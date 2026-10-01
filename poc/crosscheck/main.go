@@ -12,6 +12,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -90,10 +92,15 @@ func main() {
 		res[c.name] = &result{Candidate: c.name, ErrorKinds: map[string]int{}, DifferentKinds: map[string]int{}}
 	}
 	var refErrors, total int
+	var skipped []string // files the scanner rejects as a whole
 	for _, f := range files {
 		b, _ := os.ReadFile(f)
+		parts := split(strip(string(b)))
+		if parts == nil && strings.TrimSpace(string(b)) != "" {
+			skipped = append(skipped, filepath.Base(f))
+		}
 		var stmts []string
-		for _, s := range split(strip(string(b))) {
+		for _, s := range parts {
 			if _, err := pgquery.Parse(s); err == nil {
 				stmts = append(stmts, s)
 			}
@@ -161,6 +168,9 @@ func main() {
 		total += len(stmts)
 	}
 	fmt.Fprintf(os.Stderr, "statements: %d, reference (go-pgquery) refused: %d\n", total, refErrors)
+	if len(skipped) > 0 {
+		fmt.Fprintf(os.Stderr, "files skipped, scanner error: %s\n", strings.Join(skipped, " "))
+	}
 	var list []*result
 	for _, c := range cands {
 		st := res[c.name]
@@ -175,7 +185,7 @@ func main() {
 		}
 	}
 	if *out != "" {
-		b, _ := json.MarshalIndent(map[string]any{"statements": total, "reference_refused": refErrors, "results": list}, "", "  ")
+		b, _ := json.MarshalIndent(map[string]any{"statements": total, "reference_refused": refErrors, "skipped_files": skipped, "results": list}, "", "  ")
 		_ = os.WriteFile(*out, append(b, '\n'), 0o644)
 	}
 }
@@ -266,18 +276,30 @@ func clear(m protoreflect.Message) {
 	}
 }
 
+// strip blanks psql meta-commands and the inline data of COPY ... FROM
+// stdin: neither is SQL, and the data can break the scanner.
 func strip(s string) string {
 	lines := strings.Split(s, "\n")
+	inCopy := false
 	for i, l := range lines {
-		if strings.HasPrefix(strings.TrimSpace(l), `\`) {
+		t := strings.TrimSpace(l)
+		switch {
+		case inCopy: // inline data of COPY ... FROM stdin, up to \.
+			inCopy = t != `\.`
 			lines[i] = ""
+		case strings.HasPrefix(t, `\`): // psql meta-command
+			lines[i] = ""
+		case copyFromStdin.MatchString(t):
+			inCopy = true
 		}
 	}
 	return strings.Join(lines, "\n")
 }
 
+var copyFromStdin = regexp.MustCompile(`(?i)\bfrom\s+stdin\b[^;]*;\s*$`)
+
 func split(s string) []string {
-	res, err := pgquery.Scan(s)
+	s, res, err := scanScript(s)
 	if err != nil {
 		return nil
 	}
@@ -312,4 +334,47 @@ func split(s string) []string {
 		out = append(out, rest)
 	}
 	return out
+}
+
+// scanScript scans a whole script. The regression tests contain tokens the
+// scanner rejects on purpose ("123abc", bad Unicode escapes); the line with
+// such a token is blanked and the scan is repeated, so only that statement
+// is lost.
+func scanScript(s string) (string, *pg.ScanResult, error) {
+	var err error
+	for try := 0; try < 100; try++ {
+		var res *pg.ScanResult
+		if res, err = pgquery.Scan(s); err == nil {
+			return s, res, nil
+		}
+		v := reflect.ValueOf(err)
+		if v.Kind() != reflect.Pointer || v.Elem().Kind() != reflect.Struct {
+			break
+		}
+		f := v.Elem().FieldByName("Cursorpos")
+		if !f.IsValid() || f.Int() <= 0 {
+			break
+		}
+		// Cursorpos counts characters from 1.
+		pos, n := len(s), int(f.Int())-1
+		for i := range s {
+			if n == 0 {
+				pos = i
+				break
+			}
+			n--
+		}
+		start := strings.LastIndexByte(s[:pos], '\n') + 1
+		end := strings.IndexByte(s[pos:], '\n')
+		if end < 0 {
+			end = len(s)
+		} else {
+			end += pos
+		}
+		if start == end {
+			break
+		}
+		s = s[:start] + s[end:]
+	}
+	return s, nil, err
 }

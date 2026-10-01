@@ -60,13 +60,18 @@ cd poc
 PG_ROOT=/opt/pg ./run-versions.sh 12 13 14 15 16   # отчёты в results/pg12 … pg16
 ```
 
-Стресс-тест и замеры на регрессионных тестах PostgreSQL. Нужен каталог с `*.sql` из `src/test/regress/sql`. В прогонах использована копия из `github.com/bytebase/parser/postgresql/examples`: 212 файлов, из них 7 — примеры PL/pgSQL из документации.
+Стресс-тест и замеры на регрессионных тестах PostgreSQL. `get-regress.sh` скачивает `src/test/regress/sql/*.sql` нужных веток с raw.githubusercontent.com (список тестов берётся из `parallel_schedule`):
 
 ```bash
-cd poc/pgquery    && REGRESS_DIR=/path/to/sql go test -run TestRegress -v .
-cd poc/coverage   && go run . -regress /path/to/sql -out ../results/coverage-regress.json
-cd poc/crosscheck && go run . -regress /path/to/sql -out ../results/crosscheck-regress.json -diffs /tmp/diffs.jsonl
+cd poc
+./get-regress.sh /tmp/regress REL_12_STABLE REL_13_STABLE REL_14_STABLE REL_15_STABLE REL_16_STABLE
+R=/tmp/regress/REL_16_STABLE
+cd pgquery    && REGRESS_DIR=$R go test -run TestRegress -v .
+cd coverage   && go run . -regress $R -out ../results/coverage-regress-pg16.json
+cd crosscheck && go run . -regress $R -out ../results/crosscheck-regress-pg16.json -diffs /tmp/diffs.jsonl
 ```
+
+Инструменты вырезают команды psql и данные `COPY … FROM stdin`. Если сканер не принимает токен (тесты проверяют и такие ошибки), выбрасывается только строка с этим токеном.
 
 `-diffs` пишет каждое расхождение и каждую ошибку отдельной строкой JSON. У multigres расхождение помечено: `deparse`, если дерево меняет уже deparse исходного оператора, иначе `rewrite`.
 

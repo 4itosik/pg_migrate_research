@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
+	"reflect"
+	"regexp"
 	"sort"
 	"strings"
 	"testing"
@@ -29,7 +31,7 @@ func TestRegress(t *testing.T) {
 	sort.Strings(files)
 	var total, parsed, changed, failed int
 	byKind := map[string]int{}
-	var samples []string
+	var samples, skipped []string
 	start := time.Now()
 	for _, f := range files {
 		b, err := os.ReadFile(f)
@@ -37,6 +39,9 @@ func TestRegress(t *testing.T) {
 			t.Fatal(err)
 		}
 		stmts := splitStatements(stripPsql(string(b)))
+		if stmts == nil && strings.TrimSpace(string(b)) != "" {
+			skipped = append(skipped, filepath.Base(f))
+		}
 		r, _ := New(Options{Schema: "auth"})
 		var ok []string
 		for _, s := range stmts {
@@ -68,6 +73,9 @@ func TestRegress(t *testing.T) {
 	t.Logf("files=%d statements=%d parsed=%d rewritten=%d changed=%d failed=%d (%.3f%%) time=%s (%.2f ms/statement)",
 		len(files), total, parsed, parsed-failed, changed, failed, 100*float64(failed)/float64(parsed), elapsed.Round(time.Millisecond),
 		float64(elapsed.Microseconds())/1000/float64(parsed))
+	if len(skipped) > 0 {
+		t.Logf("files skipped, scanner error: %s", strings.Join(skipped, " "))
+	}
 	kinds := make([]string, 0, len(byKind))
 	for k := range byKind {
 		kinds = append(kinds, k)
@@ -98,21 +106,33 @@ func firstLine(s string) string {
 	return s
 }
 
+// stripPsql blanks psql meta-commands and the inline data of COPY ... FROM
+// stdin: neither is SQL, and the data can break the scanner.
 func stripPsql(s string) string {
 	lines := strings.Split(s, "\n")
+	inCopy := false
 	for i, l := range lines {
-		if strings.HasPrefix(strings.TrimSpace(l), `\`) {
+		t := strings.TrimSpace(l)
+		switch {
+		case inCopy: // inline data of COPY ... FROM stdin, up to \.
+			inCopy = t != `\.`
 			lines[i] = ""
+		case strings.HasPrefix(t, `\`): // psql meta-command
+			lines[i] = ""
+		case copyFromStdin.MatchString(t):
+			inCopy = true
 		}
 	}
 	return strings.Join(lines, "\n")
 }
 
+var copyFromStdin = regexp.MustCompile(`(?i)\bfrom\s+stdin\b[^;]*;\s*$`)
+
 // splitStatements splits a script on top-level semicolons using the
 // PostgreSQL scanner, so semicolons in strings, comments and dollar quotes
 // are ignored. BEGIN ATOMIC ... END bodies are kept together.
 func splitStatements(s string) []string {
-	res, err := pgquery.Scan(s)
+	s, res, err := scanScript(s)
 	if err != nil {
 		return nil
 	}
@@ -148,4 +168,47 @@ func splitStatements(s string) []string {
 		out = append(out, rest)
 	}
 	return out
+}
+
+// scanScript scans a whole script. The regression tests contain tokens the
+// scanner rejects on purpose ("123abc", bad Unicode escapes); the line with
+// such a token is blanked and the scan is repeated, so only that statement
+// is lost.
+func scanScript(s string) (string, *pg.ScanResult, error) {
+	var err error
+	for try := 0; try < 100; try++ {
+		var res *pg.ScanResult
+		if res, err = pgquery.Scan(s); err == nil {
+			return s, res, nil
+		}
+		v := reflect.ValueOf(err)
+		if v.Kind() != reflect.Pointer || v.Elem().Kind() != reflect.Struct {
+			break
+		}
+		f := v.Elem().FieldByName("Cursorpos")
+		if !f.IsValid() || f.Int() <= 0 {
+			break
+		}
+		// Cursorpos counts characters from 1.
+		pos, n := len(s), int(f.Int())-1
+		for i := range s {
+			if n == 0 {
+				pos = i
+				break
+			}
+			n--
+		}
+		start := strings.LastIndexByte(s[:pos], '\n') + 1
+		end := strings.IndexByte(s[pos:], '\n')
+		if end < 0 {
+			end = len(s)
+		} else {
+			end += pos
+		}
+		if start == end {
+			break
+		}
+		s = s[:start] + s[end:]
+	}
+	return s, nil, err
 }
