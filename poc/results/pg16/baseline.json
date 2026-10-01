@@ -1,182 +1,146 @@
 {
-  "candidate": "go-pgquery",
-  "library": "github.com/wasilibs/go-pgquery (libpg_query 17, WASM)",
-  "mode": "rewrite",
-  "server_version": "16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)",
+  "candidate": "baseline",
+  "library": "original SQL, search_path = auth, public",
+  "mode": "baseline",
+  "server_version": "16.15",
   "results": [
     {
       "case": "01_tables_basic",
       "title": "Таблицы, FK, индексы",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 5.079
+      "status": "pass"
     },
     {
       "case": "02_alter_rename_comment",
       "title": "ALTER, RENAME, COMMENT ON",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 6.04
+      "status": "pass"
     },
     {
       "case": "03_sequences_defaults",
       "title": "Последовательности и regclass-литералы",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 6.812
+      "status": "pass"
     },
     {
       "case": "04_types_enums_domains",
       "title": "Типы: enum, domain, composite",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 4.277
+      "status": "pass"
     },
     {
       "case": "05_views_matviews",
       "title": "Представления и матпредставления",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 5.783
+      "status": "pass"
     },
     {
       "case": "06_dml_data_migration",
       "title": "DML: перенос данных",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 9.188
+      "status": "pass"
     },
     {
       "case": "07_cte_scoping",
       "title": "CTE и области видимости",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 7.57
+      "status": "pass"
     },
     {
       "case": "08_functions_sql",
       "title": "SQL-функции и процедуры",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 9.022
+      "status": "pass"
     },
     {
       "case": "09_plpgsql_trigger",
       "title": "PL/pgSQL: триггерная функция",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 10.641
+      "status": "pass"
     },
     {
       "case": "10_plpgsql_advanced",
       "title": "PL/pgSQL: сложные тела",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 19.017
+      "status": "pass"
     },
     {
       "case": "11_do_blocks",
       "title": "DO-блоки",
       "expect": "pass",
-      "status": "pass",
-      "warnings": [
-        "001_jobs.up.sql: lookup in system catalogs by name, check that it takes the target schema into account: SELECT NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'job_prior..."
-      ],
-      "rewrite_ms": 9.304
+      "status": "pass"
     },
     {
       "case": "12_dynamic_sql",
       "title": "Динамический SQL (EXECUTE)",
       "expect": "limitation",
-      "status": "fail",
-      "stage": "up 001_audit.up.sql",
-      "error": "ERROR: relation \"audit_log\" does not exist (SQLSTATE 42P01)",
-      "warnings": [
-        "001_audit.up.sql: dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten: DO $$ BEGIN EXECUTE 'INSERT INTO audit_log (msg) VALUES (''static s..."
-      ],
-      "rewrite_ms": 2.749
+      "status": "pass"
     },
     {
       "case": "13_partitions_inheritance",
       "title": "Партиции и наследование",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 10.613
+      "status": "pass"
     },
     {
       "case": "14_grants_policies",
       "title": "GRANT/REVOKE и RLS",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 4.968
+      "status": "pass"
     },
     {
       "case": "15_quoting_and_qualified",
       "title": "Кавычки и уже квалифицированные имена",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 4.139
+      "status": "pass"
     },
     {
       "case": "16_extensions_catalogs_temp",
       "title": "Расширения, системные каталоги, temp-таблицы",
       "expect": "pass",
-      "status": "pass",
-      "warnings": [
-        "001_api_keys.up.sql: CREATE EXTENSION without SCHEMA creates objects in the first schema of search_path: CREATE EXTENSION IF NOT EXISTS pgcrypto",
-        "001_api_keys.up.sql: lookup in system catalogs by name, check that it takes the target schema into account: SELECT count(*) FROM pg_class c JOIN pg_namespace n ON n.oid = c.re...",
-        "001_api_keys.up.sql: lookup in system catalogs by name, check that it takes the target schema into account: SELECT table_name FROM information_schema.tables WHERE table_name =..."
-      ],
-      "rewrite_ms": 5.491
+      "status": "pass"
     },
     {
       "case": "17_misc_ddl",
       "title": "Прочий DDL",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 3.755
+      "status": "pass"
     },
     {
       "case": "18_concurrent_index",
       "title": "CREATE INDEX CONCURRENTLY",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 1.859
+      "status": "pass"
     },
     {
       "case": "19_triggers_transition_tables",
       "title": "Триггеры: transition tables, INSTEAD OF, constraint trigger",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 10.343
+      "status": "pass"
     },
     {
       "case": "20_lexical_traps",
       "title": "Лексические ловушки",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 3.58
+      "status": "pass"
     },
     {
       "case": "21_cross_file_registry",
       "title": "Объекты из предыдущих миграций",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 4.613
+      "status": "pass"
     },
     {
       "case": "22_sql_standard_body",
       "title": "SQL-функции со стандартным телом",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 3.089
+      "status": "pass"
     },
     {
       "case": "23_statistics_target",
       "title": "Цель статистики для CREATE STATISTICS",
       "expect": "pass",
-      "status": "pass",
-      "rewrite_ms": 1.996
+      "status": "pass"
     }
   ]
 }

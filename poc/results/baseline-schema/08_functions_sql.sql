@@ -18,12 +18,6 @@ CREATE FUNCTION price_with_vat(p_id integer) RETURNS numeric
 CREATE PROCEDURE reset_prices(IN new_amount numeric)
     LANGUAGE sql
     AS $BODY$;
-CREATE FUNCTION total_with_vat() RETURNS numeric
-    LANGUAGE sql STABLE
-    BEGIN ATOMIC
- SELECT sum(add_vat(prices.amount)) AS sum
-    FROM prices;
-END;
 ALTER TABLE ONLY prices
     ADD CONSTRAINT prices_pkey PRIMARY KEY (id);
 CREATE INDEX prices_vat_idx ON prices USING btree (add_vat(amount));

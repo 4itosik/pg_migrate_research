@@ -9,77 +9,77 @@
       "title": "Таблицы, FK, индексы",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.905
+      "rewrite_ms": 0.965
     },
     {
       "case": "02_alter_rename_comment",
       "title": "ALTER, RENAME, COMMENT ON",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.978
+      "rewrite_ms": 0.952
     },
     {
       "case": "03_sequences_defaults",
       "title": "Последовательности и regclass-литералы",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.795
+      "rewrite_ms": 0.794
     },
     {
       "case": "04_types_enums_domains",
       "title": "Типы: enum, domain, composite",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.837
+      "rewrite_ms": 0.894
     },
     {
       "case": "05_views_matviews",
       "title": "Представления и матпредставления",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.454
+      "rewrite_ms": 1.061
     },
     {
       "case": "06_dml_data_migration",
       "title": "DML: перенос данных",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.606
+      "rewrite_ms": 1.502
     },
     {
       "case": "07_cte_scoping",
       "title": "CTE и области видимости",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.648
+      "rewrite_ms": 1.046
     },
     {
       "case": "08_functions_sql",
       "title": "SQL-функции и процедуры",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.349
+      "rewrite_ms": 1.143
     },
     {
       "case": "09_plpgsql_trigger",
       "title": "PL/pgSQL: триггерная функция",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.837
+      "rewrite_ms": 1.34
     },
     {
       "case": "10_plpgsql_advanced",
       "title": "PL/pgSQL: сложные тела",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 4.489
+      "rewrite_ms": 3.456
     },
     {
       "case": "11_do_blocks",
       "title": "DO-блоки",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.113
+      "rewrite_ms": 1.213
     },
     {
       "case": "12_dynamic_sql",
@@ -91,28 +91,28 @@
       "warnings": [
         "001_audit.up.sql: dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten"
       ],
-      "rewrite_ms": 0.513
+      "rewrite_ms": 1.551
     },
     {
       "case": "13_partitions_inheritance",
       "title": "Партиции и наследование",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.774
+      "rewrite_ms": 0.702
     },
     {
       "case": "14_grants_policies",
       "title": "GRANT/REVOKE и RLS",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.67
+      "rewrite_ms": 0.726
     },
     {
       "case": "15_quoting_and_qualified",
       "title": "Кавычки и уже квалифицированные имена",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.677
+      "rewrite_ms": 0.713
     },
     {
       "case": "16_extensions_catalogs_temp",
@@ -122,21 +122,21 @@
       "warnings": [
         "001_api_keys.up.sql: CREATE EXTENSION without SCHEMA: pgcrypto"
       ],
-      "rewrite_ms": 1.82
+      "rewrite_ms": 2.105
     },
     {
       "case": "17_misc_ddl",
       "title": "Прочий DDL",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.833
+      "rewrite_ms": 0.733
     },
     {
       "case": "18_concurrent_index",
       "title": "CREATE INDEX CONCURRENTLY",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.359
+      "rewrite_ms": 0.395
     },
     {
       "case": "19_triggers_transition_tables",
@@ -145,21 +145,35 @@
       "status": "fail",
       "stage": "schema",
       "error": "schema differs from the baseline:\n--- baseline\nCREATE TRIGGER items_audit_trigger AFTER INSERT ON items REFERENCING NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION items_audit_fn();\nCREATE CONSTRAINT TRIGGER items_check AFTER INSERT ON items DEFERRABLE INITIALLY DEFERRED FOR EACH ROW EXECUTE FUNCTION noop_trg();\nCREATE TRIGGER items_view_ins INSTEAD OF INSERT ON items_view FOR EACH ROW EXECUTE FUNCTION items_view_insert();\n+++ rewritten\nCREATE TRIGGER items_audit_trigger AFTER INSERT ON items REFERENCING NEW TABLE AS new_rows FOR EACH STATEMENT EXECUTE FUNCTION items_audit_fn();\nCREATE CONSTRAINT TRIGGER items_check AFTER INSERT ON items DEFERRABLE INITIALLY IMMEDIATE FOR EACH ROW EXECUTE FUNCTION noop_trg();\nCREATE TRIGGER items_view_ins INSTEAD OF INSERT ON items_view FOR EACH ROW EXECUTE FUNCTION items_view_insert();",
-      "rewrite_ms": 1.196
+      "rewrite_ms": 1.177
     },
     {
       "case": "20_lexical_traps",
       "title": "Лексические ловушки",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.585
+      "rewrite_ms": 0.617
     },
     {
       "case": "21_cross_file_registry",
       "title": "Объекты из предыдущих миграций",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 0.89
+      "rewrite_ms": 0.808
+    },
+    {
+      "case": "22_sql_standard_body",
+      "title": "SQL-функции со стандартным телом",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 0.571
+    },
+    {
+      "case": "23_statistics_target",
+      "title": "Цель статистики для CREATE STATISTICS",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 0.409
     }
   ]
 }

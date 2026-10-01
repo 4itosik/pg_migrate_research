@@ -9,7 +9,6 @@ CREATE INDEX metrics_host_ts_idx ON auth.metrics USING btree (host, ts DESC) INC
 ALTER INDEX auth.metrics_host_ts_idx SET (fillfactor = 90);
 REINDEX INDEX auth.metrics_host_ts_idx;
 CREATE STATISTICS auth.metrics_host_ts_stats (dependencies) ON host, ts FROM auth.metrics;
-ALTER STATISTICS auth.metrics_host_ts_stats SET STATISTICS 200;
 ALTER TABLE auth.metrics ALTER COLUMN value SET STATISTICS 500;
 CLUSTER auth.metrics USING metrics_pkey;
 ANALYZE auth.metrics;

@@ -171,6 +171,22 @@
       "status": "fail",
       "stage": "check",
       "error": "ERROR: relation \"auth.tasks\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "22_sql_standard_body",
+      "title": "SQL-функции со стандартным телом",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.prices\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "23_statistics_target",
+      "title": "Цель статистики для CREATE STATISTICS",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.samples\" does not exist (SQLSTATE 42P01)"
     }
   ]
 }

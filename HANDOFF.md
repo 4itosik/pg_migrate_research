@@ -15,7 +15,7 @@
 ## Что сделано
 
 1. Обзор 11 Go-библиотек разбора PostgreSQL: README, раздел 3.
-2. Корпус: 21 сценарий миграций в формате golang-migrate с проверками, [`poc/corpus`](poc/corpus).
+2. Корпус: 23 сценария миграций в формате golang-migrate с проверками, [`poc/corpus`](poc/corpus).
 3. Стенд на живом PostgreSQL, [`poc/harness`](poc/harness):
    - накат без целевой схемы в `search_path`, как за pgbouncer;
    - сравнение `pg_dump` с эталоном;
@@ -31,21 +31,25 @@
    - стресс-тест go-pgquery, `TestRegress`;
    - сверка трёх реализаций, [`poc/crosscheck`](poc/crosscheck).
 6. Отчёт `README.md` с рекомендацией, плюсами и минусами.
+7. Проверка корпуса на PostgreSQL 12, 13, 14, 15, 16: [`poc/run-versions.sh`](poc/run-versions.sh), отчёты в `poc/results/pg12` … `pg16`.
 
-## Результаты на PostgreSQL 16
+## Результаты
 
 | | go-pgquery | multigres | bytebase ANTLR |
 |---|---|---|---|
-| Корпус, 21 сценарий | 20/21 | 19/21 | 20/21 |
+| Корпус на PostgreSQL 16, 23 сценария | 22/23 | 21/23 | 21/23 |
+| Корпус на PostgreSQL 12–15 | те же падения, что на 16 | те же | те же |
 | Регрессионные тесты, 32 029 операторов | 16 отказов (0,05%), неверного SQL нет | то же дерево, что у go-pgquery: 90,46% | байт в байт с go-pgquery: 99,74% |
 | Первый вызов | ~1,45 с | ~0 | 7–16 мс |
 | Размер CLI | 15 МБ | 12 МБ | 23 МБ |
 
-Сценарий 12 (динамический SQL в `EXECUTE`) не проходит ни у кого. Это ожидаемое ограничение.
+Сценарий 12 (динамический SQL в `EXECUTE`) не проходит ни у кого. Это ожидаемое ограничение. multigres падает на сценарии 19: deparse меняет `INITIALLY DEFERRED`. ANTLR падает на сценарии 22: грамматика не знает тело функции `RETURN выражение`. На PostgreSQL 12 и 13 сценарии с более новым синтаксисом пропускаются.
 
 ## В работе
 
-Проверка на PostgreSQL 12, 13, 14, 15 (на 16 сделана). Бинарники PostgreSQL берутся из Maven Central (zonky embedded-postgres-binaries): `apt.postgresql.org` и `ftp.postgresql.org` закрыты прокси окружения.
+Копия регрессионных тестов в bytebase/parser оказалась неполной: часть файлов из старых версий, нет, например, тел функций `RETURN` и `BEGIN ATOMIC`. Перемеряю покрытие и сверку на настоящих регрессионных тестах PostgreSQL 12–16 (файлы с raw.githubusercontent.com).
+
+Бинарники PostgreSQL берутся из Maven Central (zonky embedded-postgres-binaries): `apt.postgresql.org`, `ftp.postgresql.org`, codeload и API GitHub закрыты прокси окружения.
 
 ## Открытые вопросы
 
@@ -59,6 +63,7 @@
 ## Известные проблемы
 
 - go-pgquery: libpg_query разбирает PL/pgSQL без каталога. Переписывание отказывает на параметрах `refcursor`, `$0` в полиморфных функциях и элементе массива как цели `GET DIAGNOSTICS`.
+- ANTLR: грамматика не знает тело SQL-функции `RETURN выражение` (PostgreSQL 14+), переписывание отказывает.
 - ANTLR-PoC, не исправлено:
   - самоссылка в `CREATE RECURSIVE VIEW` получает схему;
   - встроенные функции в классах операторов и `CREATE TRANSFORM` получают схему;
@@ -89,13 +94,14 @@ cd poc/pgquery   && CGO_ENABLED=0 go test ./...   # go-pgquery на корпус
 cd poc/multigres && CGO_ENABLED=0 go test ./...
 cd poc/antlr     && CGO_ENABLED=0 go test ./...
 
-# другая версия PostgreSQL: свой каталог бинарников и свой каталог результатов
-PG_BIN=/path/to/pg/bin RESULTS_DIR=../results/pg12 go test ./...
+# PostgreSQL 12–16: скачать серверы и прогнать всё на каждой версии
+cd poc && ./get-postgres.sh /opt/pg 12 13 14 15 16
+PG_ROOT=/opt/pg ./run-versions.sh 12 13 14 15 16
 ```
 
 ## Следующие шаги
 
-1. Завершить проверку на PostgreSQL 12–15 и вписать результаты в отчёт.
+1. Покрытие и сверка на настоящих регрессионных тестах PostgreSQL 12–16, поправить цифры в отчёте.
 2. Прогнать `pgschema-rewrite` на реальных миграциях, разобрать отказы и предупреждения.
 3. Добавить реальные миграции в корпус и гонять стенд в CI.
 4. Встраивание в golang-migrate (вне скоупа): обёртка над `source.Driver`, которая переписывает `ReadUp` и `ReadDown`.

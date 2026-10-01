@@ -13,12 +13,6 @@ CREATE FUNCTION auth.price_with_vat(p_id int) RETURNS numeric
         SELECT auth.add_vat(amount) FROM auth.prices WHERE id = p_id
     $$;
 
-CREATE FUNCTION auth.total_with_vat() RETURNS numeric
-    LANGUAGE sql STABLE
-BEGIN ATOMIC
-    SELECT sum(auth.add_vat(amount)) FROM auth.prices;
-END;
-
 CREATE FUNCTION auth.expensive_prices(threshold numeric) RETURNS SETOF auth.prices
     LANGUAGE sql STABLE
     AS $$ SELECT * FROM auth.prices WHERE amount > threshold $$;

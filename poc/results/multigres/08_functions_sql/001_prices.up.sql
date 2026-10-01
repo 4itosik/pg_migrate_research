@@ -1,7 +1,6 @@
 CREATE TABLE auth.prices (id INT PRIMARY KEY, amount NUMERIC NOT NULL);
 CREATE FUNCTION auth.add_vat (amount NUMERIC) RETURNS NUMERIC LANGUAGE sql IMMUTABLE AS $$SELECT amount * 1.2$$;
 CREATE FUNCTION auth.price_with_vat (p_id INT) RETURNS NUMERIC LANGUAGE sql STABLE AS $$SELECT auth.add_vat(amount) FROM auth.prices WHERE id = p_id$$;
-CREATE FUNCTION auth.total_with_vat () RETURNS NUMERIC LANGUAGE sql STABLE BEGIN ATOMIC SELECT SUM(auth.add_vat(amount)) FROM auth.prices; END;
 CREATE FUNCTION auth.expensive_prices (threshold NUMERIC) RETURNS SETOF auth.prices LANGUAGE sql STABLE AS $$SELECT * FROM auth.prices WHERE amount > threshold$$;
 CREATE PROCEDURE auth.reset_prices (new_amount NUMERIC) LANGUAGE sql AS $$UPDATE auth.prices SET amount = new_amount$$;
 ALTER TABLE auth.prices ADD COLUMN amount_with_vat NUMERIC GENERATED ALWAYS AS (auth.add_vat(amount)) STORED;

@@ -9,70 +9,70 @@
       "title": "Таблицы, FK, индексы",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 91.839
+      "rewrite_ms": 105.634
     },
     {
       "case": "02_alter_rename_comment",
       "title": "ALTER, RENAME, COMMENT ON",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 19.949
+      "rewrite_ms": 24.9
     },
     {
       "case": "03_sequences_defaults",
       "title": "Последовательности и regclass-литералы",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 144.298
+      "rewrite_ms": 159.432
     },
     {
       "case": "04_types_enums_domains",
       "title": "Типы: enum, domain, composite",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 84.077
+      "rewrite_ms": 98.269
     },
     {
       "case": "05_views_matviews",
       "title": "Представления и матпредставления",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 188.596
+      "rewrite_ms": 210.6
     },
     {
       "case": "06_dml_data_migration",
       "title": "DML: перенос данных",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 186.118
+      "rewrite_ms": 222.738
     },
     {
       "case": "07_cte_scoping",
       "title": "CTE и области видимости",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 173.633
+      "rewrite_ms": 172.416
     },
     {
       "case": "08_functions_sql",
       "title": "SQL-функции и процедуры",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 282.326
+      "rewrite_ms": 97.203
     },
     {
       "case": "09_plpgsql_trigger",
       "title": "PL/pgSQL: триггерная функция",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 95.152
+      "rewrite_ms": 111.335
     },
     {
       "case": "10_plpgsql_advanced",
       "title": "PL/pgSQL: сложные тела",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 173.28
+      "rewrite_ms": 195.707
     },
     {
       "case": "11_do_blocks",
@@ -82,7 +82,7 @@
       "warnings": [
         "001_jobs.up.sql: lookup in system catalogs by name, check that it takes the target schema into account"
       ],
-      "rewrite_ms": 30.066
+      "rewrite_ms": 22.155
     },
     {
       "case": "12_dynamic_sql",
@@ -94,28 +94,28 @@
       "warnings": [
         "001_audit.up.sql: dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten"
       ],
-      "rewrite_ms": 20.967
+      "rewrite_ms": 19.454
     },
     {
       "case": "13_partitions_inheritance",
       "title": "Партиции и наследование",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 4.275
+      "rewrite_ms": 4.85
     },
     {
       "case": "14_grants_policies",
       "title": "GRANT/REVOKE и RLS",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 25.913
+      "rewrite_ms": 44.268
     },
     {
       "case": "15_quoting_and_qualified",
       "title": "Кавычки и уже квалифицированные имена",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 39.844
+      "rewrite_ms": 42.359
     },
     {
       "case": "16_extensions_catalogs_temp",
@@ -126,42 +126,57 @@
         "001_api_keys.up.sql: CREATE EXTENSION without SCHEMA",
         "001_api_keys.up.sql: lookup in system catalogs by name, check that it takes the target schema into account"
       ],
-      "rewrite_ms": 151.892
+      "rewrite_ms": 175.17
     },
     {
       "case": "17_misc_ddl",
       "title": "Прочий DDL",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 11.901
+      "rewrite_ms": 15.612
     },
     {
       "case": "18_concurrent_index",
       "title": "CREATE INDEX CONCURRENTLY",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 1.711
+      "rewrite_ms": 2.313
     },
     {
       "case": "19_triggers_transition_tables",
       "title": "Триггеры: transition tables, INSTEAD OF, constraint trigger",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 38.967
+      "rewrite_ms": 44.639
     },
     {
       "case": "20_lexical_traps",
       "title": "Лексические ловушки",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 27.595
+      "rewrite_ms": 60.938
     },
     {
       "case": "21_cross_file_registry",
       "title": "Объекты из предыдущих миграций",
       "expect": "pass",
       "status": "pass",
-      "rewrite_ms": 31.349
+      "rewrite_ms": 34.918
+    },
+    {
+      "case": "22_sql_standard_body",
+      "title": "SQL-функции со стандартным телом",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "learn 001_totals.up.sql",
+      "error": "syntax error at 8:4: mismatched input 'RETURN' expecting \u003cEOF\u003e"
+    },
+    {
+      "case": "23_statistics_target",
+      "title": "Цель статистики для CREATE STATISTICS",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 1.554
     }
   ]
 }

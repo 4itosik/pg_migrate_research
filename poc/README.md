@@ -6,7 +6,7 @@
 
 | Каталог | Что внутри |
 |---|---|
-| `corpus/` | 21 сценарий миграций в формате golang-migrate: `NNN_name.up.sql` / `.down.sql`, `setup.sql`, `check.sql`, `case.json` |
+| `corpus/` | 23 сценария миграций в формате golang-migrate: `NNN_name.up.sql` / `.down.sql`, `setup.sql`, `check.sql`, `case.json` (в нём можно указать `min_server_version`) |
 | `harness/` | Стенд: временный PostgreSQL, накат, проверки, сравнение схем, откат |
 | `pgquery/` | Реализация на `github.com/wasilibs/go-pgquery`, утилита `cmd/pgschema-rewrite` |
 | `multigres/` | Реализация на парсере multigres (изменение AST + генерация SQL) |
@@ -30,12 +30,14 @@
 7. Откатывает down-миграции и проверяет, что `auth` пуста.
 
 Контроль самого корпуса:
-- `TestBaseline`: оригинал с `search_path = auth` проходит 21 из 21.
-- `TestNoop`: оригинал без схемы в пути падает 21 из 21.
+- `TestBaseline`: оригинал с `search_path = auth` проходит все сценарии.
+- `TestNoop`: оригинал без схемы в пути падает во всех сценариях.
+
+Сценарий с `min_server_version` новее сервера пропускается (статус `skip`).
 
 ## Запуск
 
-Нужны Go 1.25+ и бинарники PostgreSQL: `initdb`, `pg_ctl`, `pg_dump`. Их ищет `PG_BIN`, затем `PATH`, затем `/usr/lib/postgresql/*/bin`. Вместо локального кластера можно передать `PG_DSN` с правами на создание БД и ролей. Модулю multigres нужен Go 1.26; при `GOTOOLCHAIN=auto` (по умолчанию) он скачается сам.
+Нужны Go 1.25+ и бинарники PostgreSQL: `initdb`, `pg_ctl`, `postgres`, `pg_dump`. Серверные ищутся в `PG_BIN`, затем в `PATH`, затем в `/usr/lib/postgresql/*/bin`. `pg_dump` ищется отдельно: `PG_DUMP`, рядом с серверными, `PATH`, самый новый в `/usr/lib/postgresql/*/bin`. Он читает серверы своей и более старых версий. Вместо локального кластера можно передать `PG_DSN` с правами на создание БД и ролей. Модулю multigres нужен Go 1.26; при `GOTOOLCHAIN=auto` (по умолчанию) он скачается сам.
 
 ```bash
 cd poc/harness   && go test ./...      # эталон (пишет results/baseline-schema) и контроль
@@ -48,6 +50,14 @@ cd poc/harness && go run ./cmd/matrix ../results/go-pgquery.json ../results/mult
 
 # один сценарий
 CASE=07 go test -run TestCorpus -v .
+```
+
+Версии PostgreSQL 12–16. `get-postgres.sh` скачивает серверные сборки zonky embedded-postgres-binaries из Maven Central (`MAVEN_REPO` меняет зеркало). `run-versions.sh` гоняет эталон, контроль и три реализации на каждой версии и печатает сводную таблицу:
+
+```bash
+cd poc
+./get-postgres.sh /opt/pg 12 13 14 15 16
+PG_ROOT=/opt/pg ./run-versions.sh 12 13 14 15 16   # отчёты в results/pg12 … pg16
 ```
 
 Стресс-тест и замеры на регрессионных тестах PostgreSQL. Нужен каталог с `*.sql` из `src/test/regress/sql`. В прогонах использована копия из `github.com/bytebase/parser/postgresql/examples`: 212 файлов, из них 7 — примеры PL/pgSQL из документации.
