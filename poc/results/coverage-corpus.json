@@ -1,28 +1,28 @@
 {
   "source": "PoC corpus",
-  "statements": 298,
+  "statements": 312,
   "results": [
     {
       "candidate": "go-pgquery",
-      "statements": 298,
-      "parsed": 298,
+      "statements": 312,
+      "parsed": 312,
       "panics": 0,
-      "deparsed": 298,
-      "deparse_same": 298,
-      "first_call_ms": 0.025,
-      "total_ms": 15.043,
-      "per_statement_us": 50.47986577181208
+      "deparsed": 312,
+      "deparse_same": 312,
+      "first_call_ms": 0.074,
+      "total_ms": 27.168,
+      "per_statement_us": 87.07692307692308
     },
     {
       "candidate": "multigres",
-      "statements": 298,
-      "parsed": 298,
+      "statements": 312,
+      "parsed": 312,
       "panics": 0,
-      "deparsed": 298,
-      "deparse_same": 294,
-      "first_call_ms": 0.21,
-      "total_ms": 2.632,
-      "per_statement_us": 8.832214765100671,
+      "deparsed": 312,
+      "deparse_same": 308,
+      "first_call_ms": 0.168,
+      "total_ms": 2.713,
+      "per_statement_us": 8.695512820512821,
       "deparse_diffs": [
         "CREATE TYPE money_amount AS (amount numeric(12, 2), currency char(3));  -\u003e  CREATE TYPE money_amount AS (amount NUMERIC(12, 2), currency bpchar(3))",
         "CREATE TABLE \"UserProfiles\" ( \"Id\" int PRIMARY KEY, \"countryCode\" char(2) REFERENCES shared.countries (code) );  -\u003e  CREATE TABLE \"UserProfiles\" (\"Id\" INT PRIMARY KEY, \"countryCode\" bpchar(2) REFERENCES shared.countries(code))",
@@ -32,25 +32,26 @@
     },
     {
       "candidate": "pgplex/pgparser",
-      "statements": 298,
-      "parsed": 298,
+      "statements": 312,
+      "parsed": 312,
       "panics": 0,
-      "first_call_ms": 0.061,
-      "total_ms": 1.665,
-      "per_statement_us": 5.587248322147651
+      "first_call_ms": 0.049,
+      "total_ms": 1.688,
+      "per_statement_us": 5.410256410256411
     },
     {
       "candidate": "cockroachdb-parser",
-      "statements": 298,
-      "parsed": 237,
-      "panics": 27,
-      "deparsed": 237,
-      "deparse_same": 180,
-      "first_call_ms": 0.154,
-      "total_ms": 4.69,
-      "per_statement_us": 15.738255033557047,
+      "statements": 312,
+      "parsed": 245,
+      "panics": 30,
+      "deparsed": 245,
+      "deparse_same": 185,
+      "first_call_ms": 0.16,
+      "total_ms": 6.032,
+      "per_statement_us": 19.333333333333332,
       "parse_failures": [
         "DO $$ BEGIN IF (SELECT count(*) FROM auth.sessions) \u003c\u003e 1 THEN RAISE EXCEPTION 'sessions not inserted'; END IF; END $$;  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
+        "-- gen_random_uuid() is built in since PostgreSQL 13; older servers take it -- from pgcrypto, installed in public like an extension created by the DBA. DO $$...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "DO $$ BEGIN IF obj_description('auth.customers'::regclass, 'pg_class') IS DISTINCT FROM 'Customers (renamed from accounts)' THEN RAISE EXCEPTION 'table comme...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "DO $$ BEGIN IF (SELECT number FROM auth.invoices) \u003c\u003e 5000 THEN RAISE EXCEPTION 'unexpected invoice number'; END IF; IF (SELECT id FROM auth.invoices) \u003c\u003e 101 ...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "DROP DOMAIN email_address;  -\u003e  at or near \"email_address\": syntax error: unimplemented: this syntax",
@@ -63,7 +64,7 @@
         "DO $$ BEGIN IF NOT EXISTS (SELECT 1 FROM auth.category_paths WHERE id = 999 AND path = 'from-cte') THEN RAISE EXCEPTION 'CTE shadowing broken'; END IF; IF NO...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "COMMENT ON FUNCTION add_vat(numeric) IS 'Adds 20% VAT';  -\u003e  at or near \"add_vat\": syntax error: unimplemented: this syntax",
         "ALTER FUNCTION price_with_vat(int) COST 50;  -\u003e  at or near \"50\": syntax error: unimplemented: this syntax",
-        "DO $$ BEGIN IF auth.price_with_vat(1) \u003c\u003e 12 THEN RAISE EXCEPTION 'price_with_vat broken'; END IF; IF auth.total_with_vat() \u003c\u003e 132 THEN RAISE EXCEPTION 'total...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
+        "DO $$ BEGIN IF auth.price_with_vat(1) \u003c\u003e 12 THEN RAISE EXCEPTION 'price_with_vat broken'; END IF; IF (SELECT count(*) FROM auth.expensive_prices(50)) \u003c\u003e 1 TH...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "CREATE FUNCTION document_title(p_id documents.id%TYPE) RETURNS documents.title%TYPE LANGUAGE sql STABLE AS $$ SELECT title FROM documents WHERE id = p_id $$;  -\u003e  at or near \"%\": syntax error",
         "DO $$ BEGIN IF (SELECT version FROM auth.documents WHERE id = 1) \u003c\u003e 2 THEN RAISE EXCEPTION 'trigger did not bump version'; END IF; IF (SELECT count(*) FROM a...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "DO $$ BEGIN IF auth.credit(1, 10) \u003c\u003e 10 THEN RAISE EXCEPTION 'credit broken'; END IF; IF auth.apply_op(1, 'debit', 3) \u003c\u003e 7 THEN RAISE EXCEPTION 'debit broken...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
@@ -73,8 +74,7 @@
         "DO LANGUAGE plpgsql $do$ BEGIN IF (SELECT count(*) FROM jobs) \u003c\u003e 3 THEN RAISE EXCEPTION 'expected 3 jobs, got %', (SELECT count(*) FROM jobs); END IF; END $do$;  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "DO $$ BEGIN IF (SELECT count(*) FROM auth.jobs WHERE state = 'done') \u003c\u003e 1 THEN RAISE EXCEPTION 'DO block update broken'; END IF; END $$;  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
         "DO $$ BEGIN EXECUTE 'INSERT INTO audit_log (msg) VALUES (''static string'')'; EXECUTE format('INSERT INTO %I (msg) VALUES ($1)', 'audit_log') USING 'formatte...  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
-        "DO $$ BEGIN IF (SELECT count(*) FROM auth.audit_log) \u003c\u003e 2 THEN RAISE EXCEPTION 'dynamic SQL broken'; END IF; END $$;  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference",
-        "CREATE TABLE events ( id bigint NOT NULL, created_at date NOT NULL, payload jsonb ) PARTITION BY RANGE (created_at);  -\u003e  at or near \"EOF\": syntax error"
+        "DO $$ BEGIN IF (SELECT count(*) FROM auth.audit_log) \u003c\u003e 2 THEN RAISE EXCEPTION 'dynamic SQL broken'; END IF; END $$;  -\u003e  panic: runtime error: invalid memory address or nil pointer dereference"
       ],
       "deparse_diffs": [
         "CREATE TABLE users ( id bigserial PRIMARY KEY, email text NOT NULL UNIQUE, created_at timestamptz NOT NULL DEFAULT now() );  -\u003e  CREATE TABLE users (id SERIAL8 PRIMARY KEY, email STRING NOT NULL UNIQUE, created_at TIMESTAMPTZ NOT NULL DEFAULT now())",
@@ -96,7 +96,7 @@
         "CREATE TABLE categories (id int PRIMARY KEY, parent_id int, name text NOT NULL);  -\u003e  CREATE TABLE categories (id INT8 PRIMARY KEY, parent_id INT8, name STRING NOT NULL)",
         "CREATE TABLE category_paths (id int PRIMARY KEY, path text NOT NULL);  -\u003e  CREATE TABLE category_paths (id INT8 PRIMARY KEY, path STRING NOT NULL)",
         "WITH RECURSIVE tree AS ( SELECT id, name::text AS path FROM categories WHERE parent_id IS NULL UNION ALL SELECT c.id, tree.path || '/' || c.name FROM categor...  -\u003e  WITH RECURSIVE tree AS (SELECT id, name::STRING AS path FROM categories WHERE parent_id IS NULL UNION ALL SELECT c.id, (tree.path || '/') || c.name FROM cate...",
-        "DROP FUNCTION price_with_vat(int);  -\u003e  DROP FUNCTION price_with_vat(INT8)",
+        "DROP FUNCTION IF EXISTS expensive_prices(numeric), price_with_vat(int);  -\u003e  DROP FUNCTION IF EXISTS expensive_prices(DECIMAL), price_with_vat(INT8)",
         "CREATE TABLE prices ( id int PRIMARY KEY, amount numeric NOT NULL );  -\u003e  CREATE TABLE prices (id INT8 PRIMARY KEY, amount DECIMAL NOT NULL)",
         "CREATE FUNCTION price_with_vat(p_id int) RETURNS numeric LANGUAGE sql STABLE AS ' SELECT add_vat(amount) FROM prices WHERE id = p_id ';  -\u003e  CREATE FUNCTION price_with_vat(p_id INT8) RETURNS DECIMAL LANGUAGE SQL STABLE AS $$ SELECT add_vat(amount) FROM prices WHERE id = p_id $$",
         "ALTER TABLE prices ADD COLUMN amount_with_vat numeric GENERATED ALWAYS AS (add_vat(amount)) STORED;  -\u003e  ALTER TABLE prices ADD COLUMN amount_with_vat DECIMAL AS (add_vat(amount)) STORED",
@@ -106,12 +106,15 @@
     },
     {
       "candidate": "bytebase ANTLR",
-      "statements": 298,
-      "parsed": 298,
+      "statements": 312,
+      "parsed": 311,
       "panics": 0,
-      "first_call_ms": 16.416,
-      "total_ms": 975.893,
-      "per_statement_us": 3274.808724832215
+      "first_call_ms": 15.148,
+      "total_ms": 938.207,
+      "per_statement_us": 3007.073717948718,
+      "parse_failures": [
+        "CREATE FUNCTION add_vat(amount numeric) RETURNS numeric LANGUAGE sql IMMUTABLE RETURN amount * 1.2;  -\u003e  line 3:4 mismatched input 'RETURN' expecting \u003cEOF\u003e"
+      ]
     }
   ]
 }
