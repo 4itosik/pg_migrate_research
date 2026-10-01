@@ -569,6 +569,12 @@ func (w *walker) objectRef(objtype pg.ObjectType, obj *pg.Node, cursor *int) {
 	if list == nil {
 		return
 	}
+	if objtype == pg.ObjectType_OBJECT_DOMCONSTRAINT { // CONSTRAINT c ON DOMAIN d: [d, c]
+		if len(list.Items) == 2 {
+			w.domainOf(list.Items[0].GetTypeName(), *cursor)
+		}
+		return
+	}
 	parts := strs(list.Items)
 	if len(parts) == 0 {
 		return
@@ -614,6 +620,24 @@ func (w *walker) objectRef(objtype pg.ObjectType, obj *pg.Node, cursor *int) {
 	if qualify {
 		w.qualifyTok(idx)
 		list.Items = prepend(list.Items, w.schemaNode())
+	}
+}
+
+// domainOf qualifies the domain of "CONSTRAINT c ON DOMAIN d". Its TypeName
+// has no position, so the name is searched after the DOMAIN keyword.
+func (w *walker) domainOf(tn *pg.TypeName, from int) {
+	if tn == nil || w.done[tn] || w.learnOnly {
+		return
+	}
+	w.done[tn] = true
+	names := strs(tn.Names)
+	dom := w.toks.findToken(from, w.tokEnd, pg.Token_DOMAIN_P)
+	if len(names) != 1 || dom < 0 {
+		return
+	}
+	if idx := w.locate(names, dom+1); idx >= 0 {
+		w.qualifyTok(idx)
+		tn.Names = prepend(tn.Names, w.schemaNode())
 	}
 }
 
@@ -722,7 +746,7 @@ func anchorsFor(t pg.ObjectType) []pg.Token {
 		return []pg.Token{pg.Token_POLICY}
 	case pg.ObjectType_OBJECT_RULE:
 		return []pg.Token{pg.Token_RULE}
-	case pg.ObjectType_OBJECT_TABCONSTRAINT:
+	case pg.ObjectType_OBJECT_TABCONSTRAINT, pg.ObjectType_OBJECT_DOMCONSTRAINT:
 		return []pg.Token{pg.Token_CONSTRAINT}
 	case pg.ObjectType_OBJECT_STATISTIC_EXT:
 		return []pg.Token{pg.Token_STATISTICS}
