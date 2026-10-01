@@ -1,0 +1,1 @@
+DROP INDEX CONCURRENTLY IF EXISTS auth.big_v_idx;

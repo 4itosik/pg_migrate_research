@@ -1,0 +1,11 @@
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+CREATE TABLE auth.api_keys (id UUID PRIMARY KEY DEFAULT gen_random_uuid(), owner_email citext NOT NULL, secret_hash TEXT NOT NULL, created_at TIMESTAMPTZ NOT NULL DEFAULT clock_timestamp());
+INSERT INTO auth.api_keys (owner_email, secret_hash) VALUES ('Admin@Example.com', crypt('secret', gen_salt('bf', 4)));
+CREATE TABLE auth.table_stats AS SELECT CAST(relname AS TEXT) AS relname, n_live_tup FROM pg_stat_user_tables WHERE FALSE;
+SELECT COUNT(*) FROM pg_class AS c INNER JOIN pg_namespace AS n ON n.oid = c.relnamespace WHERE n.nspname = 'auth';
+SELECT table_name FROM information_schema.tables WHERE table_name = 'api_keys';
+CREATE TEMP TABLE tmp_keys AS SELECT id FROM auth.api_keys;
+INSERT INTO auth.table_stats (relname, n_live_tup) SELECT 'api_keys', COUNT(*) FROM tmp_keys;
+DROP TABLE tmp_keys;
+SELECT * INTO TEMPORARY tmp_keys2 FROM auth.api_keys;
+DROP TABLE tmp_keys2;

@@ -35,6 +35,10 @@ type Config struct {
 	Schema    string
 	// OutputDir receives the rewritten files as <case>/<file>.
 	OutputDir string
+	// SchemaDir holds normalized pg_dump --schema-only outputs of the
+	// baseline run. The baseline writes them, other runs compare against
+	// them, so a rewrite that silently changes the resulting schema fails.
+	SchemaDir string
 }
 
 // CaseResult is the outcome of one case.
@@ -168,6 +172,26 @@ func runCase(ctx context.Context, srv *Server, c Case, cfg Config) (res CaseResu
 			return fail("up "+m.UpFile, err)
 		}
 	}
+	if cfg.SchemaDir != "" && cfg.Mode != ModeNoop {
+		dump, err := db.DumpSchema(ctx, cfg.Schema)
+		if err != nil {
+			return fail("schema", err)
+		}
+		dump = normalizeDump(dump, cfg.Schema)
+		path := filepath.Join(cfg.SchemaDir, c.Name+".sql")
+		if cfg.Mode == ModeBaseline {
+			if err := os.MkdirAll(cfg.SchemaDir, 0o755); err != nil {
+				return fail("schema", err)
+			}
+			if err := os.WriteFile(path, []byte(dump), 0o644); err != nil {
+				return fail("schema", err)
+			}
+		} else if want, err := os.ReadFile(path); err == nil {
+			if d := diffLines(string(want), dump); d != "" {
+				return fail("schema", fmt.Errorf("schema differs from the baseline:\n%s", d))
+			}
+		}
+	}
 	if c.Check != "" {
 		if err := db.Exec(ctx, "SET search_path TO "+searchPath); err != nil {
 			return fail("setup", err)
@@ -232,7 +256,55 @@ SELECT format('%s %s.%s', kind, nsp, name) FROM (
 ) x ORDER BY 1`
 }
 
-var nonIdent = regexp.MustCompile(`[^a-z0-9_]+`)
+var (
+	nonIdent   = regexp.MustCompile(`[^a-z0-9_]+`)
+	dollarBody = regexp.MustCompile(`(?s)AS \$([A-Za-z_]*)\$.*?\$([A-Za-z_]*)\$`)
+	dumpNoise  = regexp.MustCompile(`^(--.*|SET .*|SELECT pg_catalog\.set_config.*|\\(un)?restrict .*)$`)
+)
+
+// normalizeDump makes dumps of the baseline and of a rewrite comparable:
+// comments and settings go away, function bodies (whose text legitimately
+// differs: qualified names, deparser formatting) are replaced by a marker,
+// and the target schema qualifier is removed.
+func normalizeDump(dump, schema string) string {
+	dump = dollarBody.ReplaceAllString(dump, "AS $$BODY$$")
+	var lines []string
+	for _, l := range strings.Split(dump, "\n") {
+		if strings.TrimSpace(l) == "" || dumpNoise.MatchString(l) {
+			continue
+		}
+		lines = append(lines, l)
+	}
+	out := strings.Join(lines, "\n") + "\n"
+	out = strings.ReplaceAll(out, quoteIdent(schema)+".", "")
+	return strings.ReplaceAll(out, schema+".", "")
+}
+
+// diffLines returns the first difference between two texts with context.
+func diffLines(want, got string) string {
+	if want == got {
+		return ""
+	}
+	a, b := strings.Split(want, "\n"), strings.Split(got, "\n")
+	i := 0
+	for i < len(a) && i < len(b) && a[i] == b[i] {
+		i++
+	}
+	ctx := func(l []string) string {
+		lo, hi := i-1, i+2
+		if lo < 0 {
+			lo = 0
+		}
+		if hi > len(l) {
+			hi = len(l)
+		}
+		if lo >= hi {
+			return "(end)"
+		}
+		return strings.Join(l[lo:hi], "\n")
+	}
+	return fmt.Sprintf("--- baseline\n%s\n+++ rewritten\n%s", ctx(a), ctx(b))
+}
 
 func dbName(candidate, c string) string {
 	n := nonIdent.ReplaceAllString(strings.ToLower("h_"+candidate+"_"+c), "_")

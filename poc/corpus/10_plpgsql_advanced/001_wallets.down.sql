@@ -1,3 +1,4 @@
+DROP FUNCTION wallet_bump(int);
 DROP FUNCTION credit(int, numeric);
 DROP FUNCTION wallet_report();
 DROP FUNCTION apply_op(int, op_kind, numeric);

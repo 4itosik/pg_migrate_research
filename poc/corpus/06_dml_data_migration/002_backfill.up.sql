@@ -21,3 +21,7 @@ USING roles r
 WHERE upper(l.role_code) = r.code;
 
 DELETE FROM legacy_user_roles WHERE role_code IS NULL RETURNING user_id;
+
+-- FOR UPDATE OF names FROM items: they must stay unqualified
+SELECT r.id FROM roles r JOIN user_roles ur ON ur.role_id = r.id FOR UPDATE OF r;
+SELECT id FROM roles FOR NO KEY UPDATE OF roles SKIP LOCKED;

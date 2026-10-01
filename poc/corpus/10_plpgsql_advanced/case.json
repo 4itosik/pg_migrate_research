@@ -1,1 +1,1 @@
-{"title": "PL/pgSQL: сложные тела", "description": "DECLARE с выражениями и курсором, PERFORM, IF/CASE, FOR ... IN SELECT, RETURNING INTO, RAISE с подзапросом, RETURN QUERY, вызов пользовательской функции, касты к своему enum"}
+{"title": "PL/pgSQL: сложные тела", "description": "DECLARE с выражениями и курсором, PERFORM, IF/CASE, FOR ... IN SELECT, RETURNING INTO, RAISE с подзапросом, RETURN QUERY, вызов пользовательской функции, касты к своему enum, присваивание полю переменной %ROWTYPE"}

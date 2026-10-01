@@ -1,0 +1,12 @@
+CREATE TABLE auth.events (id BIGINT NOT NULL, created_at DATE NOT NULL, payload JSONB) PARTITION BY range (created_at);
+CREATE TABLE auth.events_2025 PARTITION OF auth.events FOR VALUES FROM ('2025-01-01') TO ('2026-01-01');
+CREATE TABLE auth.events_2026 (LIKE auth.events INCLUDING ALL);
+ALTER TABLE auth.events ATTACH PARTITION auth.events_2026 FOR VALUES FROM ('2026-01-01') TO ('2027-01-01');
+CREATE TABLE auth.events_default PARTITION OF auth.events DEFAULT;
+ALTER TABLE auth.events DETACH PARTITION auth.events_default;
+DROP TABLE auth.events_default;
+CREATE INDEX events_created_at_idx ON auth.events USING btree ( created_at );
+CREATE TABLE auth.base_entity (id INT, created_at TIMESTAMPTZ NOT NULL DEFAULT NOW());
+CREATE TABLE auth.notes (body TEXT) INHERITS (auth.base_entity);
+ALTER TABLE auth.notes NO INHERIT auth.base_entity;
+ALTER TABLE auth.notes INHERIT auth.base_entity;

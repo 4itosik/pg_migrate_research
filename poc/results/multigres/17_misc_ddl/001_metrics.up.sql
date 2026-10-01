@@ -1,0 +1,14 @@
+CREATE TABLE auth.metrics (id INT NOT NULL, host TEXT NOT NULL, ts TIMESTAMPTZ NOT NULL, value FLOAT8);
+ALTER TABLE auth.metrics ADD PRIMARY KEY (id);
+CREATE INDEX metrics_host_ts_idx ON auth.metrics USING btree ( host, ts desc ) INCLUDE (value) WHERE value IS NOT NULL;
+ALTER INDEX auth.metrics_host_ts_idx SET (fillfactor = 90);
+REINDEX INDEX auth.metrics_host_ts_idx;
+CREATE STATISTICS auth.metrics_host_ts_stats (dependencies) ON host, ts FROM auth.metrics;
+ALTER STATISTICS auth.metrics_host_ts_stats SET STATISTICS 200;
+ALTER TABLE auth.metrics ALTER COLUMN value SET STATISTICS 500;
+CLUSTER auth.metrics USING metrics_pkey;
+ANALYZE auth.metrics;
+CREATE RULE metrics_no_delete AS ON DELETE TO auth.metrics DO INSTEAD NOTHING;
+ALTER TABLE auth.metrics OWNER TO CURRENT_USER;
+LOCK TABLE auth.metrics IN SHARE MODE;
+TRUNCATE TABLE auth.metrics CONTINUE IDENTITY RESTRICT;

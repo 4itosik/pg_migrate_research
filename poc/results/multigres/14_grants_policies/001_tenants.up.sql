@@ -1,0 +1,10 @@
+CREATE TABLE auth.tenants (id INT PRIMARY KEY, owner name NOT NULL DEFAULT CURRENT_USER);
+CREATE SEQUENCE auth.tenant_seq;
+ALTER TABLE auth.tenants ENABLE ROW LEVEL SECURITY;
+CREATE POLICY tenants_owner ON auth.tenants AS PERMISSIVE FOR all TO PUBLIC USING ( owner = CURRENT_USER );
+ALTER POLICY tenants_owner ON auth.tenants USING ( owner = SESSION_USER );
+GRANT SELECT, INSERT ON auth.tenants TO app_reader;
+GRANT USAGE, SELECT ON SEQUENCE auth.tenant_seq TO app_reader;
+GRANT SELECT (id) ON auth.tenants TO app_reader;
+REVOKE INSERT ON auth.tenants FROM app_reader;
+COMMENT ON POLICY tenants_owner ON auth.tenants IS 'Owner only';

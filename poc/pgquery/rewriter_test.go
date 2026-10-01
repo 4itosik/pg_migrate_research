@@ -86,6 +86,18 @@ func TestRewrite(t *testing.T) {
 		{"temp table created earlier in the file", "auth", nil,
 			"CREATE TEMP TABLE tmp (id int); INSERT INTO tmp SELECT id FROM t; DROP TABLE tmp",
 			"CREATE TEMP TABLE tmp (id int); INSERT INTO tmp SELECT id FROM auth.t; DROP TABLE tmp"},
+		{"PL/pgSQL: field assignment to a composite variable", "auth", []string{"CREATE TABLE users (id int, email text)"},
+			"CREATE FUNCTION f() RETURNS void LANGUAGE plpgsql AS $$\nDECLARE\n  a users%ROWTYPE;\n  b users;\nBEGIN\n  SELECT * INTO a FROM users LIMIT 1;\n  a.email := lower(a.email);\n  b.id := 1;\nEND $$",
+			"CREATE FUNCTION auth.f() RETURNS void LANGUAGE plpgsql AS $$\nDECLARE\n  a auth.users%ROWTYPE;\n  b auth.users;\nBEGIN\n  SELECT * INTO a FROM auth.users LIMIT 1;\n  a.email := lower(a.email);\n  b.id := 1;\nEND $$"},
+		{"PL/pgSQL: field assignment to a composite parameter", "auth", []string{"CREATE TYPE pair AS (a int, b int)"},
+			"CREATE FUNCTION f(p pair) RETURNS pair LANGUAGE plpgsql AS $$\nDECLARE\n  q pair;\nBEGIN\n  p.a := 1;\n  q.b := p.a;\n  RETURN q;\nEND $$",
+			"CREATE FUNCTION auth.f(p auth.pair) RETURNS auth.pair LANGUAGE plpgsql AS $$\nDECLARE\n  q auth.pair;\nBEGIN\n  p.a := 1;\n  q.b := p.a;\n  RETURN q;\nEND $$"},
+		{"PL/pgSQL: field assignment to a %ROWTYPE of another schema", "auth", nil,
+			"CREATE FUNCTION f() RETURNS int LANGUAGE plpgsql AS $$\nDECLARE\n  w other.wallets%ROWTYPE;\nBEGIN\n  SELECT * INTO w FROM other.wallets LIMIT 1;\n  w.balance := w.balance + 1;\n  RETURN w.balance;\nEND $$",
+			"CREATE FUNCTION auth.f() RETURNS int LANGUAGE plpgsql AS $$\nDECLARE\n  w other.wallets%ROWTYPE;\nBEGIN\n  SELECT * INTO w FROM other.wallets LIMIT 1;\n  w.balance := w.balance + 1;\n  RETURN w.balance;\nEND $$"},
+		{"statistics, domain constraints, conversions, text search", "auth", nil,
+			"ALTER STATISTICS s RENAME TO s2; ALTER DOMAIN d RENAME CONSTRAINT c TO c2; DROP CONVERSION cv; CREATE TEXT SEARCH DICTIONARY td (template = simple); COMMENT ON TEXT SEARCH CONFIGURATION tc IS 'x'",
+			"ALTER STATISTICS auth.s RENAME TO s2; ALTER DOMAIN auth.d RENAME CONSTRAINT c TO c2; DROP CONVERSION auth.cv; CREATE TEXT SEARCH DICTIONARY auth.td (template = simple); COMMENT ON TEXT SEARCH CONFIGURATION auth.tc IS 'x'"},
 		{"exclusions via registry: types in function signatures", "auth", []string{"CREATE TYPE k AS ENUM ('a')"},
 			"DROP FUNCTION f(k, int, text)",
 			"DROP FUNCTION auth.f(auth.k, int, text)"},
@@ -102,19 +114,31 @@ func TestRewrite(t *testing.T) {
 
 func TestWarnings(t *testing.T) {
 	cases := map[string]string{
-		"DO $$ BEGIN EXECUTE 'DROP TABLE t'; END $$":                     "dynamic SQL",
-		"SET search_path TO other":                                       "changes search_path",
-		"SELECT set_config('search_path', 'x', true)":                    "changes search_path",
-		"CREATE EXTENSION pgcrypto":                                      "CREATE EXTENSION without SCHEMA",
-		"SELECT 1 FROM pg_type WHERE typname = 'x'":                      "system catalogs",
-		"DO $$ BEGIN PERFORM 1 FROM pg_class WHERE relname = 't'; END $$": "system catalogs",
-		"SELECT current_schema()":                                        "current_schema",
+		"DO $$ BEGIN EXECUTE 'DROP TABLE t'; END $$":                        "dynamic SQL",
+		"SET search_path TO other":                                          "changes search_path",
+		"SELECT set_config('search_path', 'x', true)":                       "changes search_path",
+		"CREATE EXTENSION pgcrypto":                                         "CREATE EXTENSION without SCHEMA",
+		"SELECT 1 FROM pg_type WHERE typname = 'x'":                         "system catalogs",
+		"DO $$ BEGIN PERFORM 1 FROM pg_class WHERE relname = 't'; END $$":   "system catalogs",
+		"SELECT current_schema()":                                           "current_schema",
 		"CREATE FUNCTION f() RETURNS int LANGUAGE plpython3u AS 'return 1'": "LANGUAGE plpython3u",
+		"CREATE OPERATOR CLASS c FOR TYPE int USING btree AS OPERATOR 1 <":  "operator classes",
+		"ALTER OPERATOR FAMILY f USING btree OWNER TO r":                    "OBJECT_OPFAMILY",
 	}
 	for sql, want := range cases {
 		_, warns := rewrite(t, "auth", nil, sql)
 		if !strings.Contains(strings.Join(warns, "\n"), want) {
 			t.Errorf("%s: warnings %q do not mention %q", sql, warns, want)
+		}
+	}
+}
+
+func TestNoFalseRecheckWarning(t *testing.T) {
+	_, warns := rewrite(t, "auth", []string{"CREATE TABLE wallets (id int, balance int)"},
+		"CREATE FUNCTION f() RETURNS int LANGUAGE plpgsql AS $$\nDECLARE\n  w wallets%ROWTYPE;\nBEGIN\n  w.balance := 1;\n  RETURN w.balance;\nEND $$")
+	for _, w := range warns {
+		if strings.Contains(w, "re-check") {
+			t.Errorf("unexpected warning: %s", w)
 		}
 	}
 }

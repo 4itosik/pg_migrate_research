@@ -136,6 +136,13 @@ func (w *walker) handle(m protoreflect.Message) bool {
 		w.withClause(n.WithClause, func() { w.children(m, "relation", "with_clause") })
 		return true
 
+	case *pg.LockingClause:
+		// FOR UPDATE OF t names FROM items and must stay unqualified
+		for _, r := range n.LockedRels {
+			if rv := r.GetRangeVar(); rv != nil {
+				w.done[rv] = true
+			}
+		}
 	case *pg.CreateStmt:
 		w.register(n.Relation, kindRelation)
 	case *pg.IntoClause:
@@ -172,8 +179,9 @@ func (w *walker) handle(m protoreflect.Message) bool {
 			w.defName(&n.Defnames, kindType, pg.Token_TYPE_P)
 		case pg.ObjectType_OBJECT_AGGREGATE:
 			w.defName(&n.Defnames, kindFunction, pg.Token_AGGREGATE)
-		case pg.ObjectType_OBJECT_COLLATION:
-			w.defName(&n.Defnames, kindNone, pg.Token_COLLATION)
+		case pg.ObjectType_OBJECT_COLLATION, pg.ObjectType_OBJECT_TSPARSER, pg.ObjectType_OBJECT_TSDICTIONARY,
+			pg.ObjectType_OBJECT_TSTEMPLATE, pg.ObjectType_OBJECT_TSCONFIGURATION:
+			w.defName(&n.Defnames, kindNone, anchorsFor(n.Kind)...)
 		default:
 			w.warn("%s is not rewritten: %s", n.Kind, snippet(w.stmtText()))
 		}
@@ -227,6 +235,10 @@ func (w *walker) handle(m protoreflect.Message) bool {
 			w.objectList(n.Objtype, n.Objects)
 		}
 
+	case *pg.CreateConversionStmt:
+		w.defName(&n.ConversionName, kindNone, pg.Token_CONVERSION_P)
+	case *pg.CreateOpClassStmt, *pg.CreateOpFamilyStmt, *pg.AlterOpFamilyStmt:
+		w.warn("operator classes and families are not rewritten: %s", snippet(w.stmtText()))
 	case *pg.CreateExtensionStmt:
 		if defElem(n.Options, "schema") == nil {
 			w.warn("CREATE EXTENSION without SCHEMA creates objects in the first schema of search_path: %s", snippet(w.stmtText()))
@@ -525,6 +537,11 @@ func (w *walker) objectList(objtype pg.ObjectType, objects []*pg.Node) {
 	}
 	anchors := anchorsFor(objtype)
 	if anchors == nil {
+		switch objtype {
+		case pg.ObjectType_OBJECT_OPCLASS, pg.ObjectType_OBJECT_OPFAMILY, pg.ObjectType_OBJECT_OPERATOR,
+			pg.ObjectType_OBJECT_AMOP, pg.ObjectType_OBJECT_AMPROC:
+			w.warn("%s is not rewritten: %s", objtype, snippet(w.stmtText()))
+		}
 		return
 	}
 	cursor := w.after(anchors...)
@@ -629,6 +646,10 @@ func (w *walker) renameStmt(n *pg.RenameStmt) {
 	case isFunctionType(n.RenameType):
 		w.r.reg.add(kindFunction, n.Newname)
 		w.objectList(n.RenameType, []*pg.Node{n.Object})
+	case n.RenameType == pg.ObjectType_OBJECT_DOMCONSTRAINT: // ALTER DOMAIN d RENAME CONSTRAINT
+		w.objectList(pg.ObjectType_OBJECT_DOMAIN, []*pg.Node{n.Object})
+	case anchorsFor(n.RenameType) != nil && n.Object.GetList() != nil: // statistics, collations, text search
+		w.objectList(n.RenameType, []*pg.Node{n.Object})
 	}
 }
 
@@ -707,6 +728,16 @@ func anchorsFor(t pg.ObjectType) []pg.Token {
 		return []pg.Token{pg.Token_STATISTICS}
 	case pg.ObjectType_OBJECT_COLLATION:
 		return []pg.Token{pg.Token_COLLATION}
+	case pg.ObjectType_OBJECT_CONVERSION:
+		return []pg.Token{pg.Token_CONVERSION_P}
+	case pg.ObjectType_OBJECT_TSPARSER:
+		return []pg.Token{pg.Token_PARSER}
+	case pg.ObjectType_OBJECT_TSDICTIONARY:
+		return []pg.Token{pg.Token_DICTIONARY}
+	case pg.ObjectType_OBJECT_TSTEMPLATE:
+		return []pg.Token{pg.Token_TEMPLATE}
+	case pg.ObjectType_OBJECT_TSCONFIGURATION:
+		return []pg.Token{pg.Token_CONFIGURATION}
 	}
 	return nil
 }

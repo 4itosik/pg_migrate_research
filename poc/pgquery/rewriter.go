@@ -93,11 +93,9 @@ func (r *Rewriter) Rewrite(sql string) (string, []string, error) {
 		return "", nil, err
 	}
 	warns := a.warns
-	if err := checkPLpgSQL(out); err != nil {
-		// Every embedded statement has been verified already. libpg_query
-		// compiles PL/pgSQL without a catalog and treats schema-qualified
-		// type names as composite types, so a rewritten body can be rejected
-		// here although PostgreSQL accepts it.
+	if err := r.checkPLpgSQL(out); err != nil {
+		// Every embedded statement has been verified already, so a body
+		// libpg_query cannot compile without a catalog is only reported.
 		warns = append(warns, fmt.Sprintf("libpg_query cannot re-check the rewritten PL/pgSQL: %v", err))
 	}
 	return out, dedupe(warns), nil
@@ -189,10 +187,23 @@ func clearLocations(m protoreflect.Message) {
 	}
 }
 
-// checkPLpgSQL makes sure every PL/pgSQL body of sql still parses.
-func checkPLpgSQL(sql string) error {
+// checkPLpgSQL makes sure every PL/pgSQL body of sql still parses. Composite
+// variables are declared as "record" for the check, as in plpgsqlBody.
+func (r *Rewriter) checkPLpgSQL(sql string) error {
 	tree, err := pgquery.Parse(sql)
 	if err != nil {
+		return err
+	}
+	parse := func(body string, wrap func(body string) string) error {
+		_, err := pgquery.ParsePlPgSqlToJSON(wrap(body))
+		if err == nil {
+			return nil
+		}
+		if mod, subs, ok := (&walker{r: r}).recordDecls(body); ok && len(subs) > 0 {
+			if _, err2 := pgquery.ParsePlPgSqlToJSON(wrap(mod)); err2 == nil {
+				return nil
+			}
+		}
 		return err
 	}
 	for _, raw := range tree.Stmts {
@@ -204,15 +215,29 @@ func checkPLpgSQL(sql string) error {
 		text := sql[start:end]
 		switch s := raw.Stmt.Node.(type) {
 		case *pg.Node_CreateFunctionStmt:
-			if language(s.CreateFunctionStmt.Options, "sql") == "plpgsql" {
-				if _, err := pgquery.ParsePlPgSqlToJSON(text); err != nil {
-					return err
-				}
+			n := s.CreateFunctionStmt
+			as := defElem(n.Options, "as")
+			items := as.GetArg().GetList().GetItems()
+			if language(n.Options, "sql") != "plpgsql" || len(items) != 1 {
+				continue
+			}
+			toks, err := scanTokens(text)
+			if err != nil {
+				return err
+			}
+			i := toks.findToken(toks.firstFrom(int(as.Location)-start), toks.len(), pg.Token_SCONST)
+			if i < 0 {
+				return fmt.Errorf("cannot locate function body literal")
+			}
+			lit := toks.list[i]
+			wrap := func(body string) string { return text[:lit.Start] + dollarQuote(body) + text[lit.End:] }
+			if err := parse(items[0].GetString_().GetSval(), wrap); err != nil {
+				return err
 			}
 		case *pg.Node_DoStmt:
 			if language(s.DoStmt.Args, "plpgsql") == "plpgsql" {
 				body := defElem(s.DoStmt.Args, "as").GetArg().GetString_().GetSval()
-				if _, err := pgquery.ParsePlPgSqlToJSON(doWrapper + dollarQuote(body)); err != nil {
+				if err := parse(body, func(b string) string { return doWrapper + dollarQuote(b) }); err != nil {
 					return err
 				}
 			}

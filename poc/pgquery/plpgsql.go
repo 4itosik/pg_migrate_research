@@ -28,13 +28,20 @@ func (w *walker) createFunction(n *pg.CreateFunctionStmt) {
 		return
 	}
 	str := items[0].GetString_()
+	i := w.toks.findToken(w.toks.firstFrom(int(as.Location)), w.tokEnd, pg.Token_SCONST)
+	if i < 0 {
+		w.fail("cannot locate function body literal")
+		return
+	}
 	var newBody string
 	var err error
 	switch lang := language(n.Options, "sql"); lang {
 	case "sql":
 		newBody, err = w.sqlBody(str.Sval)
 	case "plpgsql":
-		newBody, err = w.plpgsqlBody(w.stmtText(), str.Sval)
+		tok := w.toks.list[i]
+		prefix := w.src[w.stmtStart:tok.Start]
+		newBody, err = w.plpgsqlBody(prefix, w.compositeParams(n, prefix), w.src[tok.Start:tok.End], w.src[tok.End:w.stmtEnd], str.Sval)
 	default:
 		w.warn("function body in LANGUAGE %s is not rewritten: %s", lang, snippet(w.stmtText()))
 		return
@@ -43,7 +50,7 @@ func (w *walker) createFunction(n *pg.CreateFunctionStmt) {
 		w.fail("function %s: %v", strings.Join(strs(n.Funcname), "."), err)
 		return
 	}
-	w.replaceBody(w.toks.findToken(w.toks.firstFrom(int(as.Location)), w.tokEnd, pg.Token_SCONST), str, newBody)
+	w.replaceBody(i, str, newBody)
 }
 
 func (w *walker) doStmt(n *pg.DoStmt) {
@@ -61,7 +68,7 @@ func (w *walker) doStmt(n *pg.DoStmt) {
 		w.fail("cannot locate DO block body")
 		return
 	}
-	newBody, err := w.plpgsqlBody(doWrapper+w.toks.text(i), str.Sval)
+	newBody, err := w.plpgsqlBody(doWrapper, doWrapper, w.toks.text(i), "", str.Sval)
 	if err != nil {
 		w.fail("DO block: %v", err)
 		return
@@ -112,10 +119,28 @@ func (w *walker) sqlBody(body string) (string, error) {
 // INTO clauses blanked out (and PERFORM turned into SELECT), so it is located
 // in the body by matching the text, then rewritten with the regular SQL rules.
 // Variable declarations (%TYPE, %ROWTYPE, user types) are located by line.
-func (w *walker) plpgsqlBody(stmt, body string) (string, error) {
-	js, err := pgquery.ParsePlPgSqlToJSON(stmt)
+//
+// The statement passed to libpg_query is prefix + literal + suffix, where
+// literal is the quoted body as written. fallbackPrefix is the same header
+// with composite parameter types qualified (see compositeParams).
+func (w *walker) plpgsqlBody(prefix, fallbackPrefix, literal, suffix, body string) (string, error) {
+	js, err := pgquery.ParsePlPgSqlToJSON(prefix + literal + suffix)
+	var subs []declSub
 	if err != nil {
-		return "", fmt.Errorf("PL/pgSQL parse error: %w", err)
+		// libpg_query compiles PL/pgSQL without a catalog and treats every
+		// variable of a one-part type name as a scalar, so "r users%ROWTYPE"
+		// followed by "r.email := ..." fails. For parsing only, composite
+		// declarations become "record" and composite parameter types get a
+		// schema (two-part names are composite for libpg_query); the real
+		// types are qualified separately.
+		if mod, s, ok := w.recordDecls(body); ok && (len(s) > 0 || fallbackPrefix != prefix) {
+			if js2, err2 := pgquery.ParsePlPgSqlToJSON(fallbackPrefix + dollarQuote(mod) + suffix); err2 == nil {
+				js, err, subs = js2, nil, s
+			}
+		}
+		if err != nil {
+			return "", fmt.Errorf("PL/pgSQL parse error: %w", err)
+		}
 	}
 	var root any
 	dec := json.NewDecoder(strings.NewReader(js))
@@ -160,10 +185,115 @@ func (w *walker) plpgsqlBody(stmt, body string) (string, error) {
 		}
 		edits = append(edits, declEdits...)
 	}
+	for _, s := range subs {
+		if s.qualify {
+			edits = append(edits, edit{start: s.start, end: s.start, text: w.r.prefix})
+		}
+	}
 	if w.learnOnly {
 		return body, nil
 	}
 	return applyEdits(body, edits)
+}
+
+// compositeParams returns the function header with parameter types that
+// are tables or composite types created by the migrations qualified.
+func (w *walker) compositeParams(n *pg.CreateFunctionStmt, header string) string {
+	var edits []edit
+	for _, p := range n.Parameters {
+		tn := p.GetFunctionParameter().GetArgType()
+		if tn == nil || tn.PctType || tn.Location < 0 {
+			continue
+		}
+		if names := strs(tn.Names); len(names) == 1 && w.r.reg.relations[names[0]] {
+			if pos := int(tn.Location) - w.stmtStart; pos >= 0 && pos < len(header) {
+				edits = append(edits, edit{start: pos, end: pos, text: w.r.prefix})
+			}
+		}
+	}
+	out, err := applyEdits(header, edits)
+	if err != nil {
+		return header
+	}
+	return out
+}
+
+// declSub is a composite variable declaration replaced by "record" for
+// parsing.
+type declSub struct {
+	start   int  // offset of the type name in the body
+	qualify bool // the type name must get the schema prefix
+}
+
+// recordDecls finds declarations of composite variables (name%ROWTYPE or a
+// table or composite type created by the migrations) in DECLARE sections and
+// returns the body with their types replaced by "record".
+func (w *walker) recordDecls(body string) (string, []declSub, bool) {
+	toks, err := scanTokens(body)
+	if err != nil {
+		return "", nil, false
+	}
+	var subs []declSub
+	var repl []edit
+	n := toks.len()
+	for i := 0; i < n; i++ {
+		if toks.list[i].Token != pg.Token_DECLARE {
+			continue
+		}
+		// declarations run until the BEGIN of the block
+		for j := i + 1; j < n && toks.list[j].Token != pg.Token_BEGIN_P; {
+			end := toks.findToken(j, n, pg.Token_ASCII_59)
+			if end < 0 {
+				end = n
+			}
+			if sub, e, ok := w.compositeDecl(toks, j, end); ok {
+				subs = append(subs, sub)
+				repl = append(repl, e)
+			}
+			j = end + 1
+			i = end
+		}
+	}
+	out, err := applyEdits(body, repl)
+	return out, subs, err == nil
+}
+
+// compositeDecl inspects one declaration "name [CONSTANT] type ...".
+func (w *walker) compositeDecl(toks *tokens, from, end int) (declSub, edit, bool) {
+	k := from + 1
+	if id, _ := toks.ident(k); id == "constant" {
+		k++
+	}
+	if k >= end {
+		return declSub{}, edit{}, false
+	}
+	if id, _ := toks.ident(k); id == "alias" || toks.findToken(from, end, pg.Token_CURSOR) >= 0 {
+		return declSub{}, edit{}, false
+	}
+	t := k
+	for t < end {
+		switch toks.list[t].Token {
+		case pg.Token_COLLATE, pg.Token_NOT, pg.Token_DEFAULT, pg.Token_COLON_EQUALS, pg.Token_ASCII_61:
+			goto found
+		}
+		t++
+	}
+found:
+	name, ok := toks.ident(k)
+	if !ok {
+		return declSub{}, edit{}, false
+	}
+	start, stop := int(toks.list[k].Start), int(toks.list[t-1].End)
+	switch {
+	case t-k >= 3 && toks.is(t-2, pg.Token_ASCII_37): // [schema.]name%ROWTYPE
+		if rt, _ := toks.ident(t - 1); rt == "rowtype" {
+			return declSub{start: start, qualify: t-k == 3 && w.shouldQualifyRelation(name, false)},
+				edit{start: start, end: stop, text: "record"}, true
+		}
+	case t-k == 1 && w.r.reg.relations[name]:
+		return declSub{start: start, qualify: true}, edit{start: start, end: stop, text: "record"}, true
+	}
+	return declSub{}, edit{}, false
 }
 
 // analyzeExpr rewrites the query of a PLpgSQL_expr according to its parse mode

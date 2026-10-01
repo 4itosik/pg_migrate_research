@@ -1,0 +1,167 @@
+{
+  "candidate": "bytebase-antlr",
+  "library": "github.com/bytebase/parser/postgresql (ANTLR4 grammar, pure Go)",
+  "mode": "rewrite",
+  "server_version": "16.14 (Ubuntu 16.14-0ubuntu0.24.04.1)",
+  "results": [
+    {
+      "case": "01_tables_basic",
+      "title": "Таблицы, FK, индексы",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 91.839
+    },
+    {
+      "case": "02_alter_rename_comment",
+      "title": "ALTER, RENAME, COMMENT ON",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 19.949
+    },
+    {
+      "case": "03_sequences_defaults",
+      "title": "Последовательности и regclass-литералы",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 144.298
+    },
+    {
+      "case": "04_types_enums_domains",
+      "title": "Типы: enum, domain, composite",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 84.077
+    },
+    {
+      "case": "05_views_matviews",
+      "title": "Представления и матпредставления",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 188.596
+    },
+    {
+      "case": "06_dml_data_migration",
+      "title": "DML: перенос данных",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 186.118
+    },
+    {
+      "case": "07_cte_scoping",
+      "title": "CTE и области видимости",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 173.633
+    },
+    {
+      "case": "08_functions_sql",
+      "title": "SQL-функции и процедуры",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 282.326
+    },
+    {
+      "case": "09_plpgsql_trigger",
+      "title": "PL/pgSQL: триггерная функция",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 95.152
+    },
+    {
+      "case": "10_plpgsql_advanced",
+      "title": "PL/pgSQL: сложные тела",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 173.28
+    },
+    {
+      "case": "11_do_blocks",
+      "title": "DO-блоки",
+      "expect": "pass",
+      "status": "pass",
+      "warnings": [
+        "001_jobs.up.sql: lookup in system catalogs by name, check that it takes the target schema into account"
+      ],
+      "rewrite_ms": 30.066
+    },
+    {
+      "case": "12_dynamic_sql",
+      "title": "Динамический SQL (EXECUTE)",
+      "expect": "limitation",
+      "status": "fail",
+      "stage": "up 001_audit.up.sql",
+      "error": "ERROR: relation \"audit_log\" does not exist (SQLSTATE 42P01)",
+      "warnings": [
+        "001_audit.up.sql: dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten"
+      ],
+      "rewrite_ms": 20.967
+    },
+    {
+      "case": "13_partitions_inheritance",
+      "title": "Партиции и наследование",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 4.275
+    },
+    {
+      "case": "14_grants_policies",
+      "title": "GRANT/REVOKE и RLS",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 25.913
+    },
+    {
+      "case": "15_quoting_and_qualified",
+      "title": "Кавычки и уже квалифицированные имена",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 39.844
+    },
+    {
+      "case": "16_extensions_catalogs_temp",
+      "title": "Расширения, системные каталоги, temp-таблицы",
+      "expect": "pass",
+      "status": "pass",
+      "warnings": [
+        "001_api_keys.up.sql: CREATE EXTENSION without SCHEMA",
+        "001_api_keys.up.sql: lookup in system catalogs by name, check that it takes the target schema into account"
+      ],
+      "rewrite_ms": 151.892
+    },
+    {
+      "case": "17_misc_ddl",
+      "title": "Прочий DDL",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 11.901
+    },
+    {
+      "case": "18_concurrent_index",
+      "title": "CREATE INDEX CONCURRENTLY",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 1.711
+    },
+    {
+      "case": "19_triggers_transition_tables",
+      "title": "Триггеры: transition tables, INSTEAD OF, constraint trigger",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 38.967
+    },
+    {
+      "case": "20_lexical_traps",
+      "title": "Лексические ловушки",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 27.595
+    },
+    {
+      "case": "21_cross_file_registry",
+      "title": "Объекты из предыдущих миграций",
+      "expect": "pass",
+      "status": "pass",
+      "rewrite_ms": 31.349
+    }
+  ]
+}

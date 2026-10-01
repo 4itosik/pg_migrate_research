@@ -23,13 +23,15 @@ import (
 type Server struct {
 	dsn     string
 	version string
+	bin     string // directory with pg_dump, may be empty
 	stop    func()
 }
 
 // StartServer returns a running server.
 func StartServer(ctx context.Context) (*Server, error) {
 	if dsn := os.Getenv("PG_DSN"); dsn != "" {
-		s := &Server{dsn: dsn, stop: func() {}}
+		bin, _ := findPGBin()
+		s := &Server{dsn: dsn, bin: bin, stop: func() {}}
 		return s, s.readVersion(ctx)
 	}
 	bin, err := findPGBin()
@@ -74,6 +76,7 @@ func StartServer(ctx context.Context) (*Server, error) {
 	}
 	s := &Server{
 		dsn: fmt.Sprintf("host=%s port=%d user=postgres dbname=postgres sslmode=disable", tmp, port),
+		bin: bin,
 		stop: func() {
 			_ = run(filepath.Join(bin, "pg_ctl"), "-D", data, "-m", "immediate", "-w", "stop")
 			_ = os.RemoveAll(tmp)
@@ -173,6 +176,27 @@ func (d *Database) QueryStrings(ctx context.Context, sql string) ([]string, erro
 		}
 	}
 	return out, nil
+}
+
+// DumpSchema returns pg_dump --schema-only output for one schema.
+func (d *Database) DumpSchema(ctx context.Context, schema string) (string, error) {
+	cfg, err := pgconn.ParseConfig(d.srv.dsn)
+	if err != nil {
+		return "", err
+	}
+	conn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s", cfg.Host, cfg.Port, cfg.User, d.name)
+	cmd := exec.CommandContext(ctx, filepath.Join(d.srv.bin, "pg_dump"), "--schema-only", "--no-owner", "--schema="+schema, "-d", conn)
+	if cfg.Password != "" {
+		cmd.Env = append(os.Environ(), "PGPASSWORD="+cfg.Password)
+	}
+	out, err := cmd.Output()
+	if err != nil {
+		if ee, ok := err.(*exec.ExitError); ok {
+			return "", fmt.Errorf("pg_dump: %w: %s", err, ee.Stderr)
+		}
+		return "", fmt.Errorf("pg_dump: %w", err)
+	}
+	return string(out), nil
 }
 
 // Drop closes the connection and drops the database.

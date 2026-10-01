@@ -44,6 +44,9 @@ func RunTest(t *testing.T, opts TestOptions) Report {
 	defer srv.Stop()
 
 	cfg := opts.Config
+	if cfg.SchemaDir == "" {
+		cfg.SchemaDir = filepath.Join(resultsDir, "baseline-schema")
+	}
 	if cfg.Mode == ModeRewrite && cfg.OutputDir == "" {
 		cfg.OutputDir = filepath.Join(resultsDir, cfg.Candidate)
 		if filter == "" {

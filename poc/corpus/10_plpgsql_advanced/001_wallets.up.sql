@@ -64,3 +64,15 @@ BEGIN
     RETURN apply_op(p_wallet, 'credit', p_amount);
 END
 $$;
+
+CREATE FUNCTION wallet_bump(p_wallet int) RETURNS numeric
+LANGUAGE plpgsql AS $$
+DECLARE
+    w wallets%ROWTYPE;
+BEGIN
+    SELECT * INTO w FROM wallets WHERE id = p_wallet;
+    w.balance := w.balance + 1;
+    UPDATE wallets SET balance = w.balance WHERE id = w.id;
+    RETURN w.balance;
+END
+$$;

@@ -1,3 +1,8 @@
 # build outputs
 *.test
-/poc/**/pgschema-rewrite
+/poc/*/pgschema-rewrite
+/poc/*/rewrite
+/poc/*/coldstart
+/poc/*/matrix
+/poc/*/coverage
+/poc/*/crosscheck
