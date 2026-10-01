@@ -1,0 +1,1 @@
+{"title": "Триггеры: transition tables, INSTEAD OF, constraint trigger", "description": "REFERENCING NEW TABLE AS new_rows (имя new_rows в теле функции нельзя квалифицировать), EXECUTE PROCEDURE, INSTEAD OF на view, CONSTRAINT TRIGGER, ENABLE/DISABLE/RENAME TRIGGER, DROP FUNCTION списком"}

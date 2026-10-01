@@ -1,0 +1,1 @@
+{"title": "Последовательности и regclass-литералы", "description": "CREATE/ALTER SEQUENCE, OWNED BY, nextval('seq'), 'seq'::regclass, setval, pg_get_serial_sequence, IDENTITY"}

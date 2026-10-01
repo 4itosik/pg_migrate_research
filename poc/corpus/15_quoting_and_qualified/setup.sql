@@ -1,0 +1,3 @@
+CREATE SCHEMA IF NOT EXISTS shared;
+CREATE TABLE IF NOT EXISTS shared.countries (code char(2) PRIMARY KEY);
+INSERT INTO shared.countries VALUES ('RU'), ('US') ON CONFLICT DO NOTHING;

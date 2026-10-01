@@ -1,0 +1,1 @@
+{"title": "DO-блоки", "description": "CREATE TYPE внутри DO с EXCEPTION, проверка по pg_type, циклы и UPDATE в DO, DO LANGUAGE plpgsql с собственным тегом"}

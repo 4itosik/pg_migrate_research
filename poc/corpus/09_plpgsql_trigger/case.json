@@ -1,0 +1,1 @@
+{"title": "PL/pgSQL: триггерная функция", "description": "Тело в $$: %TYPE/%ROWTYPE, INSERT/SELECT INTO, присваивания NEW.*, CREATE TRIGGER ... EXECUTE FUNCTION, %TYPE в сигнатуре SQL-функции"}
