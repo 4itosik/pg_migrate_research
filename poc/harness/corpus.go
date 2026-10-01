@@ -17,6 +17,9 @@ type CaseMeta struct {
 	// Expect is "pass" (default) or "limitation" for cases that no static
 	// rewriter is expected to handle.
 	Expect string `json:"expect"`
+	// MinServerVersion is the oldest PostgreSQL major version the case can
+	// run on because of its syntax; older servers skip the case.
+	MinServerVersion int `json:"min_server_version,omitempty"`
 }
 
 // Migration is a pair of golang-migrate files with the same version.

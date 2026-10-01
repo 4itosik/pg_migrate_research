@@ -63,10 +63,15 @@ type Report struct {
 }
 
 // Passed returns the number of passed cases.
-func (r Report) Passed() int {
+func (r Report) Passed() int { return r.count("pass") }
+
+// Skipped returns the number of cases skipped on this server version.
+func (r Report) Skipped() int { return r.count("skip") }
+
+func (r Report) count(status string) int {
 	n := 0
 	for _, c := range r.Results {
-		if c.Status == "pass" {
+		if c.Status == status {
 			n++
 		}
 	}
@@ -89,6 +94,11 @@ func runCase(ctx context.Context, srv *Server, c Case, cfg Config) (res CaseResu
 	res = CaseResult{Case: c.Name, Title: c.Meta.Title, Expect: c.Meta.Expect, Status: "pass"}
 	fail := func(stage string, err error) CaseResult {
 		res.Status, res.Stage, res.Error = "fail", stage, err.Error()
+		return res
+	}
+	if c.Meta.MinServerVersion > srv.Major() {
+		res.Status, res.Stage = "skip", "version"
+		res.Error = fmt.Sprintf("needs PostgreSQL %d or newer", c.Meta.MinServerVersion)
 		return res
 	}
 	ups := make([]string, len(c.Migrations))

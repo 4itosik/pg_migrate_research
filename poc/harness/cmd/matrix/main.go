@@ -1,17 +1,26 @@
-// Command matrix renders harness reports as a Markdown table.
+// Command matrix renders harness reports as Markdown tables.
 //
 //	go run ./cmd/matrix ../results/go-pgquery.json ../results/multigres.json ...
+//	go run ./cmd/matrix -versions ../results/pg12 ../results/pg13 ...
+//
+// With -versions every directory holds the reports of one PostgreSQL version
+// and the table shows the totals of each run per version.
 package main
 
 import (
 	"fmt"
 	"os"
+	"path/filepath"
 	"strings"
 
 	"github.com/4itosik/pg_migrate_research/poc/harness"
 )
 
 func main() {
+	if len(os.Args) > 1 && os.Args[1] == "-versions" {
+		versions(os.Args[2:])
+		return
+	}
 	var reps []harness.Report
 	for _, p := range os.Args[1:] {
 		r, err := harness.ReadReport(p)
@@ -48,7 +57,7 @@ func main() {
 	}
 	b.WriteString("| **Итого** |")
 	for _, r := range reps {
-		b.WriteString(fmt.Sprintf(" **%d/%d** |", r.Passed(), len(r.Results)))
+		b.WriteString(" **" + total(r) + "** |")
 	}
 	b.WriteString("\n")
 	fmt.Print(b.String())
@@ -65,9 +74,67 @@ func main() {
 	}
 }
 
+// runs are the reports of one version directory, in table order.
+var runs = []string{"baseline", "noop", "go-pgquery", "multigres", "bytebase-antlr"}
+
+func versions(dirs []string) {
+	var b strings.Builder
+	b.WriteString("| Прогон |")
+	reps := make([][]harness.Report, len(dirs))
+	for i, d := range dirs {
+		for _, name := range runs {
+			r, err := harness.ReadReport(filepath.Join(d, name+".json"))
+			if err != nil {
+				fmt.Fprintln(os.Stderr, err)
+				os.Exit(1)
+			}
+			reps[i] = append(reps[i], r)
+		}
+		b.WriteString(" PostgreSQL " + reps[i][0].Server + " |")
+	}
+	b.WriteString("\n|---|")
+	for range dirs {
+		b.WriteString("---|")
+	}
+	b.WriteString("\n")
+	for k, name := range runs {
+		b.WriteString("| " + name + " |")
+		for i := range dirs {
+			b.WriteString(" " + total(reps[i][k]) + " |")
+		}
+		b.WriteString("\n")
+	}
+	fmt.Print(b.String())
+	for i, d := range dirs {
+		fmt.Printf("\n%s (PostgreSQL %s):\n", d, reps[i][0].Server)
+		for k, name := range runs {
+			if name == "noop" {
+				continue
+			}
+			for _, c := range reps[i][k].Results {
+				if c.Status != "pass" {
+					fmt.Printf("- %s `%s` [%s]: %s\n", name, c.Case, c.Stage, firstLine(c.Error))
+				}
+			}
+		}
+	}
+}
+
+// total is "passed/run", with the number of cases skipped on this version.
+func total(r harness.Report) string {
+	s := fmt.Sprintf("%d/%d", r.Passed(), len(r.Results)-r.Skipped())
+	if n := r.Skipped(); n > 0 {
+		s += fmt.Sprintf(" (+%d пропущено)", n)
+	}
+	return s
+}
+
 func cell(c harness.CaseResult) string {
-	if c.Status == "pass" {
+	switch c.Status {
+	case "pass":
 		return "✅"
+	case "skip":
+		return "—"
 	}
 	stage := c.Stage
 	if i := strings.IndexByte(stage, ' '); i > 0 {

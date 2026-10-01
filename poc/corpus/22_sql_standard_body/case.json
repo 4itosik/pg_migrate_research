@@ -1,0 +1,1 @@
+{"title": "SQL-функции со стандартным телом", "description": "LANGUAGE sql с телом RETURN и BEGIN ATOMIC: имена разбираются при создании функции", "min_server_version": 14}

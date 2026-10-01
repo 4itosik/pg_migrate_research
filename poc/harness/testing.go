@@ -17,7 +17,8 @@ type TestOptions struct {
 
 // RunTest runs the corpus (CORPUS_DIR, default ../corpus) and writes the
 // report to RESULTS_DIR (default ../results). CASE=<substring> limits the run
-// to matching cases and skips writing the report.
+// to matching cases and skips writing the report. SAVE_SQL=0 skips writing
+// the rewritten files, which do not depend on the server version.
 func RunTest(t *testing.T, opts TestOptions) Report {
 	t.Helper()
 	ctx := context.Background()
@@ -47,7 +48,7 @@ func RunTest(t *testing.T, opts TestOptions) Report {
 	if cfg.SchemaDir == "" {
 		cfg.SchemaDir = filepath.Join(resultsDir, "baseline-schema")
 	}
-	if cfg.Mode == ModeRewrite && cfg.OutputDir == "" {
+	if cfg.Mode == ModeRewrite && cfg.OutputDir == "" && os.Getenv("SAVE_SQL") != "0" {
 		cfg.OutputDir = filepath.Join(resultsDir, cfg.Candidate)
 		if filter == "" {
 			_ = os.RemoveAll(cfg.OutputDir)
@@ -55,20 +56,22 @@ func RunTest(t *testing.T, opts TestOptions) Report {
 	}
 	rep := Run(ctx, srv, cases, cfg)
 	for _, r := range rep.Results {
-		switch {
-		case r.Status == "pass":
+		switch r.Status {
+		case "pass":
 			t.Logf("PASS %s (%.1f ms)", r.Case, r.RewriteMS)
+		case "skip":
+			t.Logf("SKIP %s: %s", r.Case, r.Error)
 		default:
 			t.Logf("FAIL %s [%s] %s", r.Case, r.Stage, r.Error)
 		}
 		for _, w := range r.Warnings {
 			t.Logf("     warning: %s", w)
 		}
-		if opts.Strict && r.Status != "pass" && r.Expect == "pass" {
+		if opts.Strict && r.Status == "fail" && r.Expect == "pass" {
 			t.Errorf("%s: %s: %s", r.Case, r.Stage, r.Error)
 		}
 	}
-	t.Logf("%s: %d/%d cases passed on PostgreSQL %s", cfg.Candidate, rep.Passed(), len(rep.Results), rep.Server)
+	t.Logf("%s: %d/%d cases passed, %d skipped, on PostgreSQL %s", cfg.Candidate, rep.Passed(), len(rep.Results)-rep.Skipped(), rep.Skipped(), rep.Server)
 	if filter == "" {
 		if err := WriteReport(filepath.Join(resultsDir, cfg.Candidate+".json"), rep); err != nil {
 			t.Fatal(err)

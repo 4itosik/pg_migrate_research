@@ -13,12 +13,6 @@ CREATE FUNCTION price_with_vat(p_id int) RETURNS numeric
         SELECT add_vat(amount) FROM prices WHERE id = p_id
     ';
 
-CREATE FUNCTION total_with_vat() RETURNS numeric
-    LANGUAGE sql STABLE
-BEGIN ATOMIC
-    SELECT sum(add_vat(amount)) FROM prices;
-END;
-
 CREATE FUNCTION expensive_prices(threshold numeric) RETURNS SETOF prices
     LANGUAGE sql STABLE
     AS $$ SELECT * FROM prices WHERE amount > threshold $$;

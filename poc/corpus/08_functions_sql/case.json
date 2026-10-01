@@ -1,1 +1,1 @@
-{"title": "SQL-функции и процедуры", "description": "LANGUAGE sql с телом в $$ и в '...', BEGIN ATOMIC, RETURNS SETOF table, CALL, функции в DEFAULT/CHECK/GENERATED/индексе, COMMENT/GRANT/ALTER/DROP FUNCTION"}
+{"title": "SQL-функции и процедуры", "description": "LANGUAGE sql с телом в $$ и в '...', RETURNS SETOF table, CALL, функции в DEFAULT/CHECK/GENERATED/индексе, COMMENT/GRANT/ALTER/DROP FUNCTION. Стандартное тело (BEGIN ATOMIC) — в сценарии 22"}

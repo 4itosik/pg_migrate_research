@@ -9,6 +9,7 @@ import (
 	"os/user"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"strings"
 	"time"
 
@@ -19,12 +20,14 @@ import (
 //
 // If PG_DSN is set it is used as is (the role must be allowed to create
 // databases and roles). Otherwise a throwaway cluster is created with initdb
-// from PG_BIN, PATH or /usr/lib/postgresql/*/bin.
+// from PG_BIN, PATH or /usr/lib/postgresql/*/bin. pg_dump is looked up
+// separately (see pgDump), so PG_BIN may hold only the server binaries.
 type Server struct {
-	dsn     string
-	version string
-	bin     string // directory with pg_dump, may be empty
-	stop    func()
+	dsn        string
+	version    string
+	versionNum int    // server_version_num, e.g. 160014
+	bin        string // directory with the server binaries, may be empty
+	stop       func()
 }
 
 // StartServer returns a running server.
@@ -106,16 +109,68 @@ func (s *Server) readVersion(ctx context.Context) error {
 		return err
 	}
 	defer conn.Close(ctx)
-	res, err := conn.Exec(ctx, "SHOW server_version").ReadAll()
+	res, err := conn.Exec(ctx, "SHOW server_version; SHOW server_version_num").ReadAll()
 	if err != nil {
 		return err
 	}
 	s.version = string(res[0].Rows[0][0])
-	return nil
+	s.versionNum, err = strconv.Atoi(string(res[1].Rows[0][0]))
+	return err
 }
 
 // Version returns server_version.
 func (s *Server) Version() string { return s.version }
+
+// Major returns the major version of the server, e.g. 16.
+func (s *Server) Major() int { return s.versionNum / 10000 }
+
+// dropDatabase drops a database even if somebody is still connected to it.
+func (s *Server) dropDatabase(ctx context.Context, admin *pgconn.PgConn, name string) error {
+	if s.versionNum >= 130000 {
+		_, err := admin.Exec(ctx, "DROP DATABASE IF EXISTS "+quoteIdent(name)+" WITH (FORCE)").ReadAll()
+		return err
+	}
+	// DROP DATABASE ... WITH (FORCE) appeared in PostgreSQL 13. DROP DATABASE
+	// cannot share a query message with another statement: they would run in
+	// one implicit transaction.
+	if _, err := admin.Exec(ctx, "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = "+quoteLiteral(name)).ReadAll(); err != nil {
+		return err
+	}
+	_, err := admin.Exec(ctx, "DROP DATABASE IF EXISTS "+quoteIdent(name)).ReadAll()
+	return err
+}
+
+// pgDump returns the pg_dump binary: PG_DUMP, the one next to the server
+// binaries, PATH or the newest /usr/lib/postgresql/*/bin. pg_dump reads
+// servers of its own and older major versions.
+func (s *Server) pgDump() string {
+	if p := os.Getenv("PG_DUMP"); p != "" {
+		return p
+	}
+	if s.bin != "" {
+		if p := filepath.Join(s.bin, "pg_dump"); fileExists(p) {
+			return p
+		}
+	}
+	if p, err := exec.LookPath("pg_dump"); err == nil {
+		return p
+	}
+	found, _ := filepath.Glob("/usr/lib/postgresql/*/bin/pg_dump")
+	major := func(p string) int {
+		n, _ := strconv.Atoi(filepath.Base(filepath.Dir(filepath.Dir(p))))
+		return n
+	}
+	sort.Slice(found, func(i, j int) bool { return major(found[i]) < major(found[j]) })
+	if len(found) > 0 {
+		return found[len(found)-1]
+	}
+	return "pg_dump"
+}
+
+func fileExists(p string) bool {
+	st, err := os.Stat(p)
+	return err == nil && !st.IsDir()
+}
 
 // Stop shuts the server down if it was started by the harness.
 func (s *Server) Stop() { s.stop() }
@@ -134,11 +189,10 @@ func (s *Server) NewDatabase(ctx context.Context, name string) (*Database, error
 		return nil, err
 	}
 	defer admin.Close(ctx)
-	quoted := quoteIdent(name)
-	if _, err := admin.Exec(ctx, "DROP DATABASE IF EXISTS "+quoted+" WITH (FORCE)").ReadAll(); err != nil {
+	if err := s.dropDatabase(ctx, admin, name); err != nil {
 		return nil, err
 	}
-	if _, err := admin.Exec(ctx, "CREATE DATABASE "+quoted+" TEMPLATE template0").ReadAll(); err != nil {
+	if _, err := admin.Exec(ctx, "CREATE DATABASE "+quoteIdent(name)+" TEMPLATE template0").ReadAll(); err != nil {
 		return nil, err
 	}
 	cfg, err := pgconn.ParseConfig(s.dsn)
@@ -185,7 +239,7 @@ func (d *Database) DumpSchema(ctx context.Context, schema string) (string, error
 		return "", err
 	}
 	conn := fmt.Sprintf("host=%s port=%d user=%s dbname=%s", cfg.Host, cfg.Port, cfg.User, d.name)
-	cmd := exec.CommandContext(ctx, filepath.Join(d.srv.bin, "pg_dump"), "--schema-only", "--no-owner", "--schema="+schema, "-d", conn)
+	cmd := exec.CommandContext(ctx, d.srv.pgDump(), "--schema-only", "--no-owner", "--schema="+schema, "-d", conn)
 	if cfg.Password != "" {
 		cmd.Env = append(os.Environ(), "PGPASSWORD="+cfg.Password)
 	}
@@ -207,7 +261,7 @@ func (d *Database) Drop(ctx context.Context) {
 		return
 	}
 	defer admin.Close(ctx)
-	_, _ = admin.Exec(ctx, "DROP DATABASE IF EXISTS "+quoteIdent(d.name)+" WITH (FORCE)").ReadAll()
+	_ = d.srv.dropDatabase(ctx, admin, d.name)
 }
 
 func quoteIdent(s string) string {

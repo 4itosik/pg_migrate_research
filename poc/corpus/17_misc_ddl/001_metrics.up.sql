@@ -9,7 +9,6 @@ CREATE INDEX metrics_host_ts_idx ON metrics USING btree (host, ts DESC) INCLUDE 
 ALTER INDEX metrics_host_ts_idx SET (fillfactor = 90);
 REINDEX INDEX metrics_host_ts_idx;
 CREATE STATISTICS metrics_host_ts_stats (dependencies) ON host, ts FROM metrics;
-ALTER STATISTICS metrics_host_ts_stats SET STATISTICS 200;
 ALTER TABLE metrics ALTER COLUMN value SET STATISTICS 500;
 CLUSTER metrics USING metrics_pkey;
 ANALYZE metrics;
