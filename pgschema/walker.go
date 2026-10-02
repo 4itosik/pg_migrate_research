@@ -333,10 +333,7 @@ func (w *walker) register(rv *RangeVar, kind objKind) {
 // relationLiteral qualifies a string literal that names a relation:
 // nextval('seq'), 'tbl'::regclass, pg_get_serial_sequence('tbl', 'col').
 func (w *walker) relationLiteral(n Node) {
-	if tc, ok := n.(*TypeCast); ok {
-		n = tc.Arg
-	}
-	w.literal(n, func(name string) bool { return w.shouldQualifyRelation(name, false) })
+	w.literal(stringCastArg(n), func(name string) bool { return w.shouldQualifyRelation(name, false) })
 }
 
 func (w *walker) literal(n Node, qualify func(name string) bool) {
@@ -590,7 +587,7 @@ func (w *walker) typeCast(tc *TypeCast) {
 	}
 	switch names[len(names)-1] {
 	case "regclass":
-		w.literal(tc.Arg, func(n string) bool { return w.shouldQualifyRelation(n, false) })
+		w.literal(stringCastArg(tc.Arg), func(n string) bool { return w.shouldQualifyRelation(n, false) })
 	case "regtype":
 		w.literal(tc.Arg, func(n string) bool { return w.r.reg.isType(n) && !w.builtinUse("type", n, -1) })
 	case "regproc", "regprocedure":
@@ -598,6 +595,27 @@ func (w *walker) typeCast(tc *TypeCast) {
 	}
 }
 
+// stringCastArg looks through the casts of a string constant to text, varchar
+// and regclass, as old pg_dump wrote them: nextval(('s'::text)::regclass),
+// 's'::text::regclass.
+func stringCastArg(n Node) Node {
+	for {
+		tc, ok := n.(*TypeCast)
+		if !ok || tc.TypeName == nil {
+			return n
+		}
+		names := strs(tc.TypeName.Names)
+		if len(names) == 0 || len(names) > 2 || len(names) == 2 && names[0] != "pg_catalog" {
+			return n
+		}
+		switch names[len(names)-1] {
+		case "text", "varchar", "regclass":
+			n = tc.Arg
+		default:
+			return n
+		}
+	}
+}
 
 // usedFunctionName qualifies a function name that the statement uses (the
 // trigger function) if the function is created by the migrations.

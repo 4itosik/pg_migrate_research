@@ -61,4 +61,19 @@ func TestRewriteBuiltinNames(t *testing.T) {
 	}
 }
 
+// Nested casts of the old pg_dump style: nextval(('s'::text)::regclass).
+func TestRewriteNestedRegclassCasts(t *testing.T) {
+	got, _ := rewriteOne(t, Options{Schema: "auth"},
+		"SELECT nextval(('s'::text)::regclass), 's'::text::regclass, 's'::varchar::regclass, 's'::character varying::regclass, (('s'::text)::regclass)::regclass")
+	want := "SELECT nextval(('auth.s'::text)::regclass), 'auth.s'::text::regclass, 'auth.s'::varchar::regclass, 'auth.s'::character varying::regclass, (('auth.s'::text)::regclass)::regclass"
+	if got != want {
+		t.Errorf("got\n%s\nwant\n%s", got, want)
+	}
+	// other casts are not looked through
+	got, _ = rewriteOne(t, Options{Schema: "auth"}, "SELECT ('s'::name)::regclass, nextval(lower('s')::regclass)")
+	if want := "SELECT ('s'::name)::regclass, nextval(lower('s')::regclass)"; got != want {
+		t.Errorf("got %s", got)
+	}
+}
+
 func warningText(warns []string) string { return strings.Join(warns, "\n") }
