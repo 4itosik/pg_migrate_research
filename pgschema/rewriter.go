@@ -19,7 +19,10 @@ type Options struct {
 	// ignored.
 	Placeholder bool
 	// ExcludeRelations lists relation names that live in other schemas and
-	// are referenced without a schema on purpose.
+	// are referenced without a schema on purpose. The names are SQL
+	// identifiers as written in SQL: an unquoted name is folded to lower case
+	// (Countries is countries), a name in double quotes is taken exactly
+	// ("Countries"). A name with a schema is an error.
 	ExcludeRelations []string
 	// ExtensionsInSchema adds SCHEMA <schema> to CREATE EXTENSION statements
 	// that have no SCHEMA clause, so that the extension's objects are created
@@ -27,9 +30,12 @@ type Options struct {
 	// server puts it (the first schema of search_path, usually public), shared
 	// by the services of the database, and the statement gets a warning. An
 	// extension exists once per database, so turn this on only if the
-	// migrations of one service own it. The library does not know the names
-	// an extension provides: with this on, unqualified uses of its functions
-	// and types are not rewritten (a warning says so).
+	// migrations of one service own it. After the CREATE EXTENSION the
+	// unqualified uses of the functions and types of the extension get the
+	// target schema (or the schema the statement names) if the library knows
+	// their names: those of the contrib extensions and those of
+	// ExtensionObjects; for another extension the statement gets a warning
+	// that its uses are not rewritten.
 	ExtensionsInSchema bool
 	// Extensions says where the extensions are installed, by name: the value
 	// is the schema, "" is the target schema. The unqualified uses in the
@@ -40,11 +46,16 @@ type Options struct {
 	// (gen_random_uuid, which belongs to the core since PostgreSQL 13); for
 	// others, and for names it does not have, see ExtensionObjects. A
 	// CREATE EXTENSION of such an extension that has no SCHEMA gets the
-	// schema. An extension that is not listed is left as it was.
+	// schema. An extension that is not listed is left as it was. The keys are
+	// folded to lower case; an extension that the library does not know
+	// (KnownExtensions) and that has no names in ExtensionObjects is an error.
 	Extensions map[string]string
 	// ExtensionObjects adds names of functions and types to the extensions
 	// of Extensions (and to ExtensionsInSchema), by extension name. It is for
-	// the extensions outside contrib.
+	// the extensions outside contrib. The keys are folded to lower case, the
+	// names are SQL identifiers like those of ExcludeRelations. An extension
+	// that is neither in Extensions nor covered by ExtensionsInSchema is an
+	// error: its names would never be used.
 	ExtensionObjects map[string][]string
 }
 
@@ -66,8 +77,15 @@ type Rewriter struct {
 	extraObjects  map[string][]string
 }
 
-// New creates a Rewriter.
+// New creates a Rewriter. It returns an error for options that would be
+// ignored or would not work: see Options.
 func New(opts Options) (*Rewriter, error) {
+	switch {
+	case opts.Placeholder && opts.Schema != "":
+		return nil, errors.New("Schema and Placeholder exclude each other: a template has the placeholder instead of the schema")
+	case !opts.Placeholder && opts.Schema == subst.Placeholder:
+		return nil, fmt.Errorf("schema %s is the placeholder of templates: set Placeholder instead", subst.Placeholder)
+	}
 	if opts.Placeholder {
 		opts.Schema = subst.Placeholder
 	}
@@ -95,7 +113,11 @@ func New(opts Options) (*Rewriter, error) {
 		return nil, err
 	}
 	for _, n := range opts.ExcludeRelations {
-		r.exclude[n] = true
+		name, err := optionName(n)
+		if err != nil {
+			return nil, fmt.Errorf("ExcludeRelations: %w", err)
+		}
+		r.exclude[name] = true
 	}
 	return r, nil
 }

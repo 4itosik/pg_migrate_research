@@ -100,7 +100,7 @@ func splitQualifiedName(s string) ([]string, bool) {
 			if i < 0 {
 				i = len(s)
 			}
-			part, s = strings.ToLower(strings.TrimSpace(s[:i])), s[i:]
+			part, s = asciiLower(strings.TrimSpace(s[:i])), s[i:]
 			if part == "" {
 				return nil, false
 			}
@@ -114,6 +114,17 @@ func splitQualifiedName(s string) ([]string, bool) {
 		}
 		s = strings.TrimSpace(s[1:])
 	}
+}
+
+// asciiLower folds the ASCII letters of an unquoted identifier to lower case,
+// as PostgreSQL does in UTF-8 (downcase_identifier): other letters stay.
+func asciiLower(s string) string {
+	return strings.Map(func(c rune) rune {
+		if c >= 'A' && c <= 'Z' {
+			return c + 'a' - 'A'
+		}
+		return c
+	}, s)
 }
 
 // snippet shortens a statement for a message.

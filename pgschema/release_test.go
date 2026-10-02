@@ -128,6 +128,47 @@ func TestRewriteExplicitExtensionSchemaWins(t *testing.T) {
 	}
 }
 
+func TestOptionsAreChecked(t *testing.T) {
+	bad := map[string]Options{
+		"an empty excluded name":               {Schema: "auth", ExcludeRelations: []string{""}},
+		"an excluded name with a schema":       {Schema: "auth", ExcludeRelations: []string{"public.countries"}},
+		"an unknown extension without names":   {Schema: "auth", Extensions: map[string]string{"pgcrypt": "ext"}},
+		"an empty extension name":              {Schema: "auth", Extensions: map[string]string{"": "ext"}},
+		"names of an extension not configured": {Schema: "auth", ExtensionObjects: map[string][]string{"postgis": {"geometry"}}},
+		"an empty extension object":            {Schema: "auth", Extensions: map[string]string{"postgis": "ext"}, ExtensionObjects: map[string][]string{"postgis": {""}}},
+		"schema and placeholder":               {Schema: "auth", Placeholder: true},
+		"the placeholder as a schema":          {Schema: "pgschema_placeholder"},
+	}
+	for name, opts := range bad {
+		if _, err := New(opts); err == nil {
+			t.Errorf("%s: accepted", name)
+		}
+	}
+	good := map[string]Options{
+		"names of an unknown extension":      {Schema: "auth", Extensions: map[string]string{"postgis": "ext"}, ExtensionObjects: map[string][]string{"postgis": {"geometry"}}},
+		"names under ExtensionsInSchema":     {Schema: "auth", ExtensionsInSchema: true, ExtensionObjects: map[string][]string{"postgis": {"geometry"}}},
+		"an extension name in upper case":    {Schema: "auth", Extensions: map[string]string{"PGCrypto": "ext"}},
+		"a quoted excluded name":             {Schema: "auth", ExcludeRelations: []string{`"Countries"`}},
+		"extra names of a contrib extension": {Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext"}, ExtensionObjects: map[string][]string{"PGCRYPTO": {"gen_random_uuid"}}},
+	}
+	for name, opts := range good {
+		if _, err := New(opts); err != nil {
+			t.Errorf("%s: %v", name, err)
+		}
+	}
+	// names are SQL identifiers: unquoted ones are folded to lower case
+	got, _ := rewriteOne(t, Options{Schema: "auth", ExcludeRelations: []string{"Countries", `"Regions"`}},
+		`SELECT * FROM countries, "Regions", regions`)
+	if want := `SELECT * FROM countries, "Regions", auth.regions`; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+	got, _ = rewriteOne(t, Options{Schema: "auth", Extensions: map[string]string{"PostGIS": "ext"}, ExtensionObjects: map[string][]string{"postgis": {"ST_Distance", `"Geo"`}}},
+		`SELECT st_distance(a, b), "Geo"(a) FROM p`)
+	if want := `SELECT ext.st_distance(a, b), ext."Geo"(a) FROM auth.p`; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 // A failed Rewrite or Learn leaves the Rewriter as it was.
 func TestFailedCallsLeaveNoState(t *testing.T) {
 	r := newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})

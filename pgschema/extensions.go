@@ -1,6 +1,7 @@
 package pgschema
 
 import (
+	"errors"
 	"fmt"
 	"sort"
 
@@ -121,20 +122,64 @@ func extensionNames(m map[string]string) []string {
 	return names
 }
 
-// initExtensions activates the extensions named in the options.
+// initExtensions checks the extensions named in the options and activates
+// those of Extensions.
 func (r *Rewriter) initExtensions(opts Options) error {
-	for _, ext := range extensionNames(opts.Extensions) {
-		ref, err := r.schemaRefOf(opts.Extensions[ext])
+	schemas := map[string]string{}
+	for key, schema := range opts.Extensions {
+		ext := asciiLower(key)
+		if ext == "" {
+			return errors.New("Extensions: an empty extension name")
+		}
+		if _, dup := schemas[ext]; dup {
+			return fmt.Errorf("Extensions: extension %s is given twice", ext)
+		}
+		schemas[ext] = schema
+	}
+	for key, names := range opts.ExtensionObjects {
+		ext := asciiLower(key)
+		if ext == "" {
+			return errors.New("ExtensionObjects: an empty extension name")
+		}
+		if _, dup := r.extraObjects[ext]; dup {
+			return fmt.Errorf("ExtensionObjects: extension %s is given twice", ext)
+		}
+		if _, ok := schemas[ext]; !ok && !opts.ExtensionsInSchema {
+			return fmt.Errorf("ExtensionObjects: extension %s is not in Extensions and ExtensionsInSchema is off, so its names would never be used", ext)
+		}
+		list := make([]string, 0, len(names))
+		for _, n := range names {
+			name, err := optionName(n)
+			if err != nil {
+				return fmt.Errorf("ExtensionObjects of %s: %w", ext, err)
+			}
+			list = append(list, name)
+		}
+		r.extraObjects[ext] = list
+	}
+	for _, ext := range extensionNames(schemas) {
+		if !r.knowsExtension(ext) {
+			return fmt.Errorf("Extensions: the library does not know the objects of extension %s; give their names in ExtensionObjects", ext)
+		}
+		ref, err := r.schemaRefOf(schemas[ext])
 		if err != nil {
 			return fmt.Errorf("schema of extension %s: %w", ext, err)
 		}
 		r.configuredExt[ext] = ref
-	}
-	for ext, names := range opts.ExtensionObjects {
-		r.extraObjects[ext] = append([]string(nil), names...)
-	}
-	for _, ext := range extensionNames(opts.Extensions) {
-		r.activateExtension(ext, r.configuredExt[ext])
+		r.activateExtension(ext, ref)
 	}
 	return nil
+}
+
+// optionName parses a name of the options as SQL writes it: unquoted it is
+// folded to lower case, in double quotes it is taken exactly.
+func optionName(s string) (string, error) {
+	parts, ok := splitQualifiedName(s)
+	switch {
+	case !ok:
+		return "", fmt.Errorf("%q is not a name", s)
+	case len(parts) > 1:
+		return "", fmt.Errorf("%q has a schema; give the name alone", s)
+	}
+	return parts[0], nil
 }
