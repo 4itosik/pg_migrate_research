@@ -238,12 +238,12 @@ opt_drop_behavior:
  *****************************************************************************/
 
 CallStmt:	CALL func_application
-				{ /*C
-					CallStmt   *n = makeNode(CallStmt);
+				{
+					n := &CallStmt{}
 
-					n->funccall = castNode(FuncCall, $2);
-					$$ = (Node *) n;
-				*/ }
+					n.Funccall = as[*FuncCall]($2)
+					$$ = n
+				}
 		;
 
 /*****************************************************************************
@@ -505,53 +505,53 @@ AlterRoleSetStmt:
 
 DropRoleStmt:
 			DROP ROLE role_list
-				{ /*C
-					DropRoleStmt *n = makeNode(DropRoleStmt);
+				{
+					n := &DropRoleStmt{}
 
-					n->missing_ok = false;
-					n->roles = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.MissingOk = false
+					n.Roles = $3
+					$$ = n
+				}
 			| DROP ROLE IF_P EXISTS role_list
-				{ /*C
-					DropRoleStmt *n = makeNode(DropRoleStmt);
+				{
+					n := &DropRoleStmt{}
 
-					n->missing_ok = true;
-					n->roles = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.MissingOk = true
+					n.Roles = $5
+					$$ = n
+				}
 			| DROP USER role_list
-				{ /*C
-					DropRoleStmt *n = makeNode(DropRoleStmt);
+				{
+					n := &DropRoleStmt{}
 
-					n->missing_ok = false;
-					n->roles = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.MissingOk = false
+					n.Roles = $3
+					$$ = n
+				}
 			| DROP USER IF_P EXISTS role_list
-				{ /*C
-					DropRoleStmt *n = makeNode(DropRoleStmt);
+				{
+					n := &DropRoleStmt{}
 
-					n->roles = $5;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Roles = $5
+					n.MissingOk = true
+					$$ = n
+				}
 			| DROP GROUP_P role_list
-				{ /*C
-					DropRoleStmt *n = makeNode(DropRoleStmt);
+				{
+					n := &DropRoleStmt{}
 
-					n->missing_ok = false;
-					n->roles = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.MissingOk = false
+					n.Roles = $3
+					$$ = n
+				}
 			| DROP GROUP_P IF_P EXISTS role_list
-				{ /*C
-					DropRoleStmt *n = makeNode(DropRoleStmt);
+				{
+					n := &DropRoleStmt{}
 
-					n->missing_ok = true;
-					n->roles = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.MissingOk = true
+					n.Roles = $5
+					$$ = n
+				}
 			;
 
 
@@ -606,59 +606,55 @@ add_drop:	ADD_P									{ /*C $$ = +1; */ }
 
 CreateSchemaStmt:
 			CREATE SCHEMA opt_single_name AUTHORIZATION RoleSpec OptSchemaEltList
-				{ /*C
-					CreateSchemaStmt *n = makeNode(CreateSchemaStmt);
+				{
+					n := &CreateSchemaStmt{}
 
-					/* One can omit the schema name or the authorization id. * /
-					n->schemaname = $3;
-					n->authrole = $5;
-					n->schemaElts = $6;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					/* One can omit the schema name or the authorization id. */
+					n.Schemaname = $3
+					n.Authrole = as[*RoleSpec]($5)
+					n.SchemaElts = $6
+					n.IfNotExists = false
+					$$ = n
+				}
 			| CREATE SCHEMA ColId OptSchemaEltList
-				{ /*C
-					CreateSchemaStmt *n = makeNode(CreateSchemaStmt);
+				{
+					n := &CreateSchemaStmt{}
 
-					/* ...but not both * /
-					n->schemaname = $3;
-					n->authrole = NULL;
-					n->schemaElts = $4;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					/* ...but not both */
+					n.Schemaname = $3
+					n.Authrole = nil
+					n.SchemaElts = $4
+					n.IfNotExists = false
+					$$ = n
+				}
 			| CREATE SCHEMA IF_P NOT EXISTS opt_single_name AUTHORIZATION RoleSpec OptSchemaEltList
-				{ /*C
-					CreateSchemaStmt *n = makeNode(CreateSchemaStmt);
+				{
+					n := &CreateSchemaStmt{}
 
-					/* schema name can be omitted here, too * /
-					n->schemaname = $6;
-					n->authrole = $8;
-					if ($9 != NIL)
-						ereport(ERROR,
-								(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-								 errmsg("CREATE SCHEMA IF NOT EXISTS cannot include schema elements"),
-								 parser_errposition(@9)));
-					n->schemaElts = $9;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					/* schema name can be omitted here, too */
+					n.Schemaname = $6
+					n.Authrole = as[*RoleSpec]($8)
+					if $9 != nil {
+						p.fail(@9, "CREATE SCHEMA IF NOT EXISTS cannot include schema elements")
+					}
+					n.SchemaElts = $9
+					n.IfNotExists = true
+					$$ = n
+				}
 			| CREATE SCHEMA IF_P NOT EXISTS ColId OptSchemaEltList
-				{ /*C
-					CreateSchemaStmt *n = makeNode(CreateSchemaStmt);
+				{
+					n := &CreateSchemaStmt{}
 
-					/* ...but not here * /
-					n->schemaname = $6;
-					n->authrole = NULL;
-					if ($7 != NIL)
-						ereport(ERROR,
-								(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-								 errmsg("CREATE SCHEMA IF NOT EXISTS cannot include schema elements"),
-								 parser_errposition(@7)));
-					n->schemaElts = $7;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					/* ...but not here */
+					n.Schemaname = $6
+					n.Authrole = nil
+					if $7 != nil {
+						p.fail(@7, "CREATE SCHEMA IF NOT EXISTS cannot include schema elements")
+					}
+					n.SchemaElts = $7
+					n.IfNotExists = true
+					$$ = n
+				}
 		;
 
 OptSchemaEltList:

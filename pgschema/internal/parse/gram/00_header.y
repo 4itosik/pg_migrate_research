@@ -8,7 +8,18 @@
 
 package parse
 
-import . "github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
+import (
+	"fmt"
+	"strings"
+
+	. "github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
+)
+
+// fmt and strings are for the actions
+var (
+	_ = fmt.Sprintf
+	_ = strings.EqualFold
+)
 %}
 
 // The semantic value. node holds every node pointer of gram.y's %union

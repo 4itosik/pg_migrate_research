@@ -266,45 +266,30 @@ RoleId:		RoleSpec
 			;
 
 RoleSpec:	NonReservedWord
-				{ /*C
+				{
 					/*
 					 * "public" and "none" are not keywords, but they must
 					 * be treated specially here.
-					 * /
-					RoleSpec   *n;
+					 */
+					var n *RoleSpec
 
-					if (strcmp($1, "public") == 0)
-					{
-						n = (RoleSpec *) makeRoleSpec(ROLESPEC_PUBLIC, @1);
-						n->roletype = ROLESPEC_PUBLIC;
+					if $1 == "public" {
+						n = makeRoleSpec(ROLESPEC_PUBLIC, @1)
+						n.Roletype = ROLESPEC_PUBLIC
+					} else if $1 == "none" {
+						p.fail(@1, "role name \"none\" is reserved")
+					} else {
+						n = makeRoleSpec(ROLESPEC_CSTRING, @1)
+						n.Rolename = $1
 					}
-					else if (strcmp($1, "none") == 0)
-					{
-						ereport(ERROR,
-								(errcode(ERRCODE_RESERVED_NAME),
-								 errmsg("role name \"%s\" is reserved",
-										"none"),
-								 parser_errposition(@1)));
-					}
-					else
-					{
-						n = makeRoleSpec(ROLESPEC_CSTRING, @1);
-						n->rolename = pstrdup($1);
-					}
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 			| CURRENT_ROLE
-				{ /*C
-					$$ = makeRoleSpec(ROLESPEC_CURRENT_ROLE, @1);
-				*/ }
+				{ $$ = makeRoleSpec(ROLESPEC_CURRENT_ROLE, @1) }
 			| CURRENT_USER
-				{ /*C
-					$$ = makeRoleSpec(ROLESPEC_CURRENT_USER, @1);
-				*/ }
+				{ $$ = makeRoleSpec(ROLESPEC_CURRENT_USER, @1) }
 			| SESSION_USER
-				{ /*C
-					$$ = makeRoleSpec(ROLESPEC_SESSION_USER, @1);
-				*/ }
+				{ $$ = makeRoleSpec(ROLESPEC_SESSION_USER, @1) }
 		;
 
 role_list:	RoleSpec
