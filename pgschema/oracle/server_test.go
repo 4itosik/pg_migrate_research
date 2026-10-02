@@ -2,6 +2,7 @@ package oracle
 
 import (
 	"context"
+	"fmt"
 	"strings"
 	"testing"
 
@@ -174,6 +175,122 @@ END $$;`,
 			if len(got) == 0 || got[len(got)-1] != tc.want {
 				t.Errorf("%s = %v, want %s", tc.query, got, tc.want)
 			}
+		})
+	}
+}
+
+// TestKnownImprovementsOnServer runs on a live server the migrations where the
+// library's output differs from the prototype's on purpose (knownImprovement,
+// docs/differences.md): the files are learned by both, rewritten one by one
+// and run in one session with a search_path that does not contain the schema.
+// The library's output must give want, the prototype's must not (it fails or
+// gives something else), and the difference of the outputs must be the known
+// improvement.
+func TestKnownImprovementsOnServer(t *testing.T) {
+	if !haveServer() {
+		skipUnlessCI(t, "no PostgreSQL server: set PG_BIN or PG_DSN (tools/env.sh)")
+	}
+	ctx := context.Background()
+	srv, err := harness.StartServer(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer srv.Stop()
+	tests := []struct {
+		name        string
+		files       []string
+		query, want string
+		improvement string
+	}{
+		{
+			name: "a function named like a built-in",
+			files: []string{`CREATE FUNCTION round(double precision, int) RETURNS numeric LANGUAGE sql AS 'SELECT round($1::numeric, $2)';
+CREATE TABLE items (price numeric);
+INSERT INTO items VALUES (2.345);
+CREATE VIEW totals AS SELECT round(price, 2) AS r FROM items;`},
+			query:       "SELECT r::text FROM auth.totals",
+			want:        "2.35",
+			improvement: improvementBuiltin,
+		},
+		{
+			name: "a table named like a built-in type",
+			files: []string{`CREATE TABLE text (a int);
+CREATE TABLE notes (body text);
+INSERT INTO notes VALUES ('hello');`},
+			query:       "SELECT pg_typeof(body)::text || ' ' || body FROM auth.notes",
+			want:        "text hello",
+			improvement: improvementBuiltin,
+		},
+		{
+			name: "a sequence under nested casts",
+			files: []string{`CREATE SEQUENCE s START 7;
+CREATE TABLE t (id bigint DEFAULT nextval(('s'::text)::regclass), v int);
+INSERT INTO t (v) VALUES (1);`},
+			query:       "SELECT id::text FROM auth.t",
+			want:        "7",
+			improvement: improvementNestedCast,
+		},
+		{
+			name: "a temporary table of another file",
+			files: []string{
+				"CREATE TEMP TABLE users AS SELECT 1 AS id;",
+				"CREATE TABLE users (id int);\nINSERT INTO users VALUES (42);",
+			},
+			query:       "SELECT id::text FROM auth.users",
+			want:        "42",
+			improvement: improvementTempScope,
+		},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			pr := newPair(t)
+			for _, f := range tc.files {
+				pr.learn(f)
+			}
+			var ours, protos []string
+			kinds := map[string]bool{}
+			for _, f := range tc.files {
+				want, _, err := pr.proto.Rewrite(f)
+				if err != nil {
+					t.Fatalf("the prototype refuses: %v", err)
+				}
+				got, _, err := pr.our.Rewrite(f)
+				if err != nil {
+					t.Fatalf("the library refuses: %v", err)
+				}
+				if got != want {
+					kinds[knownImprovement(want, got, pr.temp)] = true
+				}
+				ours, protos = append(ours, got), append(protos, want)
+			}
+			if len(kinds) != 1 || !kinds[tc.improvement] {
+				t.Errorf("the outputs differ by %v, want %s", kinds, tc.improvement)
+			}
+			run := func(name string, files []string) ([]string, error) {
+				db, err := srv.NewDatabase(ctx, name)
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer db.Drop(ctx)
+				if err := db.Exec(ctx, "CREATE SCHEMA auth; CREATE SCHEMA trap; SET search_path TO trap"); err != nil {
+					t.Fatal(err)
+				}
+				for _, f := range files {
+					if err := db.Exec(ctx, f); err != nil {
+						return nil, fmt.Errorf("%w\n%s", err, f)
+					}
+				}
+				return db.QueryStrings(ctx, tc.query)
+			}
+			got, err := run("improvement_ours", ours)
+			if err != nil || len(got) != 1 || got[0] != tc.want {
+				t.Errorf("the library's output: %s = %v (%v), want %s", tc.query, got, err, tc.want)
+			}
+			got, err = run("improvement_proto", protos)
+			if err == nil && len(got) == 1 && got[0] == tc.want {
+				t.Errorf("the prototype's output gives %s too, the case shows nothing", tc.want)
+			}
+			t.Logf("the prototype's output: %v, %v", got, err)
 		})
 	}
 }

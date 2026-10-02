@@ -357,7 +357,8 @@ func rewriteIssues(p pair, sql string) (issue string) {
 	if !isInsertionOnly(sql, out, "auth.") && !requotedBody(sql, out) {
 		return fmt.Sprintf("the output is not the input with insertions of %q\n    output: %q", "auth.", truncate(out, 200))
 	}
-	if want, perr := safeProto(p.proto, sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) && trimQuoted(unqualifyKeywordTypes(want)) != trimQuoted(out) {
+	if want, perr := safeProto(p.proto, sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) && trimQuoted(unqualifyKeywordTypes(want)) != trimQuoted(out) &&
+		knownImprovement(want, out, p.temp) == "" && knownImprovement(unqualifyKeywordTypes(want), out, p.temp) == "" {
 		return fmt.Sprintf("the output differs from the prototype's:\n%s", firstDiff(want, out))
 	}
 	return ""
@@ -528,8 +529,7 @@ func TestRewriteMutations(t *testing.T) {
 	pool := tokenPool(stmts, rng)
 	pr := newPair(t)
 	for _, s := range stmts[:min(len(stmts), 4000)] {
-		_ = pr.proto.Learn(s)
-		_ = pr.our.Learn(s)
+		pr.learn(s)
 	}
 	var bodies []string // statements with a dollar-quoted body
 	for _, s := range stmts {
@@ -554,6 +554,7 @@ func TestRewriteMutations(t *testing.T) {
 		// libpg_query's PL/pgSQL compiler
 		if bodiesComplete(s) {
 			_ = pr.proto.Learn(s)
+			tempNames(pr.temp, s)
 		}
 		_ = pr.our.Learn(s)
 		if _, _, err := pr.our.Rewrite(s); err != nil {

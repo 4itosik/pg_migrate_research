@@ -81,10 +81,20 @@ func writeMetrics(t *testing.T, section []string, v any) {
 	}
 }
 
-// pair holds a prototype and a library rewriter with the same schema.
+// pair holds a prototype and a library rewriter with the same schema, and the
+// names of the temporary relations the prototype has learned
+// (knownImprovement).
 type pair struct {
 	proto *Prototype
 	our   *pgschema.Rewriter
+	temp  map[string]bool
+}
+
+// learn makes both rewriters learn sql.
+func (p pair) learn(sql string) {
+	_ = p.proto.Learn(sql)
+	_ = p.our.Learn(sql)
+	tempNames(p.temp, sql)
 }
 
 func newPair(t testing.TB) pair {
@@ -96,18 +106,19 @@ func newPair(t testing.TB) pair {
 	if err != nil {
 		t.Fatal(err)
 	}
-	return pair{p, o}
+	return pair{p, o, map[string]bool{}}
 }
 
 // TestRewriteCorpusVsPrototype rewrites every migration of the corpus with
 // the prototype and with the library: the output and the warnings must be
-// the same, byte for byte.
+// the same, byte for byte, unless the output differs by a known improvement
+// (knownImprovement).
 func TestRewriteCorpusVsPrototype(t *testing.T) {
 	cases, err := harness.LoadCorpus(corpusDir())
 	if err != nil {
 		t.Fatal(err)
 	}
-	files, same, differ := 0, 0, 0
+	files, same, improved, differ := 0, 0, 0, 0
 	for _, c := range cases {
 		pr := newPair(t)
 		for _, m := range c.Migrations {
@@ -115,6 +126,7 @@ func TestRewriteCorpusVsPrototype(t *testing.T) {
 				t.Fatalf("%s: prototype learn: %v", c.Name, err)
 			}
 			_ = pr.our.Learn(m.Up)
+			tempNames(pr.temp, m.Up)
 		}
 		for _, m := range c.Migrations {
 			for _, f := range []struct{ name, sql string }{{m.UpFile, m.Up}, {m.DownFile, m.Down}} {
@@ -130,6 +142,9 @@ func TestRewriteCorpusVsPrototype(t *testing.T) {
 				case gerr != nil:
 					differ++
 					t.Errorf("%s/%s: the library fails: %v", c.Name, f.name, gerr)
+				case got != want && knownImprovement(want, got, pr.temp) != "":
+					improved++
+					t.Logf("%s/%s: known improvement (%s):\n%s", c.Name, f.name, knownImprovement(want, got, pr.temp), firstDiff(want, got))
 				case got != want:
 					differ++
 					t.Errorf("%s/%s: output differs:\n%s", c.Name, f.name, firstDiff(want, got))
@@ -142,8 +157,8 @@ func TestRewriteCorpusVsPrototype(t *testing.T) {
 			}
 		}
 	}
-	t.Logf("%d files: %d identical to the prototype, %d differ", files, same, differ)
-	writeMetrics(t, []string{"stage4", "corpus_vs_prototype"}, map[string]any{"files": files, "identical": same, "differ": differ})
+	t.Logf("%d files: %d identical to the prototype, %d differ by a known improvement, %d differ", files, same, improved, differ)
+	writeMetrics(t, []string{"stage4", "corpus_vs_prototype"}, map[string]any{"files": files, "identical": same, "improved": improved, "differ": differ})
 }
 
 func firstDiff(want, got string) string {
@@ -158,7 +173,10 @@ func firstDiff(want, got string) string {
 
 // TestRewriteRegress rewrites every statement of the regression tests that
 // libpg_query accepts with the prototype and with the library (after
-// Learn on the whole file, as the research did) and compares the outputs.
+// Learn on the whole file, as the research did) and compares the outputs. An
+// output that differs by a known improvement (knownImprovement) is counted
+// apart; any other difference, or a statement only the prototype rewrites,
+// fails the test.
 // REWRITE_VERSIONS selects the branches (default REL_16_STABLE), REWRITE_MAX
 // the number of samples per group.
 func TestRewriteRegress(t *testing.T) {
@@ -181,6 +199,7 @@ func TestRewriteRegress(t *testing.T) {
 				skipUnlessCI(t, err.Error())
 			}
 			var total, sameChanged, sameUnchanged, differ, onlyProto, onlyOurs, bothFail int
+			improved := map[string]int{}
 			samples := map[string][]string{}
 			note := func(kind, msg string) {
 				if len(samples[kind]) < maxSamples {
@@ -196,8 +215,7 @@ func TestRewriteRegress(t *testing.T) {
 				}
 				pr := newPair(t)
 				for _, s := range accepted {
-					_ = pr.proto.Learn(s)
-					_ = pr.our.Learn(s)
+					pr.learn(s)
 				}
 				for _, s := range accepted {
 					total++
@@ -213,6 +231,10 @@ func TestRewriteRegress(t *testing.T) {
 					case gerr != nil:
 						onlyProto++
 						note("only the prototype rewrites", fmt.Sprintf("%s: library: %.200s\n    %q", f.Name, strings.ReplaceAll(gerr.Error(), "\n", " "), truncate(s, 100)))
+					case got != want && knownImprovement(want, got, pr.temp) != "":
+						k := knownImprovement(want, got, pr.temp)
+						improved[k]++
+						note("known improvement ("+k+")", fmt.Sprintf("%s:\n%s\n    %q", f.Name, firstDiff(want, got), truncate(s, 100)))
 					case got != want:
 						differ++
 						note("outputs differ", fmt.Sprintf("%s:\n%s\n    %q", f.Name, firstDiff(want, got), truncate(s, 100)))
@@ -223,10 +245,14 @@ func TestRewriteRegress(t *testing.T) {
 					}
 				}
 			}
-			t.Logf("%d statements: identical output %d (of them rewritten %d), outputs differ %d, only the library rewrites %d, only the prototype rewrites %d, both refuse %d",
-				total, sameChanged+sameUnchanged, sameChanged, differ, onlyOurs, onlyProto, bothFail)
+			nImproved := 0
+			for _, n := range improved {
+				nImproved += n
+			}
+			t.Logf("%d statements: identical output %d (of them rewritten %d), known improvements %d %v, outputs differ %d, only the library rewrites %d, only the prototype rewrites %d, both refuse %d",
+				total, sameChanged+sameUnchanged, sameChanged, nImproved, improved, differ, onlyOurs, onlyProto, bothFail)
 			writeMetrics(t, []string{"stage4", "regress", branch}, map[string]any{
-				"statements": total, "identical": sameChanged + sameUnchanged, "rewritten": sameChanged, "differ": differ,
+				"statements": total, "identical": sameChanged + sameUnchanged, "rewritten": sameChanged, "improved": improved, "differ": differ,
 				"only_library": onlyOurs, "only_prototype": onlyProto, "both_refuse": bothFail,
 			})
 			var kinds []string
@@ -240,9 +266,7 @@ func TestRewriteRegress(t *testing.T) {
 				}
 			}
 			if differ > 0 || onlyProto > 0 {
-				if os.Getenv("CI") != "" {
-					t.Errorf("%d outputs differ and %d statements are rewritten only by the prototype", differ, onlyProto)
-				}
+				t.Errorf("%d outputs differ and %d statements are rewritten only by the prototype", differ, onlyProto)
 			}
 		})
 	}
