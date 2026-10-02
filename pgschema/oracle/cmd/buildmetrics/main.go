@@ -17,6 +17,7 @@ import (
 	"regexp"
 	"sort"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/4itosik/pg_migrate_research/pgschema/oracle"
@@ -40,40 +41,48 @@ func main() {
 	tool := filepath.Join(tmp, "maxrss")
 	run(*proto, nil, "go", "build", "-o", tool, "./wasm2go/maxrss")
 
-	logFile := filepath.Join(tmp, "maxrss.log")
-	env := []string{"CGO_ENABLED=0", "MAXRSS_LOG=" + logFile}
-	start := time.Now()
-	// -a rebuilds the standard library too, as in an empty build cache
-	run(*lib, env, "go", "build", "-a", "-toolexec="+tool, "./...")
-	clean := time.Since(start)
-
-	b, err := os.ReadFile(logFile)
-	if err != nil {
-		log.Fatal(err)
-	}
 	type step struct {
 		pkg  string
 		mb   int
 		wall float64
 	}
-	var libSteps, allSteps []step
-	linkMB := 0
-	for _, l := range regexp.MustCompile(`\n`).Split(string(b), -1) {
-		m := lineRe.FindStringSubmatch(l)
-		if m == nil {
-			continue
+	// build runs a clean build (-a rebuilds the standard library too, as in an
+	// empty build cache) under the maxrss wrapper and returns its duration, the
+	// compile steps and the peak memory of the linker.
+	build := func(name string, args ...string) (time.Duration, []step, int) {
+		logFile := filepath.Join(tmp, name+".log")
+		env := []string{"CGO_ENABLED=0", "MAXRSS_LOG=" + logFile}
+		start := time.Now()
+		run(*lib, env, "go", append([]string{"build", "-a", "-toolexec=" + tool}, args...)...)
+		d := time.Since(start)
+		b, err := os.ReadFile(logFile)
+		if err != nil {
+			log.Fatal(err)
 		}
-		mb, _ := strconv.Atoi(m[3])
-		wall, _ := strconv.ParseFloat(m[4], 64)
-		if m[1] == "link" {
-			linkMB = max(linkMB, mb)
-			continue
+		var steps []step
+		linkMB := 0
+		for _, l := range regexp.MustCompile(`\n`).Split(string(b), -1) {
+			m := lineRe.FindStringSubmatch(l)
+			if m == nil {
+				continue
+			}
+			mb, _ := strconv.Atoi(m[3])
+			wall, _ := strconv.ParseFloat(m[4], 64)
+			if m[1] == "link" {
+				linkMB = max(linkMB, mb)
+				continue
+			}
+			steps = append(steps, step{m[2], mb, wall})
 		}
-		s := step{m[2], mb, wall}
-		allSteps = append(allSteps, s)
-		if len(s.pkg) >= len(modulePath) && s.pkg[:len(modulePath)] == modulePath {
-			libSteps = append(libSteps, s)
+		return d, steps, linkMB
+	}
+	onlyLib := func(steps []step) (out []step) {
+		for _, s := range steps {
+			if len(s.pkg) >= len(modulePath) && s.pkg[:len(modulePath)] == modulePath {
+				out = append(out, s)
+			}
 		}
+		return out
 	}
 	peak := func(steps []step) (step, bool) {
 		if len(steps) == 0 {
@@ -82,11 +91,14 @@ func main() {
 		sort.Slice(steps, func(i, j int) bool { return steps[i].mb > steps[j].mb })
 		return steps[0], true
 	}
+
+	clean, allSteps, linkMB := build("all", "./...")
 	sec := map[string]any{
+		"go_version":          runtimeVersion(),
 		"clean_build_seconds": clean.Seconds(),
 		"link_peak_mb":        linkMB,
 	}
-	if p, ok := peak(libSteps); ok {
+	if p, ok := peak(onlyLib(allSteps)); ok {
 		sec["library_compile_peak_mb"] = p.mb
 		sec["library_compile_peak_package"] = p.pkg
 	}
@@ -95,10 +107,15 @@ func main() {
 		sec["all_compile_peak_package"] = p.pkg
 	}
 
-	// the CLI, when it exists
+	// the CLI: a clean build of the binary alone, then its size
 	if _, err := os.Stat(filepath.Join(*lib, "cmd", "pgschema")); err == nil {
 		bin := filepath.Join(tmp, "pgschema")
-		run(*lib, []string{"CGO_ENABLED=0"}, "go", "build", "-o", bin, "./cmd/pgschema")
+		d, steps, _ := build("cli", "-o", bin, "./cmd/pgschema")
+		sec["cli_clean_build_seconds"] = d.Seconds()
+		if p, ok := peak(steps); ok {
+			sec["cli_compile_peak_mb"] = p.mb
+			sec["cli_compile_peak_package"] = p.pkg
+		}
 		if fi, err := os.Stat(bin); err == nil {
 			sec["cli_binary_mb"] = float64(fi.Size()) / (1 << 20)
 		}
@@ -107,6 +124,15 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("wrote %s: %v\n", *out, sec)
+}
+
+// runtimeVersion is the version of the go command that builds the library.
+func runtimeVersion() string {
+	out, err := exec.Command("go", "env", "GOVERSION").Output()
+	if err != nil {
+		return "unknown"
+	}
+	return strings.TrimSpace(string(out))
 }
 
 func run(dir string, env []string, name string, args ...string) {

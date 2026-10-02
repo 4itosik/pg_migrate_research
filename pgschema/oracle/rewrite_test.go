@@ -7,6 +7,7 @@ import (
 	"sort"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/4itosik/pg_migrate_research/pgschema"
 	"github.com/4itosik/pg_migrate_research/poc/harness"
@@ -205,5 +206,63 @@ func TestRewriteRegress(t *testing.T) {
 				}
 			}
 		})
+	}
+}
+
+// TestRewriteSpeed times the rewriting of the whole corpus (23 cases, up and
+// down files, 54 files) in one process: the first run starts from a process
+// that has not rewritten anything (run it alone for that figure:
+// -run '^TestRewriteSpeed$'), the best of five later runs is the warm one. The
+// budget is 0.1 s; the test fails only at five times that, because a loaded
+// machine is slower than the one the budget is for. METRICS_OUT writes the
+// figures to the report.
+func TestRewriteSpeed(t *testing.T) {
+	cases, err := harness.LoadCorpus(corpusDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	run := func() (files int) {
+		for _, c := range cases {
+			r, err := pgschema.New(pgschema.Options{Schema: "auth"})
+			if err != nil {
+				t.Fatal(err)
+			}
+			for _, m := range c.Migrations {
+				if err := r.Learn(m.Up); err != nil {
+					t.Fatal(err)
+				}
+			}
+			for _, m := range c.Migrations {
+				for _, sql := range []string{m.Up, m.Down} {
+					if _, _, err := r.Rewrite(sql); err != nil && c.Meta.Expect != "limitation" {
+						t.Fatalf("%s: %v", c.Name, err)
+					}
+					files++
+				}
+			}
+		}
+		return files
+	}
+	start := time.Now()
+	files := run()
+	first := time.Since(start)
+	best := time.Duration(1<<63 - 1)
+	for i := 0; i < 5; i++ {
+		start := time.Now()
+		run()
+		if d := time.Since(start); d < best {
+			best = d
+		}
+	}
+	t.Logf("%d files of %d cases: first run %s, best of five later runs %s", files, len(cases), first.Round(time.Millisecond), best.Round(time.Millisecond))
+	if first > 500*time.Millisecond {
+		t.Errorf("the first run took %s, the budget is 100ms", first)
+	}
+	if out := os.Getenv("METRICS_OUT"); out != "" {
+		if err := UpdateMetrics(out, []string{"stage4", "rewrite_corpus"}, map[string]any{
+			"files": files, "first_run_ms": float64(first.Microseconds()) / 1000, "warm_ms": float64(best.Microseconds()) / 1000,
+		}); err != nil {
+			t.Fatal(err)
+		}
 	}
 }
