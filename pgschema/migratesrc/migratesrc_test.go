@@ -86,6 +86,75 @@ func TestWrapRejectsSchema(t *testing.T) {
 	}
 }
 
+func TestNew(t *testing.T) {
+	src := &memDriver{up: map[uint]string{1: "CREATE TABLE pgschema_placeholder.t (id int);"}}
+	d, err := New(src, "auth")
+	if err != nil {
+		t.Fatal(err)
+	}
+	r, _, err := d.ReadUp(1)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if b, _ := io.ReadAll(r); string(b) != "CREATE TABLE auth.t (id int);" {
+		t.Errorf("got %s", b)
+	}
+	// a bad name is reported before any migration is read: with nothing to
+	// apply (ErrNoChange) Wrap would never report it
+	for _, bad := range []string{"", "a'b", "pg_x"} {
+		if d, err := New(src, bad); err == nil || d != nil {
+			t.Errorf("schema %q: %v, %v", bad, d, err)
+		}
+	}
+}
+
+// failDriver fails the way a real driver can.
+type failDriver struct {
+	memDriver
+	readErr  error // returned by ReadUp and ReadDown
+	closeErr error // returned by Close of the reader
+}
+
+func (f *failDriver) ReadUp(v uint) (io.ReadCloser, string, error) {
+	if f.readErr != nil {
+		return nil, "", f.readErr
+	}
+	return closeFails{strings.NewReader("SELECT 1"), f.closeErr}, "f", nil
+}
+
+type closeFails struct {
+	io.Reader
+	err error
+}
+
+func (c closeFails) Close() error { return c.err }
+
+func TestReadErrors(t *testing.T) {
+	// golang-migrate compares the end of the migrations with os.ErrNotExist:
+	// it passes through as it is
+	d := Wrap(&failDriver{readErr: fs.ErrNotExist}, "auth")
+	if _, _, err := d.ReadUp(7); err != fs.ErrNotExist {
+		t.Errorf("ErrNotExist: %v", err)
+	}
+	// another error of the driver keeps its identity and gets the version
+	boom := errors.New("boom")
+	d = Wrap(&failDriver{readErr: boom}, "auth")
+	if _, _, err := d.ReadUp(7); !errors.Is(err, boom) || !strings.Contains(err.Error(), "version 7") {
+		t.Errorf("driver error: %v", err)
+	}
+	// the error of closing the reader is not dropped
+	shut := errors.New("close failed")
+	d = Wrap(&failDriver{closeErr: shut}, "auth")
+	if _, _, err := d.ReadUp(7); !errors.Is(err, shut) || !strings.Contains(err.Error(), "version 7") {
+		t.Errorf("close error: %v", err)
+	}
+	// a bad schema name names the version too
+	d = Wrap(&failDriver{}, "a'b")
+	if _, _, err := d.ReadUp(7); err == nil || !strings.Contains(err.Error(), "version 7") {
+		t.Errorf("bad schema: %v", err)
+	}
+}
+
 // TestNoParser: the wrapper is imported by services, which have no parser;
 // of this repository it may depend on package subst only.
 func TestNoParser(t *testing.T) {

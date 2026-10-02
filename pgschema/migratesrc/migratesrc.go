@@ -2,12 +2,14 @@
 // migrations it reads get their schema.
 //
 // The migrations are templates written by "pgschema rewrite -placeholder":
-// the placeholder stands where the schema goes. Wrap replaces it with the
-// schema of the service when a migration is read, with no parser:
+// the placeholder stands where the schema goes. The driver replaces it with
+// the schema of the service when a migration is read, with no parser:
 //
 //	src, err := source.Open("file://migrations.tmpl")
 //	...
-//	m, err := migrate.NewWithSourceInstance("file", migratesrc.Wrap(src, "auth"), dbURL)
+//	d, err := migratesrc.New(src, "auth") // a bad schema name fails here
+//	...
+//	m, err := migrate.NewWithSourceInstance("file", d, dbURL)
 //
 // The package is a module of its own so that the library does not depend on
 // golang-migrate. It imports golang-migrate's source package and package
@@ -16,19 +18,31 @@ package migratesrc
 
 import (
 	"bytes"
+	"errors"
+	"fmt"
 	"io"
+	"os"
 
 	"github.com/golang-migrate/migrate/v4/source"
 
 	"github.com/4itosik/pg_migrate_research/pgschema/subst"
 )
 
-// Wrap returns a driver that reads the migrations from src and puts schema in
-// place of the placeholder. A schema name that cannot be substituted safely
-// (see subst.ValidSchema) makes ReadUp and ReadDown fail with the reason; the
-// driver then applies no migration.
+// New returns a driver that reads the migrations from src and puts schema in
+// place of the placeholder. It returns an error for a schema name that cannot
+// be substituted safely (see subst.ValidSchema).
 //
-// Open on the wrapper opens a new driver of src and wraps it in turn.
+// Open on the driver opens a new driver of src and wraps it in turn.
+func New(src source.Driver, schema string) (source.Driver, error) {
+	if err := subst.ValidSchema(schema); err != nil {
+		return nil, fmt.Errorf("migratesrc: %w", err)
+	}
+	return &driver{src: src, schema: schema}, nil
+}
+
+// Wrap is New that reports a bad schema name late: ReadUp and ReadDown fail
+// with the reason, and the driver applies no migration. When there is no
+// migration to apply, nothing reports it; New does.
 func Wrap(src source.Driver, schema string) source.Driver {
 	return &driver{src: src, schema: schema, err: subst.ValidSchema(schema)}
 }
@@ -60,20 +74,25 @@ func (d *driver) ReadDown(v uint) (io.ReadCloser, string, error) {
 
 func (d *driver) read(read func(uint) (io.ReadCloser, string, error), version uint) (io.ReadCloser, string, error) {
 	r, id, err := read(version)
-	if err != nil {
-		return nil, id, err // os.ErrNotExist and the like pass through unchanged
+	if errors.Is(err, os.ErrNotExist) {
+		return nil, id, err // golang-migrate compares it: as it is
 	}
-	defer r.Close()
-	if d.err != nil {
-		return nil, id, d.err
+	if err != nil {
+		return nil, id, fmt.Errorf("migratesrc: version %d: %w", version, err)
 	}
 	tmpl, err := io.ReadAll(r)
-	if err != nil {
-		return nil, id, err
+	if cerr := r.Close(); err == nil {
+		err = cerr
 	}
-	sql, err := subst.Apply(string(tmpl), d.schema)
+	if err == nil {
+		err = d.err
+	}
+	var sql string
+	if err == nil {
+		sql, err = subst.Apply(string(tmpl), d.schema)
+	}
 	if err != nil {
-		return nil, id, err
+		return nil, id, fmt.Errorf("migratesrc: version %d: %w", version, err)
 	}
 	return io.NopCloser(bytes.NewReader([]byte(sql))), id, nil
 }
