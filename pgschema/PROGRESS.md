@@ -249,6 +249,37 @@
 
 Не сделано: ничего из списка; CLI, `migratesrc` и упаковка — следующая часть. Изменения не запушены, CI на них не запускался.
 
+## Финализация v0.1.0, часть 2
+
+CLI, `migratesrc` и упаковка для переноса во внутреннюю сеть. Каждый пункт CLI и `migratesrc` — через падающий тест с воспроизведением ревьюера (`cmd/pgschema/main_test.go`, `migratesrc/migratesrc_test.go`).
+
+| Пункт | Что сделано |
+|---|---|
+| Лишний аргумент (`-placeholder true -check` писал файлы) | Аргумент после флагов — код 2 с его именем (`TestStrayArgument`) |
+| Запись удаляла миграции `-dst`, которых нет в `-src`, в том числе написанные руками | Без `-prune` такие файлы — код 1 со списком, ничего не пишется; `-prune` удаляет. `-src` внутри `-dst` и наоборот — код 2, пути сравниваются после `filepath.Abs` и раскрытия ссылок, несуществующий хвост сохраняется (`TestForeignFilesInDestination`, `TestNestedDirectories`) |
+| Запись через символическую ссылку меняла исходник | Каждый файл — временный файл в `-dst` и `os.Rename` поверх цели: ссылка заменяется (`TestSymlinkIsReplaced`) |
+| Запись не «всё или ничего» | Всё в памяти; проверка, что ни одна цель не каталог; все временные файлы; потом все переименования. Ошибка до переименований удаляет временные файлы и созданный пустой `-dst`. README говорит точно: переименование атомарно для файла, набор — нет (`TestWriteAllOrNothing`) |
+| `002_b.up.pgsql`, `003_c.up.SQL` молча пропускались | Файл, который golang-migrate прочтёт как миграцию (`source.Regex`), но не `.sql`, — ошибка с именем (`TestOtherExtensions`). Лишние файлы в `-dst` ищутся по тому же выражению |
+| `1_a.up.sql` и `001_b.up.sql`, версия больше 64 бит | Ошибка с именами обоих файлов, как `Migrations.Append` golang-migrate (по версии и направлению); up и down одной версии с разными именами — пара, не ошибка (`TestVersionClashes`) |
+| `-check`: устаревание и ошибки — один код | 3 — `-dst` устарел (отличается, нет, лишний), 1 — ошибка (в том числе файл, который не читается: каталог на месте файла), 2 — использование; коды в `-h` и README (`TestCheckExitCodes`) |
+| BOM | CLI печатает `SyntaxError` библиотеки с именем файла: `001_bom.up.sql: line 1, column 1: the input starts with a UTF-8 byte order mark …` (`TestByteOrderMark`, проходил и до правок) |
+| `migratesrc` не собирался у потребителя (`require … v0.0.0` + `replace`) | `require … pgschema v0.1.0`, `replace ../` остаётся для разработки (комментарий в `go.mod`); `go.sum` записи для заменённого каталогом модуля не нужно, `go mod tidy -diff` пуст. Модуль `oracle` поднят на `v0.1.0` (иначе `go: updates to go.mod needed`). `go 1.25.11` — из-за golang-migrate v4.20.1, сказано в `go.mod` и README |
+| Ошибки `read` | Версия в тексте (`migratesrc: version 7: …`) с `%w`; `os.ErrNotExist` возвращается тем же значением (golang-migrate сравнивает `errors.Is`, но не оборачиваю вовсе); ошибка `Close` источника не теряется (`TestReadErrors`) |
+| `Wrap` не замечал плохое имя при `ErrNoChange` | `New(src, schema) (source.Driver, error)` проверяет сразу (`TestNew`); `Wrap` оставлен; README и ADR 0007 показывают `New` |
+| Ссылки из `pgschema/` наружу | В README, `doc.go`, ADR 0007 — абсолютные ссылки на ветку `claude/sql-parser-schema-golang-55m2uj`; ссылки на `PROGRESS.md` и `results/metrics.json` тоже (в копию они не попадают). Лицензионная ссылка `subst/quote_gen.go` — `../LICENSE.PostgreSQL`, как пишет генератор |
+| `tools/export.sh DEST` | Копирует `git ls-files` без `oracle/`, `results/`, `PROGRESS.md`, `NOTES.md` и исследовательских инструментов (оставлены `tools/gengram.sh` и `internal/tools/goyacc`, их требуют `go generate` и `TestGrammarGenerated`), только в пустой каталог вне репозитория; проверяет ссылки в `*.md` (вне `` `…` ``) и ссылки `see ../…`, `../….md` в Go, `poc/` в Go, `go vet`/`go test` основного модуля с `CGO_ENABLED=0 GOFLAGS=-mod=mod GOPROXY=off GOWORK=off`, `go vet`/`go test` `migratesrc` и то, что его `replace` указывает на копию. Ломаная ссылка и `poc/` в Go проверены подложенными нарочно — скрипт падает |
+| README | Разделы CLI и `migratesrc` переписаны; новый раздел «Перенос и встраивание»: экспорт, что остаётся в исследовании, теги, смена пути модуля, два способа встраивания в форк |
+| CI | `.github/workflows/pgschema.yml` не ссылается на удалённое; не менялся |
+
+Проверено в этой сессии (Go 1.26.1):
+
+- `cd pgschema && CGO_ENABLED=0 go vet ./... && CGO_ENABLED=0 go test -count=1 ./...` — зелёные; `cd migratesrc && go vet ./... && go test -count=1 ./...` — зелёные.
+- `oracle`: `go vet ./...`; с `. tools/env.sh 16` и `CI=true` (пропуск — падение) `go test -count=1 -run 'GolangMigrate|Placeholder|SubstRejects|SchemaNamesOnServer' .` — зелёные (78 с). Других тестов сверки, которые касаются CLI, `migratesrc` или `subst`, нет.
+- `tools/export.sh` в каталог вне репозитория: 96 файлов, ссылки, оба модуля — зелёные (22 с).
+- Смена пути модуля на копии: `go mod edit -module example.corp/platform/pgschema`, `sed` старого пути во всех файлах (в том числе `00_header.y`, `gram_gen.go`, `migratesrc/go.mod`), `go generate ./internal/parse`, vet и тесты обоих модулей без сети для основного — зелёные.
+
+Не сделано: теги `pgschema/v0.1.0` и `pgschema/migratesrc/v0.1.0` (их ставит ведущий), пуш. Изменения не запушены, CI на них не запускался.
+
 ## Следующий шаг
 
 Задача выполнена по таблице этапов. Дальше по желанию: теги версий; решение, исправлять ли тихие пропуски (это расходится с прототипом на регрессионных тестах, нужен ADR); длинный фаззинг по расписанию.
