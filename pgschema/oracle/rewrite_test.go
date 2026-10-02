@@ -21,7 +21,25 @@ func ours(schema string) (harness.Rewriter, error) {
 	if err != nil {
 		return nil, err
 	}
-	return HarnessAdapter{Learner: r.Learn, Rewriter: r.Rewrite}, nil
+	return HarnessAdapter{Learner: r.Learn, Rewriter: ourRewrite(r.Rewrite)}, nil
+}
+
+// ourRewrite adapts the Rewrite of the library to HarnessAdapter: the
+// warnings become their messages, as the prototype has them.
+func ourRewrite(rewrite func(string) (string, []pgschema.Warning, error)) func(string) (string, []string, error) {
+	return func(sql string) (string, []string, error) {
+		out, warns, err := rewrite(sql)
+		return out, messages(warns), err
+	}
+}
+
+// messages are the texts of the warnings of the library.
+func messages(warns []pgschema.Warning) []string {
+	var out []string
+	for _, w := range warns {
+		out = append(out, w.Message)
+	}
+	return out
 }
 
 // TestRewriteOnHarness runs the corpus on a live PostgreSQL with the library:
@@ -102,7 +120,8 @@ func TestRewriteCorpusVsPrototype(t *testing.T) {
 			for _, f := range []struct{ name, sql string }{{m.UpFile, m.Up}, {m.DownFile, m.Down}} {
 				files++
 				want, wwarn, werr := pr.proto.Rewrite(f.sql)
-				got, gwarn, gerr := pr.our.Rewrite(f.sql)
+				got, gw, gerr := pr.our.Rewrite(f.sql)
+				gwarn := messages(gw)
 				switch {
 				case werr != nil && c.Meta.Expect == "limitation":
 					continue
@@ -299,7 +318,7 @@ func templated(schema string) (harness.Rewriter, error) {
 			return "", nil, err
 		}
 		out, err = subst.Apply(out, schema)
-		return out, warns, err
+		return out, messages(warns), err
 	}}, nil
 }
 

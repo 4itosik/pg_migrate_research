@@ -205,7 +205,7 @@ func TestRewriteWarnings(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			if !strings.Contains(strings.Join(warns, "\n"), tc.warning) {
+			if !strings.Contains(warningText(warns), tc.warning) {
 				t.Errorf("warnings %q do not mention %q", warns, tc.warning)
 			}
 		})
@@ -445,7 +445,7 @@ func TestRewriteExtensions(t *testing.T) {
 	// by default the statement stays as written and gets a warning
 	r := newTestRewriter(t, Options{Schema: "auth"})
 	got, warns, err := r.Rewrite("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
-	if err != nil || got != "CREATE EXTENSION IF NOT EXISTS pgcrypto;" || !strings.Contains(strings.Join(warns, "\n"), warning) {
+	if err != nil || got != "CREATE EXTENSION IF NOT EXISTS pgcrypto;" || !strings.Contains(warningText(warns), warning) {
 		t.Errorf("default: %q, %q, %v", got, warns, err)
 	}
 	// with the option the schema is added at the end, before the semicolon
@@ -471,7 +471,7 @@ func TestRewriteExtensions(t *testing.T) {
 			if got != tc.want {
 				t.Errorf("got %q, want %q", got, tc.want)
 			}
-			if strings.Contains(strings.Join(warns, "\n"), warning) {
+			if strings.Contains(warningText(warns), warning) {
 				t.Errorf("the old warning is still given: %q", warns)
 			}
 		})
@@ -482,7 +482,7 @@ func TestRewriteExtensions(t *testing.T) {
 	if _, warns, err := r.Rewrite("CREATE EXTENSION pgcrypto"); err != nil || len(warns) != 0 {
 		t.Errorf("a known extension: warnings %q, %v", warns, err)
 	}
-	if _, warns, err := r.Rewrite("CREATE EXTENSION postgis"); err != nil || !strings.Contains(strings.Join(warns, "\n"), "not known to the library") {
+	if _, warns, err := r.Rewrite("CREATE EXTENSION postgis"); err != nil || !strings.Contains(warningText(warns), "not known to the library") {
 		t.Errorf("an unknown extension: warnings %q, %v", warns, err)
 	}
 	// a template: the placeholder goes where the schema does

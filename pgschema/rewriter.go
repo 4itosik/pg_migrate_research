@@ -145,7 +145,7 @@ func (r *Rewriter) Learn(sql string) (err error) {
 // parsed again and its tree must be the input tree with the intended names
 // qualified, otherwise Rewrite returns an error instead of unverified SQL, and
 // the Rewriter stays as it was: what the text creates is not learned.
-func (r *Rewriter) Rewrite(sql string) (_ string, _ []string, err error) {
+func (r *Rewriter) Rewrite(sql string) (_ string, _ []Warning, err error) {
 	if err := r.checkInput(sql); err != nil {
 		return "", nil, err
 	}
@@ -165,9 +165,28 @@ func (r *Rewriter) Rewrite(sql string) (_ string, _ []string, err error) {
 	return out, dedupe(a.warns), nil
 }
 
+// Warning is a place that cannot be rewritten statically, or that is left
+// unqualified on purpose: dynamic SQL, a change of the search_path, a name of
+// a built-in. Line is the 1-based line in the text passed to Rewrite of the
+// place the warning is about, or of the start of its statement.
+type Warning struct {
+	Line    int
+	Message string
+}
+
+func (w Warning) String() string { return fmt.Sprintf("line %d: %s", w.Line, w.Message) }
+
+// shiftLines moves the lines of warnings by n.
+func shiftLines(warns []Warning, n int) []Warning {
+	for i := range warns {
+		warns[i].Line += n
+	}
+	return warns
+}
+
 type analysis struct {
 	edits []edit
-	warns []string
+	warns []Warning // the lines count in the analyzed text
 }
 
 // checkInput refuses a text that cannot be rewritten safely. A byte order

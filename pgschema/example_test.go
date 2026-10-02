@@ -65,12 +65,12 @@ func ExampleRewrite_warnings() {
 	fmt.Println(err)
 	fmt.Println(out == sql)
 	for _, w := range warnings {
-		fmt.Println(strings.SplitN(w, ":", 2)[0])
+		fmt.Println("line", w.Line, "-", strings.SplitN(w.Message, ":", 2)[0])
 	}
 	// Output:
 	// <nil>
 	// true
-	// dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten
+	// line 1 - dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten
 }
 
 // The settings: relations that live in another schema stay without one, and

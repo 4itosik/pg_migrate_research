@@ -32,13 +32,14 @@ func (w *walker) createFunction(n *CreateFunctionStmt) {
 		return
 	}
 	var newBody string
+	var warns []Warning
 	var err error
 	w.triggerVars = triggerVars(n)
 	switch lang := language(n.Options, "sql"); lang {
 	case "sql":
-		newBody, err = w.sqlBody(str.Sval)
+		newBody, warns, err = w.sqlBody(str.Sval)
 	case "plpgsql":
-		newBody, err = w.plpgsqlBody(plOptions(n), str.Sval)
+		newBody, warns, err = w.plpgsqlBody(plOptions(n), str.Sval)
 	default:
 		w.warn("function body in LANGUAGE %s is not rewritten: %s", lang, snippet(w.stmtText()))
 		return
@@ -47,6 +48,7 @@ func (w *walker) createFunction(n *CreateFunctionStmt) {
 		w.failErr(w.bodyError(err, str, "function "+name+": "))
 		return
 	}
+	w.bodyWarnings(str, warns)
 	w.replaceBody(str.Loc, str, newBody)
 }
 
@@ -64,12 +66,37 @@ func (w *walker) doStmt(n *DoStmt) {
 		return
 	}
 	w.triggerVars = nil
-	newBody, err := w.plpgsqlBody(plOptions(nil), str.Sval)
+	newBody, warns, err := w.plpgsqlBody(plOptions(nil), str.Sval)
 	if err != nil {
 		w.failErr(w.bodyError(err, str, "DO block: "))
 		return
 	}
+	w.bodyWarnings(str, warns)
 	w.replaceBody(str.Loc, str, newBody)
+}
+
+// bodyWarnings adds the warnings of the body in the literal str, whose lines
+// count in the body, with the lines of the text of the statement: exactly when
+// the literal has the line breaks of the body ($$...$$, '...'), otherwise the
+// line of the literal.
+func (w *walker) bodyWarnings(str *String, warns []Warning) {
+	if len(warns) == 0 {
+		return
+	}
+	base, _ := position(w.src, int(str.Loc))
+	exact := false
+	if it, err := w.tokenAt(str.Loc); err == nil {
+		raw := w.src[str.Loc : int(str.Loc)+int(it.End)]
+		exact = raw[0] != 'E' && raw[0] != 'e' && strings.Count(raw, "\n") == strings.Count(str.Sval, "\n")
+	}
+	for _, wn := range warns {
+		if exact {
+			wn.Line += base - 1
+		} else {
+			wn.Line = base
+		}
+		w.warns = append(w.warns, wn)
+	}
 }
 
 // bodyError is the error of a body that cannot be rewritten, with prefix in
@@ -116,14 +143,15 @@ func (w *walker) replaceBody(loc int32, str *String, newBody string) {
 	str.Sval = newBody
 }
 
-// sqlBody rewrites the body of a LANGUAGE sql function.
-func (w *walker) sqlBody(body string) (string, error) {
+// sqlBody rewrites the body of a LANGUAGE sql function. The lines of the
+// warnings count in the body.
+func (w *walker) sqlBody(body string) (string, []Warning, error) {
 	a, err := w.r.analyze(body, true, w.learnOnly)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
-	w.warns = append(w.warns, a.warns...)
-	return applyEdits(body, a.edits)
+	out, err := applyEdits(body, a.edits)
+	return out, a.warns, err
 }
 
 // plOptions are the facts about a function that its body does not contain:
@@ -187,14 +215,15 @@ func triggerVars(n *CreateFunctionStmt) []string {
 // plpgsqlBody rewrites the SQL embedded in a PL/pgSQL body. The extractor
 // finds the fragments of SQL (statements, expressions, assignments) and the
 // declarations; each fragment is rewritten as a text of its own with the
-// regular rules, and the types of the declarations are qualified.
-func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err error) {
+// regular rules, and the types of the declarations are qualified. The lines of
+// the warnings of the fragments count in the body.
+func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, warns []Warning, err error) {
 	pb, err := plpgsql.Parse(body, &opts)
 	if err != nil {
 		if pe, ok := err.(*plpgsql.Error); ok {
-			return "", &posError{off: pe.Pos, msg: "PL/pgSQL: " + pe.Msg}
+			return "", nil, &posError{off: pe.Pos, msg: "PL/pgSQL: " + pe.Msg}
 		}
-		return "", fmt.Errorf("PL/pgSQL: %w", err)
+		return "", nil, fmt.Errorf("PL/pgSQL: %w", err)
 	}
 	// a body that cannot be rewritten leaves no objects in the registry,
 	// as a function that the server would not create
@@ -207,13 +236,13 @@ func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err
 	for _, f := range pb.Fragments {
 		a, err := w.r.analyzeFragment(f, body, w.learnOnly)
 		if err != nil {
-			return "", shifted(err, f.Start, fmt.Sprintf("PL/pgSQL line %d %q: ", f.Line, snippet(f.SQL(body))))
+			return "", nil, shifted(err, f.Start, fmt.Sprintf("PL/pgSQL line %d %q: ", f.Line, snippet(f.SQL(body))))
 		}
-		w.warns = append(w.warns, a.warns...)
+		warns = append(warns, shiftLines(a.warns, strings.Count(body[:f.Start], "\n"))...)
 		edits = append(edits, shiftEdits(a.edits, f.Start)...)
 	}
 	if w.learnOnly {
-		return body, nil
+		return body, nil, nil
 	}
 	vars := plVars(pb, w.triggerVars)
 	for _, d := range pb.Decls {
@@ -221,21 +250,21 @@ func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err
 			continue
 		}
 		if e, ok, err := w.declEdit(body, d.Type, vars); err != nil {
-			return "", err
+			return "", nil, err
 		} else if ok {
 			edits = append(edits, e)
 		}
 	}
 	out, err = applyEdits(body, edits)
 	if err != nil {
-		return "", err
+		return "", nil, err
 	}
 	if out != body {
 		if err := verifyBody(pb, out, opts); err != nil {
-			return "", err
+			return "", nil, err
 		}
 	}
-	return out, nil
+	return out, warns, nil
 }
 
 // verifyBody checks that the rewritten body has the same structure as the
@@ -392,7 +421,8 @@ func identAt(src string, pos int, name string) bool {
 }
 
 // analyzeFragment rewrites a fragment of a PL/pgSQL body according to its
-// parse mode and returns the edits relative to the start of the fragment.
+// parse mode and returns the edits relative to the start of the fragment, and
+// the warnings with lines that count in the fragment.
 func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly bool) (*analysis, error) {
 	const prefix = "SELECT "
 	q := f.SQL(body)
@@ -432,6 +462,7 @@ func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly b
 			return nil, shifted(err, off-len(prefix), "")
 		}
 		a.edits = shiftEdits(a.edits, off-len(prefix))
+		a.warns = shiftLines(a.warns, strings.Count(q[:off], "\n"))
 		return a, nil
 	}
 	return &analysis{}, nil

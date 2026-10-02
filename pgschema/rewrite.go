@@ -10,7 +10,7 @@ package pgschema
 // own. Several files that depend on each other (a type created by one and used
 // by another) go through one Rewriter: Learn every up file first, then Rewrite
 // each file.
-func Rewrite(sql string, opts Options) (string, []string, error) {
+func Rewrite(sql string, opts Options) (string, []Warning, error) {
 	r, err := New(opts)
 	if err != nil {
 		return "", nil, err

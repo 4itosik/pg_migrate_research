@@ -136,9 +136,9 @@ func snippet(s string) string {
 	return s
 }
 
-func dedupe(in []string) []string {
-	seen := map[string]bool{}
-	var out []string
+func dedupe(in []Warning) []Warning {
+	seen := map[Warning]bool{}
+	var out []Warning
 	for _, s := range in {
 		if !seen[s] {
 			seen[s] = true

@@ -19,7 +19,7 @@ type walker struct {
 	learnOnly bool
 
 	edits []edit
-	warns []string
+	warns []Warning // the lines count in src
 	err   error
 
 	scopes []map[string]bool // CTE names visible at the current node
@@ -70,16 +70,24 @@ func (w *walker) failErr(err error) {
 	}
 }
 
-func (w *walker) warn(format string, args ...any) {
-	if !w.learnOnly {
-		w.warns = append(w.warns, fmt.Sprintf(format, args...))
-	}
-}
+// warn adds a warning about the statement.
+func (w *walker) warn(format string, args ...any) { w.warnAt(-1, format, args...) }
 
-// warnAt is warn about the place at byte offset loc of the text, -1 for the
-// statement.
+// warnAt adds a warning about the place at byte offset loc of the text, -1
+// for the statement.
 func (w *walker) warnAt(loc int32, format string, args ...any) {
-	w.warn(format, args...)
+	if w.learnOnly {
+		return
+	}
+	off := int(loc)
+	if loc < 0 { // the first token: the statement starts after the white space and comments that follow the one before
+		off = w.stmtStart
+		if it, err := lex.NewScanner(w.src[w.stmtStart:w.stmtEnd]).Next(); err == nil && it.Tok != 0 {
+			off += int(it.Start)
+		}
+	}
+	line, _ := position(w.src, off)
+	w.warns = append(w.warns, Warning{Line: line, Message: fmt.Sprintf(format, args...)})
 }
 
 func isNilNode(n Node) bool {
@@ -596,9 +604,9 @@ func (w *walker) funcCall(fc *FuncCall) {
 		case relationArgFunctions[base] && len(fc.Args) > 0:
 			w.relationLiteral(fc.Args[0])
 		case base == "current_schema" || base == "current_schemas":
-			w.warn("current_schema() returns the first schema of search_path, not %s: %s", w.r.schema, snippet(w.stmtText()))
+			w.warnAt(fc.Location, "current_schema() returns the first schema of search_path, not %s: %s", w.r.schema, snippet(w.stmtText()))
 		case base == "set_config" && len(fc.Args) > 0 && strings.EqualFold(constString(fc.Args[0]), "search_path"):
-			w.warn("migration changes search_path: %s", snippet(w.stmtText()))
+			w.warnAt(fc.Location, "migration changes search_path: %s", snippet(w.stmtText()))
 		}
 	}
 	if len(names) == 1 && !w.learnOnly {

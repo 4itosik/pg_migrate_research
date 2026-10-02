@@ -224,4 +224,11 @@ func TestBodyErrorNamesTheFunctionAsWritten(t *testing.T) {
 	}
 }
 
-func warningText(warns []string) string { return strings.Join(warns, "\n") }
+// warningText writes warnings one per line.
+func warningText(warns []Warning) string {
+	var lines []string
+	for _, w := range warns {
+		lines = append(lines, w.String())
+	}
+	return strings.Join(lines, "\n")
+}
