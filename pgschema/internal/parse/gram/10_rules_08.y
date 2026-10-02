@@ -7,41 +7,41 @@
  *****************************************************************************/
 
 DeallocateStmt: DEALLOCATE name
-					{ /*C
-						DeallocateStmt *n = makeNode(DeallocateStmt);
+					{
+						n := &DeallocateStmt{}
 
-						n->name = $2;
-						n->isall = false;
-						n->location = @2;
-						$$ = (Node *) n;
-					*/ }
+						n.Name = $2
+						n.Isall = false
+						n.Location = @2
+						$$ = n
+					}
 				| DEALLOCATE PREPARE name
-					{ /*C
-						DeallocateStmt *n = makeNode(DeallocateStmt);
+					{
+						n := &DeallocateStmt{}
 
-						n->name = $3;
-						n->isall = false;
-						n->location = @3;
-						$$ = (Node *) n;
-					*/ }
+						n.Name = $3
+						n.Isall = false
+						n.Location = @3
+						$$ = n
+					}
 				| DEALLOCATE ALL
-					{ /*C
-						DeallocateStmt *n = makeNode(DeallocateStmt);
+					{
+						n := &DeallocateStmt{}
 
-						n->name = NULL;
-						n->isall = true;
-						n->location = -1;
-						$$ = (Node *) n;
-					*/ }
+						n.Name = ""
+						n.Isall = true
+						n.Location = -1
+						$$ = n
+					}
 				| DEALLOCATE PREPARE ALL
-					{ /*C
-						DeallocateStmt *n = makeNode(DeallocateStmt);
+					{
+						n := &DeallocateStmt{}
 
-						n->name = NULL;
-						n->isall = true;
-						n->location = -1;
-						$$ = (Node *) n;
-					*/ }
+						n.Name = ""
+						n.Isall = true
+						n.Location = -1
+						$$ = n
+					}
 		;
 
 /*****************************************************************************
@@ -54,13 +54,15 @@ DeallocateStmt: DEALLOCATE name
 InsertStmt:
 			opt_with_clause INSERT INTO insert_target insert_rest
 			opt_on_conflict returning_clause
-				{ /*C
-					$5->relation = $4;
-					$5->onConflictClause = $6;
-					$5->returningList = $7;
-					$5->withClause = $1;
-					$$ = (Node *) $5;
-				*/ }
+				{
+					n := as[*InsertStmt]($5)
+
+					n.Relation = as[*RangeVar]($4)
+					n.OnConflictClause = as[*OnConflictClause]($6)
+					n.ReturningList = $7
+					n.WithClause = as[*WithClause]($1)
+					$$ = n
+				}
 		;
 
 /*
@@ -73,50 +75,57 @@ insert_target:
 			qualified_name
 				{ $$ = $1 }
 			| qualified_name AS ColId
-				{ /*C
-					$1->alias = makeAlias($3, NIL);
-					$$ = $1;
-				*/ }
+				{
+					r := as[*RangeVar]($1)
+
+					r.Alias = &Alias{Aliasname: $3}
+					$$ = r
+				}
 		;
 
 insert_rest:
 			SelectStmt
-				{ /*C
-					$$ = makeNode(InsertStmt);
-					$$->cols = NIL;
-					$$->selectStmt = $1;
-				*/ }
+				{
+					n := &InsertStmt{}
+					n.Cols = nil
+					n.SelectStmt = $1
+					$$ = n
+				}
 			| OVERRIDING override_kind VALUE_P SelectStmt
-				{ /*C
-					$$ = makeNode(InsertStmt);
-					$$->cols = NIL;
-					$$->override = $2;
-					$$->selectStmt = $4;
-				*/ }
+				{
+					n := &InsertStmt{}
+					n.Cols = nil
+					n.Override = OverridingKind($2)
+					n.SelectStmt = $4
+					$$ = n
+				}
 			| '(' insert_column_list ')' SelectStmt
-				{ /*C
-					$$ = makeNode(InsertStmt);
-					$$->cols = $2;
-					$$->selectStmt = $4;
-				*/ }
+				{
+					n := &InsertStmt{}
+					n.Cols = $2
+					n.SelectStmt = $4
+					$$ = n
+				}
 			| '(' insert_column_list ')' OVERRIDING override_kind VALUE_P SelectStmt
-				{ /*C
-					$$ = makeNode(InsertStmt);
-					$$->cols = $2;
-					$$->override = $5;
-					$$->selectStmt = $7;
-				*/ }
+				{
+					n := &InsertStmt{}
+					n.Cols = $2
+					n.Override = OverridingKind($5)
+					n.SelectStmt = $7
+					$$ = n
+				}
 			| DEFAULT VALUES
-				{ /*C
-					$$ = makeNode(InsertStmt);
-					$$->cols = NIL;
-					$$->selectStmt = NULL;
-				*/ }
+				{
+					n := &InsertStmt{}
+					n.Cols = nil
+					n.SelectStmt = nil
+					$$ = n
+				}
 		;
 
 override_kind:
-			USER		{ /*C $$ = OVERRIDING_USER_VALUE; */ }
-			| SYSTEM_P	{ /*C $$ = OVERRIDING_SYSTEM_VALUE; */ }
+			USER		{ $$ = int32(OVERRIDING_USER_VALUE) }
+			| SYSTEM_P	{ $$ = int32(OVERRIDING_SYSTEM_VALUE) }
 		;
 
 insert_column_list:
@@ -128,57 +137,62 @@ insert_column_list:
 
 insert_column_item:
 			ColId opt_indirection
-				{ /*C
-					$$ = makeNode(ResTarget);
-					$$->name = $1;
-					$$->indirection = check_indirection($2, yyscanner);
-					$$->val = NULL;
-					$$->location = @1;
-				*/ }
+				{
+					n := &ResTarget{}
+					n.Name = $1
+					n.Indirection = p.checkIndirection($2)
+					n.Val = nil
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 opt_on_conflict:
 			ON CONFLICT opt_conf_expr DO UPDATE SET set_clause_list	where_clause
-				{ /*C
-					$$ = makeNode(OnConflictClause);
-					$$->action = ONCONFLICT_UPDATE;
-					$$->infer = $3;
-					$$->targetList = $7;
-					$$->whereClause = $8;
-					$$->location = @1;
-				*/ }
+				{
+					n := &OnConflictClause{}
+					n.Action = ONCONFLICT_UPDATE
+					n.Infer = as[*InferClause]($3)
+					n.TargetList = $7
+					n.WhereClause = $8
+					n.Location = @1
+					$$ = n
+				}
 			|
 			ON CONFLICT opt_conf_expr DO NOTHING
-				{ /*C
-					$$ = makeNode(OnConflictClause);
-					$$->action = ONCONFLICT_NOTHING;
-					$$->infer = $3;
-					$$->targetList = NIL;
-					$$->whereClause = NULL;
-					$$->location = @1;
-				*/ }
+				{
+					n := &OnConflictClause{}
+					n.Action = ONCONFLICT_NOTHING
+					n.Infer = as[*InferClause]($3)
+					n.TargetList = nil
+					n.WhereClause = nil
+					n.Location = @1
+					$$ = n
+				}
 			| /*EMPTY*/
 				{ $$ = nil }
 		;
 
 opt_conf_expr:
 			'(' index_params ')' where_clause
-				{ /*C
-					$$ = makeNode(InferClause);
-					$$->indexElems = $2;
-					$$->whereClause = $4;
-					$$->conname = NULL;
-					$$->location = @1;
-				*/ }
+				{
+					n := &InferClause{}
+					n.IndexElems = $2
+					n.WhereClause = $4
+					n.Conname = ""
+					n.Location = @1
+					$$ = n
+				}
 			|
 			ON CONSTRAINT name
-				{ /*C
-					$$ = makeNode(InferClause);
-					$$->indexElems = NIL;
-					$$->whereClause = NULL;
-					$$->conname = $3;
-					$$->location = @1;
-				*/ }
+				{
+					n := &InferClause{}
+					n.IndexElems = nil
+					n.WhereClause = nil
+					n.Conname = $3
+					n.Location = @1
+					$$ = n
+				}
 			| /*EMPTY*/
 				{ $$ = nil }
 		;
@@ -198,16 +212,16 @@ returning_clause:
 
 DeleteStmt: opt_with_clause DELETE_P FROM relation_expr_opt_alias
 			using_clause where_or_current_clause returning_clause
-				{ /*C
-					DeleteStmt *n = makeNode(DeleteStmt);
+				{
+					n := &DeleteStmt{}
 
-					n->relation = $4;
-					n->usingClause = $5;
-					n->whereClause = $6;
-					n->returningList = $7;
-					n->withClause = $1;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($4)
+					n.UsingClause = $5
+					n.WhereClause = $6
+					n.ReturningList = $7
+					n.WithClause = as[*WithClause]($1)
+					$$ = n
+				}
 		;
 
 using_clause:
@@ -224,28 +238,28 @@ using_clause:
  *****************************************************************************/
 
 LockStmt:	LOCK_P opt_table relation_expr_list opt_lock opt_nowait
-				{ /*C
-					LockStmt   *n = makeNode(LockStmt);
+				{
+					n := &LockStmt{}
 
-					n->relations = $3;
-					n->mode = $4;
-					n->nowait = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Relations = $3
+					n.Mode = $4
+					n.Nowait = $5
+					$$ = n
+				}
 		;
 
 opt_lock:	IN_P lock_type MODE				{ $$ = $2 }
-			| /*EMPTY*/						{ /*C $$ = AccessExclusiveLock; */ }
+			| /*EMPTY*/						{ $$ = AccessExclusiveLock }
 		;
 
-lock_type:	ACCESS SHARE					{ /*C $$ = AccessShareLock; */ }
-			| ROW SHARE						{ /*C $$ = RowShareLock; */ }
-			| ROW EXCLUSIVE					{ /*C $$ = RowExclusiveLock; */ }
-			| SHARE UPDATE EXCLUSIVE		{ /*C $$ = ShareUpdateExclusiveLock; */ }
-			| SHARE							{ /*C $$ = ShareLock; */ }
-			| SHARE ROW EXCLUSIVE			{ /*C $$ = ShareRowExclusiveLock; */ }
-			| EXCLUSIVE						{ /*C $$ = ExclusiveLock; */ }
-			| ACCESS EXCLUSIVE				{ /*C $$ = AccessExclusiveLock; */ }
+lock_type:	ACCESS SHARE					{ $$ = AccessShareLock }
+			| ROW SHARE						{ $$ = RowShareLock }
+			| ROW EXCLUSIVE					{ $$ = RowExclusiveLock }
+			| SHARE UPDATE EXCLUSIVE		{ $$ = ShareUpdateExclusiveLock }
+			| SHARE							{ $$ = ShareLock }
+			| SHARE ROW EXCLUSIVE			{ $$ = ShareRowExclusiveLock }
+			| EXCLUSIVE						{ $$ = ExclusiveLock }
+			| ACCESS EXCLUSIVE				{ $$ = AccessExclusiveLock }
 		;
 
 opt_nowait:	NOWAIT							{ $$ = true }
@@ -253,9 +267,9 @@ opt_nowait:	NOWAIT							{ $$ = true }
 		;
 
 opt_nowait_or_skip:
-			NOWAIT							{ /*C $$ = LockWaitError; */ }
-			| SKIP LOCKED					{ /*C $$ = LockWaitSkip; */ }
-			| /*EMPTY*/						{ /*C $$ = LockWaitBlock; */ }
+			NOWAIT							{ $$ = int32(LockWaitError) }
+			| SKIP LOCKED					{ $$ = int32(LockWaitSkip) }
+			| /*EMPTY*/						{ $$ = int32(LockWaitBlock) }
 		;
 
 
@@ -271,67 +285,66 @@ UpdateStmt: opt_with_clause UPDATE relation_expr_opt_alias
 			from_clause
 			where_or_current_clause
 			returning_clause
-				{ /*C
-					UpdateStmt *n = makeNode(UpdateStmt);
+				{
+					n := &UpdateStmt{}
 
-					n->relation = $3;
-					n->targetList = $5;
-					n->fromClause = $6;
-					n->whereClause = $7;
-					n->returningList = $8;
-					n->withClause = $1;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.TargetList = $5
+					n.FromClause = $6
+					n.WhereClause = $7
+					n.ReturningList = $8
+					n.WithClause = as[*WithClause]($1)
+					$$ = n
+				}
 		;
 
 set_clause_list:
 			set_clause							{ $$ = $1 }
-			| set_clause_list ',' set_clause	{ /*C $$ = list_concat($1,$3); */ }
+			| set_clause_list ',' set_clause	{ $$ = append($1, $3...) }
 		;
 
 set_clause:
 			set_target '=' a_expr
-				{ /*C
-					$1->val = (Node *) $3;
-					$$ = list_make1($1);
-				*/ }
+				{
+					as[*ResTarget]($1).Val = $3
+					$$ = []Node{$1}
+				}
 			| '(' set_target_list ')' '=' a_expr
-				{ /*C
-					int			ncolumns = list_length($2);
-					int			i = 1;
-					ListCell   *col_cell;
+				{
+					ncolumns := int32(len($2))
+					i := int32(1)
 
-					/* Create a MultiAssignRef source for each target * /
-					foreach(col_cell, $2)
-					{
-						ResTarget  *res_col = (ResTarget *) lfirst(col_cell);
-						MultiAssignRef *r = makeNode(MultiAssignRef);
+					/* Create a MultiAssignRef source for each target */
+					for _, c := range $2 {
+						resCol := as[*ResTarget](c)
+						r := &MultiAssignRef{}
 
-						r->source = (Node *) $5;
-						r->colno = i;
-						r->ncolumns = ncolumns;
-						res_col->val = (Node *) r;
-						i++;
+						r.Source = $5
+						r.Colno = i
+						r.Ncolumns = ncolumns
+						resCol.Val = r
+						i++
 					}
 
-					$$ = $2;
-				*/ }
+					$$ = $2
+				}
 		;
 
 set_target:
 			ColId opt_indirection
-				{ /*C
-					$$ = makeNode(ResTarget);
-					$$->name = $1;
-					$$->indirection = check_indirection($2, yyscanner);
-					$$->val = NULL;	/* upper production sets this * /
-					$$->location = @1;
-				*/ }
+				{
+					n := &ResTarget{}
+					n.Name = $1
+					n.Indirection = p.checkIndirection($2)
+					n.Val = nil /* upper production sets this */
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 set_target_list:
 			set_target								{ $$ = []Node{$1} }
-			| set_target_list ',' set_target		{ /*C $$ = lappend($1,$3); */ }
+			| set_target_list ',' set_target		{ $$ = append($1, $3) }
 		;
 
 
@@ -348,23 +361,23 @@ MergeStmt:
 			ON a_expr
 			merge_when_list
 			returning_clause
-				{ /*C
-					MergeStmt  *m = makeNode(MergeStmt);
+				{
+					m := &MergeStmt{}
 
-					m->withClause = $1;
-					m->relation = $4;
-					m->sourceRelation = $6;
-					m->joinCondition = $8;
-					m->mergeWhenClauses = $9;
-					m->returningList = $10;
+					m.WithClause = as[*WithClause]($1)
+					m.Relation = as[*RangeVar]($4)
+					m.SourceRelation = $6
+					m.JoinCondition = $8
+					m.MergeWhenClauses = $9
+					m.ReturningList = $10
 
-					$$ = (Node *) m;
-				*/ }
+					$$ = m
+				}
 		;
 
 merge_when_list:
 			merge_when_clause						{ $$ = []Node{$1} }
-			| merge_when_list merge_when_clause		{ /*C $$ = lappend($1,$2); */ }
+			| merge_when_list merge_when_clause		{ $$ = append($1, $2) }
 		;
 
 /*
@@ -375,46 +388,52 @@ merge_when_list:
  */
 merge_when_clause:
 			merge_when_tgt_matched opt_merge_when_condition THEN merge_update
-				{ /*C
-					$4->matchKind = $1;
-					$4->condition = $2;
+				{
+					n := as[*MergeWhenClause]($4)
 
-					$$ = (Node *) $4;
-				*/ }
+					n.MatchKind = MergeMatchKind($1)
+					n.Condition = $2
+
+					$$ = n
+				}
 			| merge_when_tgt_matched opt_merge_when_condition THEN merge_delete
-				{ /*C
-					$4->matchKind = $1;
-					$4->condition = $2;
+				{
+					n := as[*MergeWhenClause]($4)
 
-					$$ = (Node *) $4;
-				*/ }
+					n.MatchKind = MergeMatchKind($1)
+					n.Condition = $2
+
+					$$ = n
+				}
 			| merge_when_tgt_not_matched opt_merge_when_condition THEN merge_insert
-				{ /*C
-					$4->matchKind = $1;
-					$4->condition = $2;
+				{
+					n := as[*MergeWhenClause]($4)
 
-					$$ = (Node *) $4;
-				*/ }
+					n.MatchKind = MergeMatchKind($1)
+					n.Condition = $2
+
+					$$ = n
+				}
 			| merge_when_tgt_matched opt_merge_when_condition THEN DO NOTHING
-				{ /*C
-					MergeWhenClause *m = makeNode(MergeWhenClause);
+				{
+					m := &MergeWhenClause{}
 
-					m->matchKind = $1;
-					m->commandType = CMD_NOTHING;
-					m->condition = $2;
+					m.MatchKind = MergeMatchKind($1)
+					m.CommandType = CMD_NOTHING
+					m.Condition = $2
 
-					$$ = (Node *) m;
-				*/ }
+					$$ = m
+				}
 			| merge_when_tgt_not_matched opt_merge_when_condition THEN DO NOTHING
-				{ /*C
-					MergeWhenClause *m = makeNode(MergeWhenClause);
+				{
+					m := &MergeWhenClause{}
 
-					m->matchKind = $1;
-					m->commandType = CMD_NOTHING;
-					m->condition = $2;
+					m.MatchKind = MergeMatchKind($1)
+					m.CommandType = CMD_NOTHING
+					m.Condition = $2
 
-					$$ = (Node *) m;
-				*/ }
+					$$ = m
+				}
 		;
 
 merge_when_tgt_matched:
@@ -434,76 +453,76 @@ opt_merge_when_condition:
 
 merge_update:
 			UPDATE SET set_clause_list
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_UPDATE;
-					n->override = OVERRIDING_NOT_SET;
-					n->targetList = $3;
-					n->values = NIL;
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_UPDATE
+					n.Override = OVERRIDING_NOT_SET
+					n.TargetList = $3
+					n.Values = nil
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 		;
 
 merge_delete:
 			DELETE_P
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_DELETE;
-					n->override = OVERRIDING_NOT_SET;
-					n->targetList = NIL;
-					n->values = NIL;
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_DELETE
+					n.Override = OVERRIDING_NOT_SET
+					n.TargetList = nil
+					n.Values = nil
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 		;
 
 merge_insert:
 			INSERT merge_values_clause
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_INSERT;
-					n->override = OVERRIDING_NOT_SET;
-					n->targetList = NIL;
-					n->values = $2;
-					$$ = n;
-				*/ }
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_INSERT
+					n.Override = OVERRIDING_NOT_SET
+					n.TargetList = nil
+					n.Values = $2
+					$$ = n
+				}
 			| INSERT OVERRIDING override_kind VALUE_P merge_values_clause
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_INSERT;
-					n->override = $3;
-					n->targetList = NIL;
-					n->values = $5;
-					$$ = n;
-				*/ }
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_INSERT
+					n.Override = OverridingKind($3)
+					n.TargetList = nil
+					n.Values = $5
+					$$ = n
+				}
 			| INSERT '(' insert_column_list ')' merge_values_clause
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_INSERT;
-					n->override = OVERRIDING_NOT_SET;
-					n->targetList = $3;
-					n->values = $5;
-					$$ = n;
-				*/ }
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_INSERT
+					n.Override = OVERRIDING_NOT_SET
+					n.TargetList = $3
+					n.Values = $5
+					$$ = n
+				}
 			| INSERT '(' insert_column_list ')' OVERRIDING override_kind VALUE_P merge_values_clause
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_INSERT;
-					n->override = $6;
-					n->targetList = $3;
-					n->values = $8;
-					$$ = n;
-				*/ }
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_INSERT
+					n.Override = OverridingKind($6)
+					n.TargetList = $3
+					n.Values = $8
+					$$ = n
+				}
 			| INSERT DEFAULT VALUES
-				{ /*C
-					MergeWhenClause *n = makeNode(MergeWhenClause);
-					n->commandType = CMD_INSERT;
-					n->override = OVERRIDING_NOT_SET;
-					n->targetList = NIL;
-					n->values = NIL;
-					$$ = n;
-				*/ }
+				{
+					n := &MergeWhenClause{}
+					n.CommandType = CMD_INSERT
+					n.Override = OVERRIDING_NOT_SET
+					n.TargetList = nil
+					n.Values = nil
+					$$ = n
+				}
 		;
 
 merge_values_clause:
@@ -518,30 +537,30 @@ merge_values_clause:
  *
  *****************************************************************************/
 DeclareCursorStmt: DECLARE cursor_name cursor_options CURSOR opt_hold FOR SelectStmt
-				{ /*C
-					DeclareCursorStmt *n = makeNode(DeclareCursorStmt);
+				{
+					n := &DeclareCursorStmt{}
 
-					n->portalname = $2;
-					/* currently we always set FAST_PLAN option * /
-					n->options = $3 | $5 | CURSOR_OPT_FAST_PLAN;
-					n->query = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $2
+					/* currently we always set FAST_PLAN option */
+					n.Options = $3 | $5 | CURSOR_OPT_FAST_PLAN
+					n.Query = $7
+					$$ = n
+				}
 		;
 
 cursor_name:	name						{ $$ = $1 }
 		;
 
 cursor_options: /*EMPTY*/					{ $$ = 0 }
-			| cursor_options NO SCROLL		{ /*C $$ = $1 | CURSOR_OPT_NO_SCROLL; */ }
-			| cursor_options SCROLL			{ /*C $$ = $1 | CURSOR_OPT_SCROLL; */ }
-			| cursor_options BINARY			{ /*C $$ = $1 | CURSOR_OPT_BINARY; */ }
-			| cursor_options ASENSITIVE		{ /*C $$ = $1 | CURSOR_OPT_ASENSITIVE; */ }
-			| cursor_options INSENSITIVE	{ /*C $$ = $1 | CURSOR_OPT_INSENSITIVE; */ }
+			| cursor_options NO SCROLL		{ $$ = $1 | CURSOR_OPT_NO_SCROLL }
+			| cursor_options SCROLL			{ $$ = $1 | CURSOR_OPT_SCROLL }
+			| cursor_options BINARY			{ $$ = $1 | CURSOR_OPT_BINARY }
+			| cursor_options ASENSITIVE		{ $$ = $1 | CURSOR_OPT_ASENSITIVE }
+			| cursor_options INSENSITIVE	{ $$ = $1 | CURSOR_OPT_INSENSITIVE }
 		;
 
 opt_hold: /* EMPTY */						{ $$ = 0 }
-			| WITH HOLD						{ /*C $$ = CURSOR_OPT_HOLD; */ }
+			| WITH HOLD						{ $$ = CURSOR_OPT_HOLD }
 			| WITHOUT HOLD					{ $$ = 0 }
 		;
 
@@ -613,60 +632,52 @@ select_with_parens:
 select_no_parens:
 			simple_select						{ $$ = $1 }
 			| select_clause sort_clause
-				{ /*C
-					insertSelectOptions((SelectStmt *) $1, $2, NIL,
-										NULL, NULL,
-										yyscanner);
-					$$ = $1;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($1), $2, nil, nil, nil)
+					$$ = $1
+				}
 			| select_clause opt_sort_clause for_locking_clause opt_select_limit
-				{ /*C
-					insertSelectOptions((SelectStmt *) $1, $2, $3,
-										$4,
-										NULL,
-										yyscanner);
-					$$ = $1;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($1), $2, $3,
+						as[*selectLimit]($4),
+						nil)
+					$$ = $1
+				}
 			| select_clause opt_sort_clause select_limit opt_for_locking_clause
-				{ /*C
-					insertSelectOptions((SelectStmt *) $1, $2, $4,
-										$3,
-										NULL,
-										yyscanner);
-					$$ = $1;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($1), $2, $4,
+						as[*selectLimit]($3),
+						nil)
+					$$ = $1
+				}
 			| with_clause select_clause
-				{ /*C
-					insertSelectOptions((SelectStmt *) $2, NULL, NIL,
-										NULL,
-										$1,
-										yyscanner);
-					$$ = $2;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($2), nil, nil,
+						nil,
+						as[*WithClause]($1))
+					$$ = $2
+				}
 			| with_clause select_clause sort_clause
-				{ /*C
-					insertSelectOptions((SelectStmt *) $2, $3, NIL,
-										NULL,
-										$1,
-										yyscanner);
-					$$ = $2;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($2), $3, nil,
+						nil,
+						as[*WithClause]($1))
+					$$ = $2
+				}
 			| with_clause select_clause opt_sort_clause for_locking_clause opt_select_limit
-				{ /*C
-					insertSelectOptions((SelectStmt *) $2, $3, $4,
-										$5,
-										$1,
-										yyscanner);
-					$$ = $2;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($2), $3, $4,
+						as[*selectLimit]($5),
+						as[*WithClause]($1))
+					$$ = $2
+				}
 			| with_clause select_clause opt_sort_clause select_limit opt_for_locking_clause
-				{ /*C
-					insertSelectOptions((SelectStmt *) $2, $3, $5,
-										$4,
-										$1,
-										yyscanner);
-					$$ = $2;
-				*/ }
+				{
+					p.insertSelectOptions(as[*SelectStmt]($2), $3, $5,
+						as[*selectLimit]($4),
+						as[*WithClause]($1))
+					$$ = $2
+				}
 		;
 
 select_clause:
@@ -706,68 +717,64 @@ simple_select:
 			SELECT opt_all_clause opt_target_list
 			into_clause from_clause where_clause
 			group_clause having_clause window_clause
-				{ /*C
-					SelectStmt *n = makeNode(SelectStmt);
+				{
+					n := &SelectStmt{}
+					g := as[*groupClause]($7)
 
-					n->targetList = $3;
-					n->intoClause = $4;
-					n->fromClause = $5;
-					n->whereClause = $6;
-					n->groupClause = ($7)->list;
-					n->groupDistinct = ($7)->distinct;
-					n->havingClause = $8;
-					n->windowClause = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.TargetList = $3
+					n.IntoClause = as[*IntoClause]($4)
+					n.FromClause = $5
+					n.WhereClause = $6
+					n.GroupClause = g.list
+					n.GroupDistinct = g.distinct
+					n.HavingClause = $8
+					n.WindowClause = $9
+					$$ = n
+				}
 			| SELECT distinct_clause target_list
 			into_clause from_clause where_clause
 			group_clause having_clause window_clause
-				{ /*C
-					SelectStmt *n = makeNode(SelectStmt);
+				{
+					n := &SelectStmt{}
+					g := as[*groupClause]($7)
 
-					n->distinctClause = $2;
-					n->targetList = $3;
-					n->intoClause = $4;
-					n->fromClause = $5;
-					n->whereClause = $6;
-					n->groupClause = ($7)->list;
-					n->groupDistinct = ($7)->distinct;
-					n->havingClause = $8;
-					n->windowClause = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.DistinctClause = $2
+					n.TargetList = $3
+					n.IntoClause = as[*IntoClause]($4)
+					n.FromClause = $5
+					n.WhereClause = $6
+					n.GroupClause = g.list
+					n.GroupDistinct = g.distinct
+					n.HavingClause = $8
+					n.WindowClause = $9
+					$$ = n
+				}
 			| values_clause							{ $$ = $1 }
 			| TABLE relation_expr
-				{ /*C
-					/* same as SELECT * FROM relation_expr * /
-					ColumnRef  *cr = makeNode(ColumnRef);
-					ResTarget  *rt = makeNode(ResTarget);
-					SelectStmt *n = makeNode(SelectStmt);
+				{
+					/* same as SELECT * FROM relation_expr */
+					cr := &ColumnRef{}
+					rt := &ResTarget{}
+					n := &SelectStmt{}
 
-					cr->fields = list_make1(makeNode(A_Star));
-					cr->location = -1;
+					cr.Fields = []Node{&A_Star{}}
+					cr.Location = -1
 
-					rt->name = NULL;
-					rt->indirection = NIL;
-					rt->val = (Node *) cr;
-					rt->location = -1;
+					rt.Name = ""
+					rt.Indirection = nil
+					rt.Val = cr
+					rt.Location = -1
 
-					n->targetList = list_make1(rt);
-					n->fromClause = list_make1($2);
-					$$ = (Node *) n;
-				*/ }
+					n.TargetList = []Node{rt}
+					n.FromClause = []Node{$2}
+					$$ = n
+				}
 			| select_clause UNION set_quantifier select_clause
-				{ /*C
-					$$ = makeSetOp(SETOP_UNION, $3 == SET_QUANTIFIER_ALL, $1, $4);
-				*/ }
+				{ $$ = makeSetOp(SETOP_UNION, SetQuantifier($3) == SET_QUANTIFIER_ALL, $1, $4) }
 			| select_clause INTERSECT set_quantifier select_clause
-				{ /*C
-					$$ = makeSetOp(SETOP_INTERSECT, $3 == SET_QUANTIFIER_ALL, $1, $4);
-				*/ }
+				{ $$ = makeSetOp(SETOP_INTERSECT, SetQuantifier($3) == SET_QUANTIFIER_ALL, $1, $4) }
 			| select_clause EXCEPT set_quantifier select_clause
-				{ /*C
-					$$ = makeSetOp(SETOP_EXCEPT, $3 == SET_QUANTIFIER_ALL, $1, $4);
-				*/ }
+				{ $$ = makeSetOp(SETOP_EXCEPT, SetQuantifier($3) == SET_QUANTIFIER_ALL, $1, $4) }
 		;
 
 /*
@@ -780,26 +787,29 @@ simple_select:
  */
 with_clause:
 		WITH cte_list
-			{ /*C
-				$$ = makeNode(WithClause);
-				$$->ctes = $2;
-				$$->recursive = false;
-				$$->location = @1;
-			*/ }
+			{
+				n := &WithClause{}
+				n.Ctes = $2
+				n.Recursive = false
+				n.Location = @1
+				$$ = n
+			}
 		| WITH_LA cte_list
-			{ /*C
-				$$ = makeNode(WithClause);
-				$$->ctes = $2;
-				$$->recursive = false;
-				$$->location = @1;
-			*/ }
+			{
+				n := &WithClause{}
+				n.Ctes = $2
+				n.Recursive = false
+				n.Location = @1
+				$$ = n
+			}
 		| WITH RECURSIVE cte_list
-			{ /*C
-				$$ = makeNode(WithClause);
-				$$->ctes = $3;
-				$$->recursive = true;
-				$$->location = @1;
-			*/ }
+			{
+				n := &WithClause{}
+				n.Ctes = $3
+				n.Recursive = true
+				n.Location = @1
+				$$ = n
+			}
 		;
 
 cte_list:
@@ -808,76 +818,76 @@ cte_list:
 		;
 
 common_table_expr:  name opt_name_list AS opt_materialized '(' PreparableStmt ')' opt_search_clause opt_cycle_clause
-			{ /*C
-				CommonTableExpr *n = makeNode(CommonTableExpr);
+			{
+				n := &CommonTableExpr{}
 
-				n->ctename = $1;
-				n->aliascolnames = $2;
-				n->ctematerialized = $4;
-				n->ctequery = $6;
-				n->search_clause = castNode(CTESearchClause, $8);
-				n->cycle_clause = castNode(CTECycleClause, $9);
-				n->location = @1;
-				$$ = (Node *) n;
-			*/ }
+				n.Ctename = $1
+				n.Aliascolnames = $2
+				n.Ctematerialized = CTEMaterialize($4)
+				n.Ctequery = $6
+				n.SearchClause = as[*CTESearchClause]($8)
+				n.CycleClause = as[*CTECycleClause]($9)
+				n.Location = @1
+				$$ = n
+			}
 		;
 
 opt_materialized:
-		MATERIALIZED							{ /*C $$ = CTEMaterializeAlways; */ }
-		| NOT MATERIALIZED						{ /*C $$ = CTEMaterializeNever; */ }
-		| /*EMPTY*/								{ /*C $$ = CTEMaterializeDefault; */ }
+		MATERIALIZED							{ $$ = int32(CTEMaterializeAlways) }
+		| NOT MATERIALIZED						{ $$ = int32(CTEMaterializeNever) }
+		| /*EMPTY*/								{ $$ = int32(CTEMaterializeDefault) }
 		;
 
 opt_search_clause:
 		SEARCH DEPTH FIRST_P BY columnList SET ColId
-			{ /*C
-				CTESearchClause *n = makeNode(CTESearchClause);
+			{
+				n := &CTESearchClause{}
 
-				n->search_col_list = $5;
-				n->search_breadth_first = false;
-				n->search_seq_column = $7;
-				n->location = @1;
-				$$ = (Node *) n;
-			*/ }
+				n.SearchColList = $5
+				n.SearchBreadthFirst = false
+				n.SearchSeqColumn = $7
+				n.Location = @1
+				$$ = n
+			}
 		| SEARCH BREADTH FIRST_P BY columnList SET ColId
-			{ /*C
-				CTESearchClause *n = makeNode(CTESearchClause);
+			{
+				n := &CTESearchClause{}
 
-				n->search_col_list = $5;
-				n->search_breadth_first = true;
-				n->search_seq_column = $7;
-				n->location = @1;
-				$$ = (Node *) n;
-			*/ }
+				n.SearchColList = $5
+				n.SearchBreadthFirst = true
+				n.SearchSeqColumn = $7
+				n.Location = @1
+				$$ = n
+			}
 		| /*EMPTY*/
 			{ $$ = nil }
 		;
 
 opt_cycle_clause:
 		CYCLE columnList SET ColId TO AexprConst DEFAULT AexprConst USING ColId
-			{ /*C
-				CTECycleClause *n = makeNode(CTECycleClause);
+			{
+				n := &CTECycleClause{}
 
-				n->cycle_col_list = $2;
-				n->cycle_mark_column = $4;
-				n->cycle_mark_value = $6;
-				n->cycle_mark_default = $8;
-				n->cycle_path_column = $10;
-				n->location = @1;
-				$$ = (Node *) n;
-			*/ }
+				n.CycleColList = $2
+				n.CycleMarkColumn = $4
+				n.CycleMarkValue = $6
+				n.CycleMarkDefault = $8
+				n.CyclePathColumn = $10
+				n.Location = @1
+				$$ = n
+			}
 		| CYCLE columnList SET ColId USING ColId
-			{ /*C
-				CTECycleClause *n = makeNode(CTECycleClause);
+			{
+				n := &CTECycleClause{}
 
-				n->cycle_col_list = $2;
-				n->cycle_mark_column = $4;
-				n->cycle_mark_value = makeBoolAConst(true, -1);
-				n->cycle_mark_default = makeBoolAConst(false, -1);
-				n->cycle_path_column = $6;
-				n->location = @1;
-				$$ = (Node *) n;
-			*/ }
+				n.CycleColList = $2
+				n.CycleMarkColumn = $4
+				n.CycleMarkValue = makeBoolAConst(true, -1)
+				n.CycleMarkDefault = makeBoolAConst(false, -1)
+				n.CyclePathColumn = $6
+				n.Location = @1
+				$$ = n
+			}
 		| /*EMPTY*/
 			{ $$ = nil }
 		;
@@ -889,16 +899,17 @@ opt_with_clause:
 
 into_clause:
 			INTO OptTempTableName
-				{ /*C
-					$$ = makeNode(IntoClause);
-					$$->rel = $2;
-					$$->colNames = NIL;
-					$$->options = NIL;
-					$$->onCommit = ONCOMMIT_NOOP;
-					$$->tableSpaceName = NULL;
-					$$->viewQuery = NULL;
-					$$->skipData = false;
-				*/ }
+				{
+					n := &IntoClause{}
+					n.Rel = as[*RangeVar]($2)
+					n.ColNames = nil
+					n.Options = nil
+					n.OnCommit = ONCOMMIT_NOOP
+					n.TableSpaceName = ""
+					n.ViewQuery = nil
+					n.SkipData = false
+					$$ = n
+				}
 			| /*EMPTY*/
 				{ $$ = nil }
 		;
@@ -909,56 +920,61 @@ into_clause:
  */
 OptTempTableName:
 			TEMPORARY opt_table qualified_name
-				{ /*C
-					$$ = $3;
-					$$->relpersistence = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					r := as[*RangeVar]($3)
+					r.Relpersistence = relpersistenceTemp
+					$$ = r
+				}
 			| TEMP opt_table qualified_name
-				{ /*C
-					$$ = $3;
-					$$->relpersistence = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					r := as[*RangeVar]($3)
+					r.Relpersistence = relpersistenceTemp
+					$$ = r
+				}
 			| LOCAL TEMPORARY opt_table qualified_name
-				{ /*C
-					$$ = $4;
-					$$->relpersistence = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					r := as[*RangeVar]($4)
+					r.Relpersistence = relpersistenceTemp
+					$$ = r
+				}
 			| LOCAL TEMP opt_table qualified_name
-				{ /*C
-					$$ = $4;
-					$$->relpersistence = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					r := as[*RangeVar]($4)
+					r.Relpersistence = relpersistenceTemp
+					$$ = r
+				}
 			| GLOBAL TEMPORARY opt_table qualified_name
-				{ /*C
-					ereport(WARNING,
-							(errmsg("GLOBAL is deprecated in temporary table creation"),
-							 parser_errposition(@1)));
-					$$ = $4;
-					$$->relpersistence = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					/* ereport(WARNING, "GLOBAL is deprecated in temporary table creation"): no effect on the tree */
+					r := as[*RangeVar]($4)
+					r.Relpersistence = relpersistenceTemp
+					$$ = r
+				}
 			| GLOBAL TEMP opt_table qualified_name
-				{ /*C
-					ereport(WARNING,
-							(errmsg("GLOBAL is deprecated in temporary table creation"),
-							 parser_errposition(@1)));
-					$$ = $4;
-					$$->relpersistence = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					/* ereport(WARNING, "GLOBAL is deprecated in temporary table creation"): no effect on the tree */
+					r := as[*RangeVar]($4)
+					r.Relpersistence = relpersistenceTemp
+					$$ = r
+				}
 			| UNLOGGED opt_table qualified_name
-				{ /*C
-					$$ = $3;
-					$$->relpersistence = RELPERSISTENCE_UNLOGGED;
-				*/ }
+				{
+					r := as[*RangeVar]($3)
+					r.Relpersistence = relpersistenceUnlogged
+					$$ = r
+				}
 			| TABLE qualified_name
-				{ /*C
-					$$ = $2;
-					$$->relpersistence = RELPERSISTENCE_PERMANENT;
-				*/ }
+				{
+					r := as[*RangeVar]($2)
+					r.Relpersistence = relpersistencePermanent
+					$$ = r
+				}
 			| qualified_name
-				{ /*C
-					$$ = $1;
-					$$->relpersistence = RELPERSISTENCE_PERMANENT;
-				*/ }
+				{
+					r := as[*RangeVar]($1)
+					r.Relpersistence = relpersistencePermanent
+					$$ = r
+				}
 		;
 
 opt_table:	TABLE
@@ -975,7 +991,7 @@ set_quantifier:
  * should be placed in the DISTINCT list during parsetree analysis.
  */
 distinct_clause:
-			DISTINCT								{ /*C $$ = list_make1(NIL); */ }
+			DISTINCT								{ $$ = []Node{nil} }
 			| DISTINCT ON '(' expr_list ')'			{ $$ = $4 }
 		;
 
@@ -1004,48 +1020,52 @@ sortby_list:
 		;
 
 sortby:		a_expr USING qual_all_Op opt_nulls_order
-				{ /*C
-					$$ = makeNode(SortBy);
-					$$->node = $1;
-					$$->sortby_dir = SORTBY_USING;
-					$$->sortby_nulls = $4;
-					$$->useOp = $3;
-					$$->location = @3;
-				*/ }
+				{
+					n := &SortBy{}
+					n.Node = $1
+					n.SortbyDir = SORTBY_USING
+					n.SortbyNulls = SortByNulls($4)
+					n.UseOp = $3
+					n.Location = @3
+					$$ = n
+				}
 			| a_expr opt_asc_desc opt_nulls_order
-				{ /*C
-					$$ = makeNode(SortBy);
-					$$->node = $1;
-					$$->sortby_dir = $2;
-					$$->sortby_nulls = $3;
-					$$->useOp = NIL;
-					$$->location = -1;		/* no operator * /
-				*/ }
+				{
+					n := &SortBy{}
+					n.Node = $1
+					n.SortbyDir = SortByDir($2)
+					n.SortbyNulls = SortByNulls($3)
+					n.UseOp = nil
+					n.Location = -1 /* no operator */
+					$$ = n
+				}
 		;
 
 
 select_limit:
 			limit_clause offset_clause
-				{ /*C
-					$$ = $1;
-					($$)->limitOffset = $2;
-				*/ }
+				{
+					n := as[*selectLimit]($1)
+					n.limitOffset = $2
+					$$ = n
+				}
 			| offset_clause limit_clause
-				{ /*C
-					$$ = $2;
-					($$)->limitOffset = $1;
-				*/ }
+				{
+					n := as[*selectLimit]($2)
+					n.limitOffset = $1
+					$$ = n
+				}
 			| limit_clause
 				{ $$ = $1 }
 			| offset_clause
-				{ /*C
-					SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+				{
+					n := &selectLimit{}
 
-					n->limitOffset = $1;
-					n->limitCount = NULL;
-					n->limitOption = LIMIT_OPTION_COUNT;
-					$$ = n;
-				*/ }
+					n.limitOffset = $1
+					n.limitCount = nil
+					n.limitOption = LIMIT_OPTION_COUNT
+					$$ = n
+				}
 		;
 
 opt_select_limit:
@@ -1055,23 +1075,19 @@ opt_select_limit:
 
 limit_clause:
 			LIMIT select_limit_value
-				{ /*C
-					SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+				{
+					n := &selectLimit{}
 
-					n->limitOffset = NULL;
-					n->limitCount = $2;
-					n->limitOption = LIMIT_OPTION_COUNT;
-					$$ = n;
-				*/ }
+					n.limitOffset = nil
+					n.limitCount = $2
+					n.limitOption = LIMIT_OPTION_COUNT
+					$$ = n
+				}
 			| LIMIT select_limit_value ',' select_offset_value
-				{ /*C
-					/* Disabled because it was too confusing, bjm 2002-02-18 * /
-					ereport(ERROR,
-							(errcode(ERRCODE_SYNTAX_ERROR),
-							 errmsg("LIMIT #,# syntax is not supported"),
-							 errhint("Use separate LIMIT and OFFSET clauses."),
-							 parser_errposition(@1)));
-				*/ }
+				{
+					/* Disabled because it was too confusing, bjm 2002-02-18 */
+					p.fail(@1, "LIMIT #,# syntax is not supported")
+				}
 			/* SQL:2008 syntax */
 			/* to avoid shift/reduce conflicts, handle the optional value with
 			 * a separate production rather than an opt_ expression.  The fact
@@ -1080,41 +1096,41 @@ limit_clause:
 			 * we can see the ONLY token in the lookahead slot.
 			 */
 			| FETCH first_or_next select_fetch_first_value row_or_rows ONLY
-				{ /*C
-					SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+				{
+					n := &selectLimit{}
 
-					n->limitOffset = NULL;
-					n->limitCount = $3;
-					n->limitOption = LIMIT_OPTION_COUNT;
-					$$ = n;
-				*/ }
+					n.limitOffset = nil
+					n.limitCount = $3
+					n.limitOption = LIMIT_OPTION_COUNT
+					$$ = n
+				}
 			| FETCH first_or_next select_fetch_first_value row_or_rows WITH TIES
-				{ /*C
-					SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+				{
+					n := &selectLimit{}
 
-					n->limitOffset = NULL;
-					n->limitCount = $3;
-					n->limitOption = LIMIT_OPTION_WITH_TIES;
-					$$ = n;
-				*/ }
+					n.limitOffset = nil
+					n.limitCount = $3
+					n.limitOption = LIMIT_OPTION_WITH_TIES
+					$$ = n
+				}
 			| FETCH first_or_next row_or_rows ONLY
-				{ /*C
-					SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+				{
+					n := &selectLimit{}
 
-					n->limitOffset = NULL;
-					n->limitCount = makeIntConst(1, -1);
-					n->limitOption = LIMIT_OPTION_COUNT;
-					$$ = n;
-				*/ }
+					n.limitOffset = nil
+					n.limitCount = makeIntConst(1, -1)
+					n.limitOption = LIMIT_OPTION_COUNT
+					$$ = n
+				}
 			| FETCH first_or_next row_or_rows WITH TIES
-				{ /*C
-					SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+				{
+					n := &selectLimit{}
 
-					n->limitOffset = NULL;
-					n->limitCount = makeIntConst(1, -1);
-					n->limitOption = LIMIT_OPTION_WITH_TIES;
-					$$ = n;
-				*/ }
+					n.limitOffset = nil
+					n.limitCount = makeIntConst(1, -1)
+					n.limitOption = LIMIT_OPTION_WITH_TIES
+					$$ = n
+				}
 		;
 
 offset_clause:
@@ -1128,10 +1144,10 @@ offset_clause:
 select_limit_value:
 			a_expr									{ $$ = $1 }
 			| ALL
-				{ /*C
-					/* LIMIT ALL is represented as a NULL constant * /
-					$$ = makeNullAConst(@1);
-				*/ }
+				{
+					/* LIMIT ALL is represented as a NULL constant */
+					$$ = makeNullAConst(@1)
+				}
 		;
 
 select_offset_value:
@@ -1157,14 +1173,14 @@ select_offset_value:
 select_fetch_first_value:
 			c_expr									{ $$ = $1 }
 			| '+' I_or_F_const
-				{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "+", NULL, $2, @1); */ }
+				{ $$ = makeSimpleA_Expr(AEXPR_OP, "+", nil, $2, @1) }
 			| '-' I_or_F_const
-				{ /*C $$ = doNegate($2, @1); */ }
+				{ $$ = doNegate($2, @1) }
 		;
 
 I_or_F_const:
-			Iconst									{ /*C $$ = makeIntConst($1,@1); */ }
-			| FCONST								{ /*C $$ = makeFloatConst($1,@1); */ }
+			Iconst									{ $$ = makeIntConst($1, @1) }
+			| FCONST								{ $$ = makeFloatConst($1, @1) }
 		;
 
 /* noise words */
@@ -1199,26 +1215,26 @@ first_or_next: FIRST_P								{ $$ = 0 }
  */
 group_clause:
 			GROUP_P BY set_quantifier group_by_list
-				{ /*C
-					GroupClause *n = (GroupClause *) palloc(sizeof(GroupClause));
+				{
+					n := &groupClause{}
 
-					n->distinct = $3 == SET_QUANTIFIER_DISTINCT;
-					n->list = $4;
-					$$ = n;
-				*/ }
+					n.distinct = SetQuantifier($3) == SET_QUANTIFIER_DISTINCT
+					n.list = $4
+					$$ = n
+				}
 			| /*EMPTY*/
-				{ /*C
-					GroupClause *n = (GroupClause *) palloc(sizeof(GroupClause));
+				{
+					n := &groupClause{}
 
-					n->distinct = false;
-					n->list = NIL;
-					$$ = n;
-				*/ }
+					n.distinct = false
+					n.list = nil
+					$$ = n
+				}
 		;
 
 group_by_list:
 			group_by_item							{ $$ = []Node{$1} }
-			| group_by_list ',' group_by_item		{ /*C $$ = lappend($1,$3); */ }
+			| group_by_list ',' group_by_item		{ $$ = append($1, $3) }
 		;
 
 group_by_item:
@@ -1231,9 +1247,7 @@ group_by_item:
 
 empty_grouping_set:
 			'(' ')'
-				{ /*C
-					$$ = (Node *) makeGroupingSet(GROUPING_SET_EMPTY, NIL, @1);
-				*/ }
+				{ $$ = makeGroupingSet(GROUPING_SET_EMPTY, nil, @1) }
 		;
 
 /*
@@ -1244,23 +1258,17 @@ empty_grouping_set:
 
 rollup_clause:
 			ROLLUP '(' expr_list ')'
-				{ /*C
-					$$ = (Node *) makeGroupingSet(GROUPING_SET_ROLLUP, $3, @1);
-				*/ }
+				{ $$ = makeGroupingSet(GROUPING_SET_ROLLUP, $3, @1) }
 		;
 
 cube_clause:
 			CUBE '(' expr_list ')'
-				{ /*C
-					$$ = (Node *) makeGroupingSet(GROUPING_SET_CUBE, $3, @1);
-				*/ }
+				{ $$ = makeGroupingSet(GROUPING_SET_CUBE, $3, @1) }
 		;
 
 grouping_sets_clause:
 			GROUPING SETS '(' group_by_list ')'
-				{ /*C
-					$$ = (Node *) makeGroupingSet(GROUPING_SET_SETS, $4, @1);
-				*/ }
+				{ $$ = makeGroupingSet(GROUPING_SET_SETS, $4, @1) }
 		;
 
 having_clause:
@@ -1285,21 +1293,21 @@ for_locking_items:
 
 for_locking_item:
 			for_locking_strength locked_rels_list opt_nowait_or_skip
-				{ /*C
-					LockingClause *n = makeNode(LockingClause);
+				{
+					n := &LockingClause{}
 
-					n->lockedRels = $2;
-					n->strength = $1;
-					n->waitPolicy = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.LockedRels = $2
+					n.Strength = LockClauseStrength($1)
+					n.WaitPolicy = LockWaitPolicy($3)
+					$$ = n
+				}
 		;
 
 for_locking_strength:
-			FOR UPDATE							{ /*C $$ = LCS_FORUPDATE; */ }
-			| FOR NO KEY UPDATE					{ /*C $$ = LCS_FORNOKEYUPDATE; */ }
-			| FOR SHARE							{ /*C $$ = LCS_FORSHARE; */ }
-			| FOR KEY SHARE						{ /*C $$ = LCS_FORKEYSHARE; */ }
+			FOR UPDATE							{ $$ = int32(LCS_FORUPDATE) }
+			| FOR NO KEY UPDATE					{ $$ = int32(LCS_FORNOKEYUPDATE) }
+			| FOR SHARE							{ $$ = int32(LCS_FORSHARE) }
+			| FOR KEY SHARE						{ $$ = int32(LCS_FORKEYSHARE) }
 		;
 
 locked_rels_list:
@@ -1315,18 +1323,18 @@ locked_rels_list:
  */
 values_clause:
 			VALUES '(' expr_list ')'
-				{ /*C
-					SelectStmt *n = makeNode(SelectStmt);
+				{
+					n := &SelectStmt{}
 
-					n->valuesLists = list_make1($3);
-					$$ = (Node *) n;
-				*/ }
+					n.ValuesLists = []Node{listNode($3)}
+					$$ = n
+				}
 			| values_clause ',' '(' expr_list ')'
-				{ /*C
-					SelectStmt *n = (SelectStmt *) $1;
+				{
+					n := as[*SelectStmt]($1)
 
-					n->valuesLists = lappend(n->valuesLists, $4);
-					$$ = (Node *) n;
-				*/ }
+					n.ValuesLists = append(n.ValuesLists, listNode($4))
+					$$ = n
+				}
 		;
 
