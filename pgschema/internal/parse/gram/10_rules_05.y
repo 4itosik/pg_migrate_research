@@ -7,172 +7,172 @@
 
 CommentStmt:
 			COMMENT ON object_type_any_name any_name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = $3;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = ObjectType($3)
+					n.Object = listNode($4)
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON COLUMN any_name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_COLUMN;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_COLUMN
+					n.Object = listNode($4)
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON object_type_name name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = $3;
-					n->object = (Node *) makeString($4);
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = ObjectType($3)
+					n.Object = makeString($4, @4)
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON TYPE_P Typename IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_TYPE;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_TYPE
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON DOMAIN_P Typename IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_DOMAIN;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_DOMAIN
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON AGGREGATE aggregate_with_argtypes IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_AGGREGATE;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_AGGREGATE
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON FUNCTION function_with_argtypes IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_FUNCTION;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_FUNCTION
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON OPERATOR operator_with_argtypes IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_OPERATOR;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_OPERATOR
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON CONSTRAINT name ON any_name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_TABCONSTRAINT;
-					n->object = (Node *) lappend($6, makeString($4));
-					n->comment = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_TABCONSTRAINT
+					n.Object = listNode(append($6, makeString($4, @4)))
+					n.Comment = $8
+					$$ = n
+				}
 			| COMMENT ON CONSTRAINT name ON DOMAIN_P any_name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_DOMCONSTRAINT;
+					n.Objtype = OBJECT_DOMCONSTRAINT
 					/*
 					 * should use Typename not any_name in the production, but
 					 * there's a shift/reduce conflict if we do that, so fix it
 					 * up here.
-					 * /
-					n->object = (Node *) list_make2(makeTypeNameFromNameList($7), makeString($4));
-					n->comment = $9;
-					$$ = (Node *) n;
-				*/ }
+					 */
+					n.Object = listNode([]Node{makeTypeNameFromNameList($7), makeString($4, @4)})
+					n.Comment = $9
+					$$ = n
+				}
 			| COMMENT ON object_type_name_on_any_name name ON any_name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = $3;
-					n->object = (Node *) lappend($6, makeString($4));
-					n->comment = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = ObjectType($3)
+					n.Object = listNode(append($6, makeString($4, @4)))
+					n.Comment = $8
+					$$ = n
+				}
 			| COMMENT ON PROCEDURE function_with_argtypes IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_PROCEDURE;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_PROCEDURE
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON ROUTINE function_with_argtypes IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_ROUTINE;
-					n->object = (Node *) $4;
-					n->comment = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_ROUTINE
+					n.Object = $4
+					n.Comment = $6
+					$$ = n
+				}
 			| COMMENT ON TRANSFORM FOR Typename LANGUAGE name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_TRANSFORM;
-					n->object = (Node *) list_make2($5, makeString($7));
-					n->comment = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_TRANSFORM
+					n.Object = listNode([]Node{$5, makeString($7, @7)})
+					n.Comment = $9
+					$$ = n
+				}
 			| COMMENT ON OPERATOR CLASS any_name USING name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_OPCLASS;
-					n->object = (Node *) lcons(makeString($7), $5);
-					n->comment = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_OPCLASS
+					n.Object = listNode(append([]Node{makeString($7, @7)}, $5...))
+					n.Comment = $9
+					$$ = n
+				}
 			| COMMENT ON OPERATOR FAMILY any_name USING name IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_OPFAMILY;
-					n->object = (Node *) lcons(makeString($7), $5);
-					n->comment = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_OPFAMILY
+					n.Object = listNode(append([]Node{makeString($7, @7)}, $5...))
+					n.Comment = $9
+					$$ = n
+				}
 			| COMMENT ON LARGE_P OBJECT_P NumericOnly IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_LARGEOBJECT;
-					n->object = (Node *) $5;
-					n->comment = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_LARGEOBJECT
+					n.Object = $5
+					n.Comment = $7
+					$$ = n
+				}
 			| COMMENT ON CAST '(' Typename AS Typename ')' IS comment_text
-				{ /*C
-					CommentStmt *n = makeNode(CommentStmt);
+				{
+					n := &CommentStmt{}
 
-					n->objtype = OBJECT_CAST;
-					n->object = (Node *) list_make2($5, $7);
-					n->comment = $10;
-					$$ = (Node *) n;
-				*/ }
+					n.Objtype = OBJECT_CAST
+					n.Object = listNode([]Node{$5, $7})
+					n.Comment = $10
+					$$ = n
+				}
 		;
 
 comment_text:
@@ -193,114 +193,114 @@ comment_text:
 SecLabelStmt:
 			SECURITY LABEL opt_provider ON object_type_any_name any_name
 			IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = $5;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = ObjectType($5)
+					n.Object = listNode($6)
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON COLUMN any_name
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_COLUMN;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_COLUMN
+					n.Object = listNode($6)
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON object_type_name name
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = $5;
-					n->object = (Node *) makeString($6);
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = ObjectType($5)
+					n.Object = makeString($6, @6)
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON TYPE_P Typename
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_TYPE;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_TYPE
+					n.Object = $6
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON DOMAIN_P Typename
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_DOMAIN;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_DOMAIN
+					n.Object = $6
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON AGGREGATE aggregate_with_argtypes
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_AGGREGATE;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_AGGREGATE
+					n.Object = $6
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON FUNCTION function_with_argtypes
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_FUNCTION;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_FUNCTION
+					n.Object = $6
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON LARGE_P OBJECT_P NumericOnly
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_LARGEOBJECT;
-					n->object = (Node *) $7;
-					n->label = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_LARGEOBJECT
+					n.Object = $7
+					n.Label = $9
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON PROCEDURE function_with_argtypes
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_PROCEDURE;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_PROCEDURE
+					n.Object = $6
+					n.Label = $8
+					$$ = n
+				}
 			| SECURITY LABEL opt_provider ON ROUTINE function_with_argtypes
 			  IS security_label
-				{ /*C
-					SecLabelStmt *n = makeNode(SecLabelStmt);
+				{
+					n := &SecLabelStmt{}
 
-					n->provider = $3;
-					n->objtype = OBJECT_ROUTINE;
-					n->object = (Node *) $6;
-					n->label = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Provider = $3
+					n.Objtype = OBJECT_ROUTINE
+					n.Object = $6
+					n.Label = $8
+					$$ = n
+				}
 		;
 
 opt_provider:	FOR NonReservedWord_or_Sconst	{ $$ = $2 }
@@ -319,165 +319,165 @@ security_label:	Sconst				{ $$ = $1 }
  *****************************************************************************/
 
 FetchStmt:	FETCH fetch_args
-				{ /*C
-					FetchStmt *n = (FetchStmt *) $2;
+				{
+					n := as[*FetchStmt]($2)
 
-					n->ismove = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Ismove = false
+					$$ = n
+				}
 			| MOVE fetch_args
-				{ /*C
-					FetchStmt *n = (FetchStmt *) $2;
+				{
+					n := as[*FetchStmt]($2)
 
-					n->ismove = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Ismove = true
+					$$ = n
+				}
 		;
 
 fetch_args:	cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $1;
-					n->direction = FETCH_FORWARD;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $1
+					n.Direction = FETCH_FORWARD
+					n.HowMany = 1
+					$$ = n
+				}
 			| from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $2;
-					n->direction = FETCH_FORWARD;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $2
+					n.Direction = FETCH_FORWARD
+					n.HowMany = 1
+					$$ = n
+				}
 			| NEXT opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_FORWARD;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_FORWARD
+					n.HowMany = 1
+					$$ = n
+				}
 			| PRIOR opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_BACKWARD;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_BACKWARD
+					n.HowMany = 1
+					$$ = n
+				}
 			| FIRST_P opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_ABSOLUTE;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_ABSOLUTE
+					n.HowMany = 1
+					$$ = n
+				}
 			| LAST_P opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_ABSOLUTE;
-					n->howMany = -1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_ABSOLUTE
+					n.HowMany = -1
+					$$ = n
+				}
 			| ABSOLUTE_P SignedIconst opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $4;
-					n->direction = FETCH_ABSOLUTE;
-					n->howMany = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $4
+					n.Direction = FETCH_ABSOLUTE
+					n.HowMany = int64($2)
+					$$ = n
+				}
 			| RELATIVE_P SignedIconst opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $4;
-					n->direction = FETCH_RELATIVE;
-					n->howMany = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $4
+					n.Direction = FETCH_RELATIVE
+					n.HowMany = int64($2)
+					$$ = n
+				}
 			| SignedIconst opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_FORWARD;
-					n->howMany = $1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_FORWARD
+					n.HowMany = int64($1)
+					$$ = n
+				}
 			| ALL opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_FORWARD;
-					n->howMany = FETCH_ALL;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_FORWARD
+					n.HowMany = fetchAll
+					$$ = n
+				}
 			| FORWARD opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_FORWARD;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_FORWARD
+					n.HowMany = 1
+					$$ = n
+				}
 			| FORWARD SignedIconst opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $4;
-					n->direction = FETCH_FORWARD;
-					n->howMany = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $4
+					n.Direction = FETCH_FORWARD
+					n.HowMany = int64($2)
+					$$ = n
+				}
 			| FORWARD ALL opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $4;
-					n->direction = FETCH_FORWARD;
-					n->howMany = FETCH_ALL;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $4
+					n.Direction = FETCH_FORWARD
+					n.HowMany = fetchAll
+					$$ = n
+				}
 			| BACKWARD opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $3;
-					n->direction = FETCH_BACKWARD;
-					n->howMany = 1;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $3
+					n.Direction = FETCH_BACKWARD
+					n.HowMany = 1
+					$$ = n
+				}
 			| BACKWARD SignedIconst opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $4;
-					n->direction = FETCH_BACKWARD;
-					n->howMany = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $4
+					n.Direction = FETCH_BACKWARD
+					n.HowMany = int64($2)
+					$$ = n
+				}
 			| BACKWARD ALL opt_from_in cursor_name
-				{ /*C
-					FetchStmt *n = makeNode(FetchStmt);
+				{
+					n := &FetchStmt{}
 
-					n->portalname = $4;
-					n->direction = FETCH_BACKWARD;
-					n->howMany = FETCH_ALL;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $4
+					n.Direction = FETCH_BACKWARD
+					n.HowMany = fetchAll
+					$$ = n
+				}
 		;
 
 from_in:	FROM
@@ -497,54 +497,54 @@ opt_from_in:	from_in
 
 GrantStmt:	GRANT privileges ON privilege_target TO grantee_list
 			opt_grant_grant_option opt_granted_by
-				{ /*C
-					GrantStmt *n = makeNode(GrantStmt);
+				{
+					n := &GrantStmt{}
 
-					n->is_grant = true;
-					n->privileges = $2;
-					n->targtype = ($4)->targtype;
-					n->objtype = ($4)->objtype;
-					n->objects = ($4)->objs;
-					n->grantees = $6;
-					n->grant_option = $7;
-					n->grantor = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = true
+					n.Privileges = $2
+					n.Targtype = as[*privTarget]($4).targtype
+					n.Objtype = as[*privTarget]($4).objtype
+					n.Objects = as[*privTarget]($4).objs
+					n.Grantees = $6
+					n.GrantOption = $7
+					n.Grantor = as[*RoleSpec]($8)
+					$$ = n
+				}
 		;
 
 RevokeStmt:
 			REVOKE privileges ON privilege_target
 			FROM grantee_list opt_granted_by opt_drop_behavior
-				{ /*C
-					GrantStmt *n = makeNode(GrantStmt);
+				{
+					n := &GrantStmt{}
 
-					n->is_grant = false;
-					n->grant_option = false;
-					n->privileges = $2;
-					n->targtype = ($4)->targtype;
-					n->objtype = ($4)->objtype;
-					n->objects = ($4)->objs;
-					n->grantees = $6;
-					n->grantor = $7;
-					n->behavior = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = false
+					n.GrantOption = false
+					n.Privileges = $2
+					n.Targtype = as[*privTarget]($4).targtype
+					n.Objtype = as[*privTarget]($4).objtype
+					n.Objects = as[*privTarget]($4).objs
+					n.Grantees = $6
+					n.Grantor = as[*RoleSpec]($7)
+					n.Behavior = DropBehavior($8)
+					$$ = n
+				}
 			| REVOKE GRANT OPTION FOR privileges ON privilege_target
 			FROM grantee_list opt_granted_by opt_drop_behavior
-				{ /*C
-					GrantStmt *n = makeNode(GrantStmt);
+				{
+					n := &GrantStmt{}
 
-					n->is_grant = false;
-					n->grant_option = true;
-					n->privileges = $5;
-					n->targtype = ($7)->targtype;
-					n->objtype = ($7)->objtype;
-					n->objects = ($7)->objs;
-					n->grantees = $9;
-					n->grantor = $10;
-					n->behavior = $11;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = false
+					n.GrantOption = true
+					n.Privileges = $5
+					n.Targtype = as[*privTarget]($7).targtype
+					n.Objtype = as[*privTarget]($7).objtype
+					n.Objects = as[*privTarget]($7).objs
+					n.Grantees = $9
+					n.Grantor = as[*RoleSpec]($10)
+					n.Behavior = DropBehavior($11)
+					$$ = n
+				}
 		;
 
 
@@ -564,21 +564,21 @@ privileges: privilege_list
 			| ALL PRIVILEGES
 				{ $$ = nil }
 			| ALL '(' columnList ')'
-				{ /*C
-					AccessPriv *n = makeNode(AccessPriv);
+				{
+					n := &AccessPriv{}
 
-					n->priv_name = NULL;
-					n->cols = $3;
-					$$ = list_make1(n);
-				*/ }
+					n.PrivName = ""
+					n.Cols = $3
+					$$ = []Node{n}
+				}
 			| ALL PRIVILEGES '(' columnList ')'
-				{ /*C
-					AccessPriv *n = makeNode(AccessPriv);
+				{
+					n := &AccessPriv{}
 
-					n->priv_name = NULL;
-					n->cols = $4;
-					$$ = list_make1(n);
-				*/ }
+					n.PrivName = ""
+					n.Cols = $4
+					$$ = []Node{n}
+				}
 		;
 
 privilege_list:	privilege							{ $$ = []Node{$1} }
@@ -586,64 +586,64 @@ privilege_list:	privilege							{ $$ = []Node{$1} }
 		;
 
 privilege:	SELECT opt_column_list
-			{ /*C
-				AccessPriv *n = makeNode(AccessPriv);
+			{
+				n := &AccessPriv{}
 
-				n->priv_name = pstrdup($1);
-				n->cols = $2;
-				$$ = n;
-			*/ }
+				n.PrivName = $1
+				n.Cols = $2
+				$$ = n
+			}
 		| REFERENCES opt_column_list
-			{ /*C
-				AccessPriv *n = makeNode(AccessPriv);
+			{
+				n := &AccessPriv{}
 
-				n->priv_name = pstrdup($1);
-				n->cols = $2;
-				$$ = n;
-			*/ }
+				n.PrivName = $1
+				n.Cols = $2
+				$$ = n
+			}
 		| CREATE opt_column_list
-			{ /*C
-				AccessPriv *n = makeNode(AccessPriv);
+			{
+				n := &AccessPriv{}
 
-				n->priv_name = pstrdup($1);
-				n->cols = $2;
-				$$ = n;
-			*/ }
+				n.PrivName = $1
+				n.Cols = $2
+				$$ = n
+			}
 		| ALTER SYSTEM_P
-			{ /*C
-				AccessPriv *n = makeNode(AccessPriv);
-				n->priv_name = pstrdup("alter system");
-				n->cols = NIL;
-				$$ = n;
-			*/ }
+			{
+				n := &AccessPriv{}
+				n.PrivName = "alter system"
+				n.Cols = nil
+				$$ = n
+			}
 		| ColId opt_column_list
-			{ /*C
-				AccessPriv *n = makeNode(AccessPriv);
+			{
+				n := &AccessPriv{}
 
-				n->priv_name = $1;
-				n->cols = $2;
-				$$ = n;
-			*/ }
+				n.PrivName = $1
+				n.Cols = $2
+				$$ = n
+			}
 		;
 
 parameter_name_list:
 		parameter_name
-			{ /*C
-				$$ = list_make1(makeString($1));
-			*/ }
+			{
+				$$ = []Node{makeString($1, @1)}
+			}
 		| parameter_name_list ',' parameter_name
-			{ /*C
-				$$ = lappend($1, makeString($3));
-			*/ }
+			{
+				$$ = append($1, makeString($3, @3))
+			}
 		;
 
 parameter_name:
 		ColId
 			{ $$ = $1 }
 		| parameter_name '.' ColId
-			{ /*C
-				$$ = psprintf("%s.%s", $1, $3);
-			*/ }
+			{
+				$$ = fmt.Sprintf("%s.%s", $1, $3)
+			}
 		;
 
 
@@ -652,193 +652,193 @@ parameter_name:
  */
 privilege_target:
 			qualified_name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_TABLE;
-					n->objs = $1;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_TABLE
+					n.objs = $1
+					$$ = n
+				}
 			| TABLE qualified_name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_TABLE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_TABLE
+					n.objs = $2
+					$$ = n
+				}
 			| SEQUENCE qualified_name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_SEQUENCE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_SEQUENCE
+					n.objs = $2
+					$$ = n
+				}
 			| FOREIGN DATA_P WRAPPER name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_FDW;
-					n->objs = $4;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_FDW
+					n.objs = $4
+					$$ = n
+				}
 			| FOREIGN SERVER name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_FOREIGN_SERVER;
-					n->objs = $3;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_FOREIGN_SERVER
+					n.objs = $3
+					$$ = n
+				}
 			| FUNCTION function_with_argtypes_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_FUNCTION;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_FUNCTION
+					n.objs = $2
+					$$ = n
+				}
 			| PROCEDURE function_with_argtypes_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_PROCEDURE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_PROCEDURE
+					n.objs = $2
+					$$ = n
+				}
 			| ROUTINE function_with_argtypes_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_ROUTINE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_ROUTINE
+					n.objs = $2
+					$$ = n
+				}
 			| DATABASE name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_DATABASE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_DATABASE
+					n.objs = $2
+					$$ = n
+				}
 			| DOMAIN_P any_name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_DOMAIN;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_DOMAIN
+					n.objs = $2
+					$$ = n
+				}
 			| LANGUAGE name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_LANGUAGE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_LANGUAGE
+					n.objs = $2
+					$$ = n
+				}
 			| LARGE_P OBJECT_P NumericOnly_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_LARGEOBJECT;
-					n->objs = $3;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_LARGEOBJECT
+					n.objs = $3
+					$$ = n
+				}
 			| PARAMETER parameter_name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_PARAMETER_ACL;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+				{
+					n := &privTarget{}
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_PARAMETER_ACL
+					n.objs = $2
+					$$ = n
+				}
 			| SCHEMA name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_SCHEMA;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_SCHEMA
+					n.objs = $2
+					$$ = n
+				}
 			| TABLESPACE name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_TABLESPACE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_TABLESPACE
+					n.objs = $2
+					$$ = n
+				}
 			| TYPE_P any_name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_OBJECT;
-					n->objtype = OBJECT_TYPE;
-					n->objs = $2;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_OBJECT
+					n.objtype = OBJECT_TYPE
+					n.objs = $2
+					$$ = n
+				}
 			| ALL TABLES IN_P SCHEMA name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-					n->objtype = OBJECT_TABLE;
-					n->objs = $5;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+					n.objtype = OBJECT_TABLE
+					n.objs = $5
+					$$ = n
+				}
 			| ALL SEQUENCES IN_P SCHEMA name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-					n->objtype = OBJECT_SEQUENCE;
-					n->objs = $5;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+					n.objtype = OBJECT_SEQUENCE
+					n.objs = $5
+					$$ = n
+				}
 			| ALL FUNCTIONS IN_P SCHEMA name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-					n->objtype = OBJECT_FUNCTION;
-					n->objs = $5;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+					n.objtype = OBJECT_FUNCTION
+					n.objs = $5
+					$$ = n
+				}
 			| ALL PROCEDURES IN_P SCHEMA name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-					n->objtype = OBJECT_PROCEDURE;
-					n->objs = $5;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+					n.objtype = OBJECT_PROCEDURE
+					n.objs = $5
+					$$ = n
+				}
 			| ALL ROUTINES IN_P SCHEMA name_list
-				{ /*C
-					PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+				{
+					n := &privTarget{}
 
-					n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-					n->objtype = OBJECT_ROUTINE;
-					n->objs = $5;
-					$$ = n;
-				*/ }
+					n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+					n.objtype = OBJECT_ROUTINE
+					n.objs = $5
+					$$ = n
+				}
 		;
 
 
@@ -866,57 +866,55 @@ opt_grant_grant_option:
 
 GrantRoleStmt:
 			GRANT privilege_list TO role_list opt_granted_by
-				{ /*C
-					GrantRoleStmt *n = makeNode(GrantRoleStmt);
+				{
+					n := &GrantRoleStmt{}
 
-					n->is_grant = true;
-					n->granted_roles = $2;
-					n->grantee_roles = $4;
-					n->opt = NIL;
-					n->grantor = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = true
+					n.GrantedRoles = $2
+					n.GranteeRoles = $4
+					n.Opt = nil
+					n.Grantor = as[*RoleSpec]($5)
+					$$ = n
+				}
 		  | GRANT privilege_list TO role_list WITH grant_role_opt_list opt_granted_by
-				{ /*C
-					GrantRoleStmt *n = makeNode(GrantRoleStmt);
+				{
+					n := &GrantRoleStmt{}
 
-					n->is_grant = true;
-					n->granted_roles = $2;
-					n->grantee_roles = $4;
-					n->opt = $6;
-					n->grantor = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = true
+					n.GrantedRoles = $2
+					n.GranteeRoles = $4
+					n.Opt = $6
+					n.Grantor = as[*RoleSpec]($7)
+					$$ = n
+				}
 		;
 
 RevokeRoleStmt:
 			REVOKE privilege_list FROM role_list opt_granted_by opt_drop_behavior
-				{ /*C
-					GrantRoleStmt *n = makeNode(GrantRoleStmt);
+				{
+					n := &GrantRoleStmt{}
 
-					n->is_grant = false;
-					n->opt = NIL;
-					n->granted_roles = $2;
-					n->grantee_roles = $4;
-					n->grantor = $5;
-					n->behavior = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = false
+					n.Opt = nil
+					n.GrantedRoles = $2
+					n.GranteeRoles = $4
+					n.Grantor = as[*RoleSpec]($5)
+					n.Behavior = DropBehavior($6)
+					$$ = n
+				}
 			| REVOKE ColId OPTION FOR privilege_list FROM role_list opt_granted_by opt_drop_behavior
-				{ /*C
-					GrantRoleStmt *n = makeNode(GrantRoleStmt);
-					DefElem *opt;
+				{
+					n := &GrantRoleStmt{}
 
-					opt = makeDefElem(pstrdup($2),
-									  (Node *) makeBoolean(false), @2);
-					n->is_grant = false;
-					n->opt = list_make1(opt);
-					n->granted_roles = $5;
-					n->grantee_roles = $7;
-					n->grantor = $8;
-					n->behavior = $9;
-					$$ = (Node *) n;
-				*/ }
+					opt := makeDefElem($2, makeBoolean(false), @2)
+					n.IsGrant = false
+					n.Opt = []Node{opt}
+					n.GrantedRoles = $5
+					n.GranteeRoles = $7
+					n.Grantor = as[*RoleSpec]($8)
+					n.Behavior = DropBehavior($9)
+					$$ = n
+				}
 		;
 
 grant_role_opt_list:
@@ -926,15 +924,15 @@ grant_role_opt_list:
 
 grant_role_opt:
 		ColLabel grant_role_opt_value
-			{ /*C
-				$$ = makeDefElem(pstrdup($1), $2, @1);
-			*/ }
+			{
+				$$ = makeDefElem($1, $2, @1)
+			}
 		;
 
 grant_role_opt_value:
-		OPTION			{ /*C $$ = (Node *) makeBoolean(true); */ }
-		| TRUE_P		{ /*C $$ = (Node *) makeBoolean(true); */ }
-		| FALSE_P		{ /*C $$ = (Node *) makeBoolean(false); */ }
+		OPTION			{ $$ = makeBoolean(true) }
+		| TRUE_P		{ $$ = makeBoolean(true) }
+		| FALSE_P		{ $$ = makeBoolean(false) }
 		;
 
 opt_granted_by: GRANTED BY RoleSpec						{ $$ = $3 }
@@ -949,13 +947,13 @@ opt_granted_by: GRANTED BY RoleSpec						{ $$ = $3 }
 
 AlterDefaultPrivilegesStmt:
 			ALTER DEFAULT PRIVILEGES DefACLOptionList DefACLAction
-				{ /*C
-					AlterDefaultPrivilegesStmt *n = makeNode(AlterDefaultPrivilegesStmt);
+				{
+					n := &AlterDefaultPrivilegesStmt{}
 
-					n->options = $4;
-					n->action = (GrantStmt *) $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Options = $4
+					n.Action = as[*GrantStmt]($5)
+					$$ = n
+				}
 		;
 
 DefACLOptionList:
@@ -965,17 +963,17 @@ DefACLOptionList:
 
 DefACLOption:
 			IN_P SCHEMA name_list
-				{ /*C
-					$$ = makeDefElem("schemas", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("schemas", listNode($3), @1)
+				}
 			| FOR ROLE role_list
-				{ /*C
-					$$ = makeDefElem("roles", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("roles", listNode($3), @1)
+				}
 			| FOR USER role_list
-				{ /*C
-					$$ = makeDefElem("roles", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("roles", listNode($3), @1)
+				}
 		;
 
 /*
@@ -985,57 +983,57 @@ DefACLOption:
 DefACLAction:
 			GRANT privileges ON defacl_privilege_target TO grantee_list
 			opt_grant_grant_option
-				{ /*C
-					GrantStmt *n = makeNode(GrantStmt);
+				{
+					n := &GrantStmt{}
 
-					n->is_grant = true;
-					n->privileges = $2;
-					n->targtype = ACL_TARGET_DEFAULTS;
-					n->objtype = $4;
-					n->objects = NIL;
-					n->grantees = $6;
-					n->grant_option = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = true
+					n.Privileges = $2
+					n.Targtype = ACL_TARGET_DEFAULTS
+					n.Objtype = ObjectType($4)
+					n.Objects = nil
+					n.Grantees = $6
+					n.GrantOption = $7
+					$$ = n
+				}
 			| REVOKE privileges ON defacl_privilege_target
 			FROM grantee_list opt_drop_behavior
-				{ /*C
-					GrantStmt *n = makeNode(GrantStmt);
+				{
+					n := &GrantStmt{}
 
-					n->is_grant = false;
-					n->grant_option = false;
-					n->privileges = $2;
-					n->targtype = ACL_TARGET_DEFAULTS;
-					n->objtype = $4;
-					n->objects = NIL;
-					n->grantees = $6;
-					n->behavior = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = false
+					n.GrantOption = false
+					n.Privileges = $2
+					n.Targtype = ACL_TARGET_DEFAULTS
+					n.Objtype = ObjectType($4)
+					n.Objects = nil
+					n.Grantees = $6
+					n.Behavior = DropBehavior($7)
+					$$ = n
+				}
 			| REVOKE GRANT OPTION FOR privileges ON defacl_privilege_target
 			FROM grantee_list opt_drop_behavior
-				{ /*C
-					GrantStmt *n = makeNode(GrantStmt);
+				{
+					n := &GrantStmt{}
 
-					n->is_grant = false;
-					n->grant_option = true;
-					n->privileges = $5;
-					n->targtype = ACL_TARGET_DEFAULTS;
-					n->objtype = $7;
-					n->objects = NIL;
-					n->grantees = $9;
-					n->behavior = $10;
-					$$ = (Node *) n;
-				*/ }
+					n.IsGrant = false
+					n.GrantOption = true
+					n.Privileges = $5
+					n.Targtype = ACL_TARGET_DEFAULTS
+					n.Objtype = ObjectType($7)
+					n.Objects = nil
+					n.Grantees = $9
+					n.Behavior = DropBehavior($10)
+					$$ = n
+				}
 		;
 
 defacl_privilege_target:
-			TABLES			{ /*C $$ = OBJECT_TABLE; */ }
-			| FUNCTIONS		{ /*C $$ = OBJECT_FUNCTION; */ }
-			| ROUTINES		{ /*C $$ = OBJECT_FUNCTION; */ }
-			| SEQUENCES		{ /*C $$ = OBJECT_SEQUENCE; */ }
-			| TYPES_P		{ /*C $$ = OBJECT_TYPE; */ }
-			| SCHEMAS		{ /*C $$ = OBJECT_SCHEMA; */ }
+			TABLES			{ $$ = int32(OBJECT_TABLE) }
+			| FUNCTIONS		{ $$ = int32(OBJECT_FUNCTION) }
+			| ROUTINES		{ $$ = int32(OBJECT_FUNCTION) }
+			| SEQUENCES		{ $$ = int32(OBJECT_SEQUENCE) }
+			| TYPES_P		{ $$ = int32(OBJECT_TYPE) }
+			| SCHEMAS		{ $$ = int32(OBJECT_SCHEMA) }
 		;
 
 
@@ -1050,67 +1048,67 @@ defacl_privilege_target:
 IndexStmt:	CREATE opt_unique INDEX opt_concurrently opt_single_name
 			ON relation_expr access_method_clause '(' index_params ')'
 			opt_include opt_unique_null_treatment opt_reloptions OptTableSpace where_clause
-				{ /*C
-					IndexStmt *n = makeNode(IndexStmt);
+				{
+					n := &IndexStmt{}
 
-					n->unique = $2;
-					n->concurrent = $4;
-					n->idxname = $5;
-					n->relation = $7;
-					n->accessMethod = $8;
-					n->indexParams = $10;
-					n->indexIncludingParams = $12;
-					n->nulls_not_distinct = !$13;
-					n->options = $14;
-					n->tableSpace = $15;
-					n->whereClause = $16;
-					n->excludeOpNames = NIL;
-					n->idxcomment = NULL;
-					n->indexOid = InvalidOid;
-					n->oldNumber = InvalidRelFileNumber;
-					n->oldCreateSubid = InvalidSubTransactionId;
-					n->oldFirstRelfilelocatorSubid = InvalidSubTransactionId;
-					n->primary = false;
-					n->isconstraint = false;
-					n->deferrable = false;
-					n->initdeferred = false;
-					n->transformed = false;
-					n->if_not_exists = false;
-					n->reset_default_tblspc = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Unique = $2
+					n.Concurrent = $4
+					n.Idxname = $5
+					n.Relation = as[*RangeVar]($7)
+					n.AccessMethod = $8
+					n.IndexParams = $10
+					n.IndexIncludingParams = $12
+					n.NullsNotDistinct = !$13
+					n.Options = $14
+					n.TableSpace = $15
+					n.WhereClause = $16
+					n.ExcludeOpNames = nil
+					n.Idxcomment = ""
+					n.IndexOid = 0
+					n.OldNumber = 0
+					n.OldCreateSubid = 0
+					n.OldFirstRelfilelocatorSubid = 0
+					n.Primary = false
+					n.Isconstraint = false
+					n.Deferrable = false
+					n.Initdeferred = false
+					n.Transformed = false
+					n.IfNotExists = false
+					n.ResetDefaultTblspc = false
+					$$ = n
+				}
 			| CREATE opt_unique INDEX opt_concurrently IF_P NOT EXISTS name
 			ON relation_expr access_method_clause '(' index_params ')'
 			opt_include opt_unique_null_treatment opt_reloptions OptTableSpace where_clause
-				{ /*C
-					IndexStmt *n = makeNode(IndexStmt);
+				{
+					n := &IndexStmt{}
 
-					n->unique = $2;
-					n->concurrent = $4;
-					n->idxname = $8;
-					n->relation = $10;
-					n->accessMethod = $11;
-					n->indexParams = $13;
-					n->indexIncludingParams = $15;
-					n->nulls_not_distinct = !$16;
-					n->options = $17;
-					n->tableSpace = $18;
-					n->whereClause = $19;
-					n->excludeOpNames = NIL;
-					n->idxcomment = NULL;
-					n->indexOid = InvalidOid;
-					n->oldNumber = InvalidRelFileNumber;
-					n->oldCreateSubid = InvalidSubTransactionId;
-					n->oldFirstRelfilelocatorSubid = InvalidSubTransactionId;
-					n->primary = false;
-					n->isconstraint = false;
-					n->deferrable = false;
-					n->initdeferred = false;
-					n->transformed = false;
-					n->if_not_exists = true;
-					n->reset_default_tblspc = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Unique = $2
+					n.Concurrent = $4
+					n.Idxname = $8
+					n.Relation = as[*RangeVar]($10)
+					n.AccessMethod = $11
+					n.IndexParams = $13
+					n.IndexIncludingParams = $15
+					n.NullsNotDistinct = !$16
+					n.Options = $17
+					n.TableSpace = $18
+					n.WhereClause = $19
+					n.ExcludeOpNames = nil
+					n.Idxcomment = ""
+					n.IndexOid = 0
+					n.OldNumber = 0
+					n.OldCreateSubid = 0
+					n.OldFirstRelfilelocatorSubid = 0
+					n.Primary = false
+					n.Isconstraint = false
+					n.Deferrable = false
+					n.Initdeferred = false
+					n.Transformed = false
+					n.IfNotExists = true
+					n.ResetDefaultTblspc = false
+					$$ = n
+				}
 		;
 
 opt_unique:
@@ -1120,7 +1118,7 @@ opt_unique:
 
 access_method_clause:
 			USING name								{ $$ = $2 }
-			| /*EMPTY*/								{ /*C $$ = DEFAULT_INDEX_TYPE; */ }
+			| /*EMPTY*/								{ $$ = "btree" }
 		;
 
 index_params:	index_elem							{ $$ = []Node{$1} }
@@ -1130,29 +1128,33 @@ index_params:	index_elem							{ $$ = []Node{$1} }
 
 index_elem_options:
 	opt_collate opt_qualified_name opt_asc_desc opt_nulls_order
-		{ /*C
-			$$ = makeNode(IndexElem);
-			$$->name = NULL;
-			$$->expr = NULL;
-			$$->indexcolname = NULL;
-			$$->collation = $1;
-			$$->opclass = $2;
-			$$->opclassopts = NIL;
-			$$->ordering = $3;
-			$$->nulls_ordering = $4;
-		*/ }
+		{
+			n := &IndexElem{}
+
+			n.Name = ""
+			n.Expr = nil
+			n.Indexcolname = ""
+			n.Collation = $1
+			n.Opclass = $2
+			n.Opclassopts = nil
+			n.Ordering = SortByDir($3)
+			n.NullsOrdering = SortByNulls($4)
+			$$ = n
+		}
 	| opt_collate any_name reloptions opt_asc_desc opt_nulls_order
-		{ /*C
-			$$ = makeNode(IndexElem);
-			$$->name = NULL;
-			$$->expr = NULL;
-			$$->indexcolname = NULL;
-			$$->collation = $1;
-			$$->opclass = $2;
-			$$->opclassopts = $3;
-			$$->ordering = $4;
-			$$->nulls_ordering = $5;
-		*/ }
+		{
+			n := &IndexElem{}
+
+			n.Name = ""
+			n.Expr = nil
+			n.Indexcolname = ""
+			n.Collation = $1
+			n.Opclass = $2
+			n.Opclassopts = $3
+			n.Ordering = SortByDir($4)
+			n.NullsOrdering = SortByNulls($5)
+			$$ = n
+		}
 	;
 
 /*
@@ -1161,20 +1163,26 @@ index_elem_options:
  * an expression that's just a function call to be written without parens.
  */
 index_elem: ColId index_elem_options
-				{ /*C
-					$$ = $2;
-					$$->name = $1;
-				*/ }
+				{
+					n := as[*IndexElem]($2)
+
+					n.Name = $1
+					$$ = n
+				}
 			| func_expr_windowless index_elem_options
-				{ /*C
-					$$ = $2;
-					$$->expr = $1;
-				*/ }
+				{
+					n := as[*IndexElem]($2)
+
+					n.Expr = $1
+					$$ = n
+				}
 			| '(' a_expr ')' index_elem_options
-				{ /*C
-					$$ = $4;
-					$$->expr = $2;
-				*/ }
+				{
+					n := as[*IndexElem]($4)
+
+					n.Expr = $2
+					$$ = n
+				}
 		;
 
 opt_include:		INCLUDE '(' index_including_params ')'			{ $$ = $3 }
@@ -1190,14 +1198,14 @@ opt_collate: COLLATE any_name						{ $$ = $2 }
 		;
 
 
-opt_asc_desc: ASC							{ /*C $$ = SORTBY_ASC; */ }
-			| DESC							{ /*C $$ = SORTBY_DESC; */ }
-			| /*EMPTY*/						{ /*C $$ = SORTBY_DEFAULT; */ }
+opt_asc_desc: ASC							{ $$ = int32(SORTBY_ASC) }
+			| DESC							{ $$ = int32(SORTBY_DESC) }
+			| /*EMPTY*/						{ $$ = int32(SORTBY_DEFAULT) }
 		;
 
-opt_nulls_order: NULLS_LA FIRST_P			{ /*C $$ = SORTBY_NULLS_FIRST; */ }
-			| NULLS_LA LAST_P				{ /*C $$ = SORTBY_NULLS_LAST; */ }
-			| /*EMPTY*/						{ /*C $$ = SORTBY_NULLS_DEFAULT; */ }
+opt_nulls_order: NULLS_LA FIRST_P			{ $$ = int32(SORTBY_NULLS_FIRST) }
+			| NULLS_LA LAST_P				{ $$ = int32(SORTBY_NULLS_LAST) }
+			| /*EMPTY*/						{ $$ = int32(SORTBY_NULLS_DEFAULT) }
 		;
 
 
@@ -1215,61 +1223,61 @@ opt_nulls_order: NULLS_LA FIRST_P			{ /*C $$ = SORTBY_NULLS_FIRST; */ }
 CreateFunctionStmt:
 			CREATE opt_or_replace FUNCTION func_name func_args_with_defaults
 			RETURNS func_return opt_createfunc_opt_list opt_routine_body
-				{ /*C
-					CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+				{
+					n := &CreateFunctionStmt{}
 
-					n->is_procedure = false;
-					n->replace = $2;
-					n->funcname = $4;
-					n->parameters = $5;
-					n->returnType = $7;
-					n->options = $8;
-					n->sql_body = $9;
-					$$ = (Node *) n;
-				*/ }
+					n.IsProcedure = false
+					n.Replace = $2
+					n.Funcname = $4
+					n.Parameters = $5
+					n.ReturnType = as[*TypeName]($7)
+					n.Options = $8
+					n.SqlBody = $9
+					$$ = n
+				}
 			| CREATE opt_or_replace FUNCTION func_name func_args_with_defaults
 			  RETURNS TABLE '(' table_func_column_list ')' opt_createfunc_opt_list opt_routine_body
-				{ /*C
-					CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+				{
+					n := &CreateFunctionStmt{}
 
-					n->is_procedure = false;
-					n->replace = $2;
-					n->funcname = $4;
-					n->parameters = mergeTableFuncParameters($5, $9);
-					n->returnType = TableFuncTypeName($9);
-					n->returnType->location = @7;
-					n->options = $11;
-					n->sql_body = $12;
-					$$ = (Node *) n;
-				*/ }
+					n.IsProcedure = false
+					n.Replace = $2
+					n.Funcname = $4
+					n.Parameters = p.mergeTableFuncParameters($5, $9)
+					n.ReturnType = tableFuncTypeName($9)
+					n.ReturnType.Location = @7
+					n.Options = $11
+					n.SqlBody = $12
+					$$ = n
+				}
 			| CREATE opt_or_replace FUNCTION func_name func_args_with_defaults
 			  opt_createfunc_opt_list opt_routine_body
-				{ /*C
-					CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+				{
+					n := &CreateFunctionStmt{}
 
-					n->is_procedure = false;
-					n->replace = $2;
-					n->funcname = $4;
-					n->parameters = $5;
-					n->returnType = NULL;
-					n->options = $6;
-					n->sql_body = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.IsProcedure = false
+					n.Replace = $2
+					n.Funcname = $4
+					n.Parameters = $5
+					n.ReturnType = nil
+					n.Options = $6
+					n.SqlBody = $7
+					$$ = n
+				}
 			| CREATE opt_or_replace PROCEDURE func_name func_args_with_defaults
 			  opt_createfunc_opt_list opt_routine_body
-				{ /*C
-					CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+				{
+					n := &CreateFunctionStmt{}
 
-					n->is_procedure = true;
-					n->replace = $2;
-					n->funcname = $4;
-					n->parameters = $5;
-					n->returnType = NULL;
-					n->options = $6;
-					n->sql_body = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.IsProcedure = true
+					n.Replace = $2
+					n.Funcname = $4
+					n.Parameters = $5
+					n.ReturnType = nil
+					n.Options = $6
+					n.SqlBody = $7
+					$$ = n
+				}
 		;
 
 opt_or_replace:
@@ -1294,44 +1302,43 @@ function_with_argtypes_list:
 
 function_with_argtypes:
 			func_name func_args
-				{ /*C
-					ObjectWithArgs *n = makeNode(ObjectWithArgs);
+				{
+					n := &ObjectWithArgs{}
 
-					n->objname = $1;
-					n->objargs = extractArgTypes($2);
-					n->objfuncargs = $2;
-					$$ = n;
-				*/ }
+					n.Objname = $1
+					n.Objargs = extractArgTypes($2)
+					n.Objfuncargs = $2
+					$$ = n
+				}
 			/*
 			 * Because of reduce/reduce conflicts, we can't use func_name
 			 * below, but we can write it out the long way, which actually
 			 * allows more cases.
 			 */
 			| type_func_name_keyword
-				{ /*C
-					ObjectWithArgs *n = makeNode(ObjectWithArgs);
+				{
+					n := &ObjectWithArgs{}
 
-					n->objname = list_make1(makeString(pstrdup($1)));
-					n->args_unspecified = true;
-					$$ = n;
-				*/ }
+					n.Objname = []Node{makeString($1, @1)}
+					n.ArgsUnspecified = true
+					$$ = n
+				}
 			| ColId
-				{ /*C
-					ObjectWithArgs *n = makeNode(ObjectWithArgs);
+				{
+					n := &ObjectWithArgs{}
 
-					n->objname = list_make1(makeString($1));
-					n->args_unspecified = true;
-					$$ = n;
-				*/ }
+					n.Objname = []Node{makeString($1, @1)}
+					n.ArgsUnspecified = true
+					$$ = n
+				}
 			| ColId indirection
-				{ /*C
-					ObjectWithArgs *n = makeNode(ObjectWithArgs);
+				{
+					n := &ObjectWithArgs{}
 
-					n->objname = check_func_name(lcons(makeString($1), $2),
-												  yyscanner);
-					n->args_unspecified = true;
-					$$ = n;
-				*/ }
+					n.Objname = p.checkFuncName(append([]Node{makeString($1, @1)}, $2...))
+					n.ArgsUnspecified = true
+					$$ = n
+				}
 		;
 
 /*
@@ -1361,55 +1368,55 @@ func_args_with_defaults_list:
  */
 func_arg:
 			arg_class param_name func_type
-				{ /*C
-					FunctionParameter *n = makeNode(FunctionParameter);
+				{
+					n := &FunctionParameter{}
 
-					n->name = $2;
-					n->argType = $3;
-					n->mode = $1;
-					n->defexpr = NULL;
-					$$ = n;
-				*/ }
+					n.Name = $2
+					n.ArgType = as[*TypeName]($3)
+					n.Mode = FunctionParameterMode($1)
+					n.Defexpr = nil
+					$$ = n
+				}
 			| param_name arg_class func_type
-				{ /*C
-					FunctionParameter *n = makeNode(FunctionParameter);
+				{
+					n := &FunctionParameter{}
 
-					n->name = $1;
-					n->argType = $3;
-					n->mode = $2;
-					n->defexpr = NULL;
-					$$ = n;
-				*/ }
+					n.Name = $1
+					n.ArgType = as[*TypeName]($3)
+					n.Mode = FunctionParameterMode($2)
+					n.Defexpr = nil
+					$$ = n
+				}
 			| param_name func_type
-				{ /*C
-					FunctionParameter *n = makeNode(FunctionParameter);
+				{
+					n := &FunctionParameter{}
 
-					n->name = $1;
-					n->argType = $2;
-					n->mode = FUNC_PARAM_DEFAULT;
-					n->defexpr = NULL;
-					$$ = n;
-				*/ }
+					n.Name = $1
+					n.ArgType = as[*TypeName]($2)
+					n.Mode = FUNC_PARAM_DEFAULT
+					n.Defexpr = nil
+					$$ = n
+				}
 			| arg_class func_type
-				{ /*C
-					FunctionParameter *n = makeNode(FunctionParameter);
+				{
+					n := &FunctionParameter{}
 
-					n->name = NULL;
-					n->argType = $2;
-					n->mode = $1;
-					n->defexpr = NULL;
-					$$ = n;
-				*/ }
+					n.Name = ""
+					n.ArgType = as[*TypeName]($2)
+					n.Mode = FunctionParameterMode($1)
+					n.Defexpr = nil
+					$$ = n
+				}
 			| func_type
-				{ /*C
-					FunctionParameter *n = makeNode(FunctionParameter);
+				{
+					n := &FunctionParameter{}
 
-					n->name = NULL;
-					n->argType = $1;
-					n->mode = FUNC_PARAM_DEFAULT;
-					n->defexpr = NULL;
-					$$ = n;
-				*/ }
+					n.Name = ""
+					n.ArgType = as[*TypeName]($1)
+					n.Mode = FUNC_PARAM_DEFAULT
+					n.Defexpr = nil
+					$$ = n
+				}
 		;
 
 /* INOUT is SQL99 standard, IN OUT is for Oracle compatibility */
@@ -1428,13 +1435,13 @@ param_name:	type_function_name
 
 func_return:
 			func_type
-				{ /*C
+				{
 					/* We can catch over-specified results here if we want to,
 					 * but for now better to silently swallow typmod, etc.
 					 * - thomas 2000-03-22
-					 * /
-					$$ = $1;
-				*/ }
+					 */
+					$$ = $1
+				}
 		;
 
 /*
@@ -1444,47 +1451,53 @@ func_return:
  */
 func_type:	Typename								{ $$ = $1 }
 			| type_function_name attrs '%' TYPE_P
-				{ /*C
-					$$ = makeTypeNameFromNameList(lcons(makeString($1), $2));
-					$$->pct_type = true;
-					$$->location = @1;
-				*/ }
+				{
+					t := makeTypeNameFromNameList(append([]Node{makeString($1, @1)}, $2...))
+					t.PctType = true
+					t.Location = @1
+					$$ = t
+				}
 			| SETOF type_function_name attrs '%' TYPE_P
-				{ /*C
-					$$ = makeTypeNameFromNameList(lcons(makeString($2), $3));
-					$$->pct_type = true;
-					$$->setof = true;
-					$$->location = @2;
-				*/ }
+				{
+					t := makeTypeNameFromNameList(append([]Node{makeString($2, @2)}, $3...))
+					t.PctType = true
+					t.Setof = true
+					t.Location = @2
+					$$ = t
+				}
 		;
 
 func_arg_with_default:
 		func_arg
 				{ $$ = $1 }
 		| func_arg DEFAULT a_expr
-				{ /*C
-					$$ = $1;
-					$$->defexpr = $3;
-				*/ }
+				{
+					n := as[*FunctionParameter]($1)
+
+					n.Defexpr = $3
+					$$ = n
+				}
 		| func_arg '=' a_expr
-				{ /*C
-					$$ = $1;
-					$$->defexpr = $3;
-				*/ }
+				{
+					n := as[*FunctionParameter]($1)
+
+					n.Defexpr = $3
+					$$ = n
+				}
 		;
 
 /* Aggregate args can be most things that function args can be */
 aggr_arg:	func_arg
-				{ /*C
-					if (!($1->mode == FUNC_PARAM_DEFAULT ||
-						  $1->mode == FUNC_PARAM_IN ||
-						  $1->mode == FUNC_PARAM_VARIADIC))
-						ereport(ERROR,
-								(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-								 errmsg("aggregates cannot have output arguments"),
-								 parser_errposition(@1)));
-					$$ = $1;
-				*/ }
+				{
+					prm := as[*FunctionParameter]($1)
+
+					if !(prm.Mode == FUNC_PARAM_DEFAULT ||
+						prm.Mode == FUNC_PARAM_IN ||
+						prm.Mode == FUNC_PARAM_VARIADIC) {
+						p.fail(@1, "aggregates cannot have output arguments")
+					}
+					$$ = $1
+				}
 		;
 
 /*
@@ -1517,22 +1530,22 @@ aggr_arg:	func_arg
  * sublist.
  */
 aggr_args:	'(' '*' ')'
-				{ /*C
-					$$ = list_make2(NIL, makeInteger(-1));
-				*/ }
+				{
+					$$ = []Node{nil, makeInteger(-1)}
+				}
 			| '(' aggr_args_list ')'
-				{ /*C
-					$$ = list_make2($2, makeInteger(-1));
-				*/ }
+				{
+					$$ = []Node{listNode($2), makeInteger(-1)}
+				}
 			| '(' ORDER BY aggr_args_list ')'
-				{ /*C
-					$$ = list_make2($4, makeInteger(0));
-				*/ }
+				{
+					$$ = []Node{listNode($4), makeInteger(0)}
+				}
 			| '(' aggr_args_list ORDER BY aggr_args_list ')'
-				{ /*C
-					/* this is the only case requiring consistency checking * /
-					$$ = makeOrderedSetArgs($2, $5, yyscanner);
-				*/ }
+				{
+					/* this is the only case requiring consistency checking */
+					$$ = p.makeOrderedSetArgs($2, $5)
+				}
 		;
 
 aggr_args_list:
@@ -1542,14 +1555,14 @@ aggr_args_list:
 
 aggregate_with_argtypes:
 			func_name aggr_args
-				{ /*C
-					ObjectWithArgs *n = makeNode(ObjectWithArgs);
+				{
+					n := &ObjectWithArgs{}
 
-					n->objname = $1;
-					n->objargs = extractAggrArgTypes($2);
-					n->objfuncargs = (List *) linitial($2);
-					$$ = n;
-				*/ }
+					n.Objname = $1
+					n.Objargs = extractAggrArgTypes($2)
+					n.Objfuncargs = asList($2[0])
+					$$ = n
+				}
 		;
 
 aggregate_with_argtypes_list:
@@ -1574,139 +1587,140 @@ createfunc_opt_list:
  */
 common_func_opt_item:
 			CALLED ON NULL_P INPUT_P
-				{ /*C
-					$$ = makeDefElem("strict", (Node *) makeBoolean(false), @1);
-				*/ }
+				{
+					$$ = makeDefElem("strict", makeBoolean(false), @1)
+				}
 			| RETURNS NULL_P ON NULL_P INPUT_P
-				{ /*C
-					$$ = makeDefElem("strict", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("strict", makeBoolean(true), @1)
+				}
 			| STRICT_P
-				{ /*C
-					$$ = makeDefElem("strict", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("strict", makeBoolean(true), @1)
+				}
 			| IMMUTABLE
-				{ /*C
-					$$ = makeDefElem("volatility", (Node *) makeString("immutable"), @1);
-				*/ }
+				{
+					$$ = makeDefElem("volatility", makeString("immutable", -1), @1)
+				}
 			| STABLE
-				{ /*C
-					$$ = makeDefElem("volatility", (Node *) makeString("stable"), @1);
-				*/ }
+				{
+					$$ = makeDefElem("volatility", makeString("stable", -1), @1)
+				}
 			| VOLATILE
-				{ /*C
-					$$ = makeDefElem("volatility", (Node *) makeString("volatile"), @1);
-				*/ }
+				{
+					$$ = makeDefElem("volatility", makeString("volatile", -1), @1)
+				}
 			| EXTERNAL SECURITY DEFINER
-				{ /*C
-					$$ = makeDefElem("security", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("security", makeBoolean(true), @1)
+				}
 			| EXTERNAL SECURITY INVOKER
-				{ /*C
-					$$ = makeDefElem("security", (Node *) makeBoolean(false), @1);
-				*/ }
+				{
+					$$ = makeDefElem("security", makeBoolean(false), @1)
+				}
 			| SECURITY DEFINER
-				{ /*C
-					$$ = makeDefElem("security", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("security", makeBoolean(true), @1)
+				}
 			| SECURITY INVOKER
-				{ /*C
-					$$ = makeDefElem("security", (Node *) makeBoolean(false), @1);
-				*/ }
+				{
+					$$ = makeDefElem("security", makeBoolean(false), @1)
+				}
 			| LEAKPROOF
-				{ /*C
-					$$ = makeDefElem("leakproof", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("leakproof", makeBoolean(true), @1)
+				}
 			| NOT LEAKPROOF
-				{ /*C
-					$$ = makeDefElem("leakproof", (Node *) makeBoolean(false), @1);
-				*/ }
+				{
+					$$ = makeDefElem("leakproof", makeBoolean(false), @1)
+				}
 			| COST NumericOnly
-				{ /*C
-					$$ = makeDefElem("cost", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("cost", $2, @1)
+				}
 			| ROWS NumericOnly
-				{ /*C
-					$$ = makeDefElem("rows", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("rows", $2, @1)
+				}
 			| SUPPORT any_name
-				{ /*C
-					$$ = makeDefElem("support", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("support", listNode($2), @1)
+				}
 			| FunctionSetResetClause
-				{ /*C
-					/* we abuse the normal content of a DefElem here * /
-					$$ = makeDefElem("set", (Node *) $1, @1);
-				*/ }
+				{
+					/* we abuse the normal content of a DefElem here */
+					$$ = makeDefElem("set", $1, @1)
+				}
 			| PARALLEL ColId
-				{ /*C
-					$$ = makeDefElem("parallel", (Node *) makeString($2), @1);
-				*/ }
+				{
+					$$ = makeDefElem("parallel", makeString($2, @2), @1)
+				}
 		;
 
 createfunc_opt_item:
 			AS func_as
-				{ /*C
-					$$ = makeDefElem("as", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("as", listNode($2), @1)
+				}
 			| LANGUAGE NonReservedWord_or_Sconst
-				{ /*C
-					$$ = makeDefElem("language", (Node *) makeString($2), @1);
-				*/ }
+				{
+					$$ = makeDefElem("language", makeString($2, @2), @1)
+				}
 			| TRANSFORM transform_type_list
-				{ /*C
-					$$ = makeDefElem("transform", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("transform", listNode($2), @1)
+				}
 			| WINDOW
-				{ /*C
-					$$ = makeDefElem("window", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("window", makeBoolean(true), @1)
+				}
 			| common_func_opt_item
 				{ $$ = $1 }
 		;
 
-func_as:	Sconst						{ /*C $$ = list_make1(makeString($1)); */ }
+func_as:	Sconst						{ $$ = []Node{makeString($1, @1)} }
 			| Sconst ',' Sconst
-				{ /*C
-					$$ = list_make2(makeString($1), makeString($3));
-				*/ }
+				{
+					$$ = []Node{makeString($1, @1), makeString($3, @3)}
+				}
 		;
 
 ReturnStmt:	RETURN a_expr
-				{ /*C
-					ReturnStmt *r = makeNode(ReturnStmt);
+				{
+					r := &ReturnStmt{}
 
-					r->returnval = (Node *) $2;
-					$$ = (Node *) r;
-				*/ }
+					r.Returnval = $2
+					$$ = r
+				}
 		;
 
 opt_routine_body:
 			ReturnStmt
 				{ $$ = $1 }
 			| BEGIN_P ATOMIC routine_body_stmt_list END_P
-				{ /*C
+				{
 					/*
 					 * A compound statement is stored as a single-item list
 					 * containing the list of statements as its member.  That
 					 * way, the parse analysis code can tell apart an empty
 					 * body from no body at all.
-					 * /
-					$$ = (Node *) list_make1($3);
-				*/ }
+					 */
+					$$ = listNode([]Node{listNode($3)})
+				}
 			| /*EMPTY*/
 				{ $$ = nil }
 		;
 
 routine_body_stmt_list:
 			routine_body_stmt_list routine_body_stmt ';'
-				{ /*C
-					/* As in stmtmulti, discard empty statements * /
-					if ($2 != NULL)
-						$$ = lappend($1, $2);
-					else
-						$$ = $1;
-				*/ }
+				{
+					/* As in stmtmulti, discard empty statements */
+					if $2 != nil {
+						$$ = append($1, $2)
+					} else {
+						$$ = $1
+					}
+				}
 			| /*EMPTY*/
 				{ $$ = nil }
 		;
@@ -1727,15 +1741,15 @@ opt_definition:
 		;
 
 table_func_column:	param_name func_type
-				{ /*C
-					FunctionParameter *n = makeNode(FunctionParameter);
+				{
+					n := &FunctionParameter{}
 
-					n->name = $1;
-					n->argType = $2;
-					n->mode = FUNC_PARAM_TABLE;
-					n->defexpr = NULL;
-					$$ = n;
-				*/ }
+					n.Name = $1
+					n.ArgType = as[*TypeName]($2)
+					n.Mode = FUNC_PARAM_TABLE
+					n.Defexpr = nil
+					$$ = n
+				}
 		;
 
 table_func_column_list:
