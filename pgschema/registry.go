@@ -12,15 +12,12 @@ type registry struct {
 	temp       map[string]bool // temporary relations of the text being analyzed
 	transition map[string]bool // trigger transition tables (REFERENCING ... AS name)
 
-	// While a transaction is open the names put in the maps are journaled, so
-	// that a body that cannot be rewritten leaves nothing behind.
-	open    int
-	journal []journalEntry
-}
-
-type journalEntry struct {
-	set  map[string]bool
-	name string
+	// While a transaction is open every change of the state of a Rewriter (the
+	// names put in the maps, the extensions it activates) is journaled with
+	// the function that undoes it, so that a call of Learn or Rewrite that
+	// fails, or a body that cannot be rewritten, leaves nothing behind.
+	open int
+	undo []func()
 }
 
 // put remembers name in set.
@@ -29,28 +26,34 @@ func (g *registry) put(set map[string]bool, name string) {
 		return
 	}
 	set[name] = true
+	g.journal(func() { delete(set, name) })
+}
+
+// journal records the function that undoes a change, if a transaction is
+// open.
+func (g *registry) journal(undo func()) {
 	if g.open > 0 {
-		g.journal = append(g.journal, journalEntry{set, name})
+		g.undo = append(g.undo, undo)
 	}
 }
 
 // begin opens a transaction; the result is the argument of end.
 func (g *registry) begin() int {
 	g.open++
-	return len(g.journal)
+	return len(g.undo)
 }
 
-// end closes the transaction opened at mark; without commit the names put
-// since then are forgotten.
+// end closes the transaction opened at mark; without commit the changes made
+// since then are undone, the last one first.
 func (g *registry) end(mark int, commit bool) {
 	if !commit {
-		for _, e := range g.journal[mark:] {
-			delete(e.set, e.name)
+		for i := len(g.undo) - 1; i >= mark; i-- {
+			g.undo[i]()
 		}
-		g.journal = g.journal[:mark]
+		g.undo = g.undo[:mark]
 	}
 	if g.open--; g.open == 0 {
-		g.journal = g.journal[:0]
+		g.undo = g.undo[:0]
 	}
 }
 

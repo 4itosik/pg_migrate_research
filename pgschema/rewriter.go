@@ -103,9 +103,11 @@ func New(opts Options) (*Rewriter, error) {
 // Learn registers the objects a migration creates, without rewriting it. Call
 // it for every up migration before rewriting any of them: the type and
 // function names a migration uses are qualified only when some migration
-// creates them.
-func (r *Rewriter) Learn(sql string) error {
-	_, err := r.pass(sql, true)
+// creates them. With an error the Rewriter stays as it was.
+func (r *Rewriter) Learn(sql string) (err error) {
+	tx := r.reg.begin()
+	defer func() { r.reg.end(tx, err == nil) }()
+	_, err = r.pass(sql, true)
 	return err
 }
 
@@ -113,9 +115,12 @@ func (r *Rewriter) Learn(sql string) error {
 // about constructs that cannot be rewritten statically. The result is the
 // input with the schema inserted into the text: nothing else changes. It is
 // parsed again and its tree must be the input tree with the intended names
-// qualified, otherwise Rewrite returns an error instead of unverified SQL.
-func (r *Rewriter) Rewrite(sql string) (string, []string, error) {
-	if err := r.Learn(sql); err != nil {
+// qualified, otherwise Rewrite returns an error instead of unverified SQL, and
+// the Rewriter stays as it was: what the text creates is not learned.
+func (r *Rewriter) Rewrite(sql string) (_ string, _ []string, err error) {
+	tx := r.reg.begin()
+	defer func() { r.reg.end(tx, err == nil) }()
+	if _, err := r.pass(sql, true); err != nil {
 		return "", nil, err
 	}
 	a, err := r.pass(sql, false)

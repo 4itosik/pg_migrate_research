@@ -55,12 +55,14 @@ func (r *Rewriter) activateExtension(ext string, ref *schemaRef) {
 		return
 	}
 	r.activeExt[ext] = true
+	r.reg.journal(func() { delete(r.activeExt, ext) })
 	objs := contribObjects[ext]
 	extra := r.extraObjects[ext]
 	put := func(m map[string]*schemaRef, names []string) {
 		for _, n := range names {
 			if _, taken := m[n]; !taken {
 				m[n] = ref
+				r.reg.journal(func() { delete(m, n) })
 			}
 		}
 	}

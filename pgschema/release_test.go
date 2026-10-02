@@ -114,4 +114,24 @@ func TestRewriteTempScope(t *testing.T) {
 	}
 }
 
+// A failed Rewrite or Learn leaves the Rewriter as it was.
+func TestFailedCallsLeaveNoState(t *testing.T) {
+	r := newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})
+	broken := "CREATE TYPE mood AS ENUM ('a'); CREATE EXTENSION citext; CREATE FUNCTION f() RETURNS int LANGUAGE plpgsql AS $$ BEGIN RETURN INTO x; END $$"
+	if _, _, err := r.Rewrite(broken); err == nil {
+		t.Fatal("no error")
+	}
+	got, _, err := r.Rewrite("SELECT 'a'::mood, 'x'::citext")
+	if err != nil || got != "SELECT 'a'::mood, 'x'::citext" {
+		t.Errorf("after a failed Rewrite: %q, %v", got, err)
+	}
+	if err := r.Learn("CREATE TYPE mood AS ENUM ('a'); SELECT FROM FROM"); err == nil {
+		t.Fatal("no error")
+	}
+	got, _, err = r.Rewrite("SELECT 'a'::mood")
+	if err != nil || got != "SELECT 'a'::mood" {
+		t.Errorf("after a failed Learn: %q, %v", got, err)
+	}
+}
+
 func warningText(warns []string) string { return strings.Join(warns, "\n") }
