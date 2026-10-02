@@ -8,19 +8,19 @@
 
 ClosePortalStmt:
 			CLOSE cursor_name
-				{ /*C
-					ClosePortalStmt *n = makeNode(ClosePortalStmt);
+				{
+					n := &ClosePortalStmt{}
 
-					n->portalname = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = $2
+					$$ = n
+				}
 			| CLOSE ALL
-				{ /*C
-					ClosePortalStmt *n = makeNode(ClosePortalStmt);
+				{
+					n := &ClosePortalStmt{}
 
-					n->portalname = NULL;
-					$$ = (Node *) n;
-				*/ }
+					n.Portalname = ""
+					$$ = n
+				}
 		;
 
 
@@ -51,59 +51,56 @@ ClosePortalStmt:
 CopyStmt:	COPY opt_binary qualified_name opt_column_list
 			copy_from opt_program copy_file_name copy_delimiter opt_with
 			copy_options where_clause
-				{ /*C
-					CopyStmt *n = makeNode(CopyStmt);
+				{
+					n := &CopyStmt{}
 
-					n->relation = $3;
-					n->query = NULL;
-					n->attlist = $4;
-					n->is_from = $5;
-					n->is_program = $6;
-					n->filename = $7;
-					n->whereClause = $11;
+					n.Relation = as[*RangeVar]($3)
+					n.Query = nil
+					n.Attlist = $4
+					n.IsFrom = $5
+					n.IsProgram = $6
+					n.Filename = $7
+					n.WhereClause = $11
 
-					if (n->is_program && n->filename == NULL)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("STDIN/STDOUT not allowed with PROGRAM"),
-								 parser_errposition(@8)));
+					if n.IsProgram && p.copyFileNameIsNull(n.Filename, @7) {
+						p.fail(@8, "STDIN/STDOUT not allowed with PROGRAM")
+					}
 
-					if (!n->is_from && n->whereClause != NULL)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("WHERE clause not allowed with COPY TO"),
-								 parser_errposition(@11)));
+					if !n.IsFrom && n.WhereClause != nil {
+						p.fail(@11, "WHERE clause not allowed with COPY TO")
+					}
 
-					n->options = NIL;
-					/* Concatenate user-supplied flags * /
-					if ($2)
-						n->options = lappend(n->options, $2);
-					if ($8)
-						n->options = lappend(n->options, $8);
-					if ($10)
-						n->options = list_concat(n->options, $10);
-					$$ = (Node *) n;
-				*/ }
+					n.Options = nil
+					/* Concatenate user-supplied flags */
+					if $2 != nil {
+						n.Options = append(n.Options, $2)
+					}
+					if $8 != nil {
+						n.Options = append(n.Options, $8)
+					}
+					if $10 != nil {
+						n.Options = append(n.Options, $10...)
+					}
+					$$ = n
+				}
 			| COPY '(' PreparableStmt ')' TO opt_program copy_file_name opt_with copy_options
-				{ /*C
-					CopyStmt *n = makeNode(CopyStmt);
+				{
+					n := &CopyStmt{}
 
-					n->relation = NULL;
-					n->query = $3;
-					n->attlist = NIL;
-					n->is_from = false;
-					n->is_program = $6;
-					n->filename = $7;
-					n->options = $9;
+					n.Relation = nil
+					n.Query = $3
+					n.Attlist = nil
+					n.IsFrom = false
+					n.IsProgram = $6
+					n.Filename = $7
+					n.Options = $9
 
-					if (n->is_program && n->filename == NULL)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("STDIN/STDOUT not allowed with PROGRAM"),
-								 parser_errposition(@5)));
+					if n.IsProgram && p.copyFileNameIsNull(n.Filename, @7) {
+						p.fail(@5, "STDIN/STDOUT not allowed with PROGRAM")
+					}
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 		;
 
 copy_from:
@@ -139,82 +136,82 @@ copy_opt_list:
 
 copy_opt_item:
 			BINARY
-				{ /*C
-					$$ = makeDefElem("format", (Node *) makeString("binary"), @1);
-				*/ }
+				{
+					$$ = makeDefElem("format", makeString("binary", @1), @1)
+				}
 			| FREEZE
-				{ /*C
-					$$ = makeDefElem("freeze", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("freeze", makeBoolean(true), @1)
+				}
 			| DELIMITER opt_as Sconst
-				{ /*C
-					$$ = makeDefElem("delimiter", (Node *) makeString($3), @1);
-				*/ }
+				{
+					$$ = makeDefElem("delimiter", makeString($3, @3), @1)
+				}
 			| NULL_P opt_as Sconst
-				{ /*C
-					$$ = makeDefElem("null", (Node *) makeString($3), @1);
-				*/ }
+				{
+					$$ = makeDefElem("null", makeString($3, @3), @1)
+				}
 			| CSV
-				{ /*C
-					$$ = makeDefElem("format", (Node *) makeString("csv"), @1);
-				*/ }
+				{
+					$$ = makeDefElem("format", makeString("csv", @1), @1)
+				}
 			| HEADER_P
-				{ /*C
-					$$ = makeDefElem("header", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("header", makeBoolean(true), @1)
+				}
 			| QUOTE opt_as Sconst
-				{ /*C
-					$$ = makeDefElem("quote", (Node *) makeString($3), @1);
-				*/ }
+				{
+					$$ = makeDefElem("quote", makeString($3, @3), @1)
+				}
 			| ESCAPE opt_as Sconst
-				{ /*C
-					$$ = makeDefElem("escape", (Node *) makeString($3), @1);
-				*/ }
+				{
+					$$ = makeDefElem("escape", makeString($3, @3), @1)
+				}
 			| FORCE QUOTE columnList
-				{ /*C
-					$$ = makeDefElem("force_quote", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("force_quote", listNode($3), @1)
+				}
 			| FORCE QUOTE '*'
-				{ /*C
-					$$ = makeDefElem("force_quote", (Node *) makeNode(A_Star), @1);
-				*/ }
+				{
+					$$ = makeDefElem("force_quote", &A_Star{}, @1)
+				}
 			| FORCE NOT NULL_P columnList
-				{ /*C
-					$$ = makeDefElem("force_not_null", (Node *) $4, @1);
-				*/ }
+				{
+					$$ = makeDefElem("force_not_null", listNode($4), @1)
+				}
 			| FORCE NOT NULL_P '*'
-				{ /*C
-					$$ = makeDefElem("force_not_null", (Node *) makeNode(A_Star), @1);
-				*/ }
+				{
+					$$ = makeDefElem("force_not_null", &A_Star{}, @1)
+				}
 			| FORCE NULL_P columnList
-				{ /*C
-					$$ = makeDefElem("force_null", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("force_null", listNode($3), @1)
+				}
 			| FORCE NULL_P '*'
-				{ /*C
-					$$ = makeDefElem("force_null", (Node *) makeNode(A_Star), @1);
-				*/ }
+				{
+					$$ = makeDefElem("force_null", &A_Star{}, @1)
+				}
 			| ENCODING Sconst
-				{ /*C
-					$$ = makeDefElem("encoding", (Node *) makeString($2), @1);
-				*/ }
+				{
+					$$ = makeDefElem("encoding", makeString($2, @2), @1)
+				}
 		;
 
 /* The following exist for backward compatibility with very old versions */
 
 opt_binary:
 			BINARY
-				{ /*C
-					$$ = makeDefElem("format", (Node *) makeString("binary"), @1);
-				*/ }
+				{
+					$$ = makeDefElem("format", makeString("binary", @1), @1)
+				}
 			| /*EMPTY*/								{ $$ = nil }
 		;
 
 copy_delimiter:
 			opt_using DELIMITERS Sconst
-				{ /*C
-					$$ = makeDefElem("delimiter", (Node *) makeString($3), @2);
-				*/ }
+				{
+					$$ = makeDefElem("delimiter", makeString($3, @3), @2)
+				}
 			| /*EMPTY*/								{ $$ = nil }
 		;
 
@@ -233,17 +230,17 @@ copy_generic_opt_list:
 
 copy_generic_opt_elem:
 			ColLabel copy_generic_opt_arg
-				{ /*C
-					$$ = makeDefElem($1, $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem($1, $2, @1)
+				}
 		;
 
 copy_generic_opt_arg:
-			opt_boolean_or_string			{ /*C $$ = (Node *) makeString($1); */ }
+			opt_boolean_or_string			{ $$ = makeString($1, @1) }
 			| NumericOnly					{ $$ = $1 }
-			| '*'							{ /*C $$ = (Node *) makeNode(A_Star); */ }
-			| DEFAULT                       { /*C $$ = (Node *) makeString("default"); */ }
-			| '(' copy_generic_opt_arg_list ')'		{ /*C $$ = (Node *) $2; */ }
+			| '*'							{ $$ = &A_Star{} }
+			| DEFAULT                       { $$ = makeString("default", @1) }
+			| '(' copy_generic_opt_arg_list ')'		{ $$ = listNode($2) }
 			| /* EMPTY */					{ $$ = nil }
 		;
 
@@ -256,7 +253,7 @@ copy_generic_opt_arg_list:
 
 /* beware of emitting non-string list elements here; see commands/define.c */
 copy_generic_opt_arg_list_item:
-			opt_boolean_or_string	{ /*C $$ = (Node *) makeString($1); */ }
+			opt_boolean_or_string	{ $$ = makeString($1, @1) }
 		;
 
 
@@ -270,127 +267,127 @@ copy_generic_opt_arg_list_item:
 CreateStmt:	CREATE OptTemp TABLE qualified_name '(' OptTableElementList ')'
 			OptInherit OptPartitionSpec table_access_method_clause OptWith
 			OnCommitOption OptTableSpace
-				{ /*C
-					CreateStmt *n = makeNode(CreateStmt);
+				{
+					n := &CreateStmt{}
 
-					$4->relpersistence = $2;
-					n->relation = $4;
-					n->tableElts = $6;
-					n->inhRelations = $8;
-					n->partspec = $9;
-					n->ofTypename = NULL;
-					n->constraints = NIL;
-					n->accessMethod = $10;
-					n->options = $11;
-					n->oncommit = $12;
-					n->tablespacename = $13;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($4), $2)
+					n.Relation = as[*RangeVar]($4)
+					n.TableElts = $6
+					n.InhRelations = $8
+					n.Partspec = as[*PartitionSpec]($9)
+					n.OfTypename = nil
+					n.Constraints = nil
+					n.AccessMethod = $10
+					n.Options = $11
+					n.Oncommit = OnCommitAction($12)
+					n.Tablespacename = $13
+					n.IfNotExists = false
+					$$ = n
+				}
 		| CREATE OptTemp TABLE IF_P NOT EXISTS qualified_name '('
 			OptTableElementList ')' OptInherit OptPartitionSpec table_access_method_clause
 			OptWith OnCommitOption OptTableSpace
-				{ /*C
-					CreateStmt *n = makeNode(CreateStmt);
+				{
+					n := &CreateStmt{}
 
-					$7->relpersistence = $2;
-					n->relation = $7;
-					n->tableElts = $9;
-					n->inhRelations = $11;
-					n->partspec = $12;
-					n->ofTypename = NULL;
-					n->constraints = NIL;
-					n->accessMethod = $13;
-					n->options = $14;
-					n->oncommit = $15;
-					n->tablespacename = $16;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($7), $2)
+					n.Relation = as[*RangeVar]($7)
+					n.TableElts = $9
+					n.InhRelations = $11
+					n.Partspec = as[*PartitionSpec]($12)
+					n.OfTypename = nil
+					n.Constraints = nil
+					n.AccessMethod = $13
+					n.Options = $14
+					n.Oncommit = OnCommitAction($15)
+					n.Tablespacename = $16
+					n.IfNotExists = true
+					$$ = n
+				}
 		| CREATE OptTemp TABLE qualified_name OF any_name
 			OptTypedTableElementList OptPartitionSpec table_access_method_clause
 			OptWith OnCommitOption OptTableSpace
-				{ /*C
-					CreateStmt *n = makeNode(CreateStmt);
+				{
+					n := &CreateStmt{}
 
-					$4->relpersistence = $2;
-					n->relation = $4;
-					n->tableElts = $7;
-					n->inhRelations = NIL;
-					n->partspec = $8;
-					n->ofTypename = makeTypeNameFromNameList($6);
-					n->ofTypename->location = @6;
-					n->constraints = NIL;
-					n->accessMethod = $9;
-					n->options = $10;
-					n->oncommit = $11;
-					n->tablespacename = $12;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($4), $2)
+					n.Relation = as[*RangeVar]($4)
+					n.TableElts = $7
+					n.InhRelations = nil
+					n.Partspec = as[*PartitionSpec]($8)
+					n.OfTypename = makeTypeNameFromNameList($6)
+					n.OfTypename.Location = @6
+					n.Constraints = nil
+					n.AccessMethod = $9
+					n.Options = $10
+					n.Oncommit = OnCommitAction($11)
+					n.Tablespacename = $12
+					n.IfNotExists = false
+					$$ = n
+				}
 		| CREATE OptTemp TABLE IF_P NOT EXISTS qualified_name OF any_name
 			OptTypedTableElementList OptPartitionSpec table_access_method_clause
 			OptWith OnCommitOption OptTableSpace
-				{ /*C
-					CreateStmt *n = makeNode(CreateStmt);
+				{
+					n := &CreateStmt{}
 
-					$7->relpersistence = $2;
-					n->relation = $7;
-					n->tableElts = $10;
-					n->inhRelations = NIL;
-					n->partspec = $11;
-					n->ofTypename = makeTypeNameFromNameList($9);
-					n->ofTypename->location = @9;
-					n->constraints = NIL;
-					n->accessMethod = $12;
-					n->options = $13;
-					n->oncommit = $14;
-					n->tablespacename = $15;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($7), $2)
+					n.Relation = as[*RangeVar]($7)
+					n.TableElts = $10
+					n.InhRelations = nil
+					n.Partspec = as[*PartitionSpec]($11)
+					n.OfTypename = makeTypeNameFromNameList($9)
+					n.OfTypename.Location = @9
+					n.Constraints = nil
+					n.AccessMethod = $12
+					n.Options = $13
+					n.Oncommit = OnCommitAction($14)
+					n.Tablespacename = $15
+					n.IfNotExists = true
+					$$ = n
+				}
 		| CREATE OptTemp TABLE qualified_name PARTITION OF qualified_name
 			OptTypedTableElementList PartitionBoundSpec OptPartitionSpec
 			table_access_method_clause OptWith OnCommitOption OptTableSpace
-				{ /*C
-					CreateStmt *n = makeNode(CreateStmt);
+				{
+					n := &CreateStmt{}
 
-					$4->relpersistence = $2;
-					n->relation = $4;
-					n->tableElts = $8;
-					n->inhRelations = list_make1($7);
-					n->partbound = $9;
-					n->partspec = $10;
-					n->ofTypename = NULL;
-					n->constraints = NIL;
-					n->accessMethod = $11;
-					n->options = $12;
-					n->oncommit = $13;
-					n->tablespacename = $14;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($4), $2)
+					n.Relation = as[*RangeVar]($4)
+					n.TableElts = $8
+					n.InhRelations = []Node{$7}
+					n.Partbound = as[*PartitionBoundSpec]($9)
+					n.Partspec = as[*PartitionSpec]($10)
+					n.OfTypename = nil
+					n.Constraints = nil
+					n.AccessMethod = $11
+					n.Options = $12
+					n.Oncommit = OnCommitAction($13)
+					n.Tablespacename = $14
+					n.IfNotExists = false
+					$$ = n
+				}
 		| CREATE OptTemp TABLE IF_P NOT EXISTS qualified_name PARTITION OF
 			qualified_name OptTypedTableElementList PartitionBoundSpec OptPartitionSpec
 			table_access_method_clause OptWith OnCommitOption OptTableSpace
-				{ /*C
-					CreateStmt *n = makeNode(CreateStmt);
+				{
+					n := &CreateStmt{}
 
-					$7->relpersistence = $2;
-					n->relation = $7;
-					n->tableElts = $11;
-					n->inhRelations = list_make1($10);
-					n->partbound = $12;
-					n->partspec = $13;
-					n->ofTypename = NULL;
-					n->constraints = NIL;
-					n->accessMethod = $14;
-					n->options = $15;
-					n->oncommit = $16;
-					n->tablespacename = $17;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($7), $2)
+					n.Relation = as[*RangeVar]($7)
+					n.TableElts = $11
+					n.InhRelations = []Node{$10}
+					n.Partbound = as[*PartitionBoundSpec]($12)
+					n.Partspec = as[*PartitionSpec]($13)
+					n.OfTypename = nil
+					n.Constraints = nil
+					n.AccessMethod = $14
+					n.Options = $15
+					n.Oncommit = OnCommitAction($16)
+					n.Tablespacename = $17
+					n.IfNotExists = true
+					$$ = n
+				}
 		;
 
 /*
@@ -404,26 +401,22 @@ CreateStmt:	CREATE OptTemp TABLE qualified_name '(' OptTableElementList ')'
  * implement LOCAL as meaning the same as our default temp table behavior,
  * so we'll probably continue to treat LOCAL as a noise word.
  */
-OptTemp:	TEMPORARY					{ /*C $$ = RELPERSISTENCE_TEMP; */ }
-			| TEMP						{ /*C $$ = RELPERSISTENCE_TEMP; */ }
-			| LOCAL TEMPORARY			{ /*C $$ = RELPERSISTENCE_TEMP; */ }
-			| LOCAL TEMP				{ /*C $$ = RELPERSISTENCE_TEMP; */ }
+OptTemp:	TEMPORARY					{ $$ = int32(relpersistenceTemp[0]) }
+			| TEMP						{ $$ = int32(relpersistenceTemp[0]) }
+			| LOCAL TEMPORARY			{ $$ = int32(relpersistenceTemp[0]) }
+			| LOCAL TEMP				{ $$ = int32(relpersistenceTemp[0]) }
 			| GLOBAL TEMPORARY
-				{ /*C
-					ereport(WARNING,
-							(errmsg("GLOBAL is deprecated in temporary table creation"),
-							 parser_errposition(@1)));
-					$$ = RELPERSISTENCE_TEMP;
-				*/ }
+				{
+					/* GLOBAL is deprecated in temporary table creation: only a warning, nothing to report */
+					$$ = int32(relpersistenceTemp[0])
+				}
 			| GLOBAL TEMP
-				{ /*C
-					ereport(WARNING,
-							(errmsg("GLOBAL is deprecated in temporary table creation"),
-							 parser_errposition(@1)));
-					$$ = RELPERSISTENCE_TEMP;
-				*/ }
-			| UNLOGGED					{ /*C $$ = RELPERSISTENCE_UNLOGGED; */ }
-			| /*EMPTY*/					{ /*C $$ = RELPERSISTENCE_PERMANENT; */ }
+				{
+					/* GLOBAL is deprecated in temporary table creation: only a warning, nothing to report */
+					$$ = int32(relpersistenceTemp[0])
+				}
+			| UNLOGGED					{ $$ = int32(relpersistenceUnlogged[0]) }
+			| /*EMPTY*/					{ $$ = int32(relpersistencePermanent[0]) }
 		;
 
 OptTableElementList:
@@ -462,72 +455,69 @@ TypedTableElement:
 		;
 
 columnDef:	ColId Typename opt_column_storage opt_column_compression create_generic_options ColQualList
-				{ /*C
-					ColumnDef *n = makeNode(ColumnDef);
+				{
+					n := &ColumnDef{}
 
-					n->colname = $1;
-					n->typeName = $2;
-					n->storage_name = $3;
-					n->compression = $4;
-					n->inhcount = 0;
-					n->is_local = true;
-					n->is_not_null = false;
-					n->is_from_type = false;
-					n->storage = 0;
-					n->raw_default = NULL;
-					n->cooked_default = NULL;
-					n->collOid = InvalidOid;
-					n->fdwoptions = $5;
-					SplitColQualList($6, &n->constraints, &n->collClause,
-									 yyscanner);
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Colname = $1
+					n.TypeName = as[*TypeName]($2)
+					n.StorageName = $3
+					n.Compression = $4
+					n.Inhcount = 0
+					n.IsLocal = true
+					n.IsNotNull = false
+					n.IsFromType = false
+					n.Storage = ""
+					n.RawDefault = nil
+					n.CookedDefault = nil
+					n.CollOid = 0
+					n.Fdwoptions = $5
+					n.Constraints, n.CollClause = p.splitColQualList($6)
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 columnOptions:	ColId ColQualList
-				{ /*C
-					ColumnDef *n = makeNode(ColumnDef);
+				{
+					n := &ColumnDef{}
 
-					n->colname = $1;
-					n->typeName = NULL;
-					n->inhcount = 0;
-					n->is_local = true;
-					n->is_not_null = false;
-					n->is_from_type = false;
-					n->storage = 0;
-					n->raw_default = NULL;
-					n->cooked_default = NULL;
-					n->collOid = InvalidOid;
-					SplitColQualList($2, &n->constraints, &n->collClause,
-									 yyscanner);
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Colname = $1
+					n.TypeName = nil
+					n.Inhcount = 0
+					n.IsLocal = true
+					n.IsNotNull = false
+					n.IsFromType = false
+					n.Storage = ""
+					n.RawDefault = nil
+					n.CookedDefault = nil
+					n.CollOid = 0
+					n.Constraints, n.CollClause = p.splitColQualList($2)
+					n.Location = @1
+					$$ = n
+				}
 				| ColId WITH OPTIONS ColQualList
-				{ /*C
-					ColumnDef *n = makeNode(ColumnDef);
+				{
+					n := &ColumnDef{}
 
-					n->colname = $1;
-					n->typeName = NULL;
-					n->inhcount = 0;
-					n->is_local = true;
-					n->is_not_null = false;
-					n->is_from_type = false;
-					n->storage = 0;
-					n->raw_default = NULL;
-					n->cooked_default = NULL;
-					n->collOid = InvalidOid;
-					SplitColQualList($4, &n->constraints, &n->collClause,
-									 yyscanner);
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Colname = $1
+					n.TypeName = nil
+					n.Inhcount = 0
+					n.IsLocal = true
+					n.IsNotNull = false
+					n.IsFromType = false
+					n.Storage = ""
+					n.RawDefault = nil
+					n.CookedDefault = nil
+					n.CollOid = 0
+					n.Constraints, n.CollClause = p.splitColQualList($4)
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 column_compression:
 			COMPRESSION ColId						{ $$ = $2 }
-			| COMPRESSION DEFAULT					{ /*C $$ = pstrdup("default"); */ }
+			| COMPRESSION DEFAULT					{ $$ = "default" }
 		;
 
 opt_column_compression:
@@ -537,7 +527,7 @@ opt_column_compression:
 
 column_storage:
 			STORAGE ColId							{ $$ = $2 }
-			| STORAGE DEFAULT						{ /*C $$ = pstrdup("default"); */ }
+			| STORAGE DEFAULT						{ $$ = "default" }
 		;
 
 opt_column_storage:
@@ -552,29 +542,29 @@ ColQualList:
 
 ColConstraint:
 			CONSTRAINT name ColConstraintElem
-				{ /*C
-					Constraint *n = castNode(Constraint, $3);
+				{
+					n := as[*Constraint]($3)
 
-					n->conname = $2;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Conname = $2
+					n.Location = @1
+					$$ = n
+				}
 			| ColConstraintElem						{ $$ = $1 }
 			| ConstraintAttr						{ $$ = $1 }
 			| COLLATE any_name
-				{ /*C
+				{
 					/*
 					 * Note: the CollateClause is momentarily included in
 					 * the list built by ColQualList, but we split it out
 					 * again in SplitColQualList.
-					 * /
-					CollateClause *n = makeNode(CollateClause);
+					 */
+					n := &CollateClause{}
 
-					n->arg = NULL;
-					n->collname = $2;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Arg = nil
+					n.Collname = $2
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 /* DEFAULT NULL is already the default for Postgres.
@@ -594,120 +584,118 @@ ColConstraint:
  */
 ColConstraintElem:
 			NOT NULL_P
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_NOTNULL;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_NOTNULL
+					n.Location = @1
+					$$ = n
+				}
 			| NULL_P
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_NULL;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_NULL
+					n.Location = @1
+					$$ = n
+				}
 			| UNIQUE opt_unique_null_treatment opt_definition OptConsTableSpace
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_UNIQUE;
-					n->location = @1;
-					n->nulls_not_distinct = !$2;
-					n->keys = NULL;
-					n->options = $3;
-					n->indexname = NULL;
-					n->indexspace = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_UNIQUE
+					n.Location = @1
+					n.NullsNotDistinct = !$2
+					n.Keys = nil
+					n.Options = $3
+					n.Indexname = ""
+					n.Indexspace = $4
+					$$ = n
+				}
 			| PRIMARY KEY opt_definition OptConsTableSpace
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_PRIMARY;
-					n->location = @1;
-					n->keys = NULL;
-					n->options = $3;
-					n->indexname = NULL;
-					n->indexspace = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_PRIMARY
+					n.Location = @1
+					n.Keys = nil
+					n.Options = $3
+					n.Indexname = ""
+					n.Indexspace = $4
+					$$ = n
+				}
 			| CHECK '(' a_expr ')' opt_no_inherit
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_CHECK;
-					n->location = @1;
-					n->is_no_inherit = $5;
-					n->raw_expr = $3;
-					n->cooked_expr = NULL;
-					n->skip_validation = false;
-					n->initially_valid = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_CHECK
+					n.Location = @1
+					n.IsNoInherit = $5
+					n.RawExpr = $3
+					n.CookedExpr = ""
+					n.SkipValidation = false
+					n.InitiallyValid = true
+					$$ = n
+				}
 			| DEFAULT b_expr
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_DEFAULT;
-					n->location = @1;
-					n->raw_expr = $2;
-					n->cooked_expr = NULL;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_DEFAULT
+					n.Location = @1
+					n.RawExpr = $2
+					n.CookedExpr = ""
+					$$ = n
+				}
 			| GENERATED generated_when AS IDENTITY_P OptParenthesizedSeqOptList
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_IDENTITY;
-					n->generated_when = $2;
-					n->options = $5;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_IDENTITY
+					n.GeneratedWhen = string(rune($2))
+					n.Options = $5
+					n.Location = @1
+					$$ = n
+				}
 			| GENERATED generated_when AS '(' a_expr ')' STORED
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_GENERATED;
-					n->generated_when = $2;
-					n->raw_expr = $5;
-					n->cooked_expr = NULL;
-					n->location = @1;
+					n.Contype = CONSTR_GENERATED
+					n.GeneratedWhen = string(rune($2))
+					n.RawExpr = $5
+					n.CookedExpr = ""
+					n.Location = @1
 
 					/*
 					 * Can't do this in the grammar because of shift/reduce
 					 * conflicts.  (IDENTITY allows both ALWAYS and BY
 					 * DEFAULT, but generated columns only allow ALWAYS.)  We
 					 * can also give a more useful error message and location.
-					 * /
-					if ($2 != ATTRIBUTE_IDENTITY_ALWAYS)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("for a generated column, GENERATED ALWAYS must be specified"),
-								 parser_errposition(@2)));
+					 */
+					if $2 != ATTRIBUTE_IDENTITY_ALWAYS {
+						p.fail(@2, "for a generated column, GENERATED ALWAYS must be specified")
+					}
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 			| REFERENCES qualified_name opt_column_list key_match key_actions
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_FOREIGN;
-					n->location = @1;
-					n->pktable = $2;
-					n->fk_attrs = NIL;
-					n->pk_attrs = $3;
-					n->fk_matchtype = $4;
-					n->fk_upd_action = ($5)->updateAction->action;
-					n->fk_del_action = ($5)->deleteAction->action;
-					n->fk_del_set_cols = ($5)->deleteAction->cols;
-					n->skip_validation = false;
-					n->initially_valid = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_FOREIGN
+					n.Location = @1
+					n.Pktable = as[*RangeVar]($2)
+					n.FkAttrs = nil
+					n.PkAttrs = $3
+					n.FkMatchtype = string(rune($4))
+					n.FkUpdAction = as[*keyActions]($5).updateAction.action
+					n.FkDelAction = as[*keyActions]($5).deleteAction.action
+					n.FkDelSetCols = as[*keyActions]($5).deleteAction.cols
+					n.SkipValidation = false
+					n.InitiallyValid = true
+					$$ = n
+				}
 		;
 
 opt_unique_null_treatment:
@@ -717,8 +705,8 @@ opt_unique_null_treatment:
 		;
 
 generated_when:
-			ALWAYS			{ /*C $$ = ATTRIBUTE_IDENTITY_ALWAYS; */ }
-			| BY DEFAULT	{ /*C $$ = ATTRIBUTE_IDENTITY_BY_DEFAULT; */ }
+			ALWAYS			{ $$ = ATTRIBUTE_IDENTITY_ALWAYS }
+			| BY DEFAULT	{ $$ = ATTRIBUTE_IDENTITY_BY_DEFAULT }
 		;
 
 /*
@@ -738,69 +726,69 @@ generated_when:
  */
 ConstraintAttr:
 			DEFERRABLE
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_ATTR_DEFERRABLE;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_ATTR_DEFERRABLE
+					n.Location = @1
+					$$ = n
+				}
 			| NOT DEFERRABLE
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_ATTR_NOT_DEFERRABLE;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_ATTR_NOT_DEFERRABLE
+					n.Location = @1
+					$$ = n
+				}
 			| INITIALLY DEFERRED
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_ATTR_DEFERRED;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_ATTR_DEFERRED
+					n.Location = @1
+					$$ = n
+				}
 			| INITIALLY IMMEDIATE
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_ATTR_IMMEDIATE;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_ATTR_IMMEDIATE
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 
 TableLikeClause:
 			LIKE qualified_name TableLikeOptionList
-				{ /*C
-					TableLikeClause *n = makeNode(TableLikeClause);
+				{
+					n := &TableLikeClause{}
 
-					n->relation = $2;
-					n->options = $3;
-					n->relationOid = InvalidOid;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($2)
+					n.Options = uint32($3)
+					n.RelationOid = 0
+					$$ = n
+				}
 		;
 
 TableLikeOptionList:
-				TableLikeOptionList INCLUDING TableLikeOption	{ /*C $$ = $1 | $3; */ }
-				| TableLikeOptionList EXCLUDING TableLikeOption	{ /*C $$ = $1 & ~$3; */ }
+				TableLikeOptionList INCLUDING TableLikeOption	{ $$ = $1 | $3 }
+				| TableLikeOptionList EXCLUDING TableLikeOption	{ $$ = $1 &^ $3 }
 				| /* EMPTY */						{ $$ = 0 }
 		;
 
 TableLikeOption:
-				COMMENTS			{ /*C $$ = CREATE_TABLE_LIKE_COMMENTS; */ }
-				| COMPRESSION		{ /*C $$ = CREATE_TABLE_LIKE_COMPRESSION; */ }
-				| CONSTRAINTS		{ /*C $$ = CREATE_TABLE_LIKE_CONSTRAINTS; */ }
-				| DEFAULTS			{ /*C $$ = CREATE_TABLE_LIKE_DEFAULTS; */ }
-				| IDENTITY_P		{ /*C $$ = CREATE_TABLE_LIKE_IDENTITY; */ }
-				| GENERATED			{ /*C $$ = CREATE_TABLE_LIKE_GENERATED; */ }
-				| INDEXES			{ /*C $$ = CREATE_TABLE_LIKE_INDEXES; */ }
-				| STATISTICS		{ /*C $$ = CREATE_TABLE_LIKE_STATISTICS; */ }
-				| STORAGE			{ /*C $$ = CREATE_TABLE_LIKE_STORAGE; */ }
-				| ALL				{ /*C $$ = CREATE_TABLE_LIKE_ALL; */ }
+				COMMENTS			{ $$ = createTableLikeComments }
+				| COMPRESSION		{ $$ = createTableLikeCompression }
+				| CONSTRAINTS		{ $$ = createTableLikeConstraints }
+				| DEFAULTS			{ $$ = createTableLikeDefaults }
+				| IDENTITY_P		{ $$ = createTableLikeIdentity }
+				| GENERATED			{ $$ = createTableLikeGenerated }
+				| INDEXES			{ $$ = createTableLikeIndexes }
+				| STATISTICS		{ $$ = createTableLikeStatistics }
+				| STORAGE			{ $$ = createTableLikeStorage }
+				| ALL				{ $$ = createTableLikeAll }
 		;
 
 
@@ -810,139 +798,138 @@ TableLikeOption:
  */
 TableConstraint:
 			CONSTRAINT name ConstraintElem
-				{ /*C
-					Constraint *n = castNode(Constraint, $3);
+				{
+					n := as[*Constraint]($3)
 
-					n->conname = $2;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Conname = $2
+					n.Location = @1
+					$$ = n
+				}
 			| ConstraintElem						{ $$ = $1 }
 		;
 
 ConstraintElem:
 			CHECK '(' a_expr ')' ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_CHECK;
-					n->location = @1;
-					n->raw_expr = $3;
-					n->cooked_expr = NULL;
-					processCASbits($5, @5, "CHECK",
-								   NULL, NULL, &n->skip_validation,
-								   &n->is_no_inherit, yyscanner);
-					n->initially_valid = !n->skip_validation;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_CHECK
+					n.Location = @1
+					n.RawExpr = $3
+					n.CookedExpr = ""
+					p.processCASbits($5, @5, "CHECK",
+						nil, nil, &n.SkipValidation,
+						&n.IsNoInherit)
+					n.InitiallyValid = !n.SkipValidation
+					$$ = n
+				}
 			| UNIQUE opt_unique_null_treatment '(' columnList ')' opt_c_include opt_definition OptConsTableSpace
 				ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_UNIQUE;
-					n->location = @1;
-					n->nulls_not_distinct = !$2;
-					n->keys = $4;
-					n->including = $6;
-					n->options = $7;
-					n->indexname = NULL;
-					n->indexspace = $8;
-					processCASbits($9, @9, "UNIQUE",
-								   &n->deferrable, &n->initdeferred, NULL,
-								   NULL, yyscanner);
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_UNIQUE
+					n.Location = @1
+					n.NullsNotDistinct = !$2
+					n.Keys = $4
+					n.Including = $6
+					n.Options = $7
+					n.Indexname = ""
+					n.Indexspace = $8
+					p.processCASbits($9, @9, "UNIQUE",
+						&n.Deferrable, &n.Initdeferred, nil,
+						nil)
+					$$ = n
+				}
 			| UNIQUE ExistingIndex ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_UNIQUE;
-					n->location = @1;
-					n->keys = NIL;
-					n->including = NIL;
-					n->options = NIL;
-					n->indexname = $2;
-					n->indexspace = NULL;
-					processCASbits($3, @3, "UNIQUE",
-								   &n->deferrable, &n->initdeferred, NULL,
-								   NULL, yyscanner);
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_UNIQUE
+					n.Location = @1
+					n.Keys = nil
+					n.Including = nil
+					n.Options = nil
+					n.Indexname = $2
+					n.Indexspace = ""
+					p.processCASbits($3, @3, "UNIQUE",
+						&n.Deferrable, &n.Initdeferred, nil,
+						nil)
+					$$ = n
+				}
 			| PRIMARY KEY '(' columnList ')' opt_c_include opt_definition OptConsTableSpace
 				ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_PRIMARY;
-					n->location = @1;
-					n->keys = $4;
-					n->including = $6;
-					n->options = $7;
-					n->indexname = NULL;
-					n->indexspace = $8;
-					processCASbits($9, @9, "PRIMARY KEY",
-								   &n->deferrable, &n->initdeferred, NULL,
-								   NULL, yyscanner);
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_PRIMARY
+					n.Location = @1
+					n.Keys = $4
+					n.Including = $6
+					n.Options = $7
+					n.Indexname = ""
+					n.Indexspace = $8
+					p.processCASbits($9, @9, "PRIMARY KEY",
+						&n.Deferrable, &n.Initdeferred, nil,
+						nil)
+					$$ = n
+				}
 			| PRIMARY KEY ExistingIndex ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_PRIMARY;
-					n->location = @1;
-					n->keys = NIL;
-					n->including = NIL;
-					n->options = NIL;
-					n->indexname = $3;
-					n->indexspace = NULL;
-					processCASbits($4, @4, "PRIMARY KEY",
-								   &n->deferrable, &n->initdeferred, NULL,
-								   NULL, yyscanner);
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_PRIMARY
+					n.Location = @1
+					n.Keys = nil
+					n.Including = nil
+					n.Options = nil
+					n.Indexname = $3
+					n.Indexspace = ""
+					p.processCASbits($4, @4, "PRIMARY KEY",
+						&n.Deferrable, &n.Initdeferred, nil,
+						nil)
+					$$ = n
+				}
 			| EXCLUDE access_method_clause '(' ExclusionConstraintList ')'
 				opt_c_include opt_definition OptConsTableSpace OptWhereClause
 				ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_EXCLUSION;
-					n->location = @1;
-					n->access_method = $2;
-					n->exclusions = $4;
-					n->including = $6;
-					n->options = $7;
-					n->indexname = NULL;
-					n->indexspace = $8;
-					n->where_clause = $9;
-					processCASbits($10, @10, "EXCLUDE",
-								   &n->deferrable, &n->initdeferred, NULL,
-								   NULL, yyscanner);
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_EXCLUSION
+					n.Location = @1
+					n.AccessMethod = $2
+					n.Exclusions = $4
+					n.Including = $6
+					n.Options = $7
+					n.Indexname = ""
+					n.Indexspace = $8
+					n.WhereClause = $9
+					p.processCASbits($10, @10, "EXCLUDE",
+						&n.Deferrable, &n.Initdeferred, nil,
+						nil)
+					$$ = n
+				}
 			| FOREIGN KEY '(' columnList ')' REFERENCES qualified_name
 				opt_column_list key_match key_actions ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_FOREIGN;
-					n->location = @1;
-					n->pktable = $7;
-					n->fk_attrs = $4;
-					n->pk_attrs = $8;
-					n->fk_matchtype = $9;
-					n->fk_upd_action = ($10)->updateAction->action;
-					n->fk_del_action = ($10)->deleteAction->action;
-					n->fk_del_set_cols = ($10)->deleteAction->cols;
-					processCASbits($11, @11, "FOREIGN KEY",
-								   &n->deferrable, &n->initdeferred,
-								   &n->skip_validation, NULL,
-								   yyscanner);
-					n->initially_valid = !n->skip_validation;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_FOREIGN
+					n.Location = @1
+					n.Pktable = as[*RangeVar]($7)
+					n.FkAttrs = $4
+					n.PkAttrs = $8
+					n.FkMatchtype = string(rune($9))
+					n.FkUpdAction = as[*keyActions]($10).updateAction.action
+					n.FkDelAction = as[*keyActions]($10).deleteAction.action
+					n.FkDelSetCols = as[*keyActions]($10).deleteAction.cols
+					p.processCASbits($11, @11, "FOREIGN KEY",
+						&n.Deferrable, &n.Initdeferred,
+						&n.SkipValidation, nil)
+					n.InitiallyValid = !n.SkipValidation
+					$$ = n
+				}
 		;
 
 /*
@@ -958,45 +945,45 @@ ConstraintElem:
  */
 DomainConstraint:
 			CONSTRAINT name DomainConstraintElem
-				{ /*C
-					Constraint *n = castNode(Constraint, $3);
+				{
+					n := as[*Constraint]($3)
 
-					n->conname = $2;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Conname = $2
+					n.Location = @1
+					$$ = n
+				}
 			| DomainConstraintElem					{ $$ = $1 }
 		;
 
 DomainConstraintElem:
 			CHECK '(' a_expr ')' ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_CHECK;
-					n->location = @1;
-					n->raw_expr = $3;
-					n->cooked_expr = NULL;
-					processCASbits($5, @5, "CHECK",
-								   NULL, NULL, &n->skip_validation,
-								   &n->is_no_inherit, yyscanner);
-					n->initially_valid = !n->skip_validation;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_CHECK
+					n.Location = @1
+					n.RawExpr = $3
+					n.CookedExpr = ""
+					p.processCASbits($5, @5, "CHECK",
+						nil, nil, &n.SkipValidation,
+						&n.IsNoInherit)
+					n.InitiallyValid = !n.SkipValidation
+					$$ = n
+				}
 			| NOT NULL_P ConstraintAttributeSpec
-				{ /*C
-					Constraint *n = makeNode(Constraint);
+				{
+					n := &Constraint{}
 
-					n->contype = CONSTR_NOTNULL;
-					n->location = @1;
-					n->keys = list_make1(makeString("value"));
-					/* no NOT VALID support yet * /
-					processCASbits($3, @3, "NOT NULL",
-								   NULL, NULL, NULL,
-								   &n->is_no_inherit, yyscanner);
-					n->initially_valid = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Contype = CONSTR_NOTNULL
+					n.Location = @1
+					n.Keys = []Node{makeString("value", -1)}
+					/* no NOT VALID support yet */
+					p.processCASbits($3, @3, "NOT NULL",
+						nil, nil, nil,
+						&n.IsNoInherit)
+					n.InitiallyValid = true
+					$$ = n
+				}
 		;
 
 opt_no_inherit:	NO INHERIT							{ $$ = true }
@@ -1014,9 +1001,9 @@ columnList:
 		;
 
 columnElem: ColId
-				{ /*C
-					$$ = (Node *) makeString($1);
-				*/ }
+				{
+					$$ = makeString($1, @1)
+				}
 		;
 
 opt_c_include:	INCLUDE '(' columnList ')'			{ $$ = $3 }
@@ -1024,42 +1011,39 @@ opt_c_include:	INCLUDE '(' columnList ')'			{ $$ = $3 }
 		;
 
 key_match:  MATCH FULL
-			{ /*C
-				$$ = FKCONSTR_MATCH_FULL;
-			*/ }
+			{
+				$$ = FKCONSTR_MATCH_FULL
+			}
 		| MATCH PARTIAL
-			{ /*C
-				ereport(ERROR,
-						(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-						 errmsg("MATCH PARTIAL not yet implemented"),
-						 parser_errposition(@1)));
-				$$ = FKCONSTR_MATCH_PARTIAL;
-			*/ }
+			{
+				p.fail(@1, "MATCH PARTIAL not yet implemented")
+				$$ = FKCONSTR_MATCH_PARTIAL
+			}
 		| MATCH SIMPLE
-			{ /*C
-				$$ = FKCONSTR_MATCH_SIMPLE;
-			*/ }
+			{
+				$$ = FKCONSTR_MATCH_SIMPLE
+			}
 		| /*EMPTY*/
-			{ /*C
-				$$ = FKCONSTR_MATCH_SIMPLE;
-			*/ }
+			{
+				$$ = FKCONSTR_MATCH_SIMPLE
+			}
 		;
 
 ExclusionConstraintList:
-			ExclusionConstraintElem					{ /*C $$ = list_make1($1); */ }
+			ExclusionConstraintElem					{ $$ = []Node{listNode($1)} }
 			| ExclusionConstraintList ',' ExclusionConstraintElem
-													{ /*C $$ = lappend($1, $3); */ }
+													{ $$ = append($1, listNode($3)) }
 		;
 
 ExclusionConstraintElem: index_elem WITH any_operator
-			{ /*C
-				$$ = list_make2($1, $3);
-			*/ }
+			{
+				$$ = []Node{$1, listNode($3)}
+			}
 			/* allow OPERATOR() decoration for the benefit of ruleutils.c */
 			| index_elem WITH OPERATOR '(' any_operator ')'
-			{ /*C
-				$$ = list_make2($1, $5);
-			*/ }
+			{
+				$$ = []Node{$1, listNode($5)}
+			}
 		;
 
 OptWhereClause:
@@ -1069,65 +1053,66 @@ OptWhereClause:
 
 key_actions:
 			key_update
-				{ /*C
-					KeyActions *n = palloc(sizeof(KeyActions));
+				{
+					n := &keyActions{}
 
-					n->updateAction = $1;
-					n->deleteAction = palloc(sizeof(KeyAction));
-					n->deleteAction->action = FKCONSTR_ACTION_NOACTION;
-					n->deleteAction->cols = NIL;
-					$$ = n;
-				*/ }
+					n.updateAction = as[*keyAction]($1)
+					n.deleteAction = &keyAction{}
+					n.deleteAction.action = FKCONSTR_ACTION_NOACTION
+					n.deleteAction.cols = nil
+					$$ = n
+				}
 			| key_delete
-				{ /*C
-					KeyActions *n = palloc(sizeof(KeyActions));
+				{
+					n := &keyActions{}
 
-					n->updateAction = palloc(sizeof(KeyAction));
-					n->updateAction->action = FKCONSTR_ACTION_NOACTION;
-					n->updateAction->cols = NIL;
-					n->deleteAction = $1;
-					$$ = n;
-				*/ }
+					n.updateAction = &keyAction{}
+					n.updateAction.action = FKCONSTR_ACTION_NOACTION
+					n.updateAction.cols = nil
+					n.deleteAction = as[*keyAction]($1)
+					$$ = n
+				}
 			| key_update key_delete
-				{ /*C
-					KeyActions *n = palloc(sizeof(KeyActions));
+				{
+					n := &keyActions{}
 
-					n->updateAction = $1;
-					n->deleteAction = $2;
-					$$ = n;
-				*/ }
+					n.updateAction = as[*keyAction]($1)
+					n.deleteAction = as[*keyAction]($2)
+					$$ = n
+				}
 			| key_delete key_update
-				{ /*C
-					KeyActions *n = palloc(sizeof(KeyActions));
+				{
+					n := &keyActions{}
 
-					n->updateAction = $2;
-					n->deleteAction = $1;
-					$$ = n;
-				*/ }
+					n.updateAction = as[*keyAction]($2)
+					n.deleteAction = as[*keyAction]($1)
+					$$ = n
+				}
 			| /*EMPTY*/
-				{ /*C
-					KeyActions *n = palloc(sizeof(KeyActions));
+				{
+					n := &keyActions{}
 
-					n->updateAction = palloc(sizeof(KeyAction));
-					n->updateAction->action = FKCONSTR_ACTION_NOACTION;
-					n->updateAction->cols = NIL;
-					n->deleteAction = palloc(sizeof(KeyAction));
-					n->deleteAction->action = FKCONSTR_ACTION_NOACTION;
-					n->deleteAction->cols = NIL;
-					$$ = n;
-				*/ }
+					n.updateAction = &keyAction{}
+					n.updateAction.action = FKCONSTR_ACTION_NOACTION
+					n.updateAction.cols = nil
+					n.deleteAction = &keyAction{}
+					n.deleteAction.action = FKCONSTR_ACTION_NOACTION
+					n.deleteAction.cols = nil
+					$$ = n
+				}
 		;
 
 key_update: ON UPDATE key_action
-				{ /*C
-					if (($3)->cols)
-						ereport(ERROR,
-								(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-								 errmsg("a column list with %s is only supported for ON DELETE actions",
-										($3)->action == FKCONSTR_ACTION_SETNULL ? "SET NULL" : "SET DEFAULT"),
-								 parser_errposition(@1)));
-					$$ = $3;
-				*/ }
+				{
+					if len(as[*keyAction]($3).cols) > 0 {
+						setWhat := "SET DEFAULT"
+						if as[*keyAction]($3).action == FKCONSTR_ACTION_SETNULL {
+							setWhat = "SET NULL"
+						}
+						p.fail(@1, fmt.Sprintf("a column list with %s is only supported for ON DELETE actions", setWhat))
+					}
+					$$ = $3
+				}
 		;
 
 key_delete: ON DELETE_P key_action
@@ -1136,45 +1121,45 @@ key_delete: ON DELETE_P key_action
 
 key_action:
 			NO ACTION
-				{ /*C
-					KeyAction *n = palloc(sizeof(KeyAction));
+				{
+					n := &keyAction{}
 
-					n->action = FKCONSTR_ACTION_NOACTION;
-					n->cols = NIL;
-					$$ = n;
-				*/ }
+					n.action = FKCONSTR_ACTION_NOACTION
+					n.cols = nil
+					$$ = n
+				}
 			| RESTRICT
-				{ /*C
-					KeyAction *n = palloc(sizeof(KeyAction));
+				{
+					n := &keyAction{}
 
-					n->action = FKCONSTR_ACTION_RESTRICT;
-					n->cols = NIL;
-					$$ = n;
-				*/ }
+					n.action = FKCONSTR_ACTION_RESTRICT
+					n.cols = nil
+					$$ = n
+				}
 			| CASCADE
-				{ /*C
-					KeyAction *n = palloc(sizeof(KeyAction));
+				{
+					n := &keyAction{}
 
-					n->action = FKCONSTR_ACTION_CASCADE;
-					n->cols = NIL;
-					$$ = n;
-				*/ }
+					n.action = FKCONSTR_ACTION_CASCADE
+					n.cols = nil
+					$$ = n
+				}
 			| SET NULL_P opt_column_list
-				{ /*C
-					KeyAction *n = palloc(sizeof(KeyAction));
+				{
+					n := &keyAction{}
 
-					n->action = FKCONSTR_ACTION_SETNULL;
-					n->cols = $3;
-					$$ = n;
-				*/ }
+					n.action = FKCONSTR_ACTION_SETNULL
+					n.cols = $3
+					$$ = n
+				}
 			| SET DEFAULT opt_column_list
-				{ /*C
-					KeyAction *n = palloc(sizeof(KeyAction));
+				{
+					n := &keyAction{}
 
-					n->action = FKCONSTR_ACTION_SETDEFAULT;
-					n->cols = $3;
-					$$ = n;
-				*/ }
+					n.action = FKCONSTR_ACTION_SETDEFAULT
+					n.cols = $3
+					$$ = n
+				}
 		;
 
 OptInherit: INHERITS '(' qualified_name_list ')'	{ $$ = $3 }
@@ -1187,15 +1172,15 @@ OptPartitionSpec: PartitionSpec	{ $$ = $1 }
 		;
 
 PartitionSpec: PARTITION BY ColId '(' part_params ')'
-				{ /*C
-					PartitionSpec *n = makeNode(PartitionSpec);
+				{
+					n := &PartitionSpec{}
 
-					n->strategy = parsePartitionStrategy($3);
-					n->partParams = $5;
-					n->location = @1;
+					n.Strategy = p.parsePartitionStrategy($3)
+					n.PartParams = $5
+					n.Location = @1
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 		;
 
 part_params:	part_elem						{ $$ = []Node{$1} }
@@ -1203,38 +1188,38 @@ part_params:	part_elem						{ $$ = []Node{$1} }
 		;
 
 part_elem: ColId opt_collate opt_qualified_name
-				{ /*C
-					PartitionElem *n = makeNode(PartitionElem);
+				{
+					n := &PartitionElem{}
 
-					n->name = $1;
-					n->expr = NULL;
-					n->collation = $2;
-					n->opclass = $3;
-					n->location = @1;
-					$$ = n;
-				*/ }
+					n.Name = $1
+					n.Expr = nil
+					n.Collation = $2
+					n.Opclass = $3
+					n.Location = @1
+					$$ = n
+				}
 			| func_expr_windowless opt_collate opt_qualified_name
-				{ /*C
-					PartitionElem *n = makeNode(PartitionElem);
+				{
+					n := &PartitionElem{}
 
-					n->name = NULL;
-					n->expr = $1;
-					n->collation = $2;
-					n->opclass = $3;
-					n->location = @1;
-					$$ = n;
-				*/ }
+					n.Name = ""
+					n.Expr = $1
+					n.Collation = $2
+					n.Opclass = $3
+					n.Location = @1
+					$$ = n
+				}
 			| '(' a_expr ')' opt_collate opt_qualified_name
-				{ /*C
-					PartitionElem *n = makeNode(PartitionElem);
+				{
+					n := &PartitionElem{}
 
-					n->name = NULL;
-					n->expr = $2;
-					n->collation = $4;
-					n->opclass = $5;
-					n->location = @1;
-					$$ = n;
-				*/ }
+					n.Name = ""
+					n.Expr = $2
+					n.Collation = $4
+					n.Opclass = $5
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 table_access_method_clause:
@@ -1285,30 +1270,30 @@ ExistingIndex:   USING INDEX name					{ $$ = $3 }
 CreateStatsStmt:
 			CREATE STATISTICS opt_qualified_name
 			opt_name_list ON stats_params FROM from_list
-				{ /*C
-					CreateStatsStmt *n = makeNode(CreateStatsStmt);
+				{
+					n := &CreateStatsStmt{}
 
-					n->defnames = $3;
-					n->stat_types = $4;
-					n->exprs = $6;
-					n->relations = $8;
-					n->stxcomment = NULL;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Defnames = $3
+					n.StatTypes = $4
+					n.Exprs = $6
+					n.Relations = $8
+					n.Stxcomment = ""
+					n.IfNotExists = false
+					$$ = n
+				}
 			| CREATE STATISTICS IF_P NOT EXISTS any_name
 			opt_name_list ON stats_params FROM from_list
-				{ /*C
-					CreateStatsStmt *n = makeNode(CreateStatsStmt);
+				{
+					n := &CreateStatsStmt{}
 
-					n->defnames = $6;
-					n->stat_types = $7;
-					n->exprs = $9;
-					n->relations = $11;
-					n->stxcomment = NULL;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Defnames = $6
+					n.StatTypes = $7
+					n.Exprs = $9
+					n.Relations = $11
+					n.Stxcomment = ""
+					n.IfNotExists = true
+					$$ = n
+				}
 			;
 
 /*
@@ -1323,23 +1308,29 @@ stats_params:	stats_param							{ $$ = []Node{$1} }
 		;
 
 stats_param:	ColId
-				{ /*C
-					$$ = makeNode(StatsElem);
-					$$->name = $1;
-					$$->expr = NULL;
-				*/ }
+				{
+					n := &StatsElem{}
+
+					n.Name = $1
+					n.Expr = nil
+					$$ = n
+				}
 			| func_expr_windowless
-				{ /*C
-					$$ = makeNode(StatsElem);
-					$$->name = NULL;
-					$$->expr = $1;
-				*/ }
+				{
+					n := &StatsElem{}
+
+					n.Name = ""
+					n.Expr = $1
+					$$ = n
+				}
 			| '(' a_expr ')'
-				{ /*C
-					$$ = makeNode(StatsElem);
-					$$->name = NULL;
-					$$->expr = $2;
-				*/ }
+				{
+					n := &StatsElem{}
+
+					n.Name = ""
+					n.Expr = $2
+					$$ = n
+				}
 		;
 
 /*****************************************************************************
@@ -1352,23 +1343,23 @@ stats_param:	ColId
 
 AlterStatsStmt:
 			ALTER STATISTICS any_name SET STATISTICS set_statistics_value
-				{ /*C
-					AlterStatsStmt *n = makeNode(AlterStatsStmt);
+				{
+					n := &AlterStatsStmt{}
 
-					n->defnames = $3;
-					n->missing_ok = false;
-					n->stxstattarget = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Defnames = $3
+					n.MissingOk = false
+					n.Stxstattarget = $6
+					$$ = n
+				}
 			| ALTER STATISTICS IF_P EXISTS any_name SET STATISTICS set_statistics_value
-				{ /*C
-					AlterStatsStmt *n = makeNode(AlterStatsStmt);
+				{
+					n := &AlterStatsStmt{}
 
-					n->defnames = $5;
-					n->missing_ok = true;
-					n->stxstattarget = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Defnames = $5
+					n.MissingOk = true
+					n.Stxstattarget = $8
+					$$ = n
+				}
 			;
 
 /*****************************************************************************
@@ -1383,49 +1374,51 @@ AlterStatsStmt:
 
 CreateAsStmt:
 		CREATE OptTemp TABLE create_as_target AS SelectStmt opt_with_data
-				{ /*C
-					CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+				{
+					ctas := &CreateTableAsStmt{}
 
-					ctas->query = $6;
-					ctas->into = $4;
-					ctas->objtype = OBJECT_TABLE;
-					ctas->is_select_into = false;
-					ctas->if_not_exists = false;
-					/* cram additional flags into the IntoClause * /
-					$4->rel->relpersistence = $2;
-					$4->skipData = !($7);
-					$$ = (Node *) ctas;
-				*/ }
+					ctas.Query = $6
+					ctas.Into = as[*IntoClause]($4)
+					ctas.Objtype = OBJECT_TABLE
+					ctas.IsSelectInto = false
+					ctas.IfNotExists = false
+					/* cram additional flags into the IntoClause */
+					setRelpersistence(as[*IntoClause]($4).Rel, $2)
+					as[*IntoClause]($4).SkipData = !$7
+					$$ = ctas
+				}
 		| CREATE OptTemp TABLE IF_P NOT EXISTS create_as_target AS SelectStmt opt_with_data
-				{ /*C
-					CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+				{
+					ctas := &CreateTableAsStmt{}
 
-					ctas->query = $9;
-					ctas->into = $7;
-					ctas->objtype = OBJECT_TABLE;
-					ctas->is_select_into = false;
-					ctas->if_not_exists = true;
-					/* cram additional flags into the IntoClause * /
-					$7->rel->relpersistence = $2;
-					$7->skipData = !($10);
-					$$ = (Node *) ctas;
-				*/ }
+					ctas.Query = $9
+					ctas.Into = as[*IntoClause]($7)
+					ctas.Objtype = OBJECT_TABLE
+					ctas.IsSelectInto = false
+					ctas.IfNotExists = true
+					/* cram additional flags into the IntoClause */
+					setRelpersistence(as[*IntoClause]($7).Rel, $2)
+					as[*IntoClause]($7).SkipData = !$10
+					$$ = ctas
+				}
 		;
 
 create_as_target:
 			qualified_name opt_column_list table_access_method_clause
 			OptWith OnCommitOption OptTableSpace
-				{ /*C
-					$$ = makeNode(IntoClause);
-					$$->rel = $1;
-					$$->colNames = $2;
-					$$->accessMethod = $3;
-					$$->options = $4;
-					$$->onCommit = $5;
-					$$->tableSpaceName = $6;
-					$$->viewQuery = NULL;
-					$$->skipData = false;		/* might get changed later * /
-				*/ }
+				{
+					n := &IntoClause{}
+
+					n.Rel = as[*RangeVar]($1)
+					n.ColNames = $2
+					n.AccessMethod = $3
+					n.Options = $4
+					n.OnCommit = OnCommitAction($5)
+					n.TableSpaceName = $6
+					n.ViewQuery = nil
+					n.SkipData = false /* might get changed later */
+					$$ = n
+				}
 		;
 
 opt_with_data:
@@ -1444,52 +1437,54 @@ opt_with_data:
 
 CreateMatViewStmt:
 		CREATE OptNoLog MATERIALIZED VIEW create_mv_target AS SelectStmt opt_with_data
-				{ /*C
-					CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+				{
+					ctas := &CreateTableAsStmt{}
 
-					ctas->query = $7;
-					ctas->into = $5;
-					ctas->objtype = OBJECT_MATVIEW;
-					ctas->is_select_into = false;
-					ctas->if_not_exists = false;
-					/* cram additional flags into the IntoClause * /
-					$5->rel->relpersistence = $2;
-					$5->skipData = !($8);
-					$$ = (Node *) ctas;
-				*/ }
+					ctas.Query = $7
+					ctas.Into = as[*IntoClause]($5)
+					ctas.Objtype = OBJECT_MATVIEW
+					ctas.IsSelectInto = false
+					ctas.IfNotExists = false
+					/* cram additional flags into the IntoClause */
+					setRelpersistence(as[*IntoClause]($5).Rel, $2)
+					as[*IntoClause]($5).SkipData = !$8
+					$$ = ctas
+				}
 		| CREATE OptNoLog MATERIALIZED VIEW IF_P NOT EXISTS create_mv_target AS SelectStmt opt_with_data
-				{ /*C
-					CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+				{
+					ctas := &CreateTableAsStmt{}
 
-					ctas->query = $10;
-					ctas->into = $8;
-					ctas->objtype = OBJECT_MATVIEW;
-					ctas->is_select_into = false;
-					ctas->if_not_exists = true;
-					/* cram additional flags into the IntoClause * /
-					$8->rel->relpersistence = $2;
-					$8->skipData = !($11);
-					$$ = (Node *) ctas;
-				*/ }
+					ctas.Query = $10
+					ctas.Into = as[*IntoClause]($8)
+					ctas.Objtype = OBJECT_MATVIEW
+					ctas.IsSelectInto = false
+					ctas.IfNotExists = true
+					/* cram additional flags into the IntoClause */
+					setRelpersistence(as[*IntoClause]($8).Rel, $2)
+					as[*IntoClause]($8).SkipData = !$11
+					$$ = ctas
+				}
 		;
 
 create_mv_target:
 			qualified_name opt_column_list table_access_method_clause opt_reloptions OptTableSpace
-				{ /*C
-					$$ = makeNode(IntoClause);
-					$$->rel = $1;
-					$$->colNames = $2;
-					$$->accessMethod = $3;
-					$$->options = $4;
-					$$->onCommit = ONCOMMIT_NOOP;
-					$$->tableSpaceName = $5;
-					$$->viewQuery = NULL;		/* filled at analysis time * /
-					$$->skipData = false;		/* might get changed later * /
-				*/ }
+				{
+					n := &IntoClause{}
+
+					n.Rel = as[*RangeVar]($1)
+					n.ColNames = $2
+					n.AccessMethod = $3
+					n.Options = $4
+					n.OnCommit = ONCOMMIT_NOOP
+					n.TableSpaceName = $5
+					n.ViewQuery = nil /* filled at analysis time */
+					n.SkipData = false /* might get changed later */
+					$$ = n
+				}
 		;
 
-OptNoLog:	UNLOGGED					{ /*C $$ = RELPERSISTENCE_UNLOGGED; */ }
-			| /*EMPTY*/					{ /*C $$ = RELPERSISTENCE_PERMANENT; */ }
+OptNoLog:	UNLOGGED					{ $$ = int32(relpersistenceUnlogged[0]) }
+			| /*EMPTY*/					{ $$ = int32(relpersistencePermanent[0]) }
 		;
 
 
@@ -1502,14 +1497,14 @@ OptNoLog:	UNLOGGED					{ /*C $$ = RELPERSISTENCE_UNLOGGED; */ }
 
 RefreshMatViewStmt:
 			REFRESH MATERIALIZED VIEW opt_concurrently qualified_name opt_with_data
-				{ /*C
-					RefreshMatViewStmt *n = makeNode(RefreshMatViewStmt);
+				{
+					n := &RefreshMatViewStmt{}
 
-					n->concurrent = $4;
-					n->relation = $5;
-					n->skipData = !($6);
-					$$ = (Node *) n;
-				*/ }
+					n.Concurrent = $4
+					n.Relation = as[*RangeVar]($5)
+					n.SkipData = !$6
+					$$ = n
+				}
 		;
 
 
@@ -1523,48 +1518,48 @@ RefreshMatViewStmt:
 
 CreateSeqStmt:
 			CREATE OptTemp SEQUENCE qualified_name OptSeqOptList
-				{ /*C
-					CreateSeqStmt *n = makeNode(CreateSeqStmt);
+				{
+					n := &CreateSeqStmt{}
 
-					$4->relpersistence = $2;
-					n->sequence = $4;
-					n->options = $5;
-					n->ownerId = InvalidOid;
-					n->if_not_exists = false;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($4), $2)
+					n.Sequence = as[*RangeVar]($4)
+					n.Options = $5
+					n.OwnerId = 0
+					n.IfNotExists = false
+					$$ = n
+				}
 			| CREATE OptTemp SEQUENCE IF_P NOT EXISTS qualified_name OptSeqOptList
-				{ /*C
-					CreateSeqStmt *n = makeNode(CreateSeqStmt);
+				{
+					n := &CreateSeqStmt{}
 
-					$7->relpersistence = $2;
-					n->sequence = $7;
-					n->options = $8;
-					n->ownerId = InvalidOid;
-					n->if_not_exists = true;
-					$$ = (Node *) n;
-				*/ }
+					setRelpersistence(as[*RangeVar]($7), $2)
+					n.Sequence = as[*RangeVar]($7)
+					n.Options = $8
+					n.OwnerId = 0
+					n.IfNotExists = true
+					$$ = n
+				}
 		;
 
 AlterSeqStmt:
 			ALTER SEQUENCE qualified_name SeqOptList
-				{ /*C
-					AlterSeqStmt *n = makeNode(AlterSeqStmt);
+				{
+					n := &AlterSeqStmt{}
 
-					n->sequence = $3;
-					n->options = $4;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Sequence = as[*RangeVar]($3)
+					n.Options = $4
+					n.MissingOk = false
+					$$ = n
+				}
 			| ALTER SEQUENCE IF_P EXISTS qualified_name SeqOptList
-				{ /*C
-					AlterSeqStmt *n = makeNode(AlterSeqStmt);
+				{
+					n := &AlterSeqStmt{}
 
-					n->sequence = $5;
-					n->options = $6;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Sequence = as[*RangeVar]($5)
+					n.Options = $6
+					n.MissingOk = true
+					$$ = n
+				}
 
 		;
 
@@ -1581,69 +1576,69 @@ SeqOptList: SeqOptElem								{ $$ = []Node{$1} }
 		;
 
 SeqOptElem: AS SimpleTypename
-				{ /*C
-					$$ = makeDefElem("as", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("as", $2, @1)
+				}
 			| CACHE NumericOnly
-				{ /*C
-					$$ = makeDefElem("cache", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("cache", $2, @1)
+				}
 			| CYCLE
-				{ /*C
-					$$ = makeDefElem("cycle", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("cycle", makeBoolean(true), @1)
+				}
 			| NO CYCLE
-				{ /*C
-					$$ = makeDefElem("cycle", (Node *) makeBoolean(false), @1);
-				*/ }
+				{
+					$$ = makeDefElem("cycle", makeBoolean(false), @1)
+				}
 			| INCREMENT opt_by NumericOnly
-				{ /*C
-					$$ = makeDefElem("increment", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("increment", $3, @1)
+				}
 			| LOGGED
-				{ /*C
-					$$ = makeDefElem("logged", NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem("logged", nil, @1)
+				}
 			| MAXVALUE NumericOnly
-				{ /*C
-					$$ = makeDefElem("maxvalue", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("maxvalue", $2, @1)
+				}
 			| MINVALUE NumericOnly
-				{ /*C
-					$$ = makeDefElem("minvalue", (Node *) $2, @1);
-				*/ }
+				{
+					$$ = makeDefElem("minvalue", $2, @1)
+				}
 			| NO MAXVALUE
-				{ /*C
-					$$ = makeDefElem("maxvalue", NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem("maxvalue", nil, @1)
+				}
 			| NO MINVALUE
-				{ /*C
-					$$ = makeDefElem("minvalue", NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem("minvalue", nil, @1)
+				}
 			| OWNED BY any_name
-				{ /*C
-					$$ = makeDefElem("owned_by", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("owned_by", listNode($3), @1)
+				}
 			| SEQUENCE NAME_P any_name
-				{ /*C
-					$$ = makeDefElem("sequence_name", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("sequence_name", listNode($3), @1)
+				}
 			| START opt_with NumericOnly
-				{ /*C
-					$$ = makeDefElem("start", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("start", $3, @1)
+				}
 			| RESTART
-				{ /*C
-					$$ = makeDefElem("restart", NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem("restart", nil, @1)
+				}
 			| RESTART opt_with NumericOnly
-				{ /*C
-					$$ = makeDefElem("restart", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("restart", $3, @1)
+				}
 			| UNLOGGED
-				{ /*C
-					$$ = makeDefElem("unlogged", NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem("unlogged", nil, @1)
+				}
 		;
 
 opt_by:		BY
@@ -1651,16 +1646,16 @@ opt_by:		BY
 	  ;
 
 NumericOnly:
-			FCONST								{ /*C $$ = (Node *) makeFloat($1); */ }
-			| '+' FCONST						{ /*C $$ = (Node *) makeFloat($2); */ }
+			FCONST								{ $$ = makeFloat($1) }
+			| '+' FCONST						{ $$ = makeFloat($2) }
 			| '-' FCONST
-				{ /*C
-					Float	   *f = makeFloat($2);
+				{
+					f := makeFloat($2)
 
-					doNegateFloat(f);
-					$$ = (Node *) f;
-				*/ }
-			| SignedIconst						{ /*C $$ = (Node *) makeInteger($1); */ }
+					doNegateFloat(f)
+					$$ = f
+				}
+			| SignedIconst						{ $$ = makeInteger($1) }
 		;
 
 NumericOnly_list:	NumericOnly						{ $$ = []Node{$1} }
@@ -1677,34 +1672,34 @@ NumericOnly_list:	NumericOnly						{ $$ = []Node{$1} }
 
 CreatePLangStmt:
 			CREATE opt_or_replace opt_trusted opt_procedural LANGUAGE name
-			{ /*C
+			{
 				/*
 				 * We now interpret parameterless CREATE LANGUAGE as
 				 * CREATE EXTENSION.  "OR REPLACE" is silently translated
 				 * to "IF NOT EXISTS", which isn't quite the same, but
 				 * seems more useful than throwing an error.  We just
 				 * ignore TRUSTED, as the previous code would have too.
-				 * /
-				CreateExtensionStmt *n = makeNode(CreateExtensionStmt);
+				 */
+				n := &CreateExtensionStmt{}
 
-				n->if_not_exists = $2;
-				n->extname = $6;
-				n->options = NIL;
-				$$ = (Node *) n;
-			*/ }
+				n.IfNotExists = $2
+				n.Extname = $6
+				n.Options = nil
+				$$ = n
+			}
 			| CREATE opt_or_replace opt_trusted opt_procedural LANGUAGE name
 			  HANDLER handler_name opt_inline_handler opt_validator
-			{ /*C
-				CreatePLangStmt *n = makeNode(CreatePLangStmt);
+			{
+				n := &CreatePLangStmt{}
 
-				n->replace = $2;
-				n->plname = $6;
-				n->plhandler = $8;
-				n->plinline = $9;
-				n->plvalidator = $10;
-				n->pltrusted = $3;
-				$$ = (Node *) n;
-			*/ }
+				n.Replace = $2
+				n.Plname = $6
+				n.Plhandler = $8
+				n.Plinline = $9
+				n.Plvalidator = $10
+				n.Pltrusted = $3
+				$$ = n
+			}
 		;
 
 opt_trusted:
@@ -1717,8 +1712,8 @@ opt_trusted:
  * Work around by using simple names, instead.
  */
 handler_name:
-			name						{ /*C $$ = list_make1(makeString($1)); */ }
-			| name attrs				{ /*C $$ = lcons(makeString($1), $2); */ }
+			name						{ $$ = []Node{makeString($1, @1)} }
+			| name attrs				{ $$ = append([]Node{makeString($1, @1)}, $2...) }
 		;
 
 opt_inline_handler:
@@ -1749,15 +1744,15 @@ opt_procedural:
  *****************************************************************************/
 
 CreateTableSpaceStmt: CREATE TABLESPACE name OptTableSpaceOwner LOCATION Sconst opt_reloptions
-				{ /*C
-					CreateTableSpaceStmt *n = makeNode(CreateTableSpaceStmt);
+				{
+					n := &CreateTableSpaceStmt{}
 
-					n->tablespacename = $3;
-					n->owner = $4;
-					n->location = $6;
-					n->options = $7;
-					$$ = (Node *) n;
-				*/ }
+					n.Tablespacename = $3
+					n.Owner = as[*RoleSpec]($4)
+					n.Location = $6
+					n.Options = $7
+					$$ = n
+				}
 		;
 
 OptTableSpaceOwner: OWNER RoleSpec		{ $$ = $2 }
@@ -1775,21 +1770,21 @@ OptTableSpaceOwner: OWNER RoleSpec		{ $$ = $2 }
  ****************************************************************************/
 
 DropTableSpaceStmt: DROP TABLESPACE name
-				{ /*C
-					DropTableSpaceStmt *n = makeNode(DropTableSpaceStmt);
+				{
+					n := &DropTableSpaceStmt{}
 
-					n->tablespacename = $3;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Tablespacename = $3
+					n.MissingOk = false
+					$$ = n
+				}
 				|  DROP TABLESPACE IF_P EXISTS name
-				{ /*C
-					DropTableSpaceStmt *n = makeNode(DropTableSpaceStmt);
+				{
+					n := &DropTableSpaceStmt{}
 
-					n->tablespacename = $5;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Tablespacename = $5
+					n.MissingOk = true
+					$$ = n
+				}
 		;
 
 /*****************************************************************************
@@ -1801,23 +1796,23 @@ DropTableSpaceStmt: DROP TABLESPACE name
  *****************************************************************************/
 
 CreateExtensionStmt: CREATE EXTENSION name opt_with create_extension_opt_list
-				{ /*C
-					CreateExtensionStmt *n = makeNode(CreateExtensionStmt);
+				{
+					n := &CreateExtensionStmt{}
 
-					n->extname = $3;
-					n->if_not_exists = false;
-					n->options = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Extname = $3
+					n.IfNotExists = false
+					n.Options = $5
+					$$ = n
+				}
 				| CREATE EXTENSION IF_P NOT EXISTS name opt_with create_extension_opt_list
-				{ /*C
-					CreateExtensionStmt *n = makeNode(CreateExtensionStmt);
+				{
+					n := &CreateExtensionStmt{}
 
-					n->extname = $6;
-					n->if_not_exists = true;
-					n->options = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Extname = $6
+					n.IfNotExists = true
+					n.Options = $8
+					$$ = n
+				}
 		;
 
 create_extension_opt_list:
@@ -1829,23 +1824,20 @@ create_extension_opt_list:
 
 create_extension_opt_item:
 			SCHEMA name
-				{ /*C
-					$$ = makeDefElem("schema", (Node *) makeString($2), @1);
-				*/ }
+				{
+					$$ = makeDefElem("schema", makeString($2, @2), @1)
+				}
 			| VERSION_P NonReservedWord_or_Sconst
-				{ /*C
-					$$ = makeDefElem("new_version", (Node *) makeString($2), @1);
-				*/ }
+				{
+					$$ = makeDefElem("new_version", makeString($2, @2), @1)
+				}
 			| FROM NonReservedWord_or_Sconst
-				{ /*C
-					ereport(ERROR,
-							(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-							 errmsg("CREATE EXTENSION ... FROM is no longer supported"),
-							 parser_errposition(@1)));
-				*/ }
+				{
+					p.fail(@1, "CREATE EXTENSION ... FROM is no longer supported")
+				}
 			| CASCADE
-				{ /*C
-					$$ = makeDefElem("cascade", (Node *) makeBoolean(true), @1);
-				*/ }
+				{
+					$$ = makeDefElem("cascade", makeBoolean(true), @1)
+				}
 		;
 
