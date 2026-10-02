@@ -6,7 +6,7 @@
 // Portions Copyright (c) 1996-2024, PostgreSQL Global Development Group
 // Portions Copyright (c) 1994, Regents of the University of California
 //
-// PostgreSQL License: see ../../LICENSE.PostgreSQL.
+// PostgreSQL License: see ../LICENSE.PostgreSQL.
 
 package subst
 

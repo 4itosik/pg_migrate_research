@@ -19,6 +19,8 @@
 // a parser.
 //
 // The README of the module describes the rules, the guarantees and the
-// limits; ../prompts/own-parser-library.md is the task and PROGRESS.md the
-// state.
+// limits. The research behind the library, the task and the state are in the
+// research repository,
+// https://github.com/4itosik/pg_migrate_research/tree/claude/sql-parser-schema-golang-55m2uj
+// (prompts/own-parser-library.md, pgschema/PROGRESS.md).
 package pgschema
