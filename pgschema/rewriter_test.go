@@ -193,8 +193,8 @@ func TestRewriteWarnings(t *testing.T) {
 		{"catalog lookup", "SELECT * FROM pg_class WHERE relname = 't'", "system catalogs"},
 		{"current_schema", "SELECT current_schema()", "current_schema"},
 		{"range type", "CREATE TYPE r AS RANGE (subtype = int)", "constructor functions of a range type"},
-		{"collation", "CREATE COLLATION c (provider = libc, locale = 'C')", "created by a migration is not qualified"},
-		{"text search configuration", "CREATE TEXT SEARCH CONFIGURATION c (COPY = simple)", "created by a migration is not qualified"},
+		{"collation", "CREATE COLLATION c (provider = libc, locale = 'C')", "collation created by a migration is not qualified"},
+		{"text search configuration", "CREATE TEXT SEARCH CONFIGURATION c (COPY = simple)", "text search configuration created by a migration is not qualified"},
 		{"schema elements", "CREATE SCHEMA s CREATE TABLE a (id int)", "elements of CREATE SCHEMA"},
 		{"other language", "CREATE FUNCTION f() RETURNS int LANGUAGE plpython3u AS $$ return 1 $$", "LANGUAGE plpython3u"},
 	}
@@ -364,5 +364,135 @@ func TestPlaceholderDoesNotKnowTheTargetSchema(t *testing.T) {
 	}
 	if want != "CREATE TYPE auth.mood AS ENUM ('a'); CREATE TABLE auth.t (m auth.mood)" || got != sql {
 		t.Errorf("direct %q, template %q", want, got)
+	}
+}
+
+// A name that already has a schema is left alone, whatever the schema is:
+// another one, the target one, a catalog.
+const explicitSchemaMigration = `CREATE TYPE other.mood AS ENUM ('a');
+CREATE DOMAIN other.pos AS int CHECK (VALUE > 0);
+CREATE TABLE other.t (id serial PRIMARY KEY, m other.mood, p other.pos, n int REFERENCES other.parent (id));
+CREATE SEQUENCE other.s OWNED BY other.t.id;
+CREATE INDEX t_idx ON other.t (id);
+CREATE VIEW other.v AS SELECT * FROM other.t JOIN other.parent USING (id);
+CREATE FUNCTION other.f(a other.mood) RETURNS other.mood LANGUAGE sql AS 'SELECT a';
+CREATE FUNCTION other.g() RETURNS trigger LANGUAGE plpgsql AS $$ DECLARE r other.t%ROWTYPE; c other.t.id%TYPE; BEGIN INSERT INTO other.log SELECT * FROM other.t; RETURN NEW; END $$;
+CREATE TRIGGER tg BEFORE INSERT ON other.t FOR EACH ROW EXECUTE FUNCTION other.g();
+ALTER TABLE other.t ADD COLUMN x other.pos;
+ALTER TABLE other.t RENAME TO t2;
+ALTER TABLE other.t2 RENAME COLUMN x TO y;
+COMMENT ON TABLE other.t IS 'x';
+COMMENT ON COLUMN other.t.id IS 'y';
+DROP TABLE IF EXISTS other.a, other.b CASCADE;
+DROP FUNCTION other.f(other.mood);
+DROP TYPE other.mood;
+GRANT SELECT ON other.t TO bob;
+GRANT EXECUTE ON FUNCTION other.f(other.mood) TO bob;
+INSERT INTO other.t (id) SELECT id FROM other.parent;
+UPDATE other.t SET id = 1 FROM other.parent WHERE true;
+DELETE FROM other.t USING other.parent WHERE true;
+SELECT nextval('other.s'), 'other.t'::regclass, other.f('a'), 'other.mood'::regtype, to_regclass('other.t'), pg_get_serial_sequence('other.t', 'id');
+CREATE POLICY p ON other.t USING (true);
+DROP POLICY p ON other.t;
+DROP TRIGGER tg ON other.t;
+TRUNCATE other.t;
+LOCK TABLE other.t;
+VACUUM other.t;
+CREATE TABLE other.c (LIKE other.t) INHERITS (other.t);
+CREATE TABLE other.pt PARTITION OF other.parent FOR VALUES IN (1);
+ALTER TABLE other.t SET SCHEMA elsewhere;
+SELECT * FROM db.other.t, pg_temp.tmp, information_schema.tables;
+`
+
+func TestRewriteLeavesQualifiedNamesAlone(t *testing.T) {
+	for _, schema := range []string{"other", "auth"} {
+		sql := strings.ReplaceAll(explicitSchemaMigration, "other.", schema+".")
+		r := newTestRewriter(t, Options{Schema: "auth"})
+		if err := r.Learn(sql); err != nil {
+			t.Fatal(err)
+		}
+		got, _, err := r.Rewrite(sql)
+		if err != nil {
+			t.Fatalf("schema %s: %v", schema, err)
+		}
+		if got != sql {
+			t.Errorf("schema %s: the text changed:\n%s", schema, firstLineDiff(sql, got))
+		}
+	}
+	// next to unqualified names only those are changed
+	r := newTestRewriter(t, Options{Schema: "auth"})
+	got, _, err := r.Rewrite("SELECT * FROM other.a JOIN b ON true JOIN auth.c ON true; DROP TABLE public.x, y; COMMENT ON TABLE other.t IS 'x'")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want := "SELECT * FROM other.a JOIN auth.b ON true JOIN auth.c ON true; DROP TABLE public.x, auth.y; COMMENT ON TABLE other.t IS 'x'"; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+func firstLineDiff(want, got string) string {
+	wl, gl := strings.Split(want, "\n"), strings.Split(got, "\n")
+	for i := 0; i < len(wl) && i < len(gl); i++ {
+		if wl[i] != gl[i] {
+			return fmt.Sprintf("line %d\n  was: %s\n  now: %s", i+1, wl[i], gl[i])
+		}
+	}
+	return "different length"
+}
+
+func TestRewriteExtensions(t *testing.T) {
+	const warning = "CREATE EXTENSION without SCHEMA"
+	// by default the statement stays as written and gets a warning
+	r := newTestRewriter(t, Options{Schema: "auth"})
+	got, warns, err := r.Rewrite("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
+	if err != nil || got != "CREATE EXTENSION IF NOT EXISTS pgcrypto;" || !strings.Contains(strings.Join(warns, "\n"), warning) {
+		t.Errorf("default: %q, %q, %v", got, warns, err)
+	}
+	// with the option the schema is added at the end, before the semicolon
+	tests := []struct{ name, sql, want string }{
+		{"plain", "CREATE EXTENSION pgcrypto;", "CREATE EXTENSION pgcrypto SCHEMA auth;"},
+		{"if not exists", "CREATE EXTENSION IF NOT EXISTS pgcrypto", "CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA auth"},
+		{"other options", "CREATE EXTENSION hstore WITH VERSION '1.8' CASCADE;", "CREATE EXTENSION hstore WITH VERSION '1.8' CASCADE SCHEMA auth;"},
+		{"a comment after", "CREATE EXTENSION citext -- case-insensitive text", "CREATE EXTENSION citext SCHEMA auth -- case-insensitive text"},
+		{"a quoted name", `CREATE EXTENSION "uuid-ossp";`, `CREATE EXTENSION "uuid-ossp" SCHEMA auth;`},
+		{"with and nothing else", "CREATE EXTENSION ltree WITH;", "CREATE EXTENSION ltree WITH SCHEMA auth;"},
+		{"several statements", "CREATE EXTENSION a; CREATE EXTENSION b", "CREATE EXTENSION a SCHEMA auth; CREATE EXTENSION b SCHEMA auth"},
+		// a schema in the statement stays, whatever it is
+		{"a schema is given", "CREATE EXTENSION pgcrypto SCHEMA public;", "CREATE EXTENSION pgcrypto SCHEMA public;"},
+		{"the target schema is given", "CREATE EXTENSION pgcrypto WITH SCHEMA auth VERSION '1.3'", "CREATE EXTENSION pgcrypto WITH SCHEMA auth VERSION '1.3'"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			r := newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})
+			got, warns, err := r.Rewrite(tc.sql)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if got != tc.want {
+				t.Errorf("got %q, want %q", got, tc.want)
+			}
+			if strings.Contains(strings.Join(warns, "\n"), warning) {
+				t.Errorf("the old warning is still given: %q", warns)
+			}
+		})
+	}
+	// the new warning says what is not rewritten
+	r = newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})
+	if _, warns, err := r.Rewrite("CREATE EXTENSION pgcrypto"); err != nil || !strings.Contains(strings.Join(warns, "\n"), "unqualified uses") {
+		t.Errorf("warnings %q, %v", warns, err)
+	}
+	// a template: the placeholder goes where the schema does
+	r = newTestRewriter(t, Options{Placeholder: true, ExtensionsInSchema: true})
+	if got, _, err := r.Rewrite("CREATE EXTENSION pgcrypto;"); err != nil || got != "CREATE EXTENSION pgcrypto SCHEMA pgschema_placeholder;" {
+		t.Errorf("template: %q, %v", got, err)
+	}
+	// a schema that needs quotes
+	r = newTestRewriter(t, Options{Schema: "my schema", ExtensionsInSchema: true})
+	if got, _, err := r.Rewrite("CREATE EXTENSION pgcrypto;"); err != nil || got != `CREATE EXTENSION pgcrypto SCHEMA "my schema";` {
+		t.Errorf("quoted: %q, %v", got, err)
+	}
+	// Learn does not change the text and does not fail
+	if err := r.Learn("CREATE EXTENSION pgcrypto"); err != nil {
+		t.Fatal(err)
 	}
 }

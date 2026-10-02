@@ -15,7 +15,8 @@ import (
 // with the schema, without a parser. The result must be exactly the output
 // of rewriting with the schema itself, for the corpus (up and down files) and
 // for the statements of the regression tests of PostgreSQL 16, with a plain
-// schema, a mixed-case one, a keyword and a name with a space.
+// schema, a mixed-case one, a keyword and a name with a space. The extensions
+// option is on, so that SCHEMA is quoted the same way too.
 func TestPlaceholder(t *testing.T) {
 	type group struct {
 		name  string
@@ -57,11 +58,11 @@ func TestPlaceholder(t *testing.T) {
 	for _, schema := range []string{"auth", "Auth", "user", "my schema"} {
 		var same, changed, refused, diffs int
 		for _, g := range groups {
-			direct, err := pgschema.New(pgschema.Options{Schema: schema})
+			direct, err := pgschema.New(pgschema.Options{Schema: schema, ExtensionsInSchema: true})
 			if err != nil {
 				t.Fatal(err)
 			}
-			tmpl, err := pgschema.New(pgschema.Options{Placeholder: true})
+			tmpl, err := pgschema.New(pgschema.Options{Placeholder: true, ExtensionsInSchema: true})
 			if err != nil {
 				t.Fatal(err)
 			}

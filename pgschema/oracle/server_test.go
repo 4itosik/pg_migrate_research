@@ -5,6 +5,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/4itosik/pg_migrate_research/pgschema"
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/parse"
 	"github.com/4itosik/pg_migrate_research/poc/harness"
 )
@@ -174,5 +175,49 @@ END $$;`,
 				t.Errorf("%s = %v, want %s", tc.query, got, tc.want)
 			}
 		})
+	}
+}
+
+// TestExtensionSchemaOnServer shows what the option does to CREATE EXTENSION
+// on a live server: without it the extension lands in the first schema of the
+// search_path (here "trap", as behind a pooler it would be some schema of the
+// connection), with it in the target schema.
+func TestExtensionSchemaOnServer(t *testing.T) {
+	if !haveServer() {
+		skipUnlessCI(t, "no PostgreSQL server: set PG_BIN or PG_DSN (tools/env.sh)")
+	}
+	ctx := context.Background()
+	srv, err := harness.StartServer(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer srv.Stop()
+	for _, tc := range []struct {
+		inSchema bool
+		want     string
+	}{{false, "trap"}, {true, "auth"}} {
+		r, err := pgschema.New(pgschema.Options{Schema: "auth", ExtensionsInSchema: tc.inSchema})
+		if err != nil {
+			t.Fatal(err)
+		}
+		out, _, err := r.Rewrite("CREATE EXTENSION IF NOT EXISTS pgcrypto;")
+		if err != nil {
+			t.Fatal(err)
+		}
+		db, err := srv.NewDatabase(ctx, "extension_schema")
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := db.Exec(ctx, "CREATE SCHEMA auth; CREATE SCHEMA trap; SET search_path TO trap, public"); err != nil {
+			t.Fatal(err)
+		}
+		if err := db.Exec(ctx, out); err != nil {
+			t.Fatalf("%s: %v", out, err)
+		}
+		got, err := db.QueryStrings(ctx, "SELECT extnamespace::regnamespace::text FROM pg_extension WHERE extname = 'pgcrypto'")
+		if err != nil || len(got) != 1 || got[0] != tc.want {
+			t.Errorf("in schema %v: the extension is in %v (%v), want %s; statement %q", tc.inSchema, got, err, tc.want, out)
+		}
+		db.Drop(ctx)
 	}
 }

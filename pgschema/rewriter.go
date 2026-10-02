@@ -21,6 +21,16 @@ type Options struct {
 	// ExcludeRelations lists relation names that live in other schemas and
 	// are referenced without a schema on purpose.
 	ExcludeRelations []string
+	// ExtensionsInSchema adds SCHEMA <schema> to CREATE EXTENSION statements
+	// that have no SCHEMA clause, so that the extension's objects are created
+	// in the target schema. Off by default: the extension then goes where the
+	// server puts it (the first schema of search_path, usually public), shared
+	// by the services of the database, and the statement gets a warning. An
+	// extension exists once per database, so turn this on only if the
+	// migrations of one service own it. The library does not know the names
+	// an extension provides: with this on, unqualified uses of its functions
+	// and types are not rewritten (a warning says so).
+	ExtensionsInSchema bool
 }
 
 // Rewriter qualifies the names in the migrations of one schema. It remembers
@@ -31,6 +41,8 @@ type Rewriter struct {
 	prefix  string
 	exclude map[string]bool
 	reg     *registry
+
+	extensionsInSchema bool
 }
 
 // New creates a Rewriter.
@@ -51,6 +63,8 @@ func New(opts Options) (*Rewriter, error) {
 		prefix:  subst.QuoteIdent(opts.Schema) + ".",
 		exclude: map[string]bool{},
 		reg:     newRegistry(),
+
+		extensionsInSchema: opts.ExtensionsInSchema,
 	}
 	for _, n := range opts.ExcludeRelations {
 		r.exclude[n] = true

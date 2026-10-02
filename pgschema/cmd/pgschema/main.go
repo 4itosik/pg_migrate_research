@@ -18,6 +18,9 @@
 // write and exits with status 1 when a file is missing, different or stale,
 // which is the check for CI that the generated files are up to date.
 //
+// Names that already have a schema are left as they are. CREATE EXTENSION
+// stays as written unless -extensions-in-schema adds SCHEMA to it.
+//
 // Warnings (dynamic SQL, lookups in the system catalogs, SET search_path, ...)
 // go to stderr; -fail-on-warning turns them into a failure.
 package main
@@ -43,7 +46,7 @@ var migrationFile = regexp.MustCompile(`^(\d+)_.*\.(up|down)\.sql$`)
 
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 || args[0] != "rewrite" {
-		fmt.Fprintln(stderr, "usage: pgschema rewrite (-schema NAME | -placeholder) -src DIR -dst DIR [-exclude a,b] [-check] [-fail-on-warning]")
+		fmt.Fprintln(stderr, "usage: pgschema rewrite (-schema NAME | -placeholder) -src DIR -dst DIR [-exclude a,b] [-extensions-in-schema] [-check] [-fail-on-warning]")
 		return 2
 	}
 	fs := flag.NewFlagSet("rewrite", flag.ContinueOnError)
@@ -53,6 +56,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 	src := fs.String("src", "", "directory with the migrations")
 	dst := fs.String("dst", "", "directory for the rewritten migrations")
 	exclude := fs.String("exclude", "", "comma-separated relation names, as PostgreSQL stores them, that stay unqualified (they live in other schemas)")
+	extensions := fs.Bool("extensions-in-schema", false, "add SCHEMA <schema> to CREATE EXTENSION statements that have none (by default they stay as written, with a warning)")
 	check := fs.Bool("check", false, "write nothing; fail if the destination is not what the command would write")
 	failOnWarning := fs.Bool("fail-on-warning", false, "exit with status 1 when there are warnings")
 	if err := fs.Parse(args[1:]); err != nil {
@@ -75,7 +79,7 @@ func run(args []string, stdout, stderr io.Writer) int {
 			ex = append(ex, strings.TrimSpace(name))
 		}
 	}
-	r, err := pgschema.New(pgschema.Options{Schema: *schema, Placeholder: *placeholder, ExcludeRelations: ex})
+	r, err := pgschema.New(pgschema.Options{Schema: *schema, Placeholder: *placeholder, ExcludeRelations: ex, ExtensionsInSchema: *extensions})
 	if err != nil {
 		fmt.Fprintln(stderr, "pgschema:", err)
 		return 2

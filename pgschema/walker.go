@@ -7,6 +7,7 @@ import (
 
 	. "github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/lex"
+	"github.com/4itosik/pg_migrate_research/pgschema/subst"
 )
 
 // walker visits the parse tree of one SQL text, collects edits and applies
@@ -187,9 +188,9 @@ func (w *walker) handle(node Node) bool {
 			w.defName(&n.Defnames, kindFunction)
 		case OBJECT_COLLATION, OBJECT_TSPARSER, OBJECT_TSDICTIONARY, OBJECT_TSTEMPLATE, OBJECT_TSCONFIGURATION:
 			w.defName(&n.Defnames, kindNone)
-			w.warn("%s created by a migration is not qualified where it is used (COLLATE, text search functions, ...): %s", n.Kind, snippet(w.stmtText()))
+			w.warn("%s created by a migration is not qualified where it is used (COLLATE, text search functions, ...): %s", objectLabel(n.Kind), snippet(w.stmtText()))
 		default:
-			w.warn("%s is not rewritten: %s", n.Kind, snippet(w.stmtText()))
+			w.warn("%s is not rewritten: %s", objectLabel(n.Kind), snippet(w.stmtText()))
 		}
 	case *CreateSchemaStmt:
 		if len(n.SchemaElts) > 0 {
@@ -246,7 +247,11 @@ func (w *walker) handle(node Node) bool {
 	case *CreateOpClassStmt, *CreateOpFamilyStmt, *AlterOpFamilyStmt:
 		w.warn("operator classes and families are not rewritten: %s", snippet(w.stmtText()))
 	case *CreateExtensionStmt:
-		if defElem(n.Options, "schema") == nil {
+		switch {
+		case defElem(n.Options, "schema") != nil: // the statement names a schema: it stays
+		case w.r.extensionsInSchema:
+			w.extensionSchema(n)
+		default:
 			w.warn("CREATE EXTENSION without SCHEMA creates objects in the first schema of search_path: %s", snippet(w.stmtText()))
 		}
 	case *VariableSetStmt:
@@ -577,7 +582,7 @@ func (w *walker) objectList(objtype ObjectType, objects []Node) {
 	if !namedObjectType(objtype) {
 		switch objtype {
 		case OBJECT_OPCLASS, OBJECT_OPFAMILY, OBJECT_OPERATOR, OBJECT_AMOP, OBJECT_AMPROC:
-			w.warn("%s is not rewritten: %s", objtype, snippet(w.stmtText()))
+			w.warn("%s is not rewritten: %s", objectLabel(objtype), snippet(w.stmtText()))
 		}
 		return
 	}
@@ -812,4 +817,58 @@ func constStringValue(n Node) string {
 		return s.Sval
 	}
 	return ""
+}
+
+// objectLabel words an object type for a warning: OBJECT_TSCONFIGURATION is
+// "text search configuration", OBJECT_OPCLASS "operator class".
+func objectLabel(t ObjectType) string {
+	switch t {
+	case OBJECT_TSPARSER:
+		return "text search parser"
+	case OBJECT_TSDICTIONARY:
+		return "text search dictionary"
+	case OBJECT_TSTEMPLATE:
+		return "text search template"
+	case OBJECT_TSCONFIGURATION:
+		return "text search configuration"
+	case OBJECT_OPCLASS:
+		return "operator class"
+	case OBJECT_OPFAMILY:
+		return "operator family"
+	}
+	return strings.ToLower(strings.ReplaceAll(strings.TrimPrefix(t.String(), "OBJECT_"), "_", " "))
+}
+
+// extensionSchema adds SCHEMA <schema> at the end of CREATE EXTENSION. The
+// options of the statement come in any order, so the end is as good a place
+// as any; it is the end of the last token, not of the statement, which may
+// end with a comment.
+func (w *walker) extensionSchema(n *CreateExtensionStmt) {
+	w.warn("the objects of extension %s are created in schema %s, and their unqualified uses in migrations are not rewritten (their names are not known): %s",
+		n.Extname, w.r.schema, snippet(w.stmtText()))
+	if w.learnOnly {
+		return
+	}
+	end := -1
+	sc := lex.NewScanner(w.src[w.stmtStart:w.stmtEnd])
+	for {
+		it, err := sc.Next()
+		if err != nil {
+			w.fail("cannot scan the statement: %v", err)
+			return
+		}
+		if it.Tok == 0 {
+			break
+		}
+		if it.Tok != ';' {
+			end = int(it.End)
+		}
+	}
+	if end < 0 {
+		w.fail("cannot find the end of CREATE EXTENSION")
+		return
+	}
+	pos := w.stmtStart + end
+	w.edits = append(w.edits, edit{start: pos, end: pos, text: " SCHEMA " + subst.QuoteIdent(w.r.schema)})
+	n.Options = append(n.Options, &DefElem{Defname: "schema", Arg: w.schemaNode(), Defaction: DEFELEM_UNSPEC, Location: -1})
 }

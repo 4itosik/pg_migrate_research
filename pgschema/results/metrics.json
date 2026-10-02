@@ -1,16 +1,16 @@
 {
   "build": {
-    "all_compile_peak_mb": 238,
+    "all_compile_peak_mb": 253,
     "all_compile_peak_package": "runtime",
-    "clean_build_seconds": 15.729311077,
-    "cli_binary_mb": 5.748095512390137,
-    "cli_clean_build_seconds": 13.051530017,
-    "cli_compile_peak_mb": 239,
+    "clean_build_seconds": 12.126596898,
+    "cli_binary_mb": 5.786931037902832,
+    "cli_clean_build_seconds": 12.971228939,
+    "cli_compile_peak_mb": 244,
     "cli_compile_peak_package": "runtime",
     "go_version": "go1.25.11",
-    "library_compile_peak_mb": 172,
+    "library_compile_peak_mb": 175,
     "library_compile_peak_package": "github.com/4itosik/pg_migrate_research/pgschema/internal/parse",
-    "link_peak_mb": 84
+    "link_peak_mb": 88
   },
   "dataset": {
     "corpus": {
@@ -83,7 +83,7 @@
   },
   "environment": {
     "cpus": 4,
-    "generated": "2026-10-02T15:16:28Z",
+    "generated": "2026-10-02T18:58:51Z",
     "go": "go1.25.11",
     "goarch": "amd64",
     "goos": "linux"
@@ -144,10 +144,10 @@
       },
       "speed_pg16": {
         "bytes": 3540132,
-        "mb_per_second": 49.811164917134,
+        "mb_per_second": 54.99920950038559,
         "statements": 43323,
         "tokens": 598629,
-        "us_per_statement": 1.5644955104678808
+        "us_per_statement": 1.4169175264870852
       }
     }
   },
@@ -201,29 +201,145 @@
         }
       },
       "speed_pg16": {
-        "first_parse_us": 798.356,
+        "first_parse_us": 199.041,
         "statements": 42798,
-        "us_per_statement": 10.03138464414225
+        "us_per_statement": 8.14850053740829
       },
       "trees": {
-        "equal": 188760,
+        "equal": 43110,
         "groups": 0,
-        "statements": 188760,
+        "statements": 43110,
         "versions": [
-          "REL_12_STABLE",
-          "REL_13_STABLE",
-          "REL_14_STABLE",
-          "REL_15_STABLE",
           "REL_16_STABLE"
         ]
       }
     }
   },
+  "stage3": {
+    "plpgsql": {
+      "regress": {
+        "REL_12_STABLE": {
+          "bodies": 424,
+          "compiled_by_libpg_query": 412,
+          "dynamic": 49,
+          "mismatching_bodies": 0,
+          "queries": 1550,
+          "rejected_but_extracted": 12,
+          "rejected_by_libpg_query": 12,
+          "statements": 1891,
+          "variables": 390
+        },
+        "REL_13_STABLE": {
+          "bodies": 466,
+          "compiled_by_libpg_query": 454,
+          "dynamic": 60,
+          "mismatching_bodies": 0,
+          "queries": 1665,
+          "rejected_but_extracted": 12,
+          "rejected_by_libpg_query": 12,
+          "statements": 2033,
+          "variables": 420
+        },
+        "REL_14_STABLE": {
+          "bodies": 488,
+          "compiled_by_libpg_query": 477,
+          "dynamic": 80,
+          "mismatching_bodies": 0,
+          "queries": 1820,
+          "rejected_but_extracted": 11,
+          "rejected_by_libpg_query": 11,
+          "statements": 2201,
+          "variables": 451
+        },
+        "REL_15_STABLE": {
+          "bodies": 519,
+          "compiled_by_libpg_query": 508,
+          "dynamic": 80,
+          "mismatching_bodies": 0,
+          "queries": 1908,
+          "rejected_but_extracted": 11,
+          "rejected_by_libpg_query": 11,
+          "statements": 2298,
+          "variables": 464
+        },
+        "REL_16_STABLE": {
+          "bodies": 536,
+          "compiled_by_libpg_query": 525,
+          "dynamic": 82,
+          "mismatching_bodies": 0,
+          "queries": 1952,
+          "rejected_but_extracted": 11,
+          "rejected_by_libpg_query": 11,
+          "statements": 2350,
+          "variables": 487
+        }
+      }
+    }
+  },
   "stage4": {
+    "corpus_vs_prototype": {
+      "differ": 0,
+      "files": 54,
+      "identical": 54
+    },
+    "harness": {
+      "cases": 23,
+      "passed": 22,
+      "server": "16.15",
+      "skipped": 0
+    },
+    "regress": {
+      "REL_16_STABLE": {
+        "both_refuse": 3,
+        "differ": 0,
+        "identical": 42787,
+        "only_library": 8,
+        "only_prototype": 0,
+        "rewritten": 24861,
+        "statements": 42798
+      }
+    },
     "rewrite_corpus": {
       "files": 54,
-      "first_run_ms": 28.689,
-      "warm_ms": 22.902
+      "first_run_ms": 23.067,
+      "warm_ms": 15.365
+    }
+  },
+  "stage5": {
+    "golang_migrate": {
+      "cases_passed": 22,
+      "server": "16.15"
+    },
+    "placeholder": {
+      "Auth": {
+        "different": 0,
+        "identical": 42849,
+        "refused_by_both": 3,
+        "rewritten": 24923
+      },
+      "auth": {
+        "different": 0,
+        "identical": 42849,
+        "refused_by_both": 3,
+        "rewritten": 24923
+      },
+      "my schema": {
+        "different": 0,
+        "identical": 42849,
+        "refused_by_both": 3,
+        "rewritten": 24923
+      },
+      "user": {
+        "different": 0,
+        "identical": 42849,
+        "refused_by_both": 3,
+        "rewritten": 24923
+      }
+    },
+    "schema_names": {
+      "cases_per_run": 22,
+      "failed": 0,
+      "runs": 10
     }
   }
 }

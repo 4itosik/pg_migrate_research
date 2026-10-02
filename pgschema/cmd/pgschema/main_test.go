@@ -152,3 +152,26 @@ func TestSameDirectoryAndHelpAndExclude(t *testing.T) {
 		t.Errorf("got %s", b)
 	}
 }
+
+func TestExtensionsInSchemaFlag(t *testing.T) {
+	root := t.TempDir()
+	src := filepath.Join(root, "src")
+	write(t, src, "001_ext.up.sql", "CREATE EXTENSION IF NOT EXISTS pgcrypto;\n")
+	var out, errb bytes.Buffer
+	for flagArgs, want := range map[string]string{
+		"":                      "CREATE EXTENSION IF NOT EXISTS pgcrypto;\n",
+		"-extensions-in-schema": "CREATE EXTENSION IF NOT EXISTS pgcrypto SCHEMA auth;\n",
+	} {
+		dst := filepath.Join(root, "dst"+flagArgs)
+		args := []string{"rewrite", "-schema", "auth", "-src", src, "-dst", dst}
+		if flagArgs != "" {
+			args = append(args, flagArgs)
+		}
+		if code := run(args, &out, &errb); code != 0 {
+			t.Fatalf("%q: exit %d: %s", flagArgs, code, errb.String())
+		}
+		if b, _ := os.ReadFile(filepath.Join(dst, "001_ext.up.sql")); string(b) != want {
+			t.Errorf("%q: got %q, want %q", flagArgs, b, want)
+		}
+	}
+}
