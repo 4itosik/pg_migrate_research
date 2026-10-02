@@ -362,6 +362,12 @@ func downcaseTruncate(id string) string {
 	return truncateIdent(string(b))
 }
 
+// TruncateIdent cuts an identifier to NAMEDATALEN-1 bytes at a character
+// boundary.
+func TruncateIdent(id string) string {
+	return truncateIdent(id)
+}
+
 func truncateIdent(id string) string {
 	if len(id) < nameDataLen {
 		return id

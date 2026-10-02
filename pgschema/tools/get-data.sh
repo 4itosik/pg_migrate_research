@@ -37,7 +37,7 @@ for step in "${steps[@]}"; do
 	case $step in
 	pgsrc)
 		# the last file get-pgsrc.sh fetches: a partial download is retried
-		[ -s "$cache/pgsrc/REL_17_STABLE/src/pl/plpgsql/src/plpgsql.h" ] || "$here/get-pgsrc.sh" "$cache/pgsrc" REL_17_STABLE
+		[ -s "$cache/pgsrc/REL_17_STABLE/src/include/parser/parser.h" ] || "$here/get-pgsrc.sh" "$cache/pgsrc" REL_17_STABLE
 		;;
 	regress)
 		for b in REL_12_STABLE REL_13_STABLE REL_14_STABLE REL_15_STABLE REL_16_STABLE; do

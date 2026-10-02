@@ -1,11 +1,11 @@
 {
   "build": {
-    "all_compile_peak_mb": 276,
+    "all_compile_peak_mb": 281,
     "all_compile_peak_package": "runtime",
-    "clean_build_seconds": 11.258967128,
-    "library_compile_peak_mb": 49,
-    "library_compile_peak_package": "github.com/4itosik/pg_migrate_research/pgschema/internal/lex",
-    "link_peak_mb": 0
+    "clean_build_seconds": 13.130730687,
+    "library_compile_peak_mb": 134,
+    "library_compile_peak_package": "github.com/4itosik/pg_migrate_research/pgschema/internal/parse",
+    "link_peak_mb": 76
   },
   "dataset": {
     "corpus": {

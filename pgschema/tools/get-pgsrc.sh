@@ -14,7 +14,8 @@ for f in \
 	src/include/nodes/parsenodes.h src/include/nodes/primnodes.h src/include/nodes/value.h \
 	src/include/nodes/pg_list.h src/include/nodes/nodes.h \
 	src/pl/plpgsql/src/pl_gram.y src/pl/plpgsql/src/pl_scanner.c src/pl/plpgsql/src/pl_comp.c \
-	src/pl/plpgsql/src/plpgsql.h; do
+	src/pl/plpgsql/src/plpgsql.h \
+	src/backend/nodes/makefuncs.c src/include/nodes/makefuncs.h src/include/parser/parser.h; do
 	mkdir -p "$dest/$branch/$(dirname "$f")"
 	curl -fsS -o "$dest/$branch/$f" "$base/$f"
 done

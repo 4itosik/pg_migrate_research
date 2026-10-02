@@ -157,3 +157,20 @@ func lookupKeyword(name string) (*keyword, bool) {
 	}
 	return &keywords[i], true
 }
+
+var tokenByName = func() map[string]Token {
+	m := make(map[string]Token, len(tokenNames))
+	for n, name := range tokenNames {
+		if name != "" {
+			m[name] = Token(n)
+		}
+	}
+	return m
+}()
+
+// TokenByName returns the token with the given name, like "IDENT" or
+// "SELECT". Single characters have no names; they are their own codes.
+func TokenByName(name string) (Token, bool) {
+	t, ok := tokenByName[name]
+	return t, ok
+}
