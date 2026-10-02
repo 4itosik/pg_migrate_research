@@ -48,7 +48,7 @@ func TestApply(t *testing.T) {
 }
 
 func TestApplyRejects(t *testing.T) {
-	for _, bad := range []string{"", "a'b", "a$b", `a\b`, "a\nb", "a\x00b", string(make([]byte, 64))} {
+	for _, bad := range []string{"", "a'b", "a$b", `a\b`, "a\nb", "a\x00b", string(make([]byte, 64)), "a\xffb"} {
 		if _, err := Apply("pgschema_placeholder.t", bad); err == nil {
 			t.Errorf("Apply accepted the schema %q", bad)
 		}

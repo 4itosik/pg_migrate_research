@@ -57,6 +57,7 @@ func TestGolangMigrate(t *testing.T) {
 		})
 	}
 	t.Logf("%d cases applied through golang-migrate give the schema of direct rewriting", passed)
+	writeMetrics(t, []string{"stage5", "golang_migrate"}, map[string]any{"server": srv.Version(), "cases_passed": passed})
 }
 
 func runGolangMigrateCase(t *testing.T, ctx context.Context, srv *harness.Server, c harness.Case) bool {

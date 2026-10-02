@@ -357,10 +357,20 @@ func rewriteIssues(p pair, sql string) (issue string) {
 	if !isInsertionOnly(sql, out, "auth.") && !requotedBody(sql, out) {
 		return fmt.Sprintf("the output is not the input with insertions of %q\n    output: %q", "auth.", truncate(out, 200))
 	}
-	if want, perr := safeProto(p.proto, sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) && trimQuoted(want) != trimQuoted(out) {
+	if want, perr := safeProto(p.proto, sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) && trimQuoted(unqualifyKeywordTypes(want)) != trimQuoted(out) {
 		return fmt.Sprintf("the output differs from the prototype's:\n%s", firstDiff(want, out))
 	}
 	return ""
+}
+
+var keywordTypeQualified = regexp.MustCompile(`(?i)\bauth\.(varchar|char|character|int|integer|bigint|smallint|numeric|decimal|dec|real|float|double|timestamp|time|interval|boolean|bit)\b`)
+
+// unqualifyKeywordTypes takes the schema off the type keywords (varchar, int,
+// ...) that the prototype puts it on when a migration creates a type of that
+// name: in a PL/pgSQL declaration the keyword is the type of pg_catalog and
+// the schema changes the type (docs/differences.md, "Ошибки прототипа").
+func unqualifyKeywordTypes(s string) string {
+	return keywordTypeQualified.ReplaceAllString(s, "$1")
 }
 
 var quotedLiteral = regexp.MustCompile(`[eE]?'([^']*)'|\$\$([^$]*)\$\$`)
@@ -386,7 +396,8 @@ var typeJunk = regexp.MustCompile(`(?i)%(?:row)?type\s+(\w+)`)
 func junkAfterType(sql string) bool {
 	for _, m := range typeJunk.FindAllStringSubmatch(sql, -1) {
 		switch strings.ToLower(m[1]) {
-		case "collate", "not", "default":
+		case "collate", "not", "default", "language", "as", "returns", "strict", "stable", "immutable", "volatile",
+			"security", "cost", "rows", "parallel", "called", "leakproof", "window", "set", "support", "transform":
 		default:
 			return true
 		}
@@ -396,8 +407,9 @@ func junkAfterType(sql string) bool {
 
 // bodiesComplete reports whether every function and DO block of sql has a body
 // (an AS clause). The PL/pgSQL compiler of libpg_query traps on a function
-// without one, and a WebAssembly instance that has trapped fails on every
-// later call, so such inputs must not reach it.
+// without one ("Assertion failed: proc_source != NULL", a WebAssembly trap),
+// and in one fuzzing run the calls after a trap failed with "out of bounds
+// memory access" in the same process, so such inputs are kept away from it.
 func bodiesComplete(sql string) bool {
 	stmts, err := parse.Parse(sql)
 	if err != nil {
@@ -455,8 +467,11 @@ func safeProto(p *Prototype, sql string) (out string, err error) {
 // body the rewriter writes with dollar quotes: the output is then not the
 // input with insertions, which is as documented (the body is edited decoded).
 func requotedBody(in, out string) bool {
-	return strings.Count(out, "$") > strings.Count(in, "$") && strings.Contains(in, "'")
+	return len(dollarQuotes.FindAllString(out, -1)) > len(dollarQuotes.FindAllString(in, -1)) && strings.Contains(in, "'")
 }
+
+// dollarQuotes matches the delimiters of dollar-quoted strings.
+var dollarQuotes = regexp.MustCompile(`\$[A-Za-z_][A-Za-z_0-9]*\$|\$\$`)
 
 // isInsertionOnly reports whether out is in with some occurrences of ins
 // added. Where a character can be matched or taken as the start of an
@@ -534,8 +549,12 @@ func TestRewriteMutations(t *testing.T) {
 		if _, err := Parse(s); err != nil {
 			continue
 		}
-		// both learn every statement, whether or not it can be rewritten
-		_ = pr.proto.Learn(s)
+		// both learn every statement, whether or not it can be rewritten; the
+		// prototype is kept away from functions without a body, which trap
+		// libpg_query's PL/pgSQL compiler
+		if bodiesComplete(s) {
+			_ = pr.proto.Learn(s)
+		}
 		_ = pr.our.Learn(s)
 		if _, _, err := pr.our.Rewrite(s); err != nil {
 			refused++

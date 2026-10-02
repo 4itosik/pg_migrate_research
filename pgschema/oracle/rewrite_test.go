@@ -48,6 +48,19 @@ func TestRewriteOnHarness(t *testing.T) {
 	if rep.Passed() == 0 {
 		t.Fatal("no case passed")
 	}
+	writeMetrics(t, []string{"stage4", "harness"}, map[string]any{
+		"server": rep.Server, "cases": len(rep.Results), "passed": rep.Passed(), "skipped": rep.Skipped(),
+	})
+}
+
+// writeMetrics adds a section to the report when METRICS_OUT is set.
+func writeMetrics(t *testing.T, section []string, v any) {
+	t.Helper()
+	if out := os.Getenv("METRICS_OUT"); out != "" {
+		if err := UpdateMetrics(out, section, v); err != nil {
+			t.Fatal(err)
+		}
+	}
 }
 
 // pair holds a prototype and a library rewriter with the same schema.
@@ -111,6 +124,7 @@ func TestRewriteCorpusVsPrototype(t *testing.T) {
 		}
 	}
 	t.Logf("%d files: %d identical to the prototype, %d differ", files, same, differ)
+	writeMetrics(t, []string{"stage4", "corpus_vs_prototype"}, map[string]any{"files": files, "identical": same, "differ": differ})
 }
 
 func firstDiff(want, got string) string {
@@ -192,6 +206,10 @@ func TestRewriteRegress(t *testing.T) {
 			}
 			t.Logf("%d statements: identical output %d (of them rewritten %d), outputs differ %d, only the library rewrites %d, only the prototype rewrites %d, both refuse %d",
 				total, sameChanged+sameUnchanged, sameChanged, differ, onlyOurs, onlyProto, bothFail)
+			writeMetrics(t, []string{"stage4", "regress", branch}, map[string]any{
+				"statements": total, "identical": sameChanged + sameUnchanged, "rewritten": sameChanged, "differ": differ,
+				"only_library": onlyOurs, "only_prototype": onlyProto, "both_refuse": bothFail,
+			})
 			var kinds []string
 			for k := range samples {
 				kinds = append(kinds, k)
@@ -215,9 +233,8 @@ func TestRewriteRegress(t *testing.T) {
 // down files, 54 files) in one process: the first run starts from a process
 // that has not rewritten anything (run it alone for that figure:
 // -run '^TestRewriteSpeed$'), the best of five later runs is the warm one. The
-// budget is 0.1 s; the test fails only at five times that, because a loaded
-// machine is slower than the one the budget is for. METRICS_OUT writes the
-// figures to the report.
+// budget is 0.1 s; the test fails when it is exceeded in CI (EnforceBudgets),
+// elsewhere it only logs the figures. METRICS_OUT writes them to the report.
 func TestRewriteSpeed(t *testing.T) {
 	cases, err := harness.LoadCorpus(corpusDir())
 	if err != nil {
@@ -257,8 +274,8 @@ func TestRewriteSpeed(t *testing.T) {
 		}
 	}
 	t.Logf("%d files of %d cases: first run %s, best of five later runs %s", files, len(cases), first.Round(time.Millisecond), best.Round(time.Millisecond))
-	if first > 500*time.Millisecond {
-		t.Errorf("the first run took %s, the budget is 100ms", first)
+	if first > 100*time.Millisecond && EnforceBudgets() {
+		t.Errorf("the first run took %s, the budget is 100 ms", first)
 	}
 	if out := os.Getenv("METRICS_OUT"); out != "" {
 		if err := UpdateMetrics(out, []string{"stage4", "rewrite_corpus"}, map[string]any{
@@ -327,6 +344,7 @@ func TestSchemaNamesOnServer(t *testing.T) {
 	}
 	defer srv.Stop()
 	modes := map[string]harness.Factory{"direct": ours, "template": templated}
+	runs, totalFailed := 0, 0
 	for _, schema := range []string{"Auth", "user", "my schema", `we"ird`, "ü"} {
 		renamed := make([]harness.Case, len(cases))
 		for i, c := range cases {
@@ -350,6 +368,9 @@ func TestSchemaNamesOnServer(t *testing.T) {
 				}
 			}
 			t.Logf("schema %-10q %-8s: %d of %d cases pass, %d skipped, %d failed", schema, mode, rep.Passed(), len(rep.Results), rep.Skipped(), failed)
+			runs++
+			totalFailed += failed
 		}
 	}
+	writeMetrics(t, []string{"stage5", "schema_names"}, map[string]any{"runs": runs, "cases_per_run": len(cases), "failed": totalFailed})
 }

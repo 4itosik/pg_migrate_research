@@ -60,6 +60,9 @@ func TestRewriteImprovements(t *testing.T) {
 	defer srv.Stop()
 	tests := []struct {
 		name, up, query, want string
+		// protoWrong: the prototype rewrites the migration and the result on
+		// the server is not want
+		protoWrong bool
 	}{
 		{
 			name: "the list of WHEN of a CASE with a selector",
@@ -74,6 +77,18 @@ BEGIN
 END $$;`,
 			query: "SELECT auth.kind_of(2) || auth.kind_of(1)",
 			want:  "lastother",
+		},
+		{
+			name: "a type keyword in a declaration is the type of pg_catalog",
+			up: `CREATE DOMAIN varchar AS text;
+CREATE FUNCTION f() RETURNS text LANGUAGE plpgsql AS $$
+DECLARE c varchar = 'xyz';
+BEGIN
+  RETURN pg_typeof(c)::text;
+END $$;`,
+			query:      "SELECT auth.f()",
+			want:       "character varying",
+			protoWrong: true,
 		},
 		{
 			name: "a variable named like a keyword",
@@ -115,6 +130,30 @@ END $$;`,
 			out, _, err := r.Rewrite(tc.up)
 			if err != nil {
 				t.Fatalf("the library refuses: %v", err)
+			}
+			if tc.protoWrong {
+				proto, err := NewPrototype(PrototypeOptions{Schema: "auth"})
+				if err != nil {
+					t.Fatal(err)
+				}
+				pout, _, err := proto.Rewrite(tc.up)
+				if err != nil {
+					t.Fatalf("the prototype refuses: %v", err)
+				}
+				pdb, err := srv.NewDatabase(ctx, "improvement_proto")
+				if err != nil {
+					t.Fatal(err)
+				}
+				defer pdb.Drop(ctx)
+				if err := pdb.Exec(ctx, "CREATE SCHEMA auth; CREATE SCHEMA trap; SET search_path TO trap"); err != nil {
+					t.Fatal(err)
+				}
+				if err := pdb.Exec(ctx, pout); err != nil {
+					t.Fatalf("the prototype's output fails: %v", err)
+				}
+				if got, err := pdb.QueryStrings(ctx, tc.query); err != nil || len(got) == 0 || got[len(got)-1] == tc.want {
+					t.Errorf("the prototype's output gives %v (%v), the point of the case is that it differs from %s", got, err, tc.want)
+				}
 			}
 			db, err := srv.NewDatabase(ctx, "improvement")
 			if err != nil {

@@ -24,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"unicode/utf8"
 )
 
 // Placeholder is the schema name the rewriter writes in a template. Do not
@@ -37,7 +38,7 @@ const maxIdentLen = 63
 // identifier when it needs quotes (upper case, a space, a keyword that is not
 // unreserved). It returns an error for a schema name that cannot be put into
 // text safely: empty, longer than 63 bytes, or with a quote ('), a dollar
-// sign ($), a backslash or a control character. The placeholder stands inside
+// sign ($), a backslash or a control character, or invalid UTF-8. The placeholder stands inside
 // string literals and dollar-quoted bodies too, where such characters would
 // change the meaning of the text.
 func Apply(tmpl, schema string) (string, error) {
@@ -57,6 +58,8 @@ func ValidSchema(schema string) error {
 		return errors.New("subst: empty schema name")
 	case len(schema) > maxIdentLen:
 		return fmt.Errorf("subst: schema name %q is longer than %d bytes", schema, maxIdentLen)
+	case !utf8.ValidString(schema):
+		return fmt.Errorf("subst: schema name %q is not valid UTF-8", schema)
 	}
 	for i := 0; i < len(schema); i++ {
 		if c := schema[i]; c == '\'' || c == '$' || c == '\\' || c < 0x20 || c == 0x7f {

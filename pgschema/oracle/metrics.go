@@ -53,3 +53,11 @@ func UpdateMetrics(path string, section []string, v any) error {
 	}
 	return os.WriteFile(path, append(out, '\n'), 0o644)
 }
+
+// EnforceBudgets reports whether the budget tests fail when a budget of the
+// task is exceeded: always in CI, elsewhere when ENFORCE_BUDGETS is set. On a
+// loaded machine the figures are worse than the 4 cores the budgets are for,
+// so a local run only logs them.
+func EnforceBudgets() bool {
+	return os.Getenv("CI") != "" || os.Getenv("ENFORCE_BUDGETS") != ""
+}

@@ -192,6 +192,14 @@ func TestParseSpeed(t *testing.T) {
 	}
 	per := float64(best.Nanoseconds()) / float64(len(stmts)) / 1000
 	t.Logf("%d statements: %.2f us per statement; the first parse in the process took %s", len(stmts), per, first.Round(time.Microsecond))
+	if EnforceBudgets() {
+		if per > 20 {
+			t.Errorf("%.2f us per statement, the budget is 20 us", per)
+		}
+		if first > 5*time.Millisecond {
+			t.Errorf("the first parse took %s, the budget is 5 ms", first)
+		}
+	}
 	if out := os.Getenv("METRICS_OUT"); out != "" {
 		err := UpdateMetrics(out, []string{"stage2", "parser", "speed_pg16"}, map[string]any{
 			"statements": len(stmts), "us_per_statement": per, "first_parse_us": float64(first.Nanoseconds()) / 1000,

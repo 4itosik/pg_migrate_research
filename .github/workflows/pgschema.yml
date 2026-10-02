@@ -90,18 +90,25 @@ jobs:
         env:
           REWRITE_VERSIONS: REL_${{ matrix.pg }}_STABLE
           PARSE_VERSIONS: REL_${{ matrix.pg }}_STABLE
+          # the tests of the stages write their figures to the report; on 16 only
+          METRICS_OUT: ${{ matrix.pg == 16 && format('{0}/pgschema/results/metrics.json', github.workspace) || '' }}
         run: |
           . ../tools/env.sh ${{ matrix.pg }}
           go vet ./...
           go test -count=1 -timeout 30m ./...
+      # the figures of speed are taken in processes of their own: the first
+      # parse and the first rewriting must be the first in the process
       - name: metrics
         if: matrix.pg == 16
         working-directory: pgschema/oracle
         run: |
           . ../tools/env.sh 16
+          export METRICS_OUT=$PWD/../results/metrics.json
           go run ./cmd/metrics -out ../results/metrics.json
-          METRICS_OUT=$PWD/../results/metrics.json go test -count=1 -timeout 30m -run 'TestLexRegress|TestLexSpeed|TestParseAcceptance|TestParseTrees|TestParseSpeed|TestRewriteSpeed' .
-          go run ./cmd/buildmetrics -out ../results/metrics.json
+          go test -count=1 -run '^TestLexSpeed$' .
+          go test -count=1 -run '^TestParseSpeed$' .
+          go test -count=1 -run '^TestRewriteSpeed$' .
+          go run ./cmd/buildmetrics -budgets -out ../results/metrics.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:

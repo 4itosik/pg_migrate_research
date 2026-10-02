@@ -3,7 +3,6 @@ package oracle
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"testing"
 
 	"github.com/4itosik/pg_migrate_research/pgschema"
@@ -54,6 +53,7 @@ func TestPlaceholder(t *testing.T) {
 		skipUnlessCI(t, "REGRESS_ROOT is not set; the regression tests are not checked")
 	}
 
+	perSchema := map[string]any{}
 	for _, schema := range []string{"auth", "Auth", "user", "my schema"} {
 		var same, changed, refused, diffs int
 		for _, g := range groups {
@@ -96,8 +96,9 @@ func TestPlaceholder(t *testing.T) {
 			}
 		}
 		t.Logf("schema %-12q identical %d (rewritten %d), refused by both %d, different %d", schema, same, changed, refused, diffs)
+		perSchema[schema] = map[string]any{"identical": same, "rewritten": changed, "refused_by_both": refused, "different": diffs}
 	}
-	_ = strings.TrimSpace
+	writeMetrics(t, []string{"stage5", "placeholder"}, perSchema)
 }
 
 // TestSubstRejects checks the schema names the substitution refuses.

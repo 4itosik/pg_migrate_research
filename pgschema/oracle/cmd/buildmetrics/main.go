@@ -4,7 +4,7 @@
 // report. The peak memory comes from the -toolexec wrapper of
 // poc/pgquery/wasm2go/maxrss, which it builds from the prototype.
 //
-//	go run ./cmd/buildmetrics -out ../results/metrics.json
+//	go run ./cmd/buildmetrics -out ../results/metrics.json [-budgets]
 package main
 
 import (
@@ -31,6 +31,7 @@ func main() {
 	out := flag.String("out", "../results/metrics.json", "metrics report")
 	lib := flag.String("lib", "..", "library module directory")
 	proto := flag.String("proto", "../../poc/pgquery", "prototype module directory, to build the maxrss tool")
+	budgets := flag.Bool("budgets", false, "exit with an error when a budget of the task is exceeded")
 	flag.Parse()
 
 	tmp, err := os.MkdirTemp("", "buildmetrics")
@@ -119,6 +120,29 @@ func main() {
 		if fi, err := os.Stat(bin); err == nil {
 			sec["cli_binary_mb"] = float64(fi.Size()) / (1 << 20)
 		}
+	}
+	if *budgets {
+		exceeded := false
+		check := func(name string, got, max float64) {
+			if got > max {
+				fmt.Fprintf(os.Stderr, "budget exceeded: %s is %.1f, the budget is %.0f\n", name, got, max)
+				exceeded = true
+			}
+		}
+		if v, ok := sec["all_compile_peak_mb"].(int); ok {
+			check("compiler peak memory on a package, MB", float64(v), 700)
+		}
+		if v, ok := sec["cli_clean_build_seconds"].(float64); ok {
+			check("clean build of the CLI, s", v, 30)
+		}
+		if v, ok := sec["cli_binary_mb"].(float64); ok {
+			check("CLI binary, MB", v, 15)
+		}
+		defer func() {
+			if exceeded {
+				os.Exit(1)
+			}
+		}()
 	}
 	if err := oracle.UpdateMetrics(*out, []string{"build"}, sec); err != nil {
 		log.Fatal(err)
