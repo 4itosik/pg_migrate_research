@@ -5,6 +5,8 @@
 - Постановка задачи: [TASK.md](TASK.md).
 - Полный отчёт: [README.md](README.md).
 - Запуск PoC и стенда: [poc/README.md](poc/README.md).
+- Датасет — где лежат корпус, регрессионные тесты и эталоны: [DATASET.md](DATASET.md).
+- Промпт для Claude Sonnet 5.5: библиотека с нуля на собственном парсере, libpg_query только эталон в тестах: [prompts/own-parser-library.md](prompts/own-parser-library.md).
 
 ## Итог на сейчас
 
@@ -43,6 +45,8 @@
    - `TestWasm2goSameBytes` — побайтная сверка с go-pgquery;
    - замеры памяти компиляции ([`wasm2go/maxrss`](poc/pgquery/wasm2go/maxrss/main.go)) и сборка под жёстким лимитом памяти.
 9. Переписывание при сборке с меткой вместо схемы, README §11: [`TestPlaceholder`](poc/pgquery/placeholder_test.go).
+10. Описание датасета: [DATASET.md](DATASET.md).
+11. Промпт для разработки библиотеки с нуля на собственном парсере: [prompts/own-parser-library.md](prompts/own-parser-library.md). Этапы с порогами приёмки, бюджеты сборки и скорости, эталоны — libpg_query и этот PoC.
 
 ## Результаты
 
