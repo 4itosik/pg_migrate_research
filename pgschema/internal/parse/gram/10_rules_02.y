@@ -441,7 +441,7 @@ alter_table_cmd:
 
 					n.Subtype = AT_SetStorage
 					n.Name = $3
-					n.Def = makeString($5, @5)
+					n.Def = makeString($5, -1)
 					$$ = n
 				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET COMPRESSION <cm> */
@@ -451,7 +451,7 @@ alter_table_cmd:
 
 					n.Subtype = AT_SetCompression
 					n.Name = $3
-					n.Def = makeString($5, @5)
+					n.Def = makeString($5, -1)
 					$$ = n
 				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> ADD GENERATED ... AS IDENTITY ... */

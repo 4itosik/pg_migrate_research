@@ -18873,7 +18873,7 @@ func yyAct315(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 
 		n.Subtype = AT_SetStorage
 		n.Name = yyDollar[3].str
-		n.Def = makeString(yyDollar[5].str, yyDollar[5].loc)
+		n.Def = makeString(yyDollar[5].str, -1)
 		yyVAL.node = n
 	}
 }
@@ -18885,7 +18885,7 @@ func yyAct316(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 
 		n.Subtype = AT_SetCompression
 		n.Name = yyDollar[3].str
-		n.Def = makeString(yyDollar[5].str, yyDollar[5].loc)
+		n.Def = makeString(yyDollar[5].str, -1)
 		yyVAL.node = n
 	}
 }
