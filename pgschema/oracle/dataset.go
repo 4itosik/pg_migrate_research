@@ -72,7 +72,7 @@ func Accepted(files []RegressFile) []Statement {
 // bodies stay whole. A line with a token the scanner rejects is dropped,
 // because the tests check such errors on purpose.
 func SplitStatements(script string) []string {
-	s, res, err := scanScript(stripPsql(script))
+	s, res, err := scanScript(StripPsql(script))
 	if err != nil {
 		return nil
 	}
@@ -111,9 +111,9 @@ func SplitStatements(script string) []string {
 
 var copyFromStdin = regexp.MustCompile(`(?i)\bfrom\s+stdin\b[^;]*;\s*$`)
 
-// stripPsql blanks psql meta-commands and the inline data of COPY ... FROM
+// StripPsql blanks psql meta-commands and the inline data of COPY ... FROM
 // stdin: neither is SQL, and the data can break the scanner.
-func stripPsql(s string) string {
+func StripPsql(s string) string {
 	lines := strings.Split(s, "\n")
 	inCopy := false
 	for i, l := range lines {

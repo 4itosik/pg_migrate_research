@@ -36,7 +36,8 @@ fi
 for step in "${steps[@]}"; do
 	case $step in
 	pgsrc)
-		[ -s "$cache/pgsrc/REL_17_STABLE/src/backend/parser/gram.y" ] || "$here/get-pgsrc.sh" "$cache/pgsrc" REL_17_STABLE
+		# the last file get-pgsrc.sh fetches: a partial download is retried
+		[ -s "$cache/pgsrc/REL_17_STABLE/src/pl/plpgsql/src/plpgsql.h" ] || "$here/get-pgsrc.sh" "$cache/pgsrc" REL_17_STABLE
 		;;
 	regress)
 		for b in REL_12_STABLE REL_13_STABLE REL_14_STABLE REL_15_STABLE REL_16_STABLE; do
@@ -49,7 +50,15 @@ for step in "${steps[@]}"; do
 		done
 		;;
 	pgdump)
-		if [ ! -x "$cache/pgclient/usr/lib/postgresql/16/bin/pg_dump" ]; then
+		# a pg_dump of version 16 or newer on the machine (GitHub runners have
+		# one) is found by the harness itself and needs no download
+		have=0
+		for p in "$(command -v pg_dump || true)" /usr/lib/postgresql/*/bin/pg_dump; do
+			[ -x "$p" ] || continue
+			v=$("$p" --version | sed -n 's/^pg_dump (PostgreSQL) \([0-9][0-9]*\).*/\1/p')
+			[ "${v:-0}" -ge 16 ] && have=1
+		done
+		if [ $have = 0 ] && [ ! -x "$cache/pgclient/usr/lib/postgresql/16/bin/pg_dump" ]; then
 			mkdir -p "$cache/debs" "$cache/pgclient"
 			(cd "$cache/debs" && apt-get download postgresql-client-16 libpq5)
 			for d in "$cache"/debs/*.deb; do dpkg -x "$d" "$cache/pgclient"; done

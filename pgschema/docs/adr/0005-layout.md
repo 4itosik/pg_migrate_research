@@ -4,13 +4,12 @@
 
 ## Решение
 
-Модуль `github.com/4itosik/pg_migrate_research/pgschema`, только стандартная библиотека:
+Основной модуль `github.com/4itosik/pg_migrate_research/pgschema`, только стандартная библиотека:
 
 | Пакет | Назначение | Виден снаружи |
 |---|---|---|
 | `pgschema` | `New`, `Learn`, `Rewrite`, режим метки | да |
 | `pgschema/subst` | подстановка схемы вместо метки, без парсера | да |
-| `pgschema/migratesrc` | обёртка над `source.Driver` golang-migrate | да |
 | `pgschema/cmd/pgschema` | CLI | да |
 | `internal/lex` | лексер | нет |
 | `internal/ast` | дерево (генерируется) | нет |
@@ -18,7 +17,9 @@
 | `internal/plpgsql` | извлечение SQL из PL/pgSQL | нет |
 | `internal/tools/goyacc` | форк goyacc, только для генерации | нет |
 
-Пакеты `subst` и `migratesrc` не импортируют парсер, ни прямо, ни через `pgschema`: у сервиса нет парсера в бинарнике.
+Обёртка над `source.Driver` — отдельный вложенный модуль `github.com/4itosik/pg_migrate_research/pgschema/migratesrc` со своим `go.mod`. Причина: `source.Driver.Open` возвращает именованный тип `source.Driver`, поэтому обёртка обязана импортировать `github.com/golang-migrate/migrate/v4/source`, а это зависимость, которой основному модулю нельзя иметь (`TestDependencies`). Сервису эта зависимость и так нужна: он использует golang-migrate. Модуль `migratesrc` зависит от `pgschema/subst` и не зависит от парсера: у сервиса нет парсера в бинарнике. Его тесты запускаются отдельно (вложенный модуль в `./...` родителя не входит), в CI — отдельным шагом.
+
+Пакет `subst` не импортирует парсер, ни прямо, ни через `pgschema`.
 
 Модуль сверки `pgschema/oracle` — отдельный модуль с `replace` на библиотеку, прототип и стенд. Библиотека о нём не знает. Каталоги `internal` модуля библиотеки доступны сверке: правило видимости `internal` смотрит на путь импорта (`…/pgschema/oracle` лежит под `…/pgschema`), а не на границу модуля.
 

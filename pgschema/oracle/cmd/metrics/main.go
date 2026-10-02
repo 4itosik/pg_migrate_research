@@ -46,12 +46,15 @@ func main() {
 			bytes += len(m.Up) + len(m.Down)
 		}
 	}
-	ds := map[string]any{"corpus": map[string]any{"cases": len(cases), "migration_files": files, "bytes": bytes}}
+	if err := oracle.UpdateMetrics(*out, []string{"dataset", "corpus"},
+		map[string]any{"cases": len(cases), "migration_files": files, "bytes": bytes}); err != nil {
+		log.Fatal(err)
+	}
 
+	// Without -regress the regress sections of an earlier run stay as they are.
 	if *regress != "" {
 		dirs, _ := filepath.Glob(filepath.Join(*regress, "REL_*_STABLE"))
 		sort.Strings(dirs)
-		reg := map[string]any{}
 		for _, d := range dirs {
 			rf, err := oracle.LoadRegress(d)
 			if err != nil {
@@ -62,31 +65,24 @@ func main() {
 				stmts += len(f.Statements)
 			}
 			acc := oracle.Accepted(rf)
-			nodes := make([]int, len(acc))
-			sum := 0
-			for i, s := range acc {
-				nodes[i] = oracle.CountNodes(s.Tree)
-				sum += nodes[i]
+			sec := map[string]any{"files": len(rf), "statements": stmts, "accepted_by_libpgq": len(acc)}
+			if n := len(acc); n > 0 {
+				nodes := make([]int, n)
+				sum := 0
+				for i, s := range acc {
+					nodes[i] = oracle.CountNodes(s.Tree)
+					sum += nodes[i]
+				}
+				sort.Ints(nodes)
+				sec["nodes_per_statement"] = map[string]any{
+					"mean": float64(sum) / float64(n), "median": nodes[n/2],
+					"p90": nodes[n*9/10], "p99": nodes[n*99/100], "max": nodes[n-1],
+				}
 			}
-			sort.Ints(nodes)
-			n := len(nodes)
-			reg[filepath.Base(d)] = map[string]any{
-				"files":              len(rf),
-				"statements":         stmts,
-				"accepted_by_libpgq": n,
-				"nodes_per_statement": map[string]any{
-					"mean":   float64(sum) / float64(n),
-					"median": nodes[n/2],
-					"p90":    nodes[n*9/10],
-					"p99":    nodes[n*99/100],
-					"max":    nodes[n-1],
-				},
+			if err := oracle.UpdateMetrics(*out, []string{"dataset", "regress", filepath.Base(d)}, sec); err != nil {
+				log.Fatal(err)
 			}
 		}
-		ds["regress"] = reg
-	}
-	if err := oracle.UpdateMetrics(*out, []string{"dataset"}, ds); err != nil {
-		log.Fatal(err)
 	}
 	fmt.Println("wrote", *out)
 }

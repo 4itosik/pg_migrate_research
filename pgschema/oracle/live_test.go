@@ -27,13 +27,13 @@ func haveServer() bool {
 // poc/harness writes them).
 func TestPrototypeOnHarness(t *testing.T) {
 	if !haveServer() {
-		t.Skip("no PostgreSQL server: set PG_BIN or PG_DSN (tools/env.sh)")
+		skipUnlessCI(t, "no PostgreSQL server: set PG_BIN or PG_DSN (tools/env.sh)")
 	}
 	if os.Getenv("CORPUS_DIR") == "" || os.Getenv("RESULTS_DIR") == "" {
-		t.Skip("CORPUS_DIR and RESULTS_DIR are not set (tools/env.sh)")
+		skipUnlessCI(t, "CORPUS_DIR and RESULTS_DIR are not set (tools/env.sh)")
 	}
 	if _, err := os.Stat(filepath.Join(os.Getenv("RESULTS_DIR"), "baseline-schema")); err != nil {
-		t.Skip("no baseline schemas in $RESULTS_DIR: run tools/baseline.sh")
+		skipUnlessCI(t, "no baseline schemas in $RESULTS_DIR: run tools/baseline.sh")
 	}
 	rep := harness.RunTest(t, harness.TestOptions{
 		Config: harness.Config{

@@ -8,6 +8,16 @@ import (
 	"github.com/4itosik/pg_migrate_research/poc/harness"
 )
 
+// skipUnlessCI skips a test whose data or server is not available, but fails
+// it when CI is set: a pipeline must not go green without running the check.
+func skipUnlessCI(t *testing.T, msg string) {
+	t.Helper()
+	if os.Getenv("CI") != "" {
+		t.Fatal("CI is set but the check cannot run: " + msg)
+	}
+	t.Skip(msg)
+}
+
 func corpusDir() string {
 	if d := os.Getenv("CORPUS_DIR"); d != "" {
 		return d
@@ -89,7 +99,7 @@ func TestCorpus(t *testing.T) {
 func TestRegressDataset(t *testing.T) {
 	root := os.Getenv("REGRESS_ROOT")
 	if root == "" {
-		t.Skip("REGRESS_ROOT is not set; run tools/get-data.sh and source tools/env.sh")
+		skipUnlessCI(t, "REGRESS_ROOT is not set; run tools/get-data.sh and source tools/env.sh")
 	}
 	want := map[string][2]int{ // files, statements accepted by libpg_query
 		"REL_12_STABLE": {189, 32024},
@@ -102,7 +112,7 @@ func TestRegressDataset(t *testing.T) {
 		t.Run(branch, func(t *testing.T) {
 			files, err := LoadRegress(filepath.Join(root, branch))
 			if err != nil {
-				t.Skip(err)
+				skipUnlessCI(t, err.Error())
 			}
 			got := [2]int{len(files), len(Accepted(files))}
 			if got != w {

@@ -1,4 +1,12 @@
 {
+  "build": {
+    "all_compile_peak_mb": 276,
+    "all_compile_peak_package": "runtime",
+    "clean_build_seconds": 11.258967128,
+    "library_compile_peak_mb": 49,
+    "library_compile_peak_package": "github.com/4itosik/pg_migrate_research/pgschema/internal/lex",
+    "link_peak_mb": 0
+  },
   "dataset": {
     "corpus": {
       "bytes": 20750,
@@ -74,5 +82,68 @@
     "go": "go1.26.1",
     "goarch": "amd64",
     "goos": "linux"
+  },
+  "stage1": {
+    "lexer": {
+      "regress": {
+        "REL_12_STABLE": {
+          "file_deviations": 0,
+          "file_mismatches": 0,
+          "files": 189,
+          "files_rejected_by_scanner": 1,
+          "statement_deviations": 0,
+          "statement_mismatches": 0,
+          "statement_tokens": 455969,
+          "statements": 32267
+        },
+        "REL_13_STABLE": {
+          "file_deviations": 0,
+          "file_mismatches": 0,
+          "files": 197,
+          "files_rejected_by_scanner": 2,
+          "statement_deviations": 0,
+          "statement_mismatches": 0,
+          "statement_tokens": 501047,
+          "statements": 35005
+        },
+        "REL_14_STABLE": {
+          "file_deviations": 0,
+          "file_mismatches": 0,
+          "files": 206,
+          "files_rejected_by_scanner": 2,
+          "statement_deviations": 0,
+          "statement_mismatches": 0,
+          "statement_tokens": 544294,
+          "statements": 38052
+        },
+        "REL_15_STABLE": {
+          "file_deviations": 0,
+          "file_mismatches": 0,
+          "files": 217,
+          "files_rejected_by_scanner": 3,
+          "statement_deviations": 0,
+          "statement_mismatches": 0,
+          "statement_tokens": 589666,
+          "statements": 41598
+        },
+        "REL_16_STABLE": {
+          "file_deviations": 0,
+          "file_mismatches": 0,
+          "files": 220,
+          "files_rejected_by_scanner": 3,
+          "statement_deviations": 0,
+          "statement_mismatches": 0,
+          "statement_tokens": 615286,
+          "statements": 43323
+        }
+      },
+      "speed_pg16": {
+        "bytes": 3540132,
+        "mb_per_second": 47.43803815534352,
+        "statements": 43323,
+        "tokens": 598629,
+        "us_per_statement": 1.6427606813932552
+      }
+    }
   }
 }
