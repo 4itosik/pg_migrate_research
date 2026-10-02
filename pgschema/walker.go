@@ -26,6 +26,7 @@ type walker struct {
 
 	stmtStart, stmtEnd int
 	catalogRef         bool
+	triggerVars        []string // special variables of the function being rewritten
 }
 
 func (w *walker) beginStmt(raw *RawStmt) {

@@ -7,6 +7,9 @@ import (
 
 	. "github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/lex"
+	"github.com/4itosik/pg_migrate_research/pgschema/internal/parse"
+	"github.com/4itosik/pg_migrate_research/pgschema/internal/plpgsql"
+	"github.com/4itosik/pg_migrate_research/pgschema/subst"
 )
 
 // createFunction qualifies the function name and rewrites a SQL or PL/pgSQL
@@ -28,11 +31,12 @@ func (w *walker) createFunction(n *CreateFunctionStmt) {
 	}
 	var newBody string
 	var err error
+	w.triggerVars = triggerVars(n)
 	switch lang := language(n.Options, "sql"); lang {
 	case "sql":
 		newBody, err = w.sqlBody(str.Sval)
 	case "plpgsql":
-		newBody, err = w.plpgsqlBody(str.Sval)
+		newBody, err = w.plpgsqlBody(plOptions(n), str.Sval)
 	default:
 		w.warn("function body in LANGUAGE %s is not rewritten: %s", lang, snippet(w.stmtText()))
 		return
@@ -57,7 +61,8 @@ func (w *walker) doStmt(n *DoStmt) {
 	if !ok {
 		return
 	}
-	newBody, err := w.plpgsqlBody(str.Sval)
+	w.triggerVars = nil
+	newBody, err := w.plpgsqlBody(plOptions(nil), str.Sval)
 	if err != nil {
 		w.fail("DO block: %v", err)
 		return
@@ -101,10 +106,260 @@ func (w *walker) sqlBody(body string) (string, error) {
 	return applyEdits(body, a.edits)
 }
 
-// plpgsqlBody rewrites the SQL embedded in a PL/pgSQL body.
-func (w *walker) plpgsqlBody(body string) (string, error) {
+// plOptions are the facts about a function that its body does not contain:
+// the name, which is a label of the outermost block, the parameters and
+// whether it is a trigger. n is nil for a DO block.
+func plOptions(n *CreateFunctionStmt) plpgsql.Options {
+	var o plpgsql.Options
+	if n == nil {
+		return o
+	}
+	if names := strs(n.Funcname); len(names) > 0 {
+		o.Name = names[len(names)-1]
+	}
+	for _, p := range n.Parameters {
+		fp, ok := p.(*FunctionParameter)
+		if !ok {
+			continue
+		}
+		o.Params = append(o.Params, plpgsql.Param{Name: fp.Name, Type: typeText(fp.ArgType)})
+	}
+	return o
+}
+
+// typeText writes a type name as the parameter list of CREATE FUNCTION had it,
+// as far as the extractor needs it: the names, the array brackets, %TYPE.
+func typeText(tn *TypeName) string {
+	if tn == nil {
+		return ""
+	}
+	var parts []string
+	for _, s := range strs(tn.Names) {
+		parts = append(parts, subst.QuoteIdent(s))
+	}
+	text := strings.Join(parts, ".")
+	if tn.PctType {
+		text += "%TYPE"
+	}
+	return text + strings.Repeat("[]", len(tn.ArrayBounds))
+}
+
+// triggerVars are the special variables PL/pgSQL declares for the body of a
+// trigger function, from its return type.
+func triggerVars(n *CreateFunctionStmt) []string {
+	if n == nil || n.ReturnType == nil {
+		return nil
+	}
+	names := strs(n.ReturnType.Names)
+	if len(names) == 0 {
+		return nil
+	}
+	switch names[len(names)-1] {
+	case "trigger":
+		return []string{"new", "old", "tg_name", "tg_when", "tg_level", "tg_op", "tg_relid", "tg_relname",
+			"tg_table_name", "tg_table_schema", "tg_nargs", "tg_argv"}
+	case "event_trigger":
+		return []string{"tg_event", "tg_tag"}
+	}
+	return nil
+}
+
+// plpgsqlBody rewrites the SQL embedded in a PL/pgSQL body. The extractor
+// finds the fragments of SQL (statements, expressions, assignments) and the
+// declarations; each fragment is rewritten as a text of its own with the
+// regular rules, and the types of the declarations are qualified.
+func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (string, error) {
+	pb, err := plpgsql.Parse(body, &opts)
+	if err != nil {
+		return "", fmt.Errorf("PL/pgSQL: %w", err)
+	}
+	if len(pb.Dynamic) > 0 {
+		w.warn("dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten: %s", snippet(w.stmtText()))
+	}
+	var edits []edit
+	for _, f := range pb.Fragments {
+		a, err := w.r.analyzeFragment(f, body, w.learnOnly)
+		if err != nil {
+			return "", fmt.Errorf("PL/pgSQL line %d %q: %w", f.Line, snippet(f.SQL(body)), err)
+		}
+		w.warns = append(w.warns, a.warns...)
+		edits = append(edits, shiftEdits(a.edits, f.Start)...)
+	}
 	if w.learnOnly {
 		return body, nil
 	}
-	return "", errors.New(fmt.Sprint("PL/pgSQL bodies are not supported yet"))
+	vars := plVars(pb, w.triggerVars)
+	for _, d := range pb.Decls {
+		if d.Type == nil || (d.Kind != plpgsql.DeclVar && d.Kind != plpgsql.DeclCursorArg) {
+			continue
+		}
+		if e, ok, err := w.declEdit(body, d.Type, vars); err != nil {
+			return "", err
+		} else if ok {
+			edits = append(edits, e)
+		}
+	}
+	out, err := applyEdits(body, edits)
+	if err != nil {
+		return "", err
+	}
+	if out != body {
+		if err := verifyBody(pb, out, opts); err != nil {
+			return "", err
+		}
+	}
+	return out, nil
+}
+
+// verifyBody checks that the rewritten body has the same structure as the
+// original: the same fragments of the same kinds and modes, declarations and
+// dynamic statements, in the same order.
+func verifyBody(orig *plpgsql.Body, out string, opts plpgsql.Options) error {
+	nb, err := plpgsql.Parse(out, &opts)
+	if err != nil {
+		return fmt.Errorf("verification: the rewritten PL/pgSQL body does not parse: %w", err)
+	}
+	if len(nb.Fragments) != len(orig.Fragments) || len(nb.Decls) != len(orig.Decls) || len(nb.Dynamic) != len(orig.Dynamic) {
+		return errors.New("verification: the rewritten PL/pgSQL body has a different structure")
+	}
+	for i, f := range orig.Fragments {
+		if g := nb.Fragments[i]; g.Kind != f.Kind || g.Mode != f.Mode {
+			return fmt.Errorf("verification: fragment %d of the PL/pgSQL body changed its kind", i+1)
+		}
+	}
+	for i, d := range orig.Decls {
+		if g := nb.Decls[i]; g.Kind != d.Kind || g.Name != d.Name {
+			return fmt.Errorf("verification: declaration %d of the PL/pgSQL body changed", i+1)
+		}
+	}
+	return nil
+}
+
+// plVars are the names of the variables of a body, which shadow tables in
+// table.column%TYPE: the declared ones, the loop variables, the special
+// variables.
+func plVars(pb *plpgsql.Body, special []string) map[string]bool {
+	vars := map[string]bool{"found": true, "sqlstate": true, "sqlerrm": true}
+	for _, n := range special {
+		vars[n] = true
+	}
+	for _, d := range pb.Decls {
+		vars[d.Name] = true
+	}
+	var walk func(stmts []*plpgsql.Stmt)
+	var block func(b *plpgsql.Block)
+	walk = func(stmts []*plpgsql.Stmt) {
+		for _, s := range stmts {
+			for _, v := range s.Vars {
+				vars[v] = true
+			}
+			if s.Block != nil {
+				block(s.Block)
+			}
+			walk(s.Body)
+			for _, br := range s.Branches {
+				walk(br.Stmts)
+			}
+		}
+	}
+	block = func(b *plpgsql.Block) {
+		walk(b.Stmts)
+		for _, h := range b.Handlers {
+			walk(h.Stmts)
+		}
+	}
+	if pb.Root != nil {
+		block(pb.Root)
+	}
+	return vars
+}
+
+// declEdit qualifies the type of a declaration: table%ROWTYPE,
+// table.column%TYPE (unless the first name is a variable) and a type or
+// table created by the migrations.
+func (w *walker) declEdit(body string, t *plpgsql.TypeRef, vars map[string]bool) (edit, bool, error) {
+	var qualify bool
+	switch t.Kind {
+	case plpgsql.TypeRow:
+		qualify = len(t.Names) == 1 && w.shouldQualifyRelation(t.Names[0].Text, false)
+	case plpgsql.TypeColumn:
+		qualify = len(t.Names) == 2 && !vars[t.Names[0].Text] && w.shouldQualifyRelation(t.Names[0].Text, false)
+	case plpgsql.TypePlain:
+		qualify = len(t.Names) == 1 && w.r.reg.isType(t.Names[0].Text)
+	}
+	if !qualify {
+		return edit{}, false, nil
+	}
+	n := t.Names[0]
+	if !identAt(body, n.Start, n.Text) {
+		return edit{}, false, fmt.Errorf("cannot locate the type %s in a declaration of the PL/pgSQL body", n.Text)
+	}
+	return edit{start: n.Start, end: n.Start, text: w.r.prefix}, true, nil
+}
+
+// identAt reports whether an identifier with the value name starts at pos.
+func identAt(src string, pos int, name string) bool {
+	if pos < 0 || pos >= len(src) {
+		return false
+	}
+	it, err := lex.NewScanner(src[pos:]).Next()
+	return err == nil && it.Start == 0 && it.Str == name &&
+		(it.Tok == lex.IDENT || (it.Kind != lex.NoKeyword && it.Kind != lex.ReservedKeyword))
+}
+
+// analyzeFragment rewrites a fragment of a PL/pgSQL body according to its
+// parse mode and returns the edits relative to the start of the fragment.
+func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly bool) (*analysis, error) {
+	const prefix = "SELECT "
+	q := f.SQL(body)
+	switch f.Mode {
+	case parse.ModeDefault: // a whole SQL statement
+		return r.analyze(q, true, learnOnly)
+	case parse.ModePLpgSQLExpr:
+		head := prefix
+		if f.Kind == plpgsql.KindCaseWhen { // the list of WHEN is parsed as: var IN (list)
+			head, q = prefix+"x IN (", q+")"
+		}
+		a, err := r.analyze(head+q, true, learnOnly)
+		if err != nil {
+			return nil, err
+		}
+		a.edits = shiftEdits(a.edits, -len(head))
+		return a, nil
+	case parse.ModePLpgSQLAssign1, parse.ModePLpgSQLAssign2, parse.ModePLpgSQLAssign3: // target := expr
+		off, ok := assignmentEnd(q)
+		if !ok {
+			return nil, errors.New("assignment operator not found")
+		}
+		a, err := r.analyze(prefix+q[off:], true, learnOnly)
+		if err != nil {
+			return nil, err
+		}
+		a.edits = shiftEdits(a.edits, off-len(prefix))
+		return a, nil
+	}
+	return &analysis{}, nil
+}
+
+// assignmentEnd returns the offset after the := or = that ends the target of
+// an assignment: the first one outside parentheses and brackets.
+func assignmentEnd(q string) (int, bool) {
+	sc := lex.NewScanner(q)
+	depth := 0
+	for {
+		it, err := sc.Next()
+		if err != nil || it.Tok == 0 {
+			return 0, false
+		}
+		switch it.Tok {
+		case '(', '[':
+			depth++
+		case ')', ']':
+			depth--
+		case lex.COLON_EQUALS, '=':
+			if depth == 0 {
+				return int(it.End), true
+			}
+		}
+	}
 }

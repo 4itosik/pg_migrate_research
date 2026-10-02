@@ -94,9 +94,6 @@ func runGolangMigrateCase(t *testing.T, ctx context.Context, srv *harness.Server
 		} {
 			out, _, err := f.rw.Rewrite(f.sql)
 			if err != nil {
-				if strings.Contains(err.Error(), plpgsqlPending) {
-					t.Skip("waits for the PL/pgSQL extractor")
-				}
 				t.Fatalf("%s: %v", f.name, err)
 			}
 			if f.write {
