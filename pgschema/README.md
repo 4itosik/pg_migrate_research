@@ -74,8 +74,11 @@ cd pgschema && CGO_ENABLED=0 go build -o pgschema ./cmd/pgschema
 # шаблоны с меткой вместо схемы; их кладут в репозиторий и в образ сервиса
 pgschema rewrite -placeholder -src migrations -dst migrations.tmpl
 
-# в CI: каталог шаблонов не устарел (код 1, если файл отличается, не хватает или лишний)
+# в CI: каталог шаблонов не устарел (код 3, если файл отличается, не хватает или лишний; 1 — ошибка)
 pgschema rewrite -placeholder -src migrations -dst migrations.tmpl -check
+
+# миграция удалена из migrations: её шаблон в migrations.tmpl без -prune — ошибка
+pgschema rewrite -placeholder -prune -src migrations -dst migrations.tmpl
 
 # или сразу с именем схемы
 pgschema rewrite -schema auth -src migrations -dst migrations.auth
@@ -88,7 +91,24 @@ pgschema rewrite -schema auth -extension postgis=ext -extension-objects postgis=
 pgschema rewrite -schema auth -extensions-in-schema -src migrations -dst migrations.auth
 ```
 
-CLI читает файлы `NNN_имя.up.sql` и `NNN_имя.down.sql` каталога golang-migrate, сначала учит по всем up-файлам, какие типы и функции создают миграции, потом переписывает каждый файл и пишет результат в `-dst` под тем же именем. Предупреждения идут в stderr со строкой (`файл: warning: line 3: …`), `-fail-on-warning` делает их ошибкой, `-exclude a,b` оставляет без схемы отношения других схем, `-extensions-in-schema`, `-extension имя[=схема]` и `-extension-objects имя=a,b` настраивают расширения (см. «Расширения»). Ошибка в любом файле — код 1 и ни одного записанного файла. В режиме записи файлы `NNN_имя.up.sql` и `.down.sql` в `-dst`, которых нет в `-src`, удаляются (каталог `-dst` генерируется); `-src` и `-dst` должны быть разными каталогами.
+CLI читает файлы `NNN_имя.up.sql` и `NNN_имя.down.sql` каталога golang-migrate, сначала учит по всем up-файлам, какие типы и функции создают миграции, потом переписывает каждый файл и пишет результат в `-dst` под тем же именем. Предупреждения идут в stderr со строкой (`файл: warning: line 3: …`), `-fail-on-warning` делает их ошибкой, `-exclude a,b` оставляет без схемы отношения других схем, `-extensions-in-schema`, `-extension имя[=схема]` и `-extension-objects имя=a,b` настраивают расширения (см. «Расширения»).
+
+Что CLI проверяет и как пишет:
+- **Ошибка в любом файле — код 1, `-dst` не меняется.** Все файлы переписываются в памяти до первой записи: SQL, который не разобрался (в том числе текст с BOM UTF-8 — ошибка с именем файла и советом убрать BOM), или предупреждение при `-fail-on-warning` не оставляют в `-dst` ни одного нового файла.
+- **Запись через переименование.** Каждый файл пишется во временный файл в `-dst`, и только когда записаны все, они переименовываются поверх целей. Ошибка до переименований (каталог на месте файла, нет места, нет прав) удаляет временные файлы, и `-dst` остаётся как был. Каждое переименование атомарно для своего файла, весь набор — нет: если процесс прервут посреди переименований, часть файлов будет новой, часть старой; `-check` или повторный запуск это покажут. Символическая ссылка в `-dst` заменяется файлом, через неё ничего не пишется (файл, на который она указывает, не меняется).
+- **Чужие миграции в `-dst`.** Файл в `-dst`, который golang-migrate прочтёт как миграцию (`NNN_имя.up.*`, `NNN_имя.down.*`) и которого нет среди результатов `-src`, мог быть написан руками: без `-prune` это ошибка (код 1) со списком таких файлов, и ничего не пишется; с `-prune` они удаляются после записи. Файлы, которые не миграции (`README.md`), не трогаются.
+- **Каталоги.** `-src` и `-dst` — разные каталоги, и ни один не лежит внутри другого; сравниваются абсолютные пути после раскрытия символических ссылок. Иначе код 2.
+- **Что golang-migrate прочтёт иначе — ошибка, а не пропуск.** golang-migrate читает миграцию с любым расширением (`^([0-9]+)_(.*)\.(down|up)\.(.*)$`), а CLI переписывает только `.sql`: `002_b.up.pgsql` или `003_c.up.SQL` в `-src` — ошибка с именем файла. Два up- или два down-файла одной версии (`1_a.up.sql` и `001_b.up.sql`) и версия, которая не помещается в 64 бита, — тоже ошибка: golang-migrate такой каталог отвергает или молча пропускает файл при старте сервиса.
+- **Лишний аргумент — код 2.** Разбор флагов останавливается на первом аргументе, который не флаг: `-placeholder true -check` молча записал бы файлы вместо проверки. Булев флаг пишется `-check` или `-check=true`.
+
+Коды выхода (их же печатает `pgschema rewrite -h`):
+
+| Код | Значение |
+|---|---|
+| 0 | готово; с `-check` — `-dst` актуален |
+| 1 | ошибка: SQL не разобрался, предупреждение при `-fail-on-warning`, файл не читается или не пишется, файл `-src` не `.sql` или с повторной версией, чужая миграция в `-dst` без `-prune` |
+| 2 | неверное использование: флаги, лишний аргумент, `-src` и `-dst` совпадают или вложены |
+| 3 | с `-check`: `-dst` устарел — файл отличается, отсутствует или лишний |
 
 Пример (`migrations/002_touch.up.sql` из каталога с двумя миграциями, `-schema auth`):
 
@@ -122,13 +142,18 @@ import (
 
 // golang-migrate: шаблоны читаются как есть, схема подставляется при чтении
 src, err := source.Open("file://migrations.tmpl")
-m, err := migrate.NewWithSourceInstance("file", migratesrc.Wrap(src, "auth"), dbURL)
+drv, err := migratesrc.New(src, "auth") // недопустимое имя схемы — ошибка здесь
+m, err := migrate.NewWithSourceInstance("file", drv, dbURL)
 
 // или руками
 sql, err := subst.Apply(tmpl, "auth") // метка pgschema_placeholder -> auth
 ```
 
-`migratesrc` — отдельный модуль (`github.com/4itosik/pg_migrate_research/pgschema/migratesrc`, каталог `migratesrc/`; пока в репозитории нет выпущенных версий, его `go.mod` ссылается на `pgschema` через `replace`, а внешнему сервису нужны теги `pgschema/vX.Y.Z` и `pgschema/migratesrc/vX.Y.Z`): его `Wrap` принимает и возвращает `source.Driver` golang-migrate, поэтому ему нужна эта зависимость, а основному модулю — нет ([ADR 0005](docs/adr/0005-layout.md)). Недопустимое имя схемы делает ошибкой каждое чтение миграции.
+`migratesrc` — отдельный модуль (`github.com/4itosik/pg_migrate_research/pgschema/migratesrc`, каталог `migratesrc/`): его `New` принимает и возвращает `source.Driver` golang-migrate, поэтому ему нужна эта зависимость, а основному модулю — нет ([ADR 0005](docs/adr/0005-layout.md)).
+
+- `New(src, schema)` проверяет имя схемы сразу и возвращает ошибку. `Wrap(src, schema)` оставлен для совместимости: он сообщает о недопустимом имени только при чтении миграции, а если применять нечего (`migrate.ErrNoChange`), ошибка не видна.
+- Ошибки чтения называют версию (`migratesrc: version 3: …`) и оборачивают причину: `errors.Is` и `errors.As` работают. `os.ErrNotExist` источника проходит без изменений — по нему golang-migrate узнаёт, что миграций больше нет. Ошибка закрытия файла источника не теряется.
+- `go.mod` модуля требует `pgschema v0.1.0` (тег `pgschema/v0.1.0`) и содержит `replace ../` для разработки в этом репозитории: у потребителя `replace` зависимости не действует, и он получает версию из `require`. Директива `go 1.25.11` — потому что её требует golang-migrate v4.20.1; самой библиотеке хватает Go 1.25.1.
 
 Имя схемы с пробелом, заглавными буквами или ключевым словом получает кавычки, как у `quote_identifier` PostgreSQL (`"my schema"`, `"Auth"`, `"user"`). `subst` отвергает пустое имя, длиннее 63 байт, не в UTF-8, содержащее `'`, `$`, `\`, управляющий символ, `/*`, `*/` или `--` и с пробелом в начале или в конце: метка стоит и внутри строк, и внутри долларовых тел функций, и в комментариях. Отвергаются и имена, которые не могут быть схемой сервиса: начинающиеся с `pg_` (PostgreSQL оставляет их системным схемам, `CREATE SCHEMA` их не принимает) и `information_schema`. Шаблон делается только из текста без метки: `Learn` и `Rewrite` в режиме `Placeholder` отвергают текст, где `pgschema_placeholder` уже есть (в комментарии, в строке), — `subst.Apply` заменил бы и его.
 
@@ -240,7 +265,59 @@ Go 1.25.11, 4 ядра, linux/amd64 ([results/metrics.json](https://github.com/4
 | `internal/parse` | парсер: порт `gram.y` на goyacc (форк в `internal/tools/goyacc`), правила в `gram/*.y`, `gram_gen.go` сгенерирован |
 | `internal/ast` | дерево, сгенерированное по описанию libpg_query |
 | `internal/plpgsql` | извлечение SQL из тел PL/pgSQL |
-| `oracle` | отдельный модуль сверки: libpg_query, прототип, живой PostgreSQL; сервисы его не импортируют |
+| `oracle` | отдельный модуль сверки: libpg_query, прототип, живой PostgreSQL; сервисы его не импортируют; только в репозитории исследования |
+
+## Перенос и встраивание
+
+**Копия библиотеки.** `pgschema/tools/export.sh DEST` копирует в пустой каталог `DEST` вне репозитория файлы `pgschema/`, которые отслеживает git, без исследовательской части и проверяет копию отдельно от репозитория: `go vet` и `go test` основного модуля без сети (`GOPROXY=off`, без cgo, только стандартная библиотека), `go vet` и `go test` модуля `migratesrc` (golang-migrate — из прокси модулей, библиотека — из копии через `replace ../`), относительные ссылки, которые ведут из копии или на файл, которого в ней нет, и `poc/` в Go-коде. Любая неудача — код 1.
+
+- В копии: библиотека, `subst`, CLI `cmd/pgschema`, `migratesrc`, парсер и форк goyacc (`internal/`), `tools/gengram.sh` (его вызывает `go generate ./internal/parse`), `tools/export.sh`, README, `docs/` (ADR, отличия от прототипа), лицензии.
+- Только в репозитории исследования: модуль сверки `oracle/` (libpg_query, прототип, живой PostgreSQL и генераторы `builtins_gen.go`, `extensions_gen.go`, `internal/ast`, `internal/lex`), `results/`, `PROGRESS.md`, `NOTES.md`, скачивание данных и стенд (`tools/get-data.sh`, `env.sh`, `baseline.sh`, `get-pgsrc.sh`), пробы (`probe-*.sh`) и скрипты порта грамматики (`gramskel.py`, `gramapply.py`, `gramdecls.py`, `strip_actions.py`). Ссылки из копии на них — абсолютные, на этот репозиторий. Сгенерированные файлы лежат в копии готовыми; без `oracle/` перегенерировать можно только грамматику.
+
+**Версии.** В репозитории исследования — теги `pgschema/v0.1.0` (библиотека) и `pgschema/migratesrc/v0.1.0` (обёртка). В копии, где `pgschema/` становится корнем репозитория, тем же версиям соответствуют теги `v0.1.0` и `migratesrc/v0.1.0`. `go get` найдёт модуль, только если его путь совпадает с местом, где лежит копия (для приватного хоста — ещё `GOPRIVATE`); иначе — `replace` в `go.mod` форка или новый путь модуля:
+
+```bash
+cd DEST
+go mod edit -module example.corp/platform/pgschema
+grep -rl 'github.com/4itosik/pg_migrate_research/pgschema' . |
+	xargs sed -i 's#github.com/4itosik/pg_migrate_research/pgschema#example.corp/platform/pgschema#g'
+go generate ./internal/parse
+CGO_ENABLED=0 go test ./...
+(cd migratesrc && go test ./...)
+```
+
+`sed` меняет старый путь во всех файлах, в том числе в `go.mod` модуля `migratesrc`, в заголовке грамматики `internal/parse/gram/00_header.y` и в сгенерированном `internal/parse/gram_gen.go`; `go generate` собирает `gram_gen.go` из грамматики заново (`TestGrammarGenerated` проверяет, что он не устарел). Команды проверены на копии из `tools/export.sh` с путём `example.corp/platform/pgschema`: vet и тесты обоих модулей зелёные. `sed -i` здесь GNU, на macOS — `sed -i ''`.
+
+**Встраивание в форк golang-migrate.** Два способа.
+
+(а) При сборке — CLI, в рантайме — подстановка. В репозитории сервиса лежат шаблоны (`pgschema rewrite -placeholder`, в CI — `-check`), а форк подставляет схему, когда драйвер источника читает миграцию. Так делает `migratesrc`: его можно импортировать или скопировать в форк (`migratesrc.go`, около 100 строк с комментариями, зависит только от `subst`). Парсера в сервисе нет.
+
+```go
+// драйвер источника форка, чтение миграции
+tmpl, err := io.ReadAll(r)
+sql, err := subst.Apply(string(tmpl), schema) // pgschema_placeholder -> схема; имя проверяет subst.ValidSchema
+// или целиком: drv, err := migratesrc.New(src, schema)
+```
+
+(б) Переписывание в рантайме форка. Один `Rewriter` на последовательность миграций: до первой миграции — `Learn` на всех up-файлах по возрастанию версий, потом `Rewrite` каждого файла при чтении.
+
+```go
+rw, err := pgschema.New(pgschema.Options{Schema: schema})
+for _, v := range versions { // все up-файлы, по возрастанию версий
+	if err := rw.Learn(up[v]); err != nil {
+		return fmt.Errorf("version %d: %w", v, err)
+	}
+}
+// при чтении миграции v
+out, warns, err := rw.Rewrite(sql)
+for _, w := range warns {
+	log.Printf("migration %d: warning: %s", v, w) // или отказ, как -fail-on-warning
+}
+```
+
+Цена: парсер в бинарнике сервиса (весь CLI — 5,7 МБ), без WebAssembly и cgo; первый разбор в процессе — меньше 1 мс, корпус из 54 файлов — 29 мс (см. «Цифры»). Предупреждения терять нельзя: это места, которые библиотека не переписала (динамический SQL, `search_path`), — форк должен их показывать или отказывать. `Rewriter` не для нескольких горутин.
+
+Форку нужен Go ≥ 1.25.1 (директива `go.mod` библиотеки), модулю `migratesrc` — Go ≥ 1.25.11 и golang-migrate v4.20.1; форку на другой версии golang-migrate проще скопировать `migratesrc.go`. Две проблемы из «Вне скоупа» — `pg_advisory_lock` за pgbouncer в transaction mode и схема `schema_migrations` из `CURRENT_SCHEMA()` — как раз то, что форк должен решить у себя.
 
 ## Разработка
 
@@ -252,7 +329,7 @@ CGO_ENABLED=0 go test ./...
 (cd migratesrc && go test ./...)
 ```
 
-Сверка с libpg_query и прототипом, стенд на живом PostgreSQL — модуль `oracle/`. Данные скачиваются один раз в `~/.cache/pgschema`:
+Сверка с libpg_query и прототипом, стенд на живом PostgreSQL — модуль `oracle/` (только в репозитории исследования, рядом с `poc/`). Данные скачиваются один раз в `~/.cache/pgschema`:
 
 ```bash
 pgschema/tools/get-data.sh                   # исходники PostgreSQL 17, регрессионные тесты и серверы 12–16, pg_dump
