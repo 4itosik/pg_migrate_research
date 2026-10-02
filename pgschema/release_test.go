@@ -203,4 +203,25 @@ func TestPlaceholderInInput(t *testing.T) {
 	}
 }
 
+func TestStatementsNotRewrittenAreReported(t *testing.T) {
+	for _, sql := range []string{
+		"SECURITY LABEL FOR selinux ON TABLE t IS 'system_u:object_r:sepgsql_table_t:s0'",
+		"ALTER EXTENSION e ADD TABLE t",
+		"ALTER EXTENSION e DROP FUNCTION f(int)",
+	} {
+		_, warns := rewriteOne(t, Options{Schema: "auth"}, sql)
+		if !strings.Contains(warns, "not rewritten") {
+			t.Errorf("%q: warnings %q", sql, warns)
+		}
+	}
+}
+
+func TestBodyErrorNamesTheFunctionAsWritten(t *testing.T) {
+	r := newTestRewriter(t, Options{Schema: "auth"})
+	_, _, err := r.Rewrite(`CREATE FUNCTION "MyF"() RETURNS int LANGUAGE sql AS 'not sql'`)
+	if err == nil || !strings.Contains(err.Error(), "function MyF:") || strings.Contains(err.Error(), "auth") {
+		t.Errorf("error %v", err)
+	}
+}
+
 func warningText(warns []string) string { return strings.Join(warns, "\n") }

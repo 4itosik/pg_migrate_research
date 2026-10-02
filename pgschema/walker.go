@@ -264,6 +264,10 @@ func (w *walker) handle(node Node) bool {
 		w.warn("operator classes and families are not rewritten: %s", snippet(w.stmtText()))
 	case *CreateExtensionStmt:
 		w.createExtension(n)
+	case *SecLabelStmt:
+		w.warn("SECURITY LABEL is not rewritten, its object keeps the name as written: %s", snippet(w.stmtText()))
+	case *AlterExtensionContentsStmt:
+		w.warn("ALTER EXTENSION ... ADD or DROP is not rewritten, its object keeps the name as written: %s", snippet(w.stmtText()))
 	case *VariableSetStmt:
 		if strings.EqualFold(n.Name, "search_path") {
 			w.warn("migration changes search_path: %s", snippet(w.stmtText()))

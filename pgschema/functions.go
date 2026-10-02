@@ -16,6 +16,7 @@ import (
 // body given as a string. A SQL-standard body (BEGIN ATOMIC) is part of the
 // main parse tree and is visited as a regular child.
 func (w *walker) createFunction(n *CreateFunctionStmt) {
+	name := strings.Join(strs(n.Funcname), ".") // as written, before the schema goes in
 	w.defName(&n.Funcname, kindFunction)
 	w.singleColumnTable(n)
 	as := defElem(n.Options, "as")
@@ -43,7 +44,7 @@ func (w *walker) createFunction(n *CreateFunctionStmt) {
 		return
 	}
 	if err != nil {
-		w.fail("function %s: %v", strings.Join(strs(n.Funcname), "."), err)
+		w.fail("function %s: %v", name, err)
 		return
 	}
 	w.replaceBody(str.Loc, str, newBody)
