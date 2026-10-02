@@ -1,11 +1,11 @@
 {
   "build": {
-    "all_compile_peak_mb": 281,
+    "all_compile_peak_mb": 283,
     "all_compile_peak_package": "runtime",
-    "clean_build_seconds": 13.130730687,
-    "library_compile_peak_mb": 134,
+    "clean_build_seconds": 15.388653156,
+    "library_compile_peak_mb": 178,
     "library_compile_peak_package": "github.com/4itosik/pg_migrate_research/pgschema/internal/parse",
-    "link_peak_mb": 76
+    "link_peak_mb": 77
   },
   "dataset": {
     "corpus": {
@@ -143,6 +143,15 @@
         "statements": 43323,
         "tokens": 598629,
         "us_per_statement": 1.6427606813932552
+      }
+    }
+  },
+  "stage2": {
+    "parser": {
+      "speed_pg16": {
+        "first_parse_us": 200.984,
+        "statements": 42798,
+        "us_per_statement": 9.041353264171223
       }
     }
   }

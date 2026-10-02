@@ -41,6 +41,9 @@ func Parse(src string) ([]*ast.RawStmt, error) {
 // the list of RawStmt of the script, or, in the other modes, the one node
 // the grammar produces (a TypeName, an expression, an assignment).
 func ParseMode(src string, mode Mode) (result []ast.Node, err error) {
+	if err := lex.CheckEncoding(src); err != nil {
+		return nil, err
+	}
 	p := &parser{src: src, sc: lex.NewScanner(src), mode: mode}
 	defer func() {
 		if r := recover(); r != nil {

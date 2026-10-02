@@ -767,6 +767,16 @@ func (s *Scanner) escape(i int, buf *[]byte, sawNonASCII *bool) (int, error) {
 func isUTF16SurrogateFirst(c uint32) bool  { return c&0xFC00 == 0xD800 }
 func isUTF16SurrogateSecond(c uint32) bool { return c&0xFC00 == 0xDC00 }
 
+// CheckEncoding is the check PostgreSQL makes of every query string before it
+// is parsed (pg_verifymbstr): valid UTF-8 and no NUL. It returns nil when the
+// text passes.
+func CheckEncoding(s string) *Error {
+	if validMB(s) {
+		return nil
+	}
+	return &Error{Msg: invalidEncoding(s), Loc: -1}
+}
+
 // validMB is pg_verifymbstr for UTF-8: valid UTF-8 without a NUL.
 func validMB(s string) bool {
 	return utf8.ValidString(s) && strings.IndexByte(s, 0) < 0

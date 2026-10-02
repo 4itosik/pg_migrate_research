@@ -41,6 +41,7 @@ func TestParseAcceptance(t *testing.T) {
 	if v := os.Getenv("PARSE_VERSIONS"); v != "" {
 		branches = strings.Fields(v)
 	}
+	report := map[string]any{}
 	for _, branch := range branches {
 		t.Run(branch, func(t *testing.T) {
 			files, err := LoadRegress(filepath.Join(root, branch))
@@ -97,7 +98,19 @@ func TestParseAcceptance(t *testing.T) {
 			for _, s := range samplesOurs {
 				t.Log("accepted by the library: " + s)
 			}
+			report[branch] = map[string]any{
+				"accepted_by_libpg_query": theirsOK, "accepted_by_both": bothOK,
+				"rejected_by_library": onlyTheirs, "accepted_only_by_library": onlyOurs, "panics": panics,
+			}
+			if onlyTheirs > 0 || onlyOurs > 0 || panics > 0 {
+				t.Errorf("the acceptance differs: rejected by the library %d, accepted only by the library %d, panics %d", onlyTheirs, onlyOurs, panics)
+			}
 		})
+	}
+	if out := os.Getenv("METRICS_OUT"); out != "" && !t.Failed() {
+		if err := UpdateMetrics(out, []string{"stage2", "parser", "acceptance"}, report); err != nil {
+			t.Fatal(err)
+		}
 	}
 	_ = harness.ModeRewrite
 }
@@ -198,11 +211,13 @@ func TestParseTrees(t *testing.T) {
 			}
 		}
 	}
+	branchesUsed := []string{}
 	if root := os.Getenv("REGRESS_ROOT"); root != "" {
 		branches := []string{"REL_16_STABLE"}
 		if v := os.Getenv("PARSE_VERSIONS"); v != "" {
 			branches = strings.Fields(v)
 		}
+		branchesUsed = branches
 		for _, b := range branches {
 			files, err := LoadRegress(filepath.Join(root, b))
 			if err != nil {
@@ -283,12 +298,12 @@ func TestParseTrees(t *testing.T) {
 			t.Logf("        %s", s)
 		}
 	}
-	if os.Getenv("PARSE_STRICT") != "" && equal != total {
-		t.Fail()
+	if (os.Getenv("PARSE_STRICT") != "" || os.Getenv("CI") != "") && equal != total {
+		t.Errorf("%d of %d trees differ", total-equal, total)
 	}
 	if out := os.Getenv("METRICS_OUT"); out != "" && filter == nil {
 		err := UpdateMetrics(out, []string{"stage2", "parser", "trees"}, map[string]any{
-			"statements": total, "equal": equal, "groups": len(groups),
+			"versions": branchesUsed, "statements": total, "equal": equal, "groups": len(groups),
 		})
 		if err != nil {
 			t.Fatal(err)

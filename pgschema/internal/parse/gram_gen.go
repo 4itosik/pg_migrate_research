@@ -18342,6122 +18342,5867 @@ func yyAct273(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 
 func yyAct274(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:1788
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $3;
-		n->cmds = $4;
-		n->objtype = OBJECT_TABLE;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Cmds = yyDollar[4].list
+		n.Objtype = OBJECT_TABLE
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct275(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:1798
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $5;
-		n->cmds = $6;
-		n->objtype = OBJECT_TABLE;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Cmds = yyDollar[6].list
+		n.Objtype = OBJECT_TABLE
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct276(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:1808
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $3;
-		n->cmds = list_make1($4);
-		n->objtype = OBJECT_TABLE;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Cmds = []Node{yyDollar[4].node}
+		n.Objtype = OBJECT_TABLE
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct277(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:1818
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $5;
-		n->cmds = list_make1($6);
-		n->objtype = OBJECT_TABLE;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Cmds = []Node{yyDollar[6].node}
+		n.Objtype = OBJECT_TABLE
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct278(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:1828
-	{ /*C
-		AlterTableMoveAllStmt *n =
-			makeNode(AlterTableMoveAllStmt);
+	{
+		n := &AlterTableMoveAllStmt{}
 
-		n->orig_tablespacename = $6;
-		n->objtype = OBJECT_TABLE;
-		n->roles = NIL;
-		n->new_tablespacename = $9;
-		n->nowait = $10;
-		$$ = (Node *) n;
-		*/
+		n.OrigTablespacename = yyDollar[6].str
+		n.Objtype = OBJECT_TABLE
+		n.Roles = nil
+		n.NewTablespacename = yyDollar[9].str
+		n.Nowait = yyDollar[10].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct279(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1840
-	{ /*C
-		AlterTableMoveAllStmt *n =
-			makeNode(AlterTableMoveAllStmt);
+//line gram.y:1839
+	{
+		n := &AlterTableMoveAllStmt{}
 
-		n->orig_tablespacename = $6;
-		n->objtype = OBJECT_TABLE;
-		n->roles = $9;
-		n->new_tablespacename = $12;
-		n->nowait = $13;
-		$$ = (Node *) n;
-		*/
+		n.OrigTablespacename = yyDollar[6].str
+		n.Objtype = OBJECT_TABLE
+		n.Roles = yyDollar[9].list
+		n.NewTablespacename = yyDollar[12].str
+		n.Nowait = yyDollar[13].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct280(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1852
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1850
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $3;
-		n->cmds = $4;
-		n->objtype = OBJECT_INDEX;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Cmds = yyDollar[4].list
+		n.Objtype = OBJECT_INDEX
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct281(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1862
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1860
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $5;
-		n->cmds = $6;
-		n->objtype = OBJECT_INDEX;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Cmds = yyDollar[6].list
+		n.Objtype = OBJECT_INDEX
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct282(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1872
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1870
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $3;
-		n->cmds = list_make1($4);
-		n->objtype = OBJECT_INDEX;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Cmds = []Node{yyDollar[4].node}
+		n.Objtype = OBJECT_INDEX
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct283(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1882
-	{ /*C
-		AlterTableMoveAllStmt *n =
-			makeNode(AlterTableMoveAllStmt);
+//line gram.y:1880
+	{
+		n := &AlterTableMoveAllStmt{}
 
-		n->orig_tablespacename = $6;
-		n->objtype = OBJECT_INDEX;
-		n->roles = NIL;
-		n->new_tablespacename = $9;
-		n->nowait = $10;
-		$$ = (Node *) n;
-		*/
+		n.OrigTablespacename = yyDollar[6].str
+		n.Objtype = OBJECT_INDEX
+		n.Roles = nil
+		n.NewTablespacename = yyDollar[9].str
+		n.Nowait = yyDollar[10].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct284(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1894
-	{ /*C
-		AlterTableMoveAllStmt *n =
-			makeNode(AlterTableMoveAllStmt);
+//line gram.y:1891
+	{
+		n := &AlterTableMoveAllStmt{}
 
-		n->orig_tablespacename = $6;
-		n->objtype = OBJECT_INDEX;
-		n->roles = $9;
-		n->new_tablespacename = $12;
-		n->nowait = $13;
-		$$ = (Node *) n;
-		*/
+		n.OrigTablespacename = yyDollar[6].str
+		n.Objtype = OBJECT_INDEX
+		n.Roles = yyDollar[9].list
+		n.NewTablespacename = yyDollar[12].str
+		n.Nowait = yyDollar[13].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct285(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1906
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1902
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $3;
-		n->cmds = $4;
-		n->objtype = OBJECT_SEQUENCE;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Cmds = yyDollar[4].list
+		n.Objtype = OBJECT_SEQUENCE
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct286(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1916
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1912
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $5;
-		n->cmds = $6;
-		n->objtype = OBJECT_SEQUENCE;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Cmds = yyDollar[6].list
+		n.Objtype = OBJECT_SEQUENCE
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct287(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1926
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1922
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $3;
-		n->cmds = $4;
-		n->objtype = OBJECT_VIEW;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Cmds = yyDollar[4].list
+		n.Objtype = OBJECT_VIEW
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct288(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1936
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1932
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $5;
-		n->cmds = $6;
-		n->objtype = OBJECT_VIEW;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Cmds = yyDollar[6].list
+		n.Objtype = OBJECT_VIEW
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct289(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1946
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1942
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $4;
-		n->cmds = $5;
-		n->objtype = OBJECT_MATVIEW;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Cmds = yyDollar[5].list
+		n.Objtype = OBJECT_MATVIEW
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct290(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1956
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1952
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $6;
-		n->cmds = $7;
-		n->objtype = OBJECT_MATVIEW;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Cmds = yyDollar[7].list
+		n.Objtype = OBJECT_MATVIEW
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct291(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1966
-	{ /*C
-		AlterTableMoveAllStmt *n =
-			makeNode(AlterTableMoveAllStmt);
+//line gram.y:1962
+	{
+		n := &AlterTableMoveAllStmt{}
 
-		n->orig_tablespacename = $7;
-		n->objtype = OBJECT_MATVIEW;
-		n->roles = NIL;
-		n->new_tablespacename = $10;
-		n->nowait = $11;
-		$$ = (Node *) n;
-		*/
+		n.OrigTablespacename = yyDollar[7].str
+		n.Objtype = OBJECT_MATVIEW
+		n.Roles = nil
+		n.NewTablespacename = yyDollar[10].str
+		n.Nowait = yyDollar[11].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct292(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1978
-	{ /*C
-		AlterTableMoveAllStmt *n =
-			makeNode(AlterTableMoveAllStmt);
+//line gram.y:1973
+	{
+		n := &AlterTableMoveAllStmt{}
 
-		n->orig_tablespacename = $7;
-		n->objtype = OBJECT_MATVIEW;
-		n->roles = $10;
-		n->new_tablespacename = $13;
-		n->nowait = $14;
-		$$ = (Node *) n;
-		*/
+		n.OrigTablespacename = yyDollar[7].str
+		n.Objtype = OBJECT_MATVIEW
+		n.Roles = yyDollar[10].list
+		n.NewTablespacename = yyDollar[13].str
+		n.Nowait = yyDollar[14].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct293(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:1990
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1984
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $4;
-		n->cmds = $5;
-		n->objtype = OBJECT_FOREIGN_TABLE;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Cmds = yyDollar[5].list
+		n.Objtype = OBJECT_FOREIGN_TABLE
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct294(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2000
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:1994
+	{
+		n := &AlterTableStmt{}
 
-		n->relation = $6;
-		n->cmds = $7;
-		n->objtype = OBJECT_FOREIGN_TABLE;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Cmds = yyDollar[7].list
+		n.Objtype = OBJECT_FOREIGN_TABLE
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct295(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2012
+//line gram.y:2006
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct296(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2013
+//line gram.y:2007
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct297(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2019
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		PartitionCmd *cmd = makeNode(PartitionCmd);
+//line gram.y:2013
+	{
+		n := &AlterTableCmd{}
+		cmd := &PartitionCmd{}
 
-		n->subtype = AT_AttachPartition;
-		cmd->name = $3;
-		cmd->bound = $4;
-		cmd->concurrent = false;
-		n->def = (Node *) cmd;
+		n.Subtype = AT_AttachPartition
+		cmd.Name = as[*RangeVar](yyDollar[3].node)
+		cmd.Bound = as[*PartitionBoundSpec](yyDollar[4].node)
+		cmd.Concurrent = false
+		n.Def = cmd
 
-		$$ = (Node *) n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct298(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2033
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		PartitionCmd *cmd = makeNode(PartitionCmd);
+//line gram.y:2027
+	{
+		n := &AlterTableCmd{}
+		cmd := &PartitionCmd{}
 
-		n->subtype = AT_DetachPartition;
-		cmd->name = $3;
-		cmd->bound = NULL;
-		cmd->concurrent = $4;
-		n->def = (Node *) cmd;
+		n.Subtype = AT_DetachPartition
+		cmd.Name = as[*RangeVar](yyDollar[3].node)
+		cmd.Bound = nil
+		cmd.Concurrent = yyDollar[4].boolean
+		n.Def = cmd
 
-		$$ = (Node *) n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct299(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2046
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		PartitionCmd *cmd = makeNode(PartitionCmd);
+//line gram.y:2040
+	{
+		n := &AlterTableCmd{}
+		cmd := &PartitionCmd{}
 
-		n->subtype = AT_DetachPartitionFinalize;
-		cmd->name = $3;
-		cmd->bound = NULL;
-		cmd->concurrent = false;
-		n->def = (Node *) cmd;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DetachPartitionFinalize
+		cmd.Name = as[*RangeVar](yyDollar[3].node)
+		cmd.Bound = nil
+		cmd.Concurrent = false
+		n.Def = cmd
+
+		yyVAL.node = n
 	}
 }
 
 func yyAct300(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2062
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		PartitionCmd *cmd = makeNode(PartitionCmd);
+//line gram.y:2057
+	{
+		n := &AlterTableCmd{}
+		cmd := &PartitionCmd{}
 
-		n->subtype = AT_AttachPartition;
-		cmd->name = $3;
-		cmd->bound = NULL;
-		cmd->concurrent = false;
-		n->def = (Node *) cmd;
+		n.Subtype = AT_AttachPartition
+		cmd.Name = as[*RangeVar](yyDollar[3].node)
+		cmd.Bound = nil
+		cmd.Concurrent = false
+		n.Def = cmd
 
-		$$ = (Node *) n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct301(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2079
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2074
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddColumn;
-		n->def = $2;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddColumn
+		n.Def = yyDollar[2].node
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct302(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2089
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2084
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddColumn;
-		n->def = $5;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddColumn
+		n.Def = yyDollar[5].node
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct303(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2099
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2094
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddColumn;
-		n->def = $3;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddColumn
+		n.Def = yyDollar[3].node
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct304(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2109
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2104
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddColumn;
-		n->def = $6;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddColumn
+		n.Def = yyDollar[6].node
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct305(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2119
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2114
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ColumnDefault;
-		n->name = $3;
-		n->def = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ColumnDefault
+		n.Name = yyDollar[3].str
+		n.Def = yyDollar[4].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct306(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2129
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2124
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropNotNull;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropNotNull
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct307(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2138
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2133
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetNotNull;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetNotNull
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct308(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2147
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2142
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetExpression;
-		n->name = $3;
-		n->def = $8;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetExpression
+		n.Name = yyDollar[3].str
+		n.Def = yyDollar[8].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct309(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2157
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2152
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropExpression;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropExpression
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct310(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2166
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2161
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropExpression;
-		n->name = $3;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropExpression
+		n.Name = yyDollar[3].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct311(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2176
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2171
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetStatistics;
-		n->name = $3;
-		n->def = $6;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetStatistics
+		n.Name = yyDollar[3].str
+		n.Def = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct312(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2186
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2181
+	{
+		n := &AlterTableCmd{}
 
-		if ($3 <= 0 || $3 > PG_INT16_MAX)
-			ereport(ERROR,
-					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("column number must be in range from 1 to %d", PG_INT16_MAX),
-					 parser_errposition(@3)));
+		if yyDollar[3].ival <= 0 || yyDollar[3].ival > 32767 /* PG_INT16_MAX */ {
+			p.fail(yyDollar[3].loc, fmt.Sprintf("column number must be in range from 1 to %d", 32767 /* PG_INT16_MAX */))
+		}
 
-		n->subtype = AT_SetStatistics;
-		n->num = (int16) $3;
-		n->def = $6;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetStatistics
+		n.Num = int32(int16(yyDollar[3].ival))
+		n.Def = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct313(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2202
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2195
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetOptions;
-		n->name = $3;
-		n->def = (Node *) $5;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetOptions
+		n.Name = yyDollar[3].str
+		n.Def = listNode(yyDollar[5].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct314(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2212
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2205
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ResetOptions;
-		n->name = $3;
-		n->def = (Node *) $5;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ResetOptions
+		n.Name = yyDollar[3].str
+		n.Def = listNode(yyDollar[5].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct315(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2222
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2215
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetStorage;
-		n->name = $3;
-		n->def = (Node *) makeString($5);
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetStorage
+		n.Name = yyDollar[3].str
+		n.Def = makeString(yyDollar[5].str, yyDollar[5].loc)
+		yyVAL.node = n
 	}
 }
 
 func yyAct316(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2232
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2225
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetCompression;
-		n->name = $3;
-		n->def = (Node *) makeString($5);
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetCompression
+		n.Name = yyDollar[3].str
+		n.Def = makeString(yyDollar[5].str, yyDollar[5].loc)
+		yyVAL.node = n
 	}
 }
 
 func yyAct317(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2242
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		Constraint *c = makeNode(Constraint);
+//line gram.y:2235
+	{
+		n := &AlterTableCmd{}
+		c := &Constraint{}
 
-		c->contype = CONSTR_IDENTITY;
-		c->generated_when = $6;
-		c->options = $9;
-		c->location = @5;
+		c.Contype = CONSTR_IDENTITY
+		c.GeneratedWhen = string(rune(yyDollar[6].ival))
+		c.Options = yyDollar[9].list
+		c.Location = yyDollar[5].loc
 
-		n->subtype = AT_AddIdentity;
-		n->name = $3;
-		n->def = (Node *) c;
+		n.Subtype = AT_AddIdentity
+		n.Name = yyDollar[3].str
+		n.Def = c
 
-		$$ = (Node *) n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct318(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2259
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2252
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetIdentity;
-		n->name = $3;
-		n->def = (Node *) $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetIdentity
+		n.Name = yyDollar[3].str
+		n.Def = listNode(yyDollar[4].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct319(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2269
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2262
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropIdentity;
-		n->name = $3;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropIdentity
+		n.Name = yyDollar[3].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct320(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2279
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2272
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropIdentity;
-		n->name = $3;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropIdentity
+		n.Name = yyDollar[3].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct321(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2289
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2282
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropColumn;
-		n->name = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropColumn
+		n.Name = yyDollar[5].str
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct322(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2300
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2293
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropColumn;
-		n->name = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropColumn
+		n.Name = yyDollar[3].str
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct323(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2314
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		ColumnDef *def = makeNode(ColumnDef);
+//line gram.y:2307
+	{
+		n := &AlterTableCmd{}
+		def := &ColumnDef{}
 
-		n->subtype = AT_AlterColumnType;
-		n->name = $3;
-		n->def = (Node *) def;
-		/* We only use these fields of the ColumnDef node * /
-		def->typeName = $6;
-		def->collClause = (CollateClause *) $7;
-		def->raw_default = $8;
-		def->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AlterColumnType
+		n.Name = yyDollar[3].str
+		n.Def = def
+		/* We only use these fields of the ColumnDef node */
+		def.TypeName = as[*TypeName](yyDollar[6].node)
+		def.CollClause = as[*CollateClause](yyDollar[7].node)
+		def.RawDefault = yyDollar[8].node
+		def.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct324(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2330
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2323
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AlterColumnGenericOptions;
-		n->name = $3;
-		n->def = (Node *) $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AlterColumnGenericOptions
+		n.Name = yyDollar[3].str
+		n.Def = listNode(yyDollar[4].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct325(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2340
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2333
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddConstraint;
-		n->def = $2;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddConstraint
+		n.Def = yyDollar[2].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct326(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2349
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		Constraint *c = makeNode(Constraint);
+//line gram.y:2342
+	{
+		n := &AlterTableCmd{}
+		c := &Constraint{}
 
-		n->subtype = AT_AlterConstraint;
-		n->def = (Node *) c;
-		c->contype = CONSTR_FOREIGN; /* others not supported, yet * /
-		c->conname = $3;
-		processCASbits($4, @4, "FOREIGN KEY",
-						&c->deferrable,
-						&c->initdeferred,
-						NULL, NULL, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AlterConstraint
+		n.Def = c
+		c.Contype = CONSTR_FOREIGN /* others not supported, yet */
+		c.Conname = yyDollar[3].str
+		p.processCASbits(yyDollar[4].ival, yyDollar[4].loc, "FOREIGN KEY",
+			&c.Deferrable,
+			&c.Initdeferred,
+			nil, nil)
+		yyVAL.node = n
 	}
 }
 
 func yyAct327(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2365
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2358
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ValidateConstraint;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ValidateConstraint
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct328(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2374
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2367
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropConstraint;
-		n->name = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropConstraint
+		n.Name = yyDollar[5].str
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct329(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2385
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2378
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropConstraint;
-		n->name = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropConstraint
+		n.Name = yyDollar[3].str
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct330(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2396
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2389
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropOids;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropOids
+		yyVAL.node = n
 	}
 }
 
 func yyAct331(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2404
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2397
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ClusterOn;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ClusterOn
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct332(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2413
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2406
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropCluster;
-		n->name = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropCluster
+		n.Name = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct333(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2422
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2415
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetLogged;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetLogged
+		yyVAL.node = n
 	}
 }
 
 func yyAct334(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2430
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2423
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetUnLogged;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetUnLogged
+		yyVAL.node = n
 	}
 }
 
 func yyAct335(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2438
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2431
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableTrig;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableTrig
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct336(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2447
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2440
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableAlwaysTrig;
-		n->name = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableAlwaysTrig
+		n.Name = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct337(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2456
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2449
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableReplicaTrig;
-		n->name = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableReplicaTrig
+		n.Name = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct338(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2465
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2458
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableTrigAll;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableTrigAll
+		yyVAL.node = n
 	}
 }
 
 func yyAct339(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2473
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2466
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableTrigUser;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableTrigUser
+		yyVAL.node = n
 	}
 }
 
 func yyAct340(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2481
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2474
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DisableTrig;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DisableTrig
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct341(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2490
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2483
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DisableTrigAll;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DisableTrigAll
+		yyVAL.node = n
 	}
 }
 
 func yyAct342(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2498
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2491
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DisableTrigUser;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DisableTrigUser
+		yyVAL.node = n
 	}
 }
 
 func yyAct343(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2506
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2499
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableRule;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableRule
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct344(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2515
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2508
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableAlwaysRule;
-		n->name = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableAlwaysRule
+		n.Name = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct345(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2524
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2517
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableReplicaRule;
-		n->name = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableReplicaRule
+		n.Name = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct346(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2533
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2526
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DisableRule;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DisableRule
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct347(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2542
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2535
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddInherit;
-		n->def = (Node *) $2;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddInherit
+		n.Def = yyDollar[2].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct348(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2551
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2544
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropInherit;
-		n->def = (Node *) $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropInherit
+		n.Def = yyDollar[3].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct349(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2560
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		TypeName   *def = makeTypeNameFromNameList($2);
+//line gram.y:2553
+	{
+		n := &AlterTableCmd{}
+		def := makeTypeNameFromNameList(yyDollar[2].list)
 
-		def->location = @2;
-		n->subtype = AT_AddOf;
-		n->def = (Node *) def;
-		$$ = (Node *) n;
-		*/
+		def.Location = yyDollar[2].loc
+		n.Subtype = AT_AddOf
+		n.Def = def
+		yyVAL.node = n
 	}
 }
 
 func yyAct350(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2571
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2564
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropOf;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropOf
+		yyVAL.node = n
 	}
 }
 
 func yyAct351(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2579
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2572
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ChangeOwner;
-		n->newowner = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ChangeOwner
+		n.Newowner = as[*RoleSpec](yyDollar[3].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct352(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2588
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2581
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetAccessMethod;
-		n->name = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetAccessMethod
+		n.Name = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct353(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2597
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2590
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetTableSpace;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetTableSpace
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct354(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2606
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2599
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_SetRelOptions;
-		n->def = (Node *) $2;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_SetRelOptions
+		n.Def = listNode(yyDollar[2].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct355(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2615
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2608
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ResetRelOptions;
-		n->def = (Node *) $2;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ResetRelOptions
+		n.Def = listNode(yyDollar[2].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct356(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2624
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2617
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ReplicaIdentity;
-		n->def = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ReplicaIdentity
+		n.Def = yyDollar[3].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct357(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2633
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2626
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_EnableRowSecurity;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_EnableRowSecurity
+		yyVAL.node = n
 	}
 }
 
 func yyAct358(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2641
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2634
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DisableRowSecurity;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DisableRowSecurity
+		yyVAL.node = n
 	}
 }
 
 func yyAct359(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2649
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2642
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_ForceRowSecurity;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_ForceRowSecurity
+		yyVAL.node = n
 	}
 }
 
 func yyAct360(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2657
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2650
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_NoForceRowSecurity;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_NoForceRowSecurity
+		yyVAL.node = n
 	}
 }
 
 func yyAct361(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2664
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2657
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_GenericOptions;
-		n->def = (Node *) $1;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_GenericOptions
+		n.Def = listNode(yyDollar[1].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct362(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2674
+//line gram.y:2667
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct363(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2675
+//line gram.y:2668
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct364(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2680
-	{ /*C
-		CollateClause *n = makeNode(CollateClause);
+//line gram.y:2673
+	{
+		n := &CollateClause{}
 
-		n->arg = NULL;
-		n->collname = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Arg = nil
+		n.Collname = yyDollar[2].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct365(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2688
+//line gram.y:2681
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct366(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2692
+//line gram.y:2685
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct367(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2693
+//line gram.y:2686
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct368(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2698
-	{ /*C
-		ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+//line gram.y:2691
+	{
+		n := &ReplicaIdentityStmt{}
 
-		n->identity_type = REPLICA_IDENTITY_NOTHING;
-		n->name = NULL;
-		$$ = (Node *) n;
-		*/
+		n.IdentityType = "n" /* REPLICA_IDENTITY_NOTHING */
+		n.Name = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct369(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2706
-	{ /*C
-		ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+//line gram.y:2699
+	{
+		n := &ReplicaIdentityStmt{}
 
-		n->identity_type = REPLICA_IDENTITY_FULL;
-		n->name = NULL;
-		$$ = (Node *) n;
-		*/
+		n.IdentityType = "f" /* REPLICA_IDENTITY_FULL */
+		n.Name = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct370(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2714
-	{ /*C
-		ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+//line gram.y:2707
+	{
+		n := &ReplicaIdentityStmt{}
 
-		n->identity_type = REPLICA_IDENTITY_DEFAULT;
-		n->name = NULL;
-		$$ = (Node *) n;
-		*/
+		n.IdentityType = "d" /* REPLICA_IDENTITY_DEFAULT */
+		n.Name = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct371(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2722
-	{ /*C
-		ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+//line gram.y:2715
+	{
+		n := &ReplicaIdentityStmt{}
 
-		n->identity_type = REPLICA_IDENTITY_INDEX;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.IdentityType = "i" /* REPLICA_IDENTITY_INDEX */
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct372(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2732
+//line gram.y:2725
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct373(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2735
+//line gram.y:2728
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct374(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2736
+//line gram.y:2729
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct375(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2740
+//line gram.y:2733
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct376(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2741
+//line gram.y:2734
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct377(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2747
-	{ /*C
-		$$ = makeDefElem($1, (Node *) $3, @1);
-		*/
+//line gram.y:2740
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct378(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2751
-	{ /*C
-		$$ = makeDefElem($1, NULL, @1);
-		*/
+//line gram.y:2744
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct379(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2755
-	{ /*C
-		$$ = makeDefElemExtended($1, $3, (Node *) $5,
-								 DEFELEM_UNSPEC, @1);
-		*/
+//line gram.y:2748
+	{
+		yyVAL.node = makeDefElemExtended(yyDollar[1].str, yyDollar[3].str, yyDollar[5].node,
+			DEFELEM_UNSPEC, yyDollar[1].loc)
 	}
 }
 
 func yyAct380(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2760
-	{ /*C
-		$$ = makeDefElemExtended($1, $3, NULL, DEFELEM_UNSPEC, @1);
-		*/
+//line gram.y:2753
+	{
+		yyVAL.node = makeDefElemExtended(yyDollar[1].str, yyDollar[3].str, nil, DEFELEM_UNSPEC, yyDollar[1].loc)
 	}
 }
 
 func yyAct381(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2767
+//line gram.y:2760
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct382(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2769
+//line gram.y:2762
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct383(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2774
-	{ /*C
-		$$ = makeDefElem("restart", NULL, @1);
-		*/
+//line gram.y:2767
+	{
+		yyVAL.node = makeDefElem("restart", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct384(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2778
-	{ /*C
-		$$ = makeDefElem("restart", (Node *) $3, @1);
-		*/
+//line gram.y:2771
+	{
+		yyVAL.node = makeDefElem("restart", yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct385(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2782
-	{ /*C
-		if (strcmp($2->defname, "as") == 0 ||
-			strcmp($2->defname, "restart") == 0 ||
-			strcmp($2->defname, "owned_by") == 0)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("sequence option \"%s\" not supported here", $2->defname),
-					 parser_errposition(@2)));
-		$$ = $2;
-		*/
+//line gram.y:2775
+	{
+		opt := as[*DefElem](yyDollar[2].node)
+		if opt != nil && (opt.Defname == "as" ||
+			opt.Defname == "restart" ||
+			opt.Defname == "owned_by") {
+			p.fail(yyDollar[2].loc, fmt.Sprintf("sequence option \"%s\" not supported here", opt.Defname))
+		}
+		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct386(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2793
-	{ /*C
-		$$ = makeDefElem("generated", (Node *) makeInteger($3), @1);
-		*/
+//line gram.y:2785
+	{
+		yyVAL.node = makeDefElem("generated", makeInteger(yyDollar[3].ival), yyDollar[1].loc)
 	}
 }
 
 func yyAct387(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2799
-	{ /*C $$ = (Node *) makeInteger($1); */
+//line gram.y:2791
+	{
+		yyVAL.node = makeInteger(yyDollar[1].ival)
 	}
 }
 
 func yyAct388(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2800
+//line gram.y:2792
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct389(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2804
+//line gram.y:2796
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct390(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2805
+//line gram.y:2797
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct391(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2811
-	{ /*C
-		ListCell   *lc;
-		PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+//line gram.y:2803
+	{
+		n := &PartitionBoundSpec{}
 
-		n->strategy = PARTITION_STRATEGY_HASH;
-		n->modulus = n->remainder = -1;
+		n.Strategy = "h" /* PARTITION_STRATEGY_HASH */
+		n.Modulus, n.Remainder = -1, -1
 
-		foreach (lc, $5)
-		{
-			DefElem    *opt = lfirst_node(DefElem, lc);
+		for _, lc := range yyDollar[5].list {
+			opt := as[*DefElem](lc)
 
-			if (strcmp(opt->defname, "modulus") == 0)
-			{
-				if (n->modulus != -1)
-					ereport(ERROR,
-							(errcode(ERRCODE_DUPLICATE_OBJECT),
-							 errmsg("modulus for hash partition provided more than once"),
-							 parser_errposition(opt->location)));
-				n->modulus = defGetInt32(opt);
+			if opt.Defname == "modulus" {
+				if n.Modulus != -1 {
+					p.fail(opt.Location, "modulus for hash partition provided more than once")
+				}
+				n.Modulus = p.defGetInt32(opt)
+			} else if opt.Defname == "remainder" {
+				if n.Remainder != -1 {
+					p.fail(opt.Location, "remainder for hash partition provided more than once")
+				}
+				n.Remainder = p.defGetInt32(opt)
+			} else {
+				p.fail(opt.Location,
+					fmt.Sprintf("unrecognized hash partition bound specification \"%s\"",
+						opt.Defname))
 			}
-			else if (strcmp(opt->defname, "remainder") == 0)
-			{
-				if (n->remainder != -1)
-					ereport(ERROR,
-							(errcode(ERRCODE_DUPLICATE_OBJECT),
-							 errmsg("remainder for hash partition provided more than once"),
-							 parser_errposition(opt->location)));
-				n->remainder = defGetInt32(opt);
-			}
-			else
-				ereport(ERROR,
-						(errcode(ERRCODE_SYNTAX_ERROR),
-						 errmsg("unrecognized hash partition bound specification \"%s\"",
-								opt->defname),
-						 parser_errposition(opt->location)));
 		}
 
-		if (n->modulus == -1)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("modulus for hash partition must be specified")));
-		if (n->remainder == -1)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("remainder for hash partition must be specified")));
+		if n.Modulus == -1 {
+			p.fail(-1, "modulus for hash partition must be specified")
+		}
+		if n.Remainder == -1 {
+			p.fail(-1, "remainder for hash partition must be specified")
+		}
 
-		n->location = @3;
+		n.Location = yyDollar[3].loc
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct392(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2864
-	{ /*C
-		PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+//line gram.y:2843
+	{
+		n := &PartitionBoundSpec{}
 
-		n->strategy = PARTITION_STRATEGY_LIST;
-		n->is_default = false;
-		n->listdatums = $5;
-		n->location = @3;
+		n.Strategy = "l" /* PARTITION_STRATEGY_LIST */
+		n.IsDefault = false
+		n.Listdatums = yyDollar[5].list
+		n.Location = yyDollar[3].loc
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct393(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2877
-	{ /*C
-		PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+//line gram.y:2856
+	{
+		n := &PartitionBoundSpec{}
 
-		n->strategy = PARTITION_STRATEGY_RANGE;
-		n->is_default = false;
-		n->lowerdatums = $5;
-		n->upperdatums = $9;
-		n->location = @3;
+		n.Strategy = "r" /* PARTITION_STRATEGY_RANGE */
+		n.IsDefault = false
+		n.Lowerdatums = yyDollar[5].list
+		n.Upperdatums = yyDollar[9].list
+		n.Location = yyDollar[3].loc
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct394(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2891
-	{ /*C
-		PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+//line gram.y:2870
+	{
+		n := &PartitionBoundSpec{}
 
-		n->is_default = true;
-		n->location = @1;
+		n.IsDefault = true
+		n.Location = yyDollar[1].loc
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct395(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2903
-	{ /*C
-		$$ = makeDefElem($1, (Node *) makeInteger($2), @1);
-		*/
+//line gram.y:2882
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, makeInteger(yyDollar[2].ival), yyDollar[1].loc)
 	}
 }
 
 func yyAct396(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2910
+//line gram.y:2889
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct397(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2912
+//line gram.y:2891
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct398(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2924
-	{ /*C
-		AlterTableStmt *n = makeNode(AlterTableStmt);
+//line gram.y:2903
+	{
+		n := &AlterTableStmt{}
 
-		/* can't use qualified_name, sigh * /
-		n->relation = makeRangeVarFromAnyName($3, @3, yyscanner);
-		n->cmds = $4;
-		n->objtype = OBJECT_TYPE;
-		$$ = (Node *) n;
-		*/
+		/* can't use qualified_name, sigh */
+		n.Relation = p.makeRangeVarFromAnyName(yyDollar[3].list, yyDollar[3].loc)
+		n.Cmds = yyDollar[4].list
+		n.Objtype = OBJECT_TYPE
+		yyVAL.node = n
 	}
 }
 
 func yyAct399(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2936
+//line gram.y:2915
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct400(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2937
+//line gram.y:2916
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct401(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2943
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2922
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_AddColumn;
-		n->def = $3;
-		n->behavior = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AddColumn
+		n.Def = yyDollar[3].node
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct402(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2953
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2932
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropColumn;
-		n->name = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropColumn
+		n.Name = yyDollar[5].str
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct403(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2964
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
+//line gram.y:2943
+	{
+		n := &AlterTableCmd{}
 
-		n->subtype = AT_DropColumn;
-		n->name = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_DropColumn
+		n.Name = yyDollar[3].str
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct404(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:2975
-	{ /*C
-		AlterTableCmd *n = makeNode(AlterTableCmd);
-		ColumnDef *def = makeNode(ColumnDef);
+//line gram.y:2954
+	{
+		n := &AlterTableCmd{}
+		def := &ColumnDef{}
 
-		n->subtype = AT_AlterColumnType;
-		n->name = $3;
-		n->def = (Node *) def;
-		n->behavior = $8;
-		/* We only use these fields of the ColumnDef node * /
-		def->typeName = $6;
-		def->collClause = (CollateClause *) $7;
-		def->raw_default = NULL;
-		def->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = AT_AlterColumnType
+		n.Name = yyDollar[3].str
+		n.Def = def
+		n.Behavior = DropBehavior(yyDollar[8].ival)
+		/* We only use these fields of the ColumnDef node */
+		def.TypeName = as[*TypeName](yyDollar[6].node)
+		def.CollClause = as[*CollateClause](yyDollar[7].node)
+		def.RawDefault = nil
+		def.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct405(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3002
-	{ /*C
-		ClosePortalStmt *n = makeNode(ClosePortalStmt);
+//line gram.y:2981
+	{
+		n := &ClosePortalStmt{}
 
-		n->portalname = $2;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[2].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct406(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3009
-	{ /*C
-		ClosePortalStmt *n = makeNode(ClosePortalStmt);
+//line gram.y:2988
+	{
+		n := &ClosePortalStmt{}
 
-		n->portalname = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct407(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3045
-	{ /*C
-		CopyStmt *n = makeNode(CopyStmt);
+//line gram.y:3024
+	{
+		n := &CopyStmt{}
 
-		n->relation = $3;
-		n->query = NULL;
-		n->attlist = $4;
-		n->is_from = $5;
-		n->is_program = $6;
-		n->filename = $7;
-		n->whereClause = $11;
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Query = nil
+		n.Attlist = yyDollar[4].list
+		n.IsFrom = yyDollar[5].boolean
+		n.IsProgram = yyDollar[6].boolean
+		n.Filename = yyDollar[7].str
+		n.WhereClause = yyDollar[11].node
 
-		if (n->is_program && n->filename == NULL)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("STDIN/STDOUT not allowed with PROGRAM"),
-					 parser_errposition(@8)));
+		if n.IsProgram && p.copyFileNameIsNull(n.Filename, yyDollar[7].loc) {
+			p.fail(yyDollar[8].loc, "STDIN/STDOUT not allowed with PROGRAM")
+		}
 
-		if (!n->is_from && n->whereClause != NULL)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("WHERE clause not allowed with COPY TO"),
-					 parser_errposition(@11)));
+		if !n.IsFrom && n.WhereClause != nil {
+			p.fail(yyDollar[11].loc, "WHERE clause not allowed with COPY TO")
+		}
 
-		n->options = NIL;
-		/* Concatenate user-supplied flags * /
-		if ($2)
-			n->options = lappend(n->options, $2);
-		if ($8)
-			n->options = lappend(n->options, $8);
-		if ($10)
-			n->options = list_concat(n->options, $10);
-		$$ = (Node *) n;
-		*/
+		n.Options = nil
+		/* Concatenate user-supplied flags */
+		if yyDollar[2].node != nil {
+			n.Options = append(n.Options, yyDollar[2].node)
+		}
+		if yyDollar[8].node != nil {
+			n.Options = append(n.Options, yyDollar[8].node)
+		}
+		if yyDollar[10].list != nil {
+			n.Options = append(n.Options, yyDollar[10].list...)
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct408(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3079
-	{ /*C
-		CopyStmt *n = makeNode(CopyStmt);
+//line gram.y:3057
+	{
+		n := &CopyStmt{}
 
-		n->relation = NULL;
-		n->query = $3;
-		n->attlist = NIL;
-		n->is_from = false;
-		n->is_program = $6;
-		n->filename = $7;
-		n->options = $9;
+		n.Relation = nil
+		n.Query = yyDollar[3].node
+		n.Attlist = nil
+		n.IsFrom = false
+		n.IsProgram = yyDollar[6].boolean
+		n.Filename = yyDollar[7].str
+		n.Options = yyDollar[9].list
 
-		if (n->is_program && n->filename == NULL)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("STDIN/STDOUT not allowed with PROGRAM"),
-					 parser_errposition(@5)));
+		if n.IsProgram && p.copyFileNameIsNull(n.Filename, yyDollar[7].loc) {
+			p.fail(yyDollar[5].loc, "STDIN/STDOUT not allowed with PROGRAM")
+		}
 
-		$$ = (Node *) n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct409(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3101
+//line gram.y:3077
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct410(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3102
+//line gram.y:3078
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct411(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3106
+//line gram.y:3082
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct412(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3107
+//line gram.y:3083
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct413(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3116
+//line gram.y:3092
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct414(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3117
+//line gram.y:3093
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct415(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3118
+//line gram.y:3094
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct416(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3121
+//line gram.y:3097
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct417(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3122
+//line gram.y:3098
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct418(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3127
+//line gram.y:3103
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct419(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3128
+//line gram.y:3104
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct420(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3133
-	{ /*C
-		$$ = makeDefElem("format", (Node *) makeString("binary"), @1);
-		*/
+//line gram.y:3109
+	{
+		yyVAL.node = makeDefElem("format", makeString("binary", yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct421(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3137
-	{ /*C
-		$$ = makeDefElem("freeze", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:3113
+	{
+		yyVAL.node = makeDefElem("freeze", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct422(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3141
-	{ /*C
-		$$ = makeDefElem("delimiter", (Node *) makeString($3), @1);
-		*/
+//line gram.y:3117
+	{
+		yyVAL.node = makeDefElem("delimiter", makeString(yyDollar[3].str, yyDollar[3].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct423(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3145
-	{ /*C
-		$$ = makeDefElem("null", (Node *) makeString($3), @1);
-		*/
+//line gram.y:3121
+	{
+		yyVAL.node = makeDefElem("null", makeString(yyDollar[3].str, yyDollar[3].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct424(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3149
-	{ /*C
-		$$ = makeDefElem("format", (Node *) makeString("csv"), @1);
-		*/
+//line gram.y:3125
+	{
+		yyVAL.node = makeDefElem("format", makeString("csv", yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct425(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3153
-	{ /*C
-		$$ = makeDefElem("header", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:3129
+	{
+		yyVAL.node = makeDefElem("header", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct426(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3157
-	{ /*C
-		$$ = makeDefElem("quote", (Node *) makeString($3), @1);
-		*/
+//line gram.y:3133
+	{
+		yyVAL.node = makeDefElem("quote", makeString(yyDollar[3].str, yyDollar[3].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct427(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3161
-	{ /*C
-		$$ = makeDefElem("escape", (Node *) makeString($3), @1);
-		*/
+//line gram.y:3137
+	{
+		yyVAL.node = makeDefElem("escape", makeString(yyDollar[3].str, yyDollar[3].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct428(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3165
-	{ /*C
-		$$ = makeDefElem("force_quote", (Node *) $3, @1);
-		*/
+//line gram.y:3141
+	{
+		yyVAL.node = makeDefElem("force_quote", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct429(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3169
-	{ /*C
-		$$ = makeDefElem("force_quote", (Node *) makeNode(A_Star), @1);
-		*/
+//line gram.y:3145
+	{
+		yyVAL.node = makeDefElem("force_quote", &A_Star{}, yyDollar[1].loc)
 	}
 }
 
 func yyAct430(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3173
-	{ /*C
-		$$ = makeDefElem("force_not_null", (Node *) $4, @1);
-		*/
+//line gram.y:3149
+	{
+		yyVAL.node = makeDefElem("force_not_null", listNode(yyDollar[4].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct431(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3177
-	{ /*C
-		$$ = makeDefElem("force_not_null", (Node *) makeNode(A_Star), @1);
-		*/
+//line gram.y:3153
+	{
+		yyVAL.node = makeDefElem("force_not_null", &A_Star{}, yyDollar[1].loc)
 	}
 }
 
 func yyAct432(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3181
-	{ /*C
-		$$ = makeDefElem("force_null", (Node *) $3, @1);
-		*/
+//line gram.y:3157
+	{
+		yyVAL.node = makeDefElem("force_null", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct433(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3185
-	{ /*C
-		$$ = makeDefElem("force_null", (Node *) makeNode(A_Star), @1);
-		*/
+//line gram.y:3161
+	{
+		yyVAL.node = makeDefElem("force_null", &A_Star{}, yyDollar[1].loc)
 	}
 }
 
 func yyAct434(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3189
-	{ /*C
-		$$ = makeDefElem("encoding", (Node *) makeString($2), @1);
-		*/
+//line gram.y:3165
+	{
+		yyVAL.node = makeDefElem("encoding", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct435(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3198
-	{ /*C
-		$$ = makeDefElem("format", (Node *) makeString("binary"), @1);
-		*/
+//line gram.y:3174
+	{
+		yyVAL.node = makeDefElem("format", makeString("binary", yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct436(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3201
+//line gram.y:3177
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct437(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3206
-	{ /*C
-		$$ = makeDefElem("delimiter", (Node *) makeString($3), @2);
-		*/
+//line gram.y:3182
+	{
+		yyVAL.node = makeDefElem("delimiter", makeString(yyDollar[3].str, yyDollar[3].loc), yyDollar[2].loc)
 	}
 }
 
 func yyAct438(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3209
+//line gram.y:3185
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct441(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3220
+//line gram.y:3196
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct442(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3222
+//line gram.y:3198
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct443(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3227
-	{ /*C
-		$$ = makeDefElem($1, $2, @1);
-		*/
+//line gram.y:3203
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct444(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3233
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:3209
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct445(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3234
+//line gram.y:3210
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct446(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3235
-	{ /*C $$ = (Node *) makeNode(A_Star); */
+//line gram.y:3211
+	{
+		yyVAL.node = &A_Star{}
 	}
 }
 
 func yyAct447(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3236
-	{ /*C $$ = (Node *) makeString("default"); */
+//line gram.y:3212
+	{
+		yyVAL.node = makeString("default", yyDollar[1].loc)
 	}
 }
 
 func yyAct448(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3237
-	{ /*C $$ = (Node *) $2; */
+//line gram.y:3213
+	{
+		yyVAL.node = listNode(yyDollar[2].list)
 	}
 }
 
 func yyAct449(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3238
+//line gram.y:3214
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct450(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3243
+//line gram.y:3219
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct451(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3245
+//line gram.y:3221
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct452(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3250
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:3226
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct453(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3264
-	{ /*C
-		CreateStmt *n = makeNode(CreateStmt);
+//line gram.y:3240
+	{
+		n := &CreateStmt{}
 
-		$4->relpersistence = $2;
-		n->relation = $4;
-		n->tableElts = $6;
-		n->inhRelations = $8;
-		n->partspec = $9;
-		n->ofTypename = NULL;
-		n->constraints = NIL;
-		n->accessMethod = $10;
-		n->options = $11;
-		n->oncommit = $12;
-		n->tablespacename = $13;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[4].node), yyDollar[2].ival)
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.TableElts = yyDollar[6].list
+		n.InhRelations = yyDollar[8].list
+		n.Partspec = as[*PartitionSpec](yyDollar[9].node)
+		n.OfTypename = nil
+		n.Constraints = nil
+		n.AccessMethod = yyDollar[10].str
+		n.Options = yyDollar[11].list
+		n.Oncommit = OnCommitAction(yyDollar[12].ival)
+		n.Tablespacename = yyDollar[13].str
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct454(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3284
-	{ /*C
-		CreateStmt *n = makeNode(CreateStmt);
+//line gram.y:3260
+	{
+		n := &CreateStmt{}
 
-		$7->relpersistence = $2;
-		n->relation = $7;
-		n->tableElts = $9;
-		n->inhRelations = $11;
-		n->partspec = $12;
-		n->ofTypename = NULL;
-		n->constraints = NIL;
-		n->accessMethod = $13;
-		n->options = $14;
-		n->oncommit = $15;
-		n->tablespacename = $16;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[7].node), yyDollar[2].ival)
+		n.Relation = as[*RangeVar](yyDollar[7].node)
+		n.TableElts = yyDollar[9].list
+		n.InhRelations = yyDollar[11].list
+		n.Partspec = as[*PartitionSpec](yyDollar[12].node)
+		n.OfTypename = nil
+		n.Constraints = nil
+		n.AccessMethod = yyDollar[13].str
+		n.Options = yyDollar[14].list
+		n.Oncommit = OnCommitAction(yyDollar[15].ival)
+		n.Tablespacename = yyDollar[16].str
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct455(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3304
-	{ /*C
-		CreateStmt *n = makeNode(CreateStmt);
+//line gram.y:3280
+	{
+		n := &CreateStmt{}
 
-		$4->relpersistence = $2;
-		n->relation = $4;
-		n->tableElts = $7;
-		n->inhRelations = NIL;
-		n->partspec = $8;
-		n->ofTypename = makeTypeNameFromNameList($6);
-		n->ofTypename->location = @6;
-		n->constraints = NIL;
-		n->accessMethod = $9;
-		n->options = $10;
-		n->oncommit = $11;
-		n->tablespacename = $12;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[4].node), yyDollar[2].ival)
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.TableElts = yyDollar[7].list
+		n.InhRelations = nil
+		n.Partspec = as[*PartitionSpec](yyDollar[8].node)
+		n.OfTypename = makeTypeNameFromNameList(yyDollar[6].list)
+		n.OfTypename.Location = yyDollar[6].loc
+		n.Constraints = nil
+		n.AccessMethod = yyDollar[9].str
+		n.Options = yyDollar[10].list
+		n.Oncommit = OnCommitAction(yyDollar[11].ival)
+		n.Tablespacename = yyDollar[12].str
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct456(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3325
-	{ /*C
-		CreateStmt *n = makeNode(CreateStmt);
+//line gram.y:3301
+	{
+		n := &CreateStmt{}
 
-		$7->relpersistence = $2;
-		n->relation = $7;
-		n->tableElts = $10;
-		n->inhRelations = NIL;
-		n->partspec = $11;
-		n->ofTypename = makeTypeNameFromNameList($9);
-		n->ofTypename->location = @9;
-		n->constraints = NIL;
-		n->accessMethod = $12;
-		n->options = $13;
-		n->oncommit = $14;
-		n->tablespacename = $15;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[7].node), yyDollar[2].ival)
+		n.Relation = as[*RangeVar](yyDollar[7].node)
+		n.TableElts = yyDollar[10].list
+		n.InhRelations = nil
+		n.Partspec = as[*PartitionSpec](yyDollar[11].node)
+		n.OfTypename = makeTypeNameFromNameList(yyDollar[9].list)
+		n.OfTypename.Location = yyDollar[9].loc
+		n.Constraints = nil
+		n.AccessMethod = yyDollar[12].str
+		n.Options = yyDollar[13].list
+		n.Oncommit = OnCommitAction(yyDollar[14].ival)
+		n.Tablespacename = yyDollar[15].str
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct457(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3346
-	{ /*C
-		CreateStmt *n = makeNode(CreateStmt);
+//line gram.y:3322
+	{
+		n := &CreateStmt{}
 
-		$4->relpersistence = $2;
-		n->relation = $4;
-		n->tableElts = $8;
-		n->inhRelations = list_make1($7);
-		n->partbound = $9;
-		n->partspec = $10;
-		n->ofTypename = NULL;
-		n->constraints = NIL;
-		n->accessMethod = $11;
-		n->options = $12;
-		n->oncommit = $13;
-		n->tablespacename = $14;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[4].node), yyDollar[2].ival)
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.TableElts = yyDollar[8].list
+		n.InhRelations = []Node{yyDollar[7].node}
+		n.Partbound = as[*PartitionBoundSpec](yyDollar[9].node)
+		n.Partspec = as[*PartitionSpec](yyDollar[10].node)
+		n.OfTypename = nil
+		n.Constraints = nil
+		n.AccessMethod = yyDollar[11].str
+		n.Options = yyDollar[12].list
+		n.Oncommit = OnCommitAction(yyDollar[13].ival)
+		n.Tablespacename = yyDollar[14].str
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct458(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3367
-	{ /*C
-		CreateStmt *n = makeNode(CreateStmt);
+//line gram.y:3343
+	{
+		n := &CreateStmt{}
 
-		$7->relpersistence = $2;
-		n->relation = $7;
-		n->tableElts = $11;
-		n->inhRelations = list_make1($10);
-		n->partbound = $12;
-		n->partspec = $13;
-		n->ofTypename = NULL;
-		n->constraints = NIL;
-		n->accessMethod = $14;
-		n->options = $15;
-		n->oncommit = $16;
-		n->tablespacename = $17;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[7].node), yyDollar[2].ival)
+		n.Relation = as[*RangeVar](yyDollar[7].node)
+		n.TableElts = yyDollar[11].list
+		n.InhRelations = []Node{yyDollar[10].node}
+		n.Partbound = as[*PartitionBoundSpec](yyDollar[12].node)
+		n.Partspec = as[*PartitionSpec](yyDollar[13].node)
+		n.OfTypename = nil
+		n.Constraints = nil
+		n.AccessMethod = yyDollar[14].str
+		n.Options = yyDollar[15].list
+		n.Oncommit = OnCommitAction(yyDollar[16].ival)
+		n.Tablespacename = yyDollar[17].str
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct459(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3398
-	{ /*C $$ = RELPERSISTENCE_TEMP; */
+//line gram.y:3374
+	{
+		yyVAL.ival = int32(relpersistenceTemp[0])
 	}
 }
 
 func yyAct460(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3399
-	{ /*C $$ = RELPERSISTENCE_TEMP; */
+//line gram.y:3375
+	{
+		yyVAL.ival = int32(relpersistenceTemp[0])
 	}
 }
 
 func yyAct461(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3400
-	{ /*C $$ = RELPERSISTENCE_TEMP; */
+//line gram.y:3376
+	{
+		yyVAL.ival = int32(relpersistenceTemp[0])
 	}
 }
 
 func yyAct462(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3401
-	{ /*C $$ = RELPERSISTENCE_TEMP; */
+//line gram.y:3377
+	{
+		yyVAL.ival = int32(relpersistenceTemp[0])
 	}
 }
 
 func yyAct463(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3403
-	{ /*C
-		ereport(WARNING,
-				(errmsg("GLOBAL is deprecated in temporary table creation"),
-				 parser_errposition(@1)));
-		$$ = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:3379
+	{
+		/* GLOBAL is deprecated in temporary table creation: only a warning, nothing to report */
+		yyVAL.ival = int32(relpersistenceTemp[0])
 	}
 }
 
 func yyAct464(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3410
-	{ /*C
-		ereport(WARNING,
-				(errmsg("GLOBAL is deprecated in temporary table creation"),
-				 parser_errposition(@1)));
-		$$ = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:3384
+	{
+		/* GLOBAL is deprecated in temporary table creation: only a warning, nothing to report */
+		yyVAL.ival = int32(relpersistenceTemp[0])
 	}
 }
 
 func yyAct465(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3416
-	{ /*C $$ = RELPERSISTENCE_UNLOGGED; */
+//line gram.y:3388
+	{
+		yyVAL.ival = int32(relpersistenceUnlogged[0])
 	}
 }
 
 func yyAct466(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3417
-	{ /*C $$ = RELPERSISTENCE_PERMANENT; */
+//line gram.y:3389
+	{
+		yyVAL.ival = int32(relpersistencePermanent[0])
 	}
 }
 
 func yyAct467(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3421
+//line gram.y:3393
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct468(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3422
+//line gram.y:3394
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct469(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3426
+//line gram.y:3398
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct470(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3427
+//line gram.y:3399
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct471(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3432
+//line gram.y:3404
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct472(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3434
+//line gram.y:3406
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct473(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3439
+//line gram.y:3411
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct474(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3441
+//line gram.y:3413
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct475(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3445
+//line gram.y:3417
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct476(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3446
+//line gram.y:3418
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct477(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3447
+//line gram.y:3419
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct478(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3451
+//line gram.y:3423
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct479(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3452
+//line gram.y:3424
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct480(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3456
-	{ /*C
-		ColumnDef *n = makeNode(ColumnDef);
+//line gram.y:3428
+	{
+		n := &ColumnDef{}
 
-		n->colname = $1;
-		n->typeName = $2;
-		n->storage_name = $3;
-		n->compression = $4;
-		n->inhcount = 0;
-		n->is_local = true;
-		n->is_not_null = false;
-		n->is_from_type = false;
-		n->storage = 0;
-		n->raw_default = NULL;
-		n->cooked_default = NULL;
-		n->collOid = InvalidOid;
-		n->fdwoptions = $5;
-		SplitColQualList($6, &n->constraints, &n->collClause,
-						 yyscanner);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Colname = yyDollar[1].str
+		n.TypeName = as[*TypeName](yyDollar[2].node)
+		n.StorageName = yyDollar[3].str
+		n.Compression = yyDollar[4].str
+		n.Inhcount = 0
+		n.IsLocal = true
+		n.IsNotNull = false
+		n.IsFromType = false
+		n.Storage = ""
+		n.RawDefault = nil
+		n.CookedDefault = nil
+		n.CollOid = 0
+		n.Fdwoptions = yyDollar[5].list
+		n.Constraints, n.CollClause = p.splitColQualList(yyDollar[6].list)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct481(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3480
-	{ /*C
-		ColumnDef *n = makeNode(ColumnDef);
+//line gram.y:3451
+	{
+		n := &ColumnDef{}
 
-		n->colname = $1;
-		n->typeName = NULL;
-		n->inhcount = 0;
-		n->is_local = true;
-		n->is_not_null = false;
-		n->is_from_type = false;
-		n->storage = 0;
-		n->raw_default = NULL;
-		n->cooked_default = NULL;
-		n->collOid = InvalidOid;
-		SplitColQualList($2, &n->constraints, &n->collClause,
-						 yyscanner);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Colname = yyDollar[1].str
+		n.TypeName = nil
+		n.Inhcount = 0
+		n.IsLocal = true
+		n.IsNotNull = false
+		n.IsFromType = false
+		n.Storage = ""
+		n.RawDefault = nil
+		n.CookedDefault = nil
+		n.CollOid = 0
+		n.Constraints, n.CollClause = p.splitColQualList(yyDollar[2].list)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct482(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3499
-	{ /*C
-		ColumnDef *n = makeNode(ColumnDef);
+//line gram.y:3469
+	{
+		n := &ColumnDef{}
 
-		n->colname = $1;
-		n->typeName = NULL;
-		n->inhcount = 0;
-		n->is_local = true;
-		n->is_not_null = false;
-		n->is_from_type = false;
-		n->storage = 0;
-		n->raw_default = NULL;
-		n->cooked_default = NULL;
-		n->collOid = InvalidOid;
-		SplitColQualList($4, &n->constraints, &n->collClause,
-						 yyscanner);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Colname = yyDollar[1].str
+		n.TypeName = nil
+		n.Inhcount = 0
+		n.IsLocal = true
+		n.IsNotNull = false
+		n.IsFromType = false
+		n.Storage = ""
+		n.RawDefault = nil
+		n.CookedDefault = nil
+		n.CollOid = 0
+		n.Constraints, n.CollClause = p.splitColQualList(yyDollar[4].list)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct483(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3520
+//line gram.y:3489
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct484(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3521
-	{ /*C $$ = pstrdup("default"); */
+//line gram.y:3490
+	{
+		yyVAL.str = "default"
 	}
 }
 
 func yyAct485(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3525
+//line gram.y:3494
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct486(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3526
+//line gram.y:3495
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct487(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3530
+//line gram.y:3499
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct488(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3531
-	{ /*C $$ = pstrdup("default"); */
+//line gram.y:3500
+	{
+		yyVAL.str = "default"
 	}
 }
 
 func yyAct489(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3535
+//line gram.y:3504
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct490(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3536
+//line gram.y:3505
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct491(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3540
+//line gram.y:3509
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct492(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3541
+//line gram.y:3510
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct493(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3546
-	{ /*C
-		Constraint *n = castNode(Constraint, $3);
+//line gram.y:3515
+	{
+		n := as[*Constraint](yyDollar[3].node)
 
-		n->conname = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Conname = yyDollar[2].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct494(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3553
+//line gram.y:3522
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct495(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3554
+//line gram.y:3523
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct496(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3556
-	{ /*C
+//line gram.y:3525
+	{
 		/*
 		 * Note: the CollateClause is momentarily included in
 		 * the list built by ColQualList, but we split it out
 		 * again in SplitColQualList.
-		 * /
-		CollateClause *n = makeNode(CollateClause);
+		 */
+		n := &CollateClause{}
 
-		n->arg = NULL;
-		n->collname = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Arg = nil
+		n.Collname = yyDollar[2].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct497(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3588
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3557
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_NOTNULL;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_NOTNULL
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct498(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3596
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3565
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_NULL;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_NULL
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct499(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3604
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3573
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_UNIQUE;
-		n->location = @1;
-		n->nulls_not_distinct = !$2;
-		n->keys = NULL;
-		n->options = $3;
-		n->indexname = NULL;
-		n->indexspace = $4;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_UNIQUE
+		n.Location = yyDollar[1].loc
+		n.NullsNotDistinct = !yyDollar[2].boolean
+		n.Keys = nil
+		n.Options = yyDollar[3].list
+		n.Indexname = ""
+		n.Indexspace = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct500(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3617
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3586
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_PRIMARY;
-		n->location = @1;
-		n->keys = NULL;
-		n->options = $3;
-		n->indexname = NULL;
-		n->indexspace = $4;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_PRIMARY
+		n.Location = yyDollar[1].loc
+		n.Keys = nil
+		n.Options = yyDollar[3].list
+		n.Indexname = ""
+		n.Indexspace = yyDollar[4].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct501(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3629
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3598
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_CHECK;
-		n->location = @1;
-		n->is_no_inherit = $5;
-		n->raw_expr = $3;
-		n->cooked_expr = NULL;
-		n->skip_validation = false;
-		n->initially_valid = true;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_CHECK
+		n.Location = yyDollar[1].loc
+		n.IsNoInherit = yyDollar[5].boolean
+		n.RawExpr = yyDollar[3].node
+		n.CookedExpr = ""
+		n.SkipValidation = false
+		n.InitiallyValid = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct502(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3642
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3611
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_DEFAULT;
-		n->location = @1;
-		n->raw_expr = $2;
-		n->cooked_expr = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_DEFAULT
+		n.Location = yyDollar[1].loc
+		n.RawExpr = yyDollar[2].node
+		n.CookedExpr = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct503(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3652
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3621
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_IDENTITY;
-		n->generated_when = $2;
-		n->options = $5;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_IDENTITY
+		n.GeneratedWhen = string(rune(yyDollar[2].ival))
+		n.Options = yyDollar[5].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct504(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3662
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3631
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_GENERATED;
-		n->generated_when = $2;
-		n->raw_expr = $5;
-		n->cooked_expr = NULL;
-		n->location = @1;
+		n.Contype = CONSTR_GENERATED
+		n.GeneratedWhen = string(rune(yyDollar[2].ival))
+		n.RawExpr = yyDollar[5].node
+		n.CookedExpr = ""
+		n.Location = yyDollar[1].loc
 
 		/*
 		 * Can't do this in the grammar because of shift/reduce
 		 * conflicts.  (IDENTITY allows both ALWAYS and BY
 		 * DEFAULT, but generated columns only allow ALWAYS.)  We
 		 * can also give a more useful error message and location.
-		 * /
-		if ($2 != ATTRIBUTE_IDENTITY_ALWAYS)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("for a generated column, GENERATED ALWAYS must be specified"),
-					 parser_errposition(@2)));
+		 */
+		if yyDollar[2].ival != ATTRIBUTE_IDENTITY_ALWAYS {
+			p.fail(yyDollar[2].loc, "for a generated column, GENERATED ALWAYS must be specified")
+		}
 
-		$$ = (Node *) n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct505(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3686
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3653
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_FOREIGN;
-		n->location = @1;
-		n->pktable = $2;
-		n->fk_attrs = NIL;
-		n->pk_attrs = $3;
-		n->fk_matchtype = $4;
-		n->fk_upd_action = ($5)->updateAction->action;
-		n->fk_del_action = ($5)->deleteAction->action;
-		n->fk_del_set_cols = ($5)->deleteAction->cols;
-		n->skip_validation = false;
-		n->initially_valid = true;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_FOREIGN
+		n.Location = yyDollar[1].loc
+		n.Pktable = as[*RangeVar](yyDollar[2].node)
+		n.FkAttrs = nil
+		n.PkAttrs = yyDollar[3].list
+		n.FkMatchtype = string(rune(yyDollar[4].ival))
+		n.FkUpdAction = as[*keyActions](yyDollar[5].node).updateAction.action
+		n.FkDelAction = as[*keyActions](yyDollar[5].node).deleteAction.action
+		n.FkDelSetCols = as[*keyActions](yyDollar[5].node).deleteAction.cols
+		n.SkipValidation = false
+		n.InitiallyValid = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct506(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3705
+//line gram.y:3672
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct507(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3706
+//line gram.y:3673
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct508(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3707
+//line gram.y:3674
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct509(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3711
-	{ /*C $$ = ATTRIBUTE_IDENTITY_ALWAYS; */
+//line gram.y:3678
+	{
+		yyVAL.ival = ATTRIBUTE_IDENTITY_ALWAYS
 	}
 }
 
 func yyAct510(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3712
-	{ /*C $$ = ATTRIBUTE_IDENTITY_BY_DEFAULT; */
+//line gram.y:3679
+	{
+		yyVAL.ival = ATTRIBUTE_IDENTITY_BY_DEFAULT
 	}
 }
 
 func yyAct511(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3732
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3699
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_ATTR_DEFERRABLE;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_ATTR_DEFERRABLE
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct512(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3740
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3707
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_ATTR_NOT_DEFERRABLE;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_ATTR_NOT_DEFERRABLE
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct513(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3748
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3715
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_ATTR_DEFERRED;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_ATTR_DEFERRED
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct514(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3756
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3723
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_ATTR_IMMEDIATE;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_ATTR_IMMEDIATE
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct515(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3768
-	{ /*C
-		TableLikeClause *n = makeNode(TableLikeClause);
+//line gram.y:3735
+	{
+		n := &TableLikeClause{}
 
-		n->relation = $2;
-		n->options = $3;
-		n->relationOid = InvalidOid;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[2].node)
+		n.Options = uint32(yyDollar[3].ival)
+		n.RelationOid = 0
+		yyVAL.node = n
 	}
 }
 
 func yyAct516(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3779
-	{ /*C $$ = $1 | $3; */
+//line gram.y:3746
+	{
+		yyVAL.ival = yyDollar[1].ival | yyDollar[3].ival
 	}
 }
 
 func yyAct517(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3780
-	{ /*C $$ = $1 & ~$3; */
+//line gram.y:3747
+	{
+		yyVAL.ival = yyDollar[1].ival &^ yyDollar[3].ival
 	}
 }
 
 func yyAct518(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3781
+//line gram.y:3748
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct519(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3785
-	{ /*C $$ = CREATE_TABLE_LIKE_COMMENTS; */
+//line gram.y:3752
+	{
+		yyVAL.ival = createTableLikeComments
 	}
 }
 
 func yyAct520(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3786
-	{ /*C $$ = CREATE_TABLE_LIKE_COMPRESSION; */
+//line gram.y:3753
+	{
+		yyVAL.ival = createTableLikeCompression
 	}
 }
 
 func yyAct521(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3787
-	{ /*C $$ = CREATE_TABLE_LIKE_CONSTRAINTS; */
+//line gram.y:3754
+	{
+		yyVAL.ival = createTableLikeConstraints
 	}
 }
 
 func yyAct522(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3788
-	{ /*C $$ = CREATE_TABLE_LIKE_DEFAULTS; */
+//line gram.y:3755
+	{
+		yyVAL.ival = createTableLikeDefaults
 	}
 }
 
 func yyAct523(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3789
-	{ /*C $$ = CREATE_TABLE_LIKE_IDENTITY; */
+//line gram.y:3756
+	{
+		yyVAL.ival = createTableLikeIdentity
 	}
 }
 
 func yyAct524(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3790
-	{ /*C $$ = CREATE_TABLE_LIKE_GENERATED; */
+//line gram.y:3757
+	{
+		yyVAL.ival = createTableLikeGenerated
 	}
 }
 
 func yyAct525(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3791
-	{ /*C $$ = CREATE_TABLE_LIKE_INDEXES; */
+//line gram.y:3758
+	{
+		yyVAL.ival = createTableLikeIndexes
 	}
 }
 
 func yyAct526(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3792
-	{ /*C $$ = CREATE_TABLE_LIKE_STATISTICS; */
+//line gram.y:3759
+	{
+		yyVAL.ival = createTableLikeStatistics
 	}
 }
 
 func yyAct527(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3793
-	{ /*C $$ = CREATE_TABLE_LIKE_STORAGE; */
+//line gram.y:3760
+	{
+		yyVAL.ival = createTableLikeStorage
 	}
 }
 
 func yyAct528(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3794
-	{ /*C $$ = CREATE_TABLE_LIKE_ALL; */
+//line gram.y:3761
+	{
+		yyVAL.ival = createTableLikeAll
 	}
 }
 
 func yyAct529(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3804
-	{ /*C
-		Constraint *n = castNode(Constraint, $3);
+//line gram.y:3771
+	{
+		n := as[*Constraint](yyDollar[3].node)
 
-		n->conname = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Conname = yyDollar[2].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct530(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3811
+//line gram.y:3778
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct531(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3816
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3783
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_CHECK;
-		n->location = @1;
-		n->raw_expr = $3;
-		n->cooked_expr = NULL;
-		processCASbits($5, @5, "CHECK",
-					   NULL, NULL, &n->skip_validation,
-					   &n->is_no_inherit, yyscanner);
-		n->initially_valid = !n->skip_validation;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_CHECK
+		n.Location = yyDollar[1].loc
+		n.RawExpr = yyDollar[3].node
+		n.CookedExpr = ""
+		p.processCASbits(yyDollar[5].ival, yyDollar[5].loc, "CHECK",
+			nil, nil, &n.SkipValidation,
+			&n.IsNoInherit)
+		n.InitiallyValid = !n.SkipValidation
+		yyVAL.node = n
 	}
 }
 
 func yyAct532(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3831
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3798
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_UNIQUE;
-		n->location = @1;
-		n->nulls_not_distinct = !$2;
-		n->keys = $4;
-		n->including = $6;
-		n->options = $7;
-		n->indexname = NULL;
-		n->indexspace = $8;
-		processCASbits($9, @9, "UNIQUE",
-					   &n->deferrable, &n->initdeferred, NULL,
-					   NULL, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_UNIQUE
+		n.Location = yyDollar[1].loc
+		n.NullsNotDistinct = !yyDollar[2].boolean
+		n.Keys = yyDollar[4].list
+		n.Including = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		n.Indexname = ""
+		n.Indexspace = yyDollar[8].str
+		p.processCASbits(yyDollar[9].ival, yyDollar[9].loc, "UNIQUE",
+			&n.Deferrable, &n.Initdeferred, nil,
+			nil)
+		yyVAL.node = n
 	}
 }
 
 func yyAct533(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3848
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3815
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_UNIQUE;
-		n->location = @1;
-		n->keys = NIL;
-		n->including = NIL;
-		n->options = NIL;
-		n->indexname = $2;
-		n->indexspace = NULL;
-		processCASbits($3, @3, "UNIQUE",
-					   &n->deferrable, &n->initdeferred, NULL,
-					   NULL, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_UNIQUE
+		n.Location = yyDollar[1].loc
+		n.Keys = nil
+		n.Including = nil
+		n.Options = nil
+		n.Indexname = yyDollar[2].str
+		n.Indexspace = ""
+		p.processCASbits(yyDollar[3].ival, yyDollar[3].loc, "UNIQUE",
+			&n.Deferrable, &n.Initdeferred, nil,
+			nil)
+		yyVAL.node = n
 	}
 }
 
 func yyAct534(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3865
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3832
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_PRIMARY;
-		n->location = @1;
-		n->keys = $4;
-		n->including = $6;
-		n->options = $7;
-		n->indexname = NULL;
-		n->indexspace = $8;
-		processCASbits($9, @9, "PRIMARY KEY",
-					   &n->deferrable, &n->initdeferred, NULL,
-					   NULL, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_PRIMARY
+		n.Location = yyDollar[1].loc
+		n.Keys = yyDollar[4].list
+		n.Including = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		n.Indexname = ""
+		n.Indexspace = yyDollar[8].str
+		p.processCASbits(yyDollar[9].ival, yyDollar[9].loc, "PRIMARY KEY",
+			&n.Deferrable, &n.Initdeferred, nil,
+			nil)
+		yyVAL.node = n
 	}
 }
 
 func yyAct535(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3881
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3848
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_PRIMARY;
-		n->location = @1;
-		n->keys = NIL;
-		n->including = NIL;
-		n->options = NIL;
-		n->indexname = $3;
-		n->indexspace = NULL;
-		processCASbits($4, @4, "PRIMARY KEY",
-					   &n->deferrable, &n->initdeferred, NULL,
-					   NULL, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_PRIMARY
+		n.Location = yyDollar[1].loc
+		n.Keys = nil
+		n.Including = nil
+		n.Options = nil
+		n.Indexname = yyDollar[3].str
+		n.Indexspace = ""
+		p.processCASbits(yyDollar[4].ival, yyDollar[4].loc, "PRIMARY KEY",
+			&n.Deferrable, &n.Initdeferred, nil,
+			nil)
+		yyVAL.node = n
 	}
 }
 
 func yyAct536(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3899
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3866
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_EXCLUSION;
-		n->location = @1;
-		n->access_method = $2;
-		n->exclusions = $4;
-		n->including = $6;
-		n->options = $7;
-		n->indexname = NULL;
-		n->indexspace = $8;
-		n->where_clause = $9;
-		processCASbits($10, @10, "EXCLUDE",
-					   &n->deferrable, &n->initdeferred, NULL,
-					   NULL, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_EXCLUSION
+		n.Location = yyDollar[1].loc
+		n.AccessMethod = yyDollar[2].str
+		n.Exclusions = yyDollar[4].list
+		n.Including = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		n.Indexname = ""
+		n.Indexspace = yyDollar[8].str
+		n.WhereClause = yyDollar[9].node
+		p.processCASbits(yyDollar[10].ival, yyDollar[10].loc, "EXCLUDE",
+			&n.Deferrable, &n.Initdeferred, nil,
+			nil)
+		yyVAL.node = n
 	}
 }
 
 func yyAct537(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3918
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3885
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_FOREIGN;
-		n->location = @1;
-		n->pktable = $7;
-		n->fk_attrs = $4;
-		n->pk_attrs = $8;
-		n->fk_matchtype = $9;
-		n->fk_upd_action = ($10)->updateAction->action;
-		n->fk_del_action = ($10)->deleteAction->action;
-		n->fk_del_set_cols = ($10)->deleteAction->cols;
-		processCASbits($11, @11, "FOREIGN KEY",
-					   &n->deferrable, &n->initdeferred,
-					   &n->skip_validation, NULL,
-					   yyscanner);
-		n->initially_valid = !n->skip_validation;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_FOREIGN
+		n.Location = yyDollar[1].loc
+		n.Pktable = as[*RangeVar](yyDollar[7].node)
+		n.FkAttrs = yyDollar[4].list
+		n.PkAttrs = yyDollar[8].list
+		n.FkMatchtype = string(rune(yyDollar[9].ival))
+		n.FkUpdAction = as[*keyActions](yyDollar[10].node).updateAction.action
+		n.FkDelAction = as[*keyActions](yyDollar[10].node).deleteAction.action
+		n.FkDelSetCols = as[*keyActions](yyDollar[10].node).deleteAction.cols
+		p.processCASbits(yyDollar[11].ival, yyDollar[11].loc, "FOREIGN KEY",
+			&n.Deferrable, &n.Initdeferred,
+			&n.SkipValidation, nil)
+		n.InitiallyValid = !n.SkipValidation
+		yyVAL.node = n
 	}
 }
 
 func yyAct538(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3952
-	{ /*C
-		Constraint *n = castNode(Constraint, $3);
+//line gram.y:3918
+	{
+		n := as[*Constraint](yyDollar[3].node)
 
-		n->conname = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Conname = yyDollar[2].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct539(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3959
+//line gram.y:3925
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct540(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3964
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3930
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_CHECK;
-		n->location = @1;
-		n->raw_expr = $3;
-		n->cooked_expr = NULL;
-		processCASbits($5, @5, "CHECK",
-					   NULL, NULL, &n->skip_validation,
-					   &n->is_no_inherit, yyscanner);
-		n->initially_valid = !n->skip_validation;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_CHECK
+		n.Location = yyDollar[1].loc
+		n.RawExpr = yyDollar[3].node
+		n.CookedExpr = ""
+		p.processCASbits(yyDollar[5].ival, yyDollar[5].loc, "CHECK",
+			nil, nil, &n.SkipValidation,
+			&n.IsNoInherit)
+		n.InitiallyValid = !n.SkipValidation
+		yyVAL.node = n
 	}
 }
 
 func yyAct541(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3978
-	{ /*C
-		Constraint *n = makeNode(Constraint);
+//line gram.y:3944
+	{
+		n := &Constraint{}
 
-		n->contype = CONSTR_NOTNULL;
-		n->location = @1;
-		n->keys = list_make1(makeString("value"));
-		/* no NOT VALID support yet * /
-		processCASbits($3, @3, "NOT NULL",
-					   NULL, NULL, NULL,
-					   &n->is_no_inherit, yyscanner);
-		n->initially_valid = true;
-		$$ = (Node *) n;
-		*/
+		n.Contype = CONSTR_NOTNULL
+		n.Location = yyDollar[1].loc
+		n.Keys = []Node{makeString("value", -1)}
+		/* no NOT VALID support yet */
+		p.processCASbits(yyDollar[3].ival, yyDollar[3].loc, "NOT NULL",
+			nil, nil, nil,
+			&n.IsNoInherit)
+		n.InitiallyValid = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct542(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3993
+//line gram.y:3959
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct543(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3994
+//line gram.y:3960
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct544(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3998
+//line gram.y:3964
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct545(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:3999
+//line gram.y:3965
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct546(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4003
+//line gram.y:3969
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct547(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4004
+//line gram.y:3970
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct548(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4008
-	{ /*C
-		$$ = (Node *) makeString($1);
-		*/
+//line gram.y:3974
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct549(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4013
+//line gram.y:3979
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct550(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4014
+//line gram.y:3980
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct551(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4018
-	{ /*C
-		$$ = FKCONSTR_MATCH_FULL;
-		*/
+//line gram.y:3984
+	{
+		yyVAL.ival = FKCONSTR_MATCH_FULL
 	}
 }
 
 func yyAct552(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4022
-	{ /*C
-		ereport(ERROR,
-				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("MATCH PARTIAL not yet implemented"),
-				 parser_errposition(@1)));
-		$$ = FKCONSTR_MATCH_PARTIAL;
-		*/
+//line gram.y:3988
+	{
+		p.fail(yyDollar[1].loc, "MATCH PARTIAL not yet implemented")
+		yyVAL.ival = FKCONSTR_MATCH_PARTIAL
 	}
 }
 
 func yyAct553(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4030
-	{ /*C
-		$$ = FKCONSTR_MATCH_SIMPLE;
-		*/
+//line gram.y:3993
+	{
+		yyVAL.ival = FKCONSTR_MATCH_SIMPLE
 	}
 }
 
 func yyAct554(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4034
-	{ /*C
-		$$ = FKCONSTR_MATCH_SIMPLE;
-		*/
+//line gram.y:3997
+	{
+		yyVAL.ival = FKCONSTR_MATCH_SIMPLE
 	}
 }
 
 func yyAct555(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4040
-	{ /*C $$ = list_make1($1); */
+//line gram.y:4003
+	{
+		yyVAL.list = []Node{listNode(yyDollar[1].list)}
 	}
 }
 
 func yyAct556(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4042
-	{ /*C $$ = lappend($1, $3); */
+//line gram.y:4005
+	{
+		yyVAL.list = append(yyDollar[1].list, listNode(yyDollar[3].list))
 	}
 }
 
 func yyAct557(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4046
-	{ /*C
-		$$ = list_make2($1, $3);
-		*/
+//line gram.y:4009
+	{
+		yyVAL.list = []Node{yyDollar[1].node, listNode(yyDollar[3].list)}
 	}
 }
 
 func yyAct558(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4051
-	{ /*C
-		$$ = list_make2($1, $5);
-		*/
+//line gram.y:4014
+	{
+		yyVAL.list = []Node{yyDollar[1].node, listNode(yyDollar[5].list)}
 	}
 }
 
 func yyAct559(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4057
+//line gram.y:4020
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct560(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4058
+//line gram.y:4021
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct561(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4063
-	{ /*C
-		KeyActions *n = palloc(sizeof(KeyActions));
+//line gram.y:4026
+	{
+		n := &keyActions{}
 
-		n->updateAction = $1;
-		n->deleteAction = palloc(sizeof(KeyAction));
-		n->deleteAction->action = FKCONSTR_ACTION_NOACTION;
-		n->deleteAction->cols = NIL;
-		$$ = n;
-		*/
+		n.updateAction = as[*keyAction](yyDollar[1].node)
+		n.deleteAction = &keyAction{}
+		n.deleteAction.action = FKCONSTR_ACTION_NOACTION
+		n.deleteAction.cols = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct562(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4073
-	{ /*C
-		KeyActions *n = palloc(sizeof(KeyActions));
+//line gram.y:4036
+	{
+		n := &keyActions{}
 
-		n->updateAction = palloc(sizeof(KeyAction));
-		n->updateAction->action = FKCONSTR_ACTION_NOACTION;
-		n->updateAction->cols = NIL;
-		n->deleteAction = $1;
-		$$ = n;
-		*/
+		n.updateAction = &keyAction{}
+		n.updateAction.action = FKCONSTR_ACTION_NOACTION
+		n.updateAction.cols = nil
+		n.deleteAction = as[*keyAction](yyDollar[1].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct563(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4083
-	{ /*C
-		KeyActions *n = palloc(sizeof(KeyActions));
+//line gram.y:4046
+	{
+		n := &keyActions{}
 
-		n->updateAction = $1;
-		n->deleteAction = $2;
-		$$ = n;
-		*/
+		n.updateAction = as[*keyAction](yyDollar[1].node)
+		n.deleteAction = as[*keyAction](yyDollar[2].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct564(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4091
-	{ /*C
-		KeyActions *n = palloc(sizeof(KeyActions));
+//line gram.y:4054
+	{
+		n := &keyActions{}
 
-		n->updateAction = $2;
-		n->deleteAction = $1;
-		$$ = n;
-		*/
+		n.updateAction = as[*keyAction](yyDollar[2].node)
+		n.deleteAction = as[*keyAction](yyDollar[1].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct565(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4099
-	{ /*C
-		KeyActions *n = palloc(sizeof(KeyActions));
+//line gram.y:4062
+	{
+		n := &keyActions{}
 
-		n->updateAction = palloc(sizeof(KeyAction));
-		n->updateAction->action = FKCONSTR_ACTION_NOACTION;
-		n->updateAction->cols = NIL;
-		n->deleteAction = palloc(sizeof(KeyAction));
-		n->deleteAction->action = FKCONSTR_ACTION_NOACTION;
-		n->deleteAction->cols = NIL;
-		$$ = n;
-		*/
+		n.updateAction = &keyAction{}
+		n.updateAction.action = FKCONSTR_ACTION_NOACTION
+		n.updateAction.cols = nil
+		n.deleteAction = &keyAction{}
+		n.deleteAction.action = FKCONSTR_ACTION_NOACTION
+		n.deleteAction.cols = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct566(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4113
-	{ /*C
-		if (($3)->cols)
-			ereport(ERROR,
-					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("a column list with %s is only supported for ON DELETE actions",
-							($3)->action == FKCONSTR_ACTION_SETNULL ? "SET NULL" : "SET DEFAULT"),
-					 parser_errposition(@1)));
-		$$ = $3;
-		*/
+//line gram.y:4076
+	{
+		if len(as[*keyAction](yyDollar[3].node).cols) > 0 {
+			setWhat := "SET DEFAULT"
+			if as[*keyAction](yyDollar[3].node).action == FKCONSTR_ACTION_SETNULL {
+				setWhat = "SET NULL"
+			}
+			p.fail(yyDollar[1].loc, fmt.Sprintf("a column list with %s is only supported for ON DELETE actions", setWhat))
+		}
+		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct567(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4125
+//line gram.y:4089
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct568(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4130
-	{ /*C
-		KeyAction *n = palloc(sizeof(KeyAction));
+//line gram.y:4094
+	{
+		n := &keyAction{}
 
-		n->action = FKCONSTR_ACTION_NOACTION;
-		n->cols = NIL;
-		$$ = n;
-		*/
+		n.action = FKCONSTR_ACTION_NOACTION
+		n.cols = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct569(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4138
-	{ /*C
-		KeyAction *n = palloc(sizeof(KeyAction));
+//line gram.y:4102
+	{
+		n := &keyAction{}
 
-		n->action = FKCONSTR_ACTION_RESTRICT;
-		n->cols = NIL;
-		$$ = n;
-		*/
+		n.action = FKCONSTR_ACTION_RESTRICT
+		n.cols = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct570(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4146
-	{ /*C
-		KeyAction *n = palloc(sizeof(KeyAction));
+//line gram.y:4110
+	{
+		n := &keyAction{}
 
-		n->action = FKCONSTR_ACTION_CASCADE;
-		n->cols = NIL;
-		$$ = n;
-		*/
+		n.action = FKCONSTR_ACTION_CASCADE
+		n.cols = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct571(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4154
-	{ /*C
-		KeyAction *n = palloc(sizeof(KeyAction));
+//line gram.y:4118
+	{
+		n := &keyAction{}
 
-		n->action = FKCONSTR_ACTION_SETNULL;
-		n->cols = $3;
-		$$ = n;
-		*/
+		n.action = FKCONSTR_ACTION_SETNULL
+		n.cols = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct572(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4162
-	{ /*C
-		KeyAction *n = palloc(sizeof(KeyAction));
+//line gram.y:4126
+	{
+		n := &keyAction{}
 
-		n->action = FKCONSTR_ACTION_SETDEFAULT;
-		n->cols = $3;
-		$$ = n;
-		*/
+		n.action = FKCONSTR_ACTION_SETDEFAULT
+		n.cols = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct573(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4171
+//line gram.y:4135
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct574(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4172
+//line gram.y:4136
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct575(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4176
+//line gram.y:4140
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct576(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4177
+//line gram.y:4141
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct577(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4181
-	{ /*C
-		PartitionSpec *n = makeNode(PartitionSpec);
+//line gram.y:4145
+	{
+		n := &PartitionSpec{}
 
-		n->strategy = parsePartitionStrategy($3);
-		n->partParams = $5;
-		n->location = @1;
+		n.Strategy = p.parsePartitionStrategy(yyDollar[3].str)
+		n.PartParams = yyDollar[5].list
+		n.Location = yyDollar[1].loc
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct578(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4192
+//line gram.y:4156
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct579(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4193
+//line gram.y:4157
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct580(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4197
-	{ /*C
-		PartitionElem *n = makeNode(PartitionElem);
+//line gram.y:4161
+	{
+		n := &PartitionElem{}
 
-		n->name = $1;
-		n->expr = NULL;
-		n->collation = $2;
-		n->opclass = $3;
-		n->location = @1;
-		$$ = n;
-		*/
+		n.Name = yyDollar[1].str
+		n.Expr = nil
+		n.Collation = yyDollar[2].list
+		n.Opclass = yyDollar[3].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct581(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4208
-	{ /*C
-		PartitionElem *n = makeNode(PartitionElem);
+//line gram.y:4172
+	{
+		n := &PartitionElem{}
 
-		n->name = NULL;
-		n->expr = $1;
-		n->collation = $2;
-		n->opclass = $3;
-		n->location = @1;
-		$$ = n;
-		*/
+		n.Name = ""
+		n.Expr = yyDollar[1].node
+		n.Collation = yyDollar[2].list
+		n.Opclass = yyDollar[3].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct582(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4219
-	{ /*C
-		PartitionElem *n = makeNode(PartitionElem);
+//line gram.y:4183
+	{
+		n := &PartitionElem{}
 
-		n->name = NULL;
-		n->expr = $2;
-		n->collation = $4;
-		n->opclass = $5;
-		n->location = @1;
-		$$ = n;
-		*/
+		n.Name = ""
+		n.Expr = yyDollar[2].node
+		n.Collation = yyDollar[4].list
+		n.Opclass = yyDollar[5].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct583(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4232
+//line gram.y:4196
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct584(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4233
+//line gram.y:4197
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct585(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4238
+//line gram.y:4202
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct586(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4239
+//line gram.y:4203
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct587(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4240
+//line gram.y:4204
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct588(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4243
+//line gram.y:4207
 	{
 		yyVAL.ival = int32(ONCOMMIT_DROP)
 	}
 }
 
 func yyAct589(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4244
+//line gram.y:4208
 	{
 		yyVAL.ival = int32(ONCOMMIT_DELETE_ROWS)
 	}
 }
 
 func yyAct590(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4245
+//line gram.y:4209
 	{
 		yyVAL.ival = int32(ONCOMMIT_PRESERVE_ROWS)
 	}
 }
 
 func yyAct591(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4246
+//line gram.y:4210
 	{
 		yyVAL.ival = int32(ONCOMMIT_NOOP)
 	}
 }
 
 func yyAct592(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4249
+//line gram.y:4213
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct593(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4250
+//line gram.y:4214
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct594(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4253
+//line gram.y:4217
 	{
 		yyVAL.str = yyDollar[4].str
 	}
 }
 
 func yyAct595(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4254
+//line gram.y:4218
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct596(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4257
+//line gram.y:4221
 	{
 		yyVAL.str = yyDollar[3].str
 	}
 }
 
 func yyAct597(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4279
-	{ /*C
-		CreateStatsStmt *n = makeNode(CreateStatsStmt);
+//line gram.y:4243
+	{
+		n := &CreateStatsStmt{}
 
-		n->defnames = $3;
-		n->stat_types = $4;
-		n->exprs = $6;
-		n->relations = $8;
-		n->stxcomment = NULL;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		n.Defnames = yyDollar[3].list
+		n.StatTypes = yyDollar[4].list
+		n.Exprs = yyDollar[6].list
+		n.Relations = yyDollar[8].list
+		n.Stxcomment = ""
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct598(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4292
-	{ /*C
-		CreateStatsStmt *n = makeNode(CreateStatsStmt);
+//line gram.y:4256
+	{
+		n := &CreateStatsStmt{}
 
-		n->defnames = $6;
-		n->stat_types = $7;
-		n->exprs = $9;
-		n->relations = $11;
-		n->stxcomment = NULL;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		n.Defnames = yyDollar[6].list
+		n.StatTypes = yyDollar[7].list
+		n.Exprs = yyDollar[9].list
+		n.Relations = yyDollar[11].list
+		n.Stxcomment = ""
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct599(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4312
+//line gram.y:4276
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct600(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4313
+//line gram.y:4277
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct601(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4317
-	{ /*C
-		$$ = makeNode(StatsElem);
-		$$->name = $1;
-		$$->expr = NULL;
-		*/
+//line gram.y:4281
+	{
+		n := &StatsElem{}
+
+		n.Name = yyDollar[1].str
+		n.Expr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct602(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4323
-	{ /*C
-		$$ = makeNode(StatsElem);
-		$$->name = NULL;
-		$$->expr = $1;
-		*/
+//line gram.y:4289
+	{
+		n := &StatsElem{}
+
+		n.Name = ""
+		n.Expr = yyDollar[1].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct603(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4329
-	{ /*C
-		$$ = makeNode(StatsElem);
-		$$->name = NULL;
-		$$->expr = $2;
-		*/
+//line gram.y:4297
+	{
+		n := &StatsElem{}
+
+		n.Name = ""
+		n.Expr = yyDollar[2].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct604(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4346
-	{ /*C
-		AlterStatsStmt *n = makeNode(AlterStatsStmt);
+//line gram.y:4316
+	{
+		n := &AlterStatsStmt{}
 
-		n->defnames = $3;
-		n->missing_ok = false;
-		n->stxstattarget = $6;
-		$$ = (Node *) n;
-		*/
+		n.Defnames = yyDollar[3].list
+		n.MissingOk = false
+		n.Stxstattarget = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct605(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4355
-	{ /*C
-		AlterStatsStmt *n = makeNode(AlterStatsStmt);
+//line gram.y:4325
+	{
+		n := &AlterStatsStmt{}
 
-		n->defnames = $5;
-		n->missing_ok = true;
-		n->stxstattarget = $8;
-		$$ = (Node *) n;
-		*/
+		n.Defnames = yyDollar[5].list
+		n.MissingOk = true
+		n.Stxstattarget = yyDollar[8].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct606(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4377
-	{ /*C
-		CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+//line gram.y:4347
+	{
+		ctas := &CreateTableAsStmt{}
 
-		ctas->query = $6;
-		ctas->into = $4;
-		ctas->objtype = OBJECT_TABLE;
-		ctas->is_select_into = false;
-		ctas->if_not_exists = false;
-		/* cram additional flags into the IntoClause * /
-		$4->rel->relpersistence = $2;
-		$4->skipData = !($7);
-		$$ = (Node *) ctas;
-		*/
+		ctas.Query = yyDollar[6].node
+		ctas.Into = as[*IntoClause](yyDollar[4].node)
+		ctas.Objtype = OBJECT_TABLE
+		ctas.IsSelectInto = false
+		ctas.IfNotExists = false
+		/* cram additional flags into the IntoClause */
+		setRelpersistence(as[*IntoClause](yyDollar[4].node).Rel, yyDollar[2].ival)
+		as[*IntoClause](yyDollar[4].node).SkipData = !yyDollar[7].boolean
+		yyVAL.node = ctas
 	}
 }
 
 func yyAct607(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4391
-	{ /*C
-		CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+//line gram.y:4361
+	{
+		ctas := &CreateTableAsStmt{}
 
-		ctas->query = $9;
-		ctas->into = $7;
-		ctas->objtype = OBJECT_TABLE;
-		ctas->is_select_into = false;
-		ctas->if_not_exists = true;
-		/* cram additional flags into the IntoClause * /
-		$7->rel->relpersistence = $2;
-		$7->skipData = !($10);
-		$$ = (Node *) ctas;
-		*/
+		ctas.Query = yyDollar[9].node
+		ctas.Into = as[*IntoClause](yyDollar[7].node)
+		ctas.Objtype = OBJECT_TABLE
+		ctas.IsSelectInto = false
+		ctas.IfNotExists = true
+		/* cram additional flags into the IntoClause */
+		setRelpersistence(as[*IntoClause](yyDollar[7].node).Rel, yyDollar[2].ival)
+		as[*IntoClause](yyDollar[7].node).SkipData = !yyDollar[10].boolean
+		yyVAL.node = ctas
 	}
 }
 
 func yyAct608(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4409
-	{ /*C
-		$$ = makeNode(IntoClause);
-		$$->rel = $1;
-		$$->colNames = $2;
-		$$->accessMethod = $3;
-		$$->options = $4;
-		$$->onCommit = $5;
-		$$->tableSpaceName = $6;
-		$$->viewQuery = NULL;
-		$$->skipData = false;		/* might get changed later * /
-		*/
+//line gram.y:4379
+	{
+		n := &IntoClause{}
+
+		n.Rel = as[*RangeVar](yyDollar[1].node)
+		n.ColNames = yyDollar[2].list
+		n.AccessMethod = yyDollar[3].str
+		n.Options = yyDollar[4].list
+		n.OnCommit = OnCommitAction(yyDollar[5].ival)
+		n.TableSpaceName = yyDollar[6].str
+		n.ViewQuery = nil
+		n.SkipData = false /* might get changed later */
+		yyVAL.node = n
 	}
 }
 
 func yyAct609(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4423
+//line gram.y:4395
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct610(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4424
+//line gram.y:4396
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct611(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4425
+//line gram.y:4397
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct612(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4438
-	{ /*C
-		CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+//line gram.y:4410
+	{
+		ctas := &CreateTableAsStmt{}
 
-		ctas->query = $7;
-		ctas->into = $5;
-		ctas->objtype = OBJECT_MATVIEW;
-		ctas->is_select_into = false;
-		ctas->if_not_exists = false;
-		/* cram additional flags into the IntoClause * /
-		$5->rel->relpersistence = $2;
-		$5->skipData = !($8);
-		$$ = (Node *) ctas;
-		*/
+		ctas.Query = yyDollar[7].node
+		ctas.Into = as[*IntoClause](yyDollar[5].node)
+		ctas.Objtype = OBJECT_MATVIEW
+		ctas.IsSelectInto = false
+		ctas.IfNotExists = false
+		/* cram additional flags into the IntoClause */
+		setRelpersistence(as[*IntoClause](yyDollar[5].node).Rel, yyDollar[2].ival)
+		as[*IntoClause](yyDollar[5].node).SkipData = !yyDollar[8].boolean
+		yyVAL.node = ctas
 	}
 }
 
 func yyAct613(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4452
-	{ /*C
-		CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
+//line gram.y:4424
+	{
+		ctas := &CreateTableAsStmt{}
 
-		ctas->query = $10;
-		ctas->into = $8;
-		ctas->objtype = OBJECT_MATVIEW;
-		ctas->is_select_into = false;
-		ctas->if_not_exists = true;
-		/* cram additional flags into the IntoClause * /
-		$8->rel->relpersistence = $2;
-		$8->skipData = !($11);
-		$$ = (Node *) ctas;
-		*/
+		ctas.Query = yyDollar[10].node
+		ctas.Into = as[*IntoClause](yyDollar[8].node)
+		ctas.Objtype = OBJECT_MATVIEW
+		ctas.IsSelectInto = false
+		ctas.IfNotExists = true
+		/* cram additional flags into the IntoClause */
+		setRelpersistence(as[*IntoClause](yyDollar[8].node).Rel, yyDollar[2].ival)
+		as[*IntoClause](yyDollar[8].node).SkipData = !yyDollar[11].boolean
+		yyVAL.node = ctas
 	}
 }
 
 func yyAct614(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4469
-	{ /*C
-		$$ = makeNode(IntoClause);
-		$$->rel = $1;
-		$$->colNames = $2;
-		$$->accessMethod = $3;
-		$$->options = $4;
-		$$->onCommit = ONCOMMIT_NOOP;
-		$$->tableSpaceName = $5;
-		$$->viewQuery = NULL;		/* filled at analysis time * /
-		$$->skipData = false;		/* might get changed later * /
-		*/
+//line gram.y:4441
+	{
+		n := &IntoClause{}
+
+		n.Rel = as[*RangeVar](yyDollar[1].node)
+		n.ColNames = yyDollar[2].list
+		n.AccessMethod = yyDollar[3].str
+		n.Options = yyDollar[4].list
+		n.OnCommit = ONCOMMIT_NOOP
+		n.TableSpaceName = yyDollar[5].str
+		n.ViewQuery = nil  /* filled at analysis time */
+		n.SkipData = false /* might get changed later */
+		yyVAL.node = n
 	}
 }
 
 func yyAct615(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4482
-	{ /*C $$ = RELPERSISTENCE_UNLOGGED; */
+//line gram.y:4456
+	{
+		yyVAL.ival = int32(relpersistenceUnlogged[0])
 	}
 }
 
 func yyAct616(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4483
-	{ /*C $$ = RELPERSISTENCE_PERMANENT; */
+//line gram.y:4457
+	{
+		yyVAL.ival = int32(relpersistencePermanent[0])
 	}
 }
 
 func yyAct617(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4496
-	{ /*C
-		RefreshMatViewStmt *n = makeNode(RefreshMatViewStmt);
+//line gram.y:4470
+	{
+		n := &RefreshMatViewStmt{}
 
-		n->concurrent = $4;
-		n->relation = $5;
-		n->skipData = !($6);
-		$$ = (Node *) n;
-		*/
+		n.Concurrent = yyDollar[4].boolean
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.SkipData = !yyDollar[6].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct618(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4517
-	{ /*C
-		CreateSeqStmt *n = makeNode(CreateSeqStmt);
+//line gram.y:4491
+	{
+		n := &CreateSeqStmt{}
 
-		$4->relpersistence = $2;
-		n->sequence = $4;
-		n->options = $5;
-		n->ownerId = InvalidOid;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[4].node), yyDollar[2].ival)
+		n.Sequence = as[*RangeVar](yyDollar[4].node)
+		n.Options = yyDollar[5].list
+		n.OwnerId = 0
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct619(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4528
-	{ /*C
-		CreateSeqStmt *n = makeNode(CreateSeqStmt);
+//line gram.y:4502
+	{
+		n := &CreateSeqStmt{}
 
-		$7->relpersistence = $2;
-		n->sequence = $7;
-		n->options = $8;
-		n->ownerId = InvalidOid;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		setRelpersistence(as[*RangeVar](yyDollar[7].node), yyDollar[2].ival)
+		n.Sequence = as[*RangeVar](yyDollar[7].node)
+		n.Options = yyDollar[8].list
+		n.OwnerId = 0
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct620(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4542
-	{ /*C
-		AlterSeqStmt *n = makeNode(AlterSeqStmt);
+//line gram.y:4516
+	{
+		n := &AlterSeqStmt{}
 
-		n->sequence = $3;
-		n->options = $4;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Sequence = as[*RangeVar](yyDollar[3].node)
+		n.Options = yyDollar[4].list
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct621(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4551
-	{ /*C
-		AlterSeqStmt *n = makeNode(AlterSeqStmt);
+//line gram.y:4525
+	{
+		n := &AlterSeqStmt{}
 
-		n->sequence = $5;
-		n->options = $6;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Sequence = as[*RangeVar](yyDollar[5].node)
+		n.Options = yyDollar[6].list
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct622(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4562
+//line gram.y:4536
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct623(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4563
+//line gram.y:4537
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct624(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4566
+//line gram.y:4540
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct625(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4567
+//line gram.y:4541
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct626(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4570
+//line gram.y:4544
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct627(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4571
+//line gram.y:4545
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct628(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4575
-	{ /*C
-		$$ = makeDefElem("as", (Node *) $2, @1);
-		*/
+//line gram.y:4549
+	{
+		yyVAL.node = makeDefElem("as", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct629(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4579
-	{ /*C
-		$$ = makeDefElem("cache", (Node *) $2, @1);
-		*/
+//line gram.y:4553
+	{
+		yyVAL.node = makeDefElem("cache", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct630(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4583
-	{ /*C
-		$$ = makeDefElem("cycle", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:4557
+	{
+		yyVAL.node = makeDefElem("cycle", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct631(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4587
-	{ /*C
-		$$ = makeDefElem("cycle", (Node *) makeBoolean(false), @1);
-		*/
+//line gram.y:4561
+	{
+		yyVAL.node = makeDefElem("cycle", makeBoolean(false), yyDollar[1].loc)
 	}
 }
 
 func yyAct632(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4591
-	{ /*C
-		$$ = makeDefElem("increment", (Node *) $3, @1);
-		*/
+//line gram.y:4565
+	{
+		yyVAL.node = makeDefElem("increment", yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct633(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4595
-	{ /*C
-		$$ = makeDefElem("logged", NULL, @1);
-		*/
+//line gram.y:4569
+	{
+		yyVAL.node = makeDefElem("logged", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct634(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4599
-	{ /*C
-		$$ = makeDefElem("maxvalue", (Node *) $2, @1);
-		*/
+//line gram.y:4573
+	{
+		yyVAL.node = makeDefElem("maxvalue", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct635(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4603
-	{ /*C
-		$$ = makeDefElem("minvalue", (Node *) $2, @1);
-		*/
+//line gram.y:4577
+	{
+		yyVAL.node = makeDefElem("minvalue", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct636(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4607
-	{ /*C
-		$$ = makeDefElem("maxvalue", NULL, @1);
-		*/
+//line gram.y:4581
+	{
+		yyVAL.node = makeDefElem("maxvalue", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct637(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4611
-	{ /*C
-		$$ = makeDefElem("minvalue", NULL, @1);
-		*/
+//line gram.y:4585
+	{
+		yyVAL.node = makeDefElem("minvalue", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct638(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4615
-	{ /*C
-		$$ = makeDefElem("owned_by", (Node *) $3, @1);
-		*/
+//line gram.y:4589
+	{
+		yyVAL.node = makeDefElem("owned_by", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct639(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4619
-	{ /*C
-		$$ = makeDefElem("sequence_name", (Node *) $3, @1);
-		*/
+//line gram.y:4593
+	{
+		yyVAL.node = makeDefElem("sequence_name", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct640(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4623
-	{ /*C
-		$$ = makeDefElem("start", (Node *) $3, @1);
-		*/
+//line gram.y:4597
+	{
+		yyVAL.node = makeDefElem("start", yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct641(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4627
-	{ /*C
-		$$ = makeDefElem("restart", NULL, @1);
-		*/
+//line gram.y:4601
+	{
+		yyVAL.node = makeDefElem("restart", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct642(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4631
-	{ /*C
-		$$ = makeDefElem("restart", (Node *) $3, @1);
-		*/
+//line gram.y:4605
+	{
+		yyVAL.node = makeDefElem("restart", yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct643(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4635
-	{ /*C
-		$$ = makeDefElem("unlogged", NULL, @1);
-		*/
+//line gram.y:4609
+	{
+		yyVAL.node = makeDefElem("unlogged", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct646(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4645
-	{ /*C $$ = (Node *) makeFloat($1); */
+//line gram.y:4619
+	{
+		yyVAL.node = makeFloat(yyDollar[1].str)
 	}
 }
 
 func yyAct647(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4646
-	{ /*C $$ = (Node *) makeFloat($2); */
+//line gram.y:4620
+	{
+		yyVAL.node = makeFloat(yyDollar[2].str)
 	}
 }
 
 func yyAct648(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4648
-	{ /*C
-		Float	   *f = makeFloat($2);
+//line gram.y:4622
+	{
+		f := makeFloat(yyDollar[2].str)
 
-		doNegateFloat(f);
-		$$ = (Node *) f;
-		*/
+		doNegateFloat(f)
+		yyVAL.node = f
 	}
 }
 
 func yyAct649(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4654
-	{ /*C $$ = (Node *) makeInteger($1); */
+//line gram.y:4628
+	{
+		yyVAL.node = makeInteger(yyDollar[1].ival)
 	}
 }
 
 func yyAct650(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4657
+//line gram.y:4631
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct651(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4658
+//line gram.y:4632
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct652(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4671
-	{ /*C
+//line gram.y:4645
+	{
 		/*
 		 * We now interpret parameterless CREATE LANGUAGE as
 		 * CREATE EXTENSION.  "OR REPLACE" is silently translated
 		 * to "IF NOT EXISTS", which isn't quite the same, but
 		 * seems more useful than throwing an error.  We just
 		 * ignore TRUSTED, as the previous code would have too.
-		 * /
-		CreateExtensionStmt *n = makeNode(CreateExtensionStmt);
+		 */
+		n := &CreateExtensionStmt{}
 
-		n->if_not_exists = $2;
-		n->extname = $6;
-		n->options = NIL;
-		$$ = (Node *) n;
-		*/
+		n.IfNotExists = yyDollar[2].boolean
+		n.Extname = yyDollar[6].str
+		n.Options = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct653(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4688
-	{ /*C
-		CreatePLangStmt *n = makeNode(CreatePLangStmt);
+//line gram.y:4662
+	{
+		n := &CreatePLangStmt{}
 
-		n->replace = $2;
-		n->plname = $6;
-		n->plhandler = $8;
-		n->plinline = $9;
-		n->plvalidator = $10;
-		n->pltrusted = $3;
-		$$ = (Node *) n;
-		*/
+		n.Replace = yyDollar[2].boolean
+		n.Plname = yyDollar[6].str
+		n.Plhandler = yyDollar[8].list
+		n.Plinline = yyDollar[9].list
+		n.Plvalidator = yyDollar[10].list
+		n.Pltrusted = yyDollar[3].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct654(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4702
+//line gram.y:4676
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct655(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4703
+//line gram.y:4677
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct656(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4711
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:4685
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct657(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4712
-	{ /*C $$ = lcons(makeString($1), $2); */
+//line gram.y:4686
+	{
+		yyVAL.list = append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[2].list...)
 	}
 }
 
 func yyAct658(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4716
+//line gram.y:4690
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct659(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4717
+//line gram.y:4691
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct660(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4721
+//line gram.y:4695
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct661(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4722
+//line gram.y:4696
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct662(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4726
+//line gram.y:4700
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct663(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4727
+//line gram.y:4701
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct666(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4743
-	{ /*C
-		CreateTableSpaceStmt *n = makeNode(CreateTableSpaceStmt);
+//line gram.y:4717
+	{
+		n := &CreateTableSpaceStmt{}
 
-		n->tablespacename = $3;
-		n->owner = $4;
-		n->location = $6;
-		n->options = $7;
-		$$ = (Node *) n;
-		*/
+		n.Tablespacename = yyDollar[3].str
+		n.Owner = as[*RoleSpec](yyDollar[4].node)
+		n.Location = yyDollar[6].str
+		n.Options = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct667(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4754
+//line gram.y:4728
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct668(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4755
+//line gram.y:4729
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct669(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4769
-	{ /*C
-		DropTableSpaceStmt *n = makeNode(DropTableSpaceStmt);
+//line gram.y:4743
+	{
+		n := &DropTableSpaceStmt{}
 
-		n->tablespacename = $3;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Tablespacename = yyDollar[3].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct670(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4777
-	{ /*C
-		DropTableSpaceStmt *n = makeNode(DropTableSpaceStmt);
+//line gram.y:4751
+	{
+		n := &DropTableSpaceStmt{}
 
-		n->tablespacename = $5;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Tablespacename = yyDollar[5].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct671(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4795
-	{ /*C
-		CreateExtensionStmt *n = makeNode(CreateExtensionStmt);
+//line gram.y:4769
+	{
+		n := &CreateExtensionStmt{}
 
-		n->extname = $3;
-		n->if_not_exists = false;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.IfNotExists = false
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct672(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4804
-	{ /*C
-		CreateExtensionStmt *n = makeNode(CreateExtensionStmt);
+//line gram.y:4778
+	{
+		n := &CreateExtensionStmt{}
 
-		n->extname = $6;
-		n->if_not_exists = true;
-		n->options = $8;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[6].str
+		n.IfNotExists = true
+		n.Options = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct673(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4816
+//line gram.y:4790
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct674(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4818
+//line gram.y:4792
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct675(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4823
-	{ /*C
-		$$ = makeDefElem("schema", (Node *) makeString($2), @1);
-		*/
+//line gram.y:4797
+	{
+		yyVAL.node = makeDefElem("schema", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct676(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4827
-	{ /*C
-		$$ = makeDefElem("new_version", (Node *) makeString($2), @1);
-		*/
+//line gram.y:4801
+	{
+		yyVAL.node = makeDefElem("new_version", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct677(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4831
-	{ /*C
-		ereport(ERROR,
-				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("CREATE EXTENSION ... FROM is no longer supported"),
-				 parser_errposition(@1)));
-		*/
+//line gram.y:4805
+	{
+		p.fail(yyDollar[1].loc, "CREATE EXTENSION ... FROM is no longer supported")
 	}
 }
 
 func yyAct678(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4838
-	{ /*C
-		$$ = makeDefElem("cascade", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:4809
+	{
+		yyVAL.node = makeDefElem("cascade", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct679(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4851
-	{ /*C
-		AlterExtensionStmt *n = makeNode(AlterExtensionStmt);
+//line gram.y:4822
+	{
+		n := &AlterExtensionStmt{}
 
-		n->extname = $3;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct680(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4862
+//line gram.y:4833
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct681(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4864
+//line gram.y:4835
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct682(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4869
-	{ /*C
-		$$ = makeDefElem("new_version", (Node *) makeString($2), @1);
-		*/
+//line gram.y:4840
+	{
+		yyVAL.node = makeDefElem("new_version", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct683(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4882
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4853
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = $5;
-		n->object = (Node *) makeString($6);
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = ObjectType(yyDollar[5].ival)
+		n.Object = makeString(yyDollar[6].str, yyDollar[6].loc)
+		yyVAL.node = n
 	}
 }
 
 func yyAct684(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4892
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4863
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = $5;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = ObjectType(yyDollar[5].ival)
+		n.Object = listNode(yyDollar[6].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct685(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4902
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4873
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_AGGREGATE;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_AGGREGATE
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct686(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4912
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4883
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_CAST;
-		n->object = (Node *) list_make2($7, $9);
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_CAST
+		n.Object = listNode([]Node{yyDollar[7].node, yyDollar[9].node})
+		yyVAL.node = n
 	}
 }
 
 func yyAct687(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4922
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4893
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_DOMAIN;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_DOMAIN
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct688(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4932
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4903
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_FUNCTION;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_FUNCTION
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct689(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4942
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4913
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_OPERATOR;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_OPERATOR
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct690(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4952
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4923
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_OPCLASS;
-		n->object = (Node *) lcons(makeString($9), $7);
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_OPCLASS
+		n.Object = listNode(append([]Node{makeString(yyDollar[9].str, yyDollar[9].loc)}, yyDollar[7].list...))
+		yyVAL.node = n
 	}
 }
 
 func yyAct691(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4962
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4933
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_OPFAMILY;
-		n->object = (Node *) lcons(makeString($9), $7);
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_OPFAMILY
+		n.Object = listNode(append([]Node{makeString(yyDollar[9].str, yyDollar[9].loc)}, yyDollar[7].list...))
+		yyVAL.node = n
 	}
 }
 
 func yyAct692(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4972
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4943
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_PROCEDURE;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_PROCEDURE
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct693(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4982
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4953
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_ROUTINE;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_ROUTINE
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct694(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:4992
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4963
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_TRANSFORM;
-		n->object = (Node *) list_make2($7, makeString($9));
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_TRANSFORM
+		n.Object = listNode([]Node{yyDollar[7].node, makeString(yyDollar[9].str, yyDollar[9].loc)})
+		yyVAL.node = n
 	}
 }
 
 func yyAct695(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5002
-	{ /*C
-		AlterExtensionContentsStmt *n = makeNode(AlterExtensionContentsStmt);
+//line gram.y:4973
+	{
+		n := &AlterExtensionContentsStmt{}
 
-		n->extname = $3;
-		n->action = $4;
-		n->objtype = OBJECT_TYPE;
-		n->object = (Node *) $6;
-		$$ = (Node *) n;
-		*/
+		n.Extname = yyDollar[3].str
+		n.Action = yyDollar[4].ival
+		n.Objtype = OBJECT_TYPE
+		n.Object = yyDollar[6].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct696(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5021
-	{ /*C
-		CreateFdwStmt *n = makeNode(CreateFdwStmt);
+//line gram.y:4992
+	{
+		n := &CreateFdwStmt{}
 
-		n->fdwname = $5;
-		n->func_options = $6;
-		n->options = $7;
-		$$ = (Node *) n;
-		*/
+		n.Fdwname = yyDollar[5].str
+		n.FuncOptions = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct697(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5032
-	{ /*C $$ = makeDefElem("handler", (Node *) $2, @1); */
+//line gram.y:5003
+	{
+		yyVAL.node = makeDefElem("handler", listNode(yyDollar[2].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct698(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5033
-	{ /*C $$ = makeDefElem("handler", NULL, @1); */
+//line gram.y:5004
+	{
+		yyVAL.node = makeDefElem("handler", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct699(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5034
-	{ /*C $$ = makeDefElem("validator", (Node *) $2, @1); */
+//line gram.y:5005
+	{
+		yyVAL.node = makeDefElem("validator", listNode(yyDollar[2].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct700(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5035
-	{ /*C $$ = makeDefElem("validator", NULL, @1); */
+//line gram.y:5006
+	{
+		yyVAL.node = makeDefElem("validator", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct701(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5039
+//line gram.y:5010
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct702(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5040
+//line gram.y:5011
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct703(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5044
+//line gram.y:5015
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct704(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5045
+//line gram.y:5016
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct705(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5056
-	{ /*C
-		AlterFdwStmt *n = makeNode(AlterFdwStmt);
+//line gram.y:5027
+	{
+		n := &AlterFdwStmt{}
 
-		n->fdwname = $5;
-		n->func_options = $6;
-		n->options = $7;
-		$$ = (Node *) n;
-		*/
+		n.Fdwname = yyDollar[5].str
+		n.FuncOptions = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct706(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5065
-	{ /*C
-		AlterFdwStmt *n = makeNode(AlterFdwStmt);
+//line gram.y:5036
+	{
+		n := &AlterFdwStmt{}
 
-		n->fdwname = $5;
-		n->func_options = $6;
-		n->options = NIL;
-		$$ = (Node *) n;
-		*/
+		n.Fdwname = yyDollar[5].str
+		n.FuncOptions = yyDollar[6].list
+		n.Options = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct707(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5077
+//line gram.y:5048
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct708(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5078
+//line gram.y:5049
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct709(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5083
+//line gram.y:5054
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct710(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5085
+//line gram.y:5056
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct711(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5090
+//line gram.y:5061
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct712(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5095
+//line gram.y:5066
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct713(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5097
+//line gram.y:5068
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct714(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5102
+//line gram.y:5073
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct715(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5104
-	{ /*C
-		$$ = $2;
-		$$->defaction = DEFELEM_SET;
-		*/
+//line gram.y:5075
+	{
+		yyVAL.node = yyDollar[2].node
+		as[*DefElem](yyVAL.node).Defaction = DEFELEM_SET
 	}
 }
 
 func yyAct716(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5109
-	{ /*C
-		$$ = $2;
-		$$->defaction = DEFELEM_ADD;
-		*/
+//line gram.y:5080
+	{
+		yyVAL.node = yyDollar[2].node
+		as[*DefElem](yyVAL.node).Defaction = DEFELEM_ADD
 	}
 }
 
 func yyAct717(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5114
-	{ /*C
-		$$ = makeDefElemExtended(NULL, $2, NULL, DEFELEM_DROP, @2);
-		*/
+//line gram.y:5085
+	{
+		yyVAL.node = makeDefElemExtended("", yyDollar[2].str, nil, DEFELEM_DROP, yyDollar[2].loc)
 	}
 }
 
 func yyAct718(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5121
-	{ /*C
-		$$ = makeDefElem($1, $2, @1);
-		*/
+//line gram.y:5092
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct719(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5127
+//line gram.y:5098
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct720(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5132
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:5103
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct721(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5144
-	{ /*C
-		CreateForeignServerStmt *n = makeNode(CreateForeignServerStmt);
+//line gram.y:5115
+	{
+		n := &CreateForeignServerStmt{}
 
-		n->servername = $3;
-		n->servertype = $4;
-		n->version = $5;
-		n->fdwname = $9;
-		n->options = $10;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		n.Servername = yyDollar[3].str
+		n.Servertype = yyDollar[4].str
+		n.Version = yyDollar[5].str
+		n.Fdwname = yyDollar[9].str
+		n.Options = yyDollar[10].list
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct722(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5157
-	{ /*C
-		CreateForeignServerStmt *n = makeNode(CreateForeignServerStmt);
+//line gram.y:5128
+	{
+		n := &CreateForeignServerStmt{}
 
-		n->servername = $6;
-		n->servertype = $7;
-		n->version = $8;
-		n->fdwname = $12;
-		n->options = $13;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		n.Servername = yyDollar[6].str
+		n.Servertype = yyDollar[7].str
+		n.Version = yyDollar[8].str
+		n.Fdwname = yyDollar[12].str
+		n.Options = yyDollar[13].list
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct723(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5171
+//line gram.y:5142
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct724(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5172
+//line gram.y:5143
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct725(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5177
+//line gram.y:5148
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct726(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5178
+//line gram.y:5149
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct727(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5182
+//line gram.y:5153
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct728(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5183
+//line gram.y:5154
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct729(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5194
-	{ /*C
-		AlterForeignServerStmt *n = makeNode(AlterForeignServerStmt);
+//line gram.y:5165
+	{
+		n := &AlterForeignServerStmt{}
 
-		n->servername = $3;
-		n->version = $4;
-		n->options = $5;
-		n->has_version = true;
-		$$ = (Node *) n;
-		*/
+		n.Servername = yyDollar[3].str
+		n.Version = yyDollar[4].str
+		n.Options = yyDollar[5].list
+		n.HasVersion = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct730(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5204
-	{ /*C
-		AlterForeignServerStmt *n = makeNode(AlterForeignServerStmt);
+//line gram.y:5175
+	{
+		n := &AlterForeignServerStmt{}
 
-		n->servername = $3;
-		n->version = $4;
-		n->has_version = true;
-		$$ = (Node *) n;
-		*/
+		n.Servername = yyDollar[3].str
+		n.Version = yyDollar[4].str
+		n.HasVersion = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct731(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5213
-	{ /*C
-		AlterForeignServerStmt *n = makeNode(AlterForeignServerStmt);
+//line gram.y:5184
+	{
+		n := &AlterForeignServerStmt{}
 
-		n->servername = $3;
-		n->options = $4;
-		$$ = (Node *) n;
-		*/
+		n.Servername = yyDollar[3].str
+		n.Options = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct732(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5233
-	{ /*C
-		CreateForeignTableStmt *n = makeNode(CreateForeignTableStmt);
+//line gram.y:5204
+	{
+		n := &CreateForeignTableStmt{}
+		base := &CreateStmt{}
+		rv := as[*RangeVar](yyDollar[4].node)
 
-		$4->relpersistence = RELPERSISTENCE_PERMANENT;
-		n->base.relation = $4;
-		n->base.tableElts = $6;
-		n->base.inhRelations = $8;
-		n->base.ofTypename = NULL;
-		n->base.constraints = NIL;
-		n->base.options = NIL;
-		n->base.oncommit = ONCOMMIT_NOOP;
-		n->base.tablespacename = NULL;
-		n->base.if_not_exists = false;
-		/* FDW-specific data * /
-		n->servername = $10;
-		n->options = $11;
-		$$ = (Node *) n;
-		*/
+		if rv != nil {
+			rv.Relpersistence = relpersistencePermanent
+		}
+		base.Relation = rv
+		base.TableElts = yyDollar[6].list
+		base.InhRelations = yyDollar[8].list
+		base.OfTypename = nil
+		base.Constraints = nil
+		base.Options = nil
+		base.Oncommit = ONCOMMIT_NOOP
+		base.Tablespacename = ""
+		base.IfNotExists = false
+		n.BaseStmt = base
+		/* FDW-specific data */
+		n.Servername = yyDollar[10].str
+		n.Options = yyDollar[11].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct733(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5254
-	{ /*C
-		CreateForeignTableStmt *n = makeNode(CreateForeignTableStmt);
+//line gram.y:5230
+	{
+		n := &CreateForeignTableStmt{}
+		base := &CreateStmt{}
+		rv := as[*RangeVar](yyDollar[7].node)
 
-		$7->relpersistence = RELPERSISTENCE_PERMANENT;
-		n->base.relation = $7;
-		n->base.tableElts = $9;
-		n->base.inhRelations = $11;
-		n->base.ofTypename = NULL;
-		n->base.constraints = NIL;
-		n->base.options = NIL;
-		n->base.oncommit = ONCOMMIT_NOOP;
-		n->base.tablespacename = NULL;
-		n->base.if_not_exists = true;
-		/* FDW-specific data * /
-		n->servername = $13;
-		n->options = $14;
-		$$ = (Node *) n;
-		*/
+		if rv != nil {
+			rv.Relpersistence = relpersistencePermanent
+		}
+		base.Relation = rv
+		base.TableElts = yyDollar[9].list
+		base.InhRelations = yyDollar[11].list
+		base.OfTypename = nil
+		base.Constraints = nil
+		base.Options = nil
+		base.Oncommit = ONCOMMIT_NOOP
+		base.Tablespacename = ""
+		base.IfNotExists = true
+		n.BaseStmt = base
+		/* FDW-specific data */
+		n.Servername = yyDollar[13].str
+		n.Options = yyDollar[14].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct734(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5275
-	{ /*C
-		CreateForeignTableStmt *n = makeNode(CreateForeignTableStmt);
+//line gram.y:5256
+	{
+		n := &CreateForeignTableStmt{}
+		base := &CreateStmt{}
+		rv := as[*RangeVar](yyDollar[4].node)
 
-		$4->relpersistence = RELPERSISTENCE_PERMANENT;
-		n->base.relation = $4;
-		n->base.inhRelations = list_make1($7);
-		n->base.tableElts = $8;
-		n->base.partbound = $9;
-		n->base.ofTypename = NULL;
-		n->base.constraints = NIL;
-		n->base.options = NIL;
-		n->base.oncommit = ONCOMMIT_NOOP;
-		n->base.tablespacename = NULL;
-		n->base.if_not_exists = false;
-		/* FDW-specific data * /
-		n->servername = $11;
-		n->options = $12;
-		$$ = (Node *) n;
-		*/
+		if rv != nil {
+			rv.Relpersistence = relpersistencePermanent
+		}
+		base.Relation = rv
+		base.InhRelations = []Node{yyDollar[7].node}
+		base.TableElts = yyDollar[8].list
+		base.Partbound = as[*PartitionBoundSpec](yyDollar[9].node)
+		base.OfTypename = nil
+		base.Constraints = nil
+		base.Options = nil
+		base.Oncommit = ONCOMMIT_NOOP
+		base.Tablespacename = ""
+		base.IfNotExists = false
+		n.BaseStmt = base
+		/* FDW-specific data */
+		n.Servername = yyDollar[11].str
+		n.Options = yyDollar[12].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct735(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5297
-	{ /*C
-		CreateForeignTableStmt *n = makeNode(CreateForeignTableStmt);
+//line gram.y:5283
+	{
+		n := &CreateForeignTableStmt{}
+		base := &CreateStmt{}
+		rv := as[*RangeVar](yyDollar[7].node)
 
-		$7->relpersistence = RELPERSISTENCE_PERMANENT;
-		n->base.relation = $7;
-		n->base.inhRelations = list_make1($10);
-		n->base.tableElts = $11;
-		n->base.partbound = $12;
-		n->base.ofTypename = NULL;
-		n->base.constraints = NIL;
-		n->base.options = NIL;
-		n->base.oncommit = ONCOMMIT_NOOP;
-		n->base.tablespacename = NULL;
-		n->base.if_not_exists = true;
-		/* FDW-specific data * /
-		n->servername = $14;
-		n->options = $15;
-		$$ = (Node *) n;
-		*/
+		if rv != nil {
+			rv.Relpersistence = relpersistencePermanent
+		}
+		base.Relation = rv
+		base.InhRelations = []Node{yyDollar[10].node}
+		base.TableElts = yyDollar[11].list
+		base.Partbound = as[*PartitionBoundSpec](yyDollar[12].node)
+		base.OfTypename = nil
+		base.Constraints = nil
+		base.Options = nil
+		base.Oncommit = ONCOMMIT_NOOP
+		base.Tablespacename = ""
+		base.IfNotExists = true
+		n.BaseStmt = base
+		/* FDW-specific data */
+		n.Servername = yyDollar[14].str
+		n.Options = yyDollar[15].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct736(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5330
-	{ /*C
-		ImportForeignSchemaStmt *n = makeNode(ImportForeignSchemaStmt);
+//line gram.y:5321
+	{
+		n := &ImportForeignSchemaStmt{}
 
-		n->server_name = $8;
-		n->remote_schema = $4;
-		n->local_schema = $10;
-		n->list_type = $5->type;
-		n->table_list = $5->table_names;
-		n->options = $11;
-		$$ = (Node *) n;
-		*/
+		n.ServerName = yyDollar[8].str
+		n.RemoteSchema = yyDollar[4].str
+		n.LocalSchema = yyDollar[10].str
+		n.ListType = as[*importQual](yyDollar[5].node).typ
+		n.TableList = as[*importQual](yyDollar[5].node).tableNames
+		n.Options = yyDollar[11].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct737(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5344
-	{ /*C $$ = FDW_IMPORT_SCHEMA_LIMIT_TO; */
+//line gram.y:5335
+	{
+		yyVAL.ival = int32(FDW_IMPORT_SCHEMA_LIMIT_TO)
 	}
 }
 
 func yyAct738(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5345
-	{ /*C $$ = FDW_IMPORT_SCHEMA_EXCEPT; */
+//line gram.y:5336
+	{
+		yyVAL.ival = int32(FDW_IMPORT_SCHEMA_EXCEPT)
 	}
 }
 
 func yyAct739(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5350
-	{ /*C
-		ImportQual *n = (ImportQual *) palloc(sizeof(ImportQual));
+//line gram.y:5341
+	{
+		n := &importQual{}
 
-		n->type = $1;
-		n->table_names = $3;
-		$$ = n;
-		*/
+		n.typ = ImportForeignSchemaType(yyDollar[1].ival)
+		n.tableNames = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct740(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5358
-	{ /*C
-		ImportQual *n = (ImportQual *) palloc(sizeof(ImportQual));
-		n->type = FDW_IMPORT_SCHEMA_ALL;
-		n->table_names = NIL;
-		$$ = n;
-		*/
+//line gram.y:5349
+	{
+		n := &importQual{}
+		n.typ = FDW_IMPORT_SCHEMA_ALL
+		n.tableNames = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct741(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5374
-	{ /*C
-		CreateUserMappingStmt *n = makeNode(CreateUserMappingStmt);
+//line gram.y:5365
+	{
+		n := &CreateUserMappingStmt{}
 
-		n->user = $5;
-		n->servername = $7;
-		n->options = $8;
-		n->if_not_exists = false;
-		$$ = (Node *) n;
-		*/
+		n.User = as[*RoleSpec](yyDollar[5].node)
+		n.Servername = yyDollar[7].str
+		n.Options = yyDollar[8].list
+		n.IfNotExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct742(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5384
-	{ /*C
-		CreateUserMappingStmt *n = makeNode(CreateUserMappingStmt);
+//line gram.y:5375
+	{
+		n := &CreateUserMappingStmt{}
 
-		n->user = $8;
-		n->servername = $10;
-		n->options = $11;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		n.User = as[*RoleSpec](yyDollar[8].node)
+		n.Servername = yyDollar[10].str
+		n.Options = yyDollar[11].list
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct743(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5396
+//line gram.y:5387
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct744(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5397
-	{ /*C $$ = makeRoleSpec(ROLESPEC_CURRENT_USER, @1); */
+//line gram.y:5388
+	{
+		yyVAL.node = makeRoleSpec(ROLESPEC_CURRENT_USER, yyDollar[1].loc)
 	}
 }
 
 func yyAct745(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5410
-	{ /*C
-		DropUserMappingStmt *n = makeNode(DropUserMappingStmt);
+//line gram.y:5401
+	{
+		n := &DropUserMappingStmt{}
 
-		n->user = $5;
-		n->servername = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.User = as[*RoleSpec](yyDollar[5].node)
+		n.Servername = yyDollar[7].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct746(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5419
-	{ /*C
-		DropUserMappingStmt *n = makeNode(DropUserMappingStmt);
+//line gram.y:5410
+	{
+		n := &DropUserMappingStmt{}
 
-		n->user = $7;
-		n->servername = $9;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.User = as[*RoleSpec](yyDollar[7].node)
+		n.Servername = yyDollar[9].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct747(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5437
-	{ /*C
-		AlterUserMappingStmt *n = makeNode(AlterUserMappingStmt);
+//line gram.y:5428
+	{
+		n := &AlterUserMappingStmt{}
 
-		n->user = $5;
-		n->servername = $7;
-		n->options = $8;
-		$$ = (Node *) n;
-		*/
+		n.User = as[*RoleSpec](yyDollar[5].node)
+		n.Servername = yyDollar[7].str
+		n.Options = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct748(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5464
-	{ /*C
-		CreatePolicyStmt *n = makeNode(CreatePolicyStmt);
+//line gram.y:5455
+	{
+		n := &CreatePolicyStmt{}
 
-		n->policy_name = $3;
-		n->table = $5;
-		n->permissive = $6;
-		n->cmd_name = $7;
-		n->roles = $8;
-		n->qual = $9;
-		n->with_check = $10;
-		$$ = (Node *) n;
-		*/
+		n.PolicyName = yyDollar[3].str
+		n.Table = as[*RangeVar](yyDollar[5].node)
+		n.Permissive = yyDollar[6].boolean
+		n.CmdName = yyDollar[7].str
+		n.Roles = yyDollar[8].list
+		n.Qual = yyDollar[9].node
+		n.WithCheck = yyDollar[10].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct749(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5481
-	{ /*C
-		AlterPolicyStmt *n = makeNode(AlterPolicyStmt);
+//line gram.y:5472
+	{
+		n := &AlterPolicyStmt{}
 
-		n->policy_name = $3;
-		n->table = $5;
-		n->roles = $6;
-		n->qual = $7;
-		n->with_check = $8;
-		$$ = (Node *) n;
-		*/
+		n.PolicyName = yyDollar[3].str
+		n.Table = as[*RangeVar](yyDollar[5].node)
+		n.Roles = yyDollar[6].list
+		n.Qual = yyDollar[7].node
+		n.WithCheck = yyDollar[8].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct750(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5494
+//line gram.y:5485
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct751(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5495
+//line gram.y:5486
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct752(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5499
+//line gram.y:5490
 	{
 		yyVAL.node = yyDollar[4].node
 	}
 }
 
 func yyAct753(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5500
+//line gram.y:5491
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct754(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5504
+//line gram.y:5495
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct755(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5505
-	{ /*C $$ = list_make1(makeRoleSpec(ROLESPEC_PUBLIC, -1)); */
+//line gram.y:5496
+	{
+		yyVAL.list = []Node{makeRoleSpec(ROLESPEC_PUBLIC, -1)}
 	}
 }
 
 func yyAct756(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5509
+//line gram.y:5500
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct757(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5510
+//line gram.y:5501
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct758(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5515
-	{ /*C
-		if (strcmp($2, "permissive") == 0)
-			$$ = true;
-		else if (strcmp($2, "restrictive") == 0)
-			$$ = false;
-		else
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("unrecognized row security option \"%s\"", $2),
-					 errhint("Only PERMISSIVE or RESTRICTIVE policies are supported currently."),
-					 parser_errposition(@2)));
-
-		*/
+//line gram.y:5506
+	{
+		if yyDollar[2].str == "permissive" {
+			yyVAL.boolean = true
+		} else if yyDollar[2].str == "restrictive" {
+			yyVAL.boolean = false
+		} else {
+			p.fail(yyDollar[2].loc, fmt.Sprintf("unrecognized row security option \"%s\"", yyDollar[2].str))
+		}
 	}
 }
 
 func yyAct759(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5528
+//line gram.y:5515
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct760(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5532
+//line gram.y:5519
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct761(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5533
+//line gram.y:5520
 	{
 		yyVAL.str = "all"
 	}
 }
 
 func yyAct762(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5537
+//line gram.y:5524
 	{
 		yyVAL.str = "all"
 	}
 }
 
 func yyAct763(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5538
+//line gram.y:5525
 	{
 		yyVAL.str = "select"
 	}
 }
 
 func yyAct764(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5539
+//line gram.y:5526
 	{
 		yyVAL.str = "insert"
 	}
 }
 
 func yyAct765(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5540
+//line gram.y:5527
 	{
 		yyVAL.str = "update"
 	}
 }
 
 func yyAct766(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5541
+//line gram.y:5528
 	{
 		yyVAL.str = "delete"
 	}
 }
 
 func yyAct767(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5552
-	{ /*C
-		CreateAmStmt *n = makeNode(CreateAmStmt);
+//line gram.y:5539
+	{
+		n := &CreateAmStmt{}
 
-		n->amname = $4;
-		n->handler_name = $8;
-		n->amtype = $6;
-		$$ = (Node *) n;
-		*/
+		n.Amname = yyDollar[4].str
+		n.HandlerName = yyDollar[8].list
+		n.Amtype = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct768(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5563
-	{ /*C $$ = AMTYPE_INDEX; */
+//line gram.y:5550
+	{
+		yyVAL.str = amtypeIndex
 	}
 }
 
 func yyAct769(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5564
-	{ /*C $$ = AMTYPE_TABLE; */
+//line gram.y:5551
+	{
+		yyVAL.str = amtypeTable
 	}
 }
 
 func yyAct770(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5578
-	{ /*C
-		CreateTrigStmt *n = makeNode(CreateTrigStmt);
+//line gram.y:5565
+	{
+		n := &CreateTrigStmt{}
 
-		n->replace = $2;
-		n->isconstraint = false;
-		n->trigname = $4;
-		n->relation = $8;
-		n->funcname = $14;
-		n->args = $16;
-		n->row = $10;
-		n->timing = $5;
-		n->events = intVal(linitial($6));
-		n->columns = (List *) lsecond($6);
-		n->whenClause = $11;
-		n->transitionRels = $9;
-		n->deferrable = false;
-		n->initdeferred = false;
-		n->constrrel = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Replace = yyDollar[2].boolean
+		n.Isconstraint = false
+		n.Trigname = yyDollar[4].str
+		n.Relation = as[*RangeVar](yyDollar[8].node)
+		n.Funcname = yyDollar[14].list
+		n.Args = yyDollar[16].list
+		n.Row = yyDollar[10].boolean
+		n.Timing = yyDollar[5].ival
+		n.Events = intVal(yyDollar[6].list[0])
+		n.Columns = asList(yyDollar[6].list[1])
+		n.WhenClause = yyDollar[11].node
+		n.TransitionRels = yyDollar[9].list
+		n.Deferrable = false
+		n.Initdeferred = false
+		n.Constrrel = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct771(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5602
-	{ /*C
-		CreateTrigStmt *n = makeNode(CreateTrigStmt);
+//line gram.y:5589
+	{
+		n := &CreateTrigStmt{}
 
-		n->replace = $2;
-		if (n->replace) /* not supported, see CreateTrigger * /
-			ereport(ERROR,
-					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("CREATE OR REPLACE CONSTRAINT TRIGGER is not supported")));
-		n->isconstraint = true;
-		n->trigname = $5;
-		n->relation = $9;
-		n->funcname = $18;
-		n->args = $20;
-		n->row = true;
-		n->timing = TRIGGER_TYPE_AFTER;
-		n->events = intVal(linitial($7));
-		n->columns = (List *) lsecond($7);
-		n->whenClause = $15;
-		n->transitionRels = NIL;
-		processCASbits($11, @11, "TRIGGER",
-					   &n->deferrable, &n->initdeferred, NULL,
-					   NULL, yyscanner);
-		n->constrrel = $10;
-		$$ = (Node *) n;
-		*/
+		n.Replace = yyDollar[2].boolean
+		if n.Replace { /* not supported, see CreateTrigger */
+			p.fail(-1, "CREATE OR REPLACE CONSTRAINT TRIGGER is not supported")
+		}
+		n.Isconstraint = true
+		n.Trigname = yyDollar[5].str
+		n.Relation = as[*RangeVar](yyDollar[9].node)
+		n.Funcname = yyDollar[18].list
+		n.Args = yyDollar[20].list
+		n.Row = true
+		n.Timing = triggerTypeAfter
+		n.Events = intVal(yyDollar[7].list[0])
+		n.Columns = asList(yyDollar[7].list[1])
+		n.WhenClause = yyDollar[15].node
+		n.TransitionRels = nil
+		p.processCASbits(yyDollar[11].ival, yyDollar[11].loc, "TRIGGER",
+			&n.Deferrable, &n.Initdeferred, nil,
+			nil)
+		n.Constrrel = as[*RangeVar](yyDollar[10].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct772(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5630
-	{ /*C $$ = TRIGGER_TYPE_BEFORE; */
+//line gram.y:5616
+	{
+		yyVAL.ival = triggerTypeBefore
 	}
 }
 
 func yyAct773(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5631
-	{ /*C $$ = TRIGGER_TYPE_AFTER; */
+//line gram.y:5617
+	{
+		yyVAL.ival = triggerTypeAfter
 	}
 }
 
 func yyAct774(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5632
-	{ /*C $$ = TRIGGER_TYPE_INSTEAD; */
+//line gram.y:5618
+	{
+		yyVAL.ival = triggerTypeInstead
 	}
 }
 
 func yyAct775(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5637
+//line gram.y:5623
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct776(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5639
-	{ /*C
-		int			events1 = intVal(linitial($1));
-		int			events2 = intVal(linitial($3));
-		List	   *columns1 = (List *) lsecond($1);
-		List	   *columns2 = (List *) lsecond($3);
+//line gram.y:5625
+	{
+		events1 := intVal(yyDollar[1].list[0])
+		events2 := intVal(yyDollar[3].list[0])
+		columns1 := asList(yyDollar[1].list[1])
+		columns2 := asList(yyDollar[3].list[1])
 
-		if (events1 & events2)
-			parser_yyerror("duplicate trigger events specified");
+		if events1&events2 != 0 {
+			p.yyerror("duplicate trigger events specified")
+		}
 		/*
 		 * concat'ing the columns lists loses information about
 		 * which columns went with which event, but so long as
 		 * only UPDATE carries columns and we disallow multiple
 		 * UPDATE items, it doesn't matter.  Command execution
 		 * should just ignore the columns for non-UPDATE events.
-		 * /
-		$$ = list_make2(makeInteger(events1 | events2),
-						list_concat(columns1, columns2));
-		*/
+		 */
+		yyVAL.list = []Node{makeInteger(events1 | events2),
+			listNode(append(columns1, columns2...))}
 	}
 }
 
 func yyAct777(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5661
-	{ /*C $$ = list_make2(makeInteger(TRIGGER_TYPE_INSERT), NIL); */
+//line gram.y:5648
+	{
+		yyVAL.list = []Node{makeInteger(triggerTypeInsert), nil}
 	}
 }
 
 func yyAct778(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5663
-	{ /*C $$ = list_make2(makeInteger(TRIGGER_TYPE_DELETE), NIL); */
+//line gram.y:5650
+	{
+		yyVAL.list = []Node{makeInteger(triggerTypeDelete), nil}
 	}
 }
 
 func yyAct779(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5665
-	{ /*C $$ = list_make2(makeInteger(TRIGGER_TYPE_UPDATE), NIL); */
+//line gram.y:5652
+	{
+		yyVAL.list = []Node{makeInteger(triggerTypeUpdate), nil}
 	}
 }
 
 func yyAct780(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5667
-	{ /*C $$ = list_make2(makeInteger(TRIGGER_TYPE_UPDATE), $3); */
+//line gram.y:5654
+	{
+		yyVAL.list = []Node{makeInteger(triggerTypeUpdate), listNode(yyDollar[3].list)}
 	}
 }
 
 func yyAct781(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5669
-	{ /*C $$ = list_make2(makeInteger(TRIGGER_TYPE_TRUNCATE), NIL); */
+//line gram.y:5656
+	{
+		yyVAL.list = []Node{makeInteger(triggerTypeTruncate), nil}
 	}
 }
 
 func yyAct782(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5673
+//line gram.y:5660
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct783(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5674
+//line gram.y:5661
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct784(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5678
+//line gram.y:5665
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct785(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5679
+//line gram.y:5666
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct786(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5684
-	{ /*C
-		TriggerTransition *n = makeNode(TriggerTransition);
+//line gram.y:5671
+	{
+		n := &TriggerTransition{}
 
-		n->name = $4;
-		n->isNew = $1;
-		n->isTable = $2;
-		$$ = (Node *) n;
-		*/
+		n.Name = yyDollar[4].str
+		n.IsNew = yyDollar[1].boolean
+		n.IsTable = yyDollar[2].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct787(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5695
+//line gram.y:5682
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct788(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5696
+//line gram.y:5683
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct789(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5700
+//line gram.y:5687
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct790(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5709
+//line gram.y:5696
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct791(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5713
+//line gram.y:5700
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct792(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5718
+//line gram.y:5705
 	{
 		yyVAL.boolean = yyDollar[3].boolean
 	}
 }
 
 func yyAct793(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5720
-	{ /*C
+//line gram.y:5707
+	{
 		/*
 		 * If ROW/STATEMENT not specified, default to
 		 * STATEMENT, per SQL
-		 * /
-		$$ = false;
-		*/
+		 */
+		yyVAL.boolean = false
 	}
 }
 
 func yyAct796(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5735
+//line gram.y:5722
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct797(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5736
+//line gram.y:5723
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct798(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5740
+//line gram.y:5727
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct799(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5741
+//line gram.y:5728
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct802(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5750
+//line gram.y:5737
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct803(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5751
+//line gram.y:5738
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct804(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5752
+//line gram.y:5739
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct805(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5757
-	{ /*C
-		$$ = (Node *) makeString(psprintf("%d", $1));
-		*/
+//line gram.y:5744
+	{
+		yyVAL.node = makeString(fmt.Sprintf("%d", yyDollar[1].ival), yyDollar[1].loc)
 	}
 }
 
 func yyAct806(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5760
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:5747
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct807(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5761
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:5748
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct808(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5762
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:5749
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct809(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5766
+//line gram.y:5753
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct810(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5767
+//line gram.y:5754
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct811(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5772
+//line gram.y:5759
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct812(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5774
-	{ /*C
+//line gram.y:5761
+	{
 		/*
 		 * We must complain about conflicting options.
 		 * We could, but choose not to, complain about redundant
 		 * options (ie, where $2's bit is already set in $1).
-		 * /
-		int		newspec = $1 | $2;
+		 */
+		newspec := yyDollar[1].ival | yyDollar[2].ival
 
-		/* special message for this case * /
-		if ((newspec & (CAS_NOT_DEFERRABLE | CAS_INITIALLY_DEFERRED)) == (CAS_NOT_DEFERRABLE | CAS_INITIALLY_DEFERRED))
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("constraint declared INITIALLY DEFERRED must be DEFERRABLE"),
-					 parser_errposition(@2)));
-		/* generic message for other conflicts * /
-		if ((newspec & (CAS_NOT_DEFERRABLE | CAS_DEFERRABLE)) == (CAS_NOT_DEFERRABLE | CAS_DEFERRABLE) ||
-			(newspec & (CAS_INITIALLY_IMMEDIATE | CAS_INITIALLY_DEFERRED)) == (CAS_INITIALLY_IMMEDIATE | CAS_INITIALLY_DEFERRED))
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("conflicting constraint properties"),
-					 parser_errposition(@2)));
-		$$ = newspec;
-		*/
+		/* special message for this case */
+		if (newspec & (casNotDeferrable | casInitiallyDeferred)) == (casNotDeferrable | casInitiallyDeferred) {
+			p.fail(yyDollar[2].loc, "constraint declared INITIALLY DEFERRED must be DEFERRABLE")
+		}
+		/* generic message for other conflicts */
+		if (newspec&(casNotDeferrable|casDeferrable)) == (casNotDeferrable|casDeferrable) ||
+			(newspec&(casInitiallyImmediate|casInitiallyDeferred)) == (casInitiallyImmediate|casInitiallyDeferred) {
+			p.fail(yyDollar[2].loc, "conflicting constraint properties")
+		}
+		yyVAL.ival = newspec
 	}
 }
 
 func yyAct813(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5800
-	{ /*C $$ = CAS_NOT_DEFERRABLE; */
+//line gram.y:5783
+	{
+		yyVAL.ival = casNotDeferrable
 	}
 }
 
 func yyAct814(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5801
-	{ /*C $$ = CAS_DEFERRABLE; */
+//line gram.y:5784
+	{
+		yyVAL.ival = casDeferrable
 	}
 }
 
 func yyAct815(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5802
-	{ /*C $$ = CAS_INITIALLY_IMMEDIATE; */
+//line gram.y:5785
+	{
+		yyVAL.ival = casInitiallyImmediate
 	}
 }
 
 func yyAct816(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5803
-	{ /*C $$ = CAS_INITIALLY_DEFERRED; */
+//line gram.y:5786
+	{
+		yyVAL.ival = casInitiallyDeferred
 	}
 }
 
 func yyAct817(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5804
-	{ /*C $$ = CAS_NOT_VALID; */
+//line gram.y:5787
+	{
+		yyVAL.ival = casNotValid
 	}
 }
 
 func yyAct818(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5805
-	{ /*C $$ = CAS_NO_INHERIT; */
+//line gram.y:5788
+	{
+		yyVAL.ival = casNoInherit
 	}
 }
 
 func yyAct819(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5820
-	{ /*C
-		CreateEventTrigStmt *n = makeNode(CreateEventTrigStmt);
+//line gram.y:5803
+	{
+		n := &CreateEventTrigStmt{}
 
-		n->trigname = $4;
-		n->eventname = $6;
-		n->whenclause = NULL;
-		n->funcname = $9;
-		$$ = (Node *) n;
-		*/
+		n.Trigname = yyDollar[4].str
+		n.Eventname = yyDollar[6].str
+		n.Whenclause = nil
+		n.Funcname = yyDollar[9].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct820(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5832
-	{ /*C
-		CreateEventTrigStmt *n = makeNode(CreateEventTrigStmt);
+//line gram.y:5815
+	{
+		n := &CreateEventTrigStmt{}
 
-		n->trigname = $4;
-		n->eventname = $6;
-		n->whenclause = $8;
-		n->funcname = $11;
-		$$ = (Node *) n;
-		*/
+		n.Trigname = yyDollar[4].str
+		n.Eventname = yyDollar[6].str
+		n.Whenclause = yyDollar[8].list
+		n.Funcname = yyDollar[11].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct821(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5845
+//line gram.y:5828
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct822(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5847
+//line gram.y:5830
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct823(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5852
-	{ /*C $$ = makeDefElem($1, (Node *) $4, @1); */
+//line gram.y:5835
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, listNode(yyDollar[4].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct824(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5857
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:5840
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct825(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5859
-	{ /*C $$ = lappend($1, makeString($3)); */
+//line gram.y:5842
+	{
+		yyVAL.list = append(yyDollar[1].list, makeString(yyDollar[3].str, yyDollar[3].loc))
 	}
 }
 
 func yyAct826(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5864
-	{ /*C
-		AlterEventTrigStmt *n = makeNode(AlterEventTrigStmt);
+//line gram.y:5847
+	{
+		n := &AlterEventTrigStmt{}
 
-		n->trigname = $4;
-		n->tgenabled = $5;
-		$$ = (Node *) n;
-		*/
+		n.Trigname = yyDollar[4].str
+		n.Tgenabled = yyDollar[5].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct827(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5874
-	{ /*C $$ = TRIGGER_FIRES_ON_ORIGIN; */
+//line gram.y:5857
+	{
+		yyVAL.str = triggerFiresOnOrigin
 	}
 }
 
 func yyAct828(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5875
-	{ /*C $$ = TRIGGER_FIRES_ON_REPLICA; */
+//line gram.y:5858
+	{
+		yyVAL.str = triggerFiresOnReplica
 	}
 }
 
 func yyAct829(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5876
-	{ /*C $$ = TRIGGER_FIRES_ALWAYS; */
+//line gram.y:5859
+	{
+		yyVAL.str = triggerFiresAlways
 	}
 }
 
 func yyAct830(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5877
-	{ /*C $$ = TRIGGER_DISABLED; */
+//line gram.y:5860
+	{
+		yyVAL.str = triggerDisabled
 	}
 }
 
 func yyAct831(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5889
-	{ /*C
-		ereport(ERROR,
-				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("CREATE ASSERTION is not yet implemented")));
+//line gram.y:5872
+	{
+		p.fail(-1, "CREATE ASSERTION is not yet implemented")
 
-		$$ = NULL;
-		*/
+		yyVAL.node = nil
 	}
 }
 
 func yyAct832(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5908
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5889
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_AGGREGATE;
-		n->oldstyle = false;
-		n->replace = $2;
-		n->defnames = $4;
-		n->args = $5;
-		n->definition = $6;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_AGGREGATE
+		n.Oldstyle = false
+		n.Replace = yyDollar[2].boolean
+		n.Defnames = yyDollar[4].list
+		n.Args = yyDollar[5].list
+		n.Definition = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct833(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5920
-	{ /*C
-		/* old-style (pre-8.2) syntax for CREATE AGGREGATE * /
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5901
+	{
+		/* old-style (pre-8.2) syntax for CREATE AGGREGATE */
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_AGGREGATE;
-		n->oldstyle = true;
-		n->replace = $2;
-		n->defnames = $4;
-		n->args = NIL;
-		n->definition = $5;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_AGGREGATE
+		n.Oldstyle = true
+		n.Replace = yyDollar[2].boolean
+		n.Defnames = yyDollar[4].list
+		n.Args = nil
+		n.Definition = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct834(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5933
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5914
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_OPERATOR;
-		n->oldstyle = false;
-		n->defnames = $3;
-		n->args = NIL;
-		n->definition = $4;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_OPERATOR
+		n.Oldstyle = false
+		n.Defnames = yyDollar[3].list
+		n.Args = nil
+		n.Definition = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct835(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5944
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5925
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_TYPE;
-		n->oldstyle = false;
-		n->defnames = $3;
-		n->args = NIL;
-		n->definition = $4;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_TYPE
+		n.Oldstyle = false
+		n.Defnames = yyDollar[3].list
+		n.Args = nil
+		n.Definition = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct836(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5955
-	{ /*C
-		/* Shell type (identified by lack of definition) * /
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5936
+	{
+		/* Shell type (identified by lack of definition) */
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_TYPE;
-		n->oldstyle = false;
-		n->defnames = $3;
-		n->args = NIL;
-		n->definition = NIL;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_TYPE
+		n.Oldstyle = false
+		n.Defnames = yyDollar[3].list
+		n.Args = nil
+		n.Definition = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct837(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5967
-	{ /*C
-		CompositeTypeStmt *n = makeNode(CompositeTypeStmt);
+//line gram.y:5948
+	{
+		n := &CompositeTypeStmt{}
 
-		/* can't use qualified_name, sigh * /
-		n->typevar = makeRangeVarFromAnyName($3, @3, yyscanner);
-		n->coldeflist = $6;
-		$$ = (Node *) n;
-		*/
+		/* can't use qualified_name, sigh */
+		n.Typevar = p.makeRangeVarFromAnyName(yyDollar[3].list, yyDollar[3].loc)
+		n.Coldeflist = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct838(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5976
-	{ /*C
-		CreateEnumStmt *n = makeNode(CreateEnumStmt);
+//line gram.y:5957
+	{
+		n := &CreateEnumStmt{}
 
-		n->typeName = $3;
-		n->vals = $7;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.Vals = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct839(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5984
-	{ /*C
-		CreateRangeStmt *n = makeNode(CreateRangeStmt);
+//line gram.y:5965
+	{
+		n := &CreateRangeStmt{}
 
-		n->typeName = $3;
-		n->params = $6;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.Params = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct840(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:5992
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5973
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_TSPARSER;
-		n->args = NIL;
-		n->defnames = $5;
-		n->definition = $6;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_TSPARSER
+		n.Args = nil
+		n.Defnames = yyDollar[5].list
+		n.Definition = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct841(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6002
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5983
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_TSDICTIONARY;
-		n->args = NIL;
-		n->defnames = $5;
-		n->definition = $6;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_TSDICTIONARY
+		n.Args = nil
+		n.Defnames = yyDollar[5].list
+		n.Definition = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct842(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6012
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:5993
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_TSTEMPLATE;
-		n->args = NIL;
-		n->defnames = $5;
-		n->definition = $6;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_TSTEMPLATE
+		n.Args = nil
+		n.Defnames = yyDollar[5].list
+		n.Definition = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct843(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6022
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:6003
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_TSCONFIGURATION;
-		n->args = NIL;
-		n->defnames = $5;
-		n->definition = $6;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_TSCONFIGURATION
+		n.Args = nil
+		n.Defnames = yyDollar[5].list
+		n.Definition = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct844(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6032
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:6013
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_COLLATION;
-		n->args = NIL;
-		n->defnames = $3;
-		n->definition = $4;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_COLLATION
+		n.Args = nil
+		n.Defnames = yyDollar[3].list
+		n.Definition = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct845(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6042
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:6023
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_COLLATION;
-		n->args = NIL;
-		n->defnames = $6;
-		n->definition = $7;
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_COLLATION
+		n.Args = nil
+		n.Defnames = yyDollar[6].list
+		n.Definition = yyDollar[7].list
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct846(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6053
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:6034
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_COLLATION;
-		n->args = NIL;
-		n->defnames = $3;
-		n->definition = list_make1(makeDefElem("from", (Node *) $5, @5));
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_COLLATION
+		n.Args = nil
+		n.Defnames = yyDollar[3].list
+		n.Definition = []Node{makeDefElem("from", listNode(yyDollar[5].list), yyDollar[5].loc)}
+		yyVAL.node = n
 	}
 }
 
 func yyAct847(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6063
-	{ /*C
-		DefineStmt *n = makeNode(DefineStmt);
+//line gram.y:6044
+	{
+		n := &DefineStmt{}
 
-		n->kind = OBJECT_COLLATION;
-		n->args = NIL;
-		n->defnames = $6;
-		n->definition = list_make1(makeDefElem("from", (Node *) $8, @8));
-		n->if_not_exists = true;
-		$$ = (Node *) n;
-		*/
+		n.Kind = OBJECT_COLLATION
+		n.Args = nil
+		n.Defnames = yyDollar[6].list
+		n.Definition = []Node{makeDefElem("from", listNode(yyDollar[8].list), yyDollar[8].loc)}
+		n.IfNotExists = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct848(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6075
+//line gram.y:6056
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct849(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6078
+//line gram.y:6059
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct850(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6079
+//line gram.y:6060
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct851(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6083
-	{ /*C
-		$$ = makeDefElem($1, (Node *) $3, @1);
-		*/
+//line gram.y:6064
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct852(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6087
-	{ /*C
-		$$ = makeDefElem($1, NULL, @1);
-		*/
+//line gram.y:6068
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct853(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6093
+//line gram.y:6074
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct854(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6094
-	{ /*C $$ = (Node *) makeString(pstrdup($1)); */
+//line gram.y:6075
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct855(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6095
-	{ /*C $$ = (Node *) $1; */
+//line gram.y:6076
+	{
+		yyVAL.node = listNode(yyDollar[1].list)
 	}
 }
 
 func yyAct856(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6096
+//line gram.y:6077
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct857(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6097
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:6078
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct858(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6098
-	{ /*C $$ = (Node *) makeString(pstrdup($1)); */
+//line gram.y:6079
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct859(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6101
+//line gram.y:6082
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct860(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6104
+//line gram.y:6085
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct861(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6105
+//line gram.y:6086
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct862(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6114
-	{ /*C
-		$$ = makeDefElem($1, (Node *) $3, @1);
-		*/
+//line gram.y:6095
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct863(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6120
+//line gram.y:6101
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct864(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6121
+//line gram.y:6102
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct865(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6125
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:6106
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct866(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6127
-	{ /*C $$ = lappend($1, makeString($3)); */
+//line gram.y:6108
+	{
+		yyVAL.list = append(yyDollar[1].list, makeString(yyDollar[3].str, yyDollar[3].loc))
 	}
 }
 
 func yyAct867(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6138
-	{ /*C
-		AlterEnumStmt *n = makeNode(AlterEnumStmt);
+//line gram.y:6119
+	{
+		n := &AlterEnumStmt{}
 
-		n->typeName = $3;
-		n->oldVal = NULL;
-		n->newVal = $7;
-		n->newValNeighbor = NULL;
-		n->newValIsAfter = true;
-		n->skipIfNewValExists = $6;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.OldVal = ""
+		n.NewVal = yyDollar[7].str
+		n.NewValNeighbor = ""
+		n.NewValIsAfter = true
+		n.SkipIfNewValExists = yyDollar[6].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct868(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6150
-	{ /*C
-		AlterEnumStmt *n = makeNode(AlterEnumStmt);
+//line gram.y:6131
+	{
+		n := &AlterEnumStmt{}
 
-		n->typeName = $3;
-		n->oldVal = NULL;
-		n->newVal = $7;
-		n->newValNeighbor = $9;
-		n->newValIsAfter = false;
-		n->skipIfNewValExists = $6;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.OldVal = ""
+		n.NewVal = yyDollar[7].str
+		n.NewValNeighbor = yyDollar[9].str
+		n.NewValIsAfter = false
+		n.SkipIfNewValExists = yyDollar[6].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct869(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6162
-	{ /*C
-		AlterEnumStmt *n = makeNode(AlterEnumStmt);
+//line gram.y:6143
+	{
+		n := &AlterEnumStmt{}
 
-		n->typeName = $3;
-		n->oldVal = NULL;
-		n->newVal = $7;
-		n->newValNeighbor = $9;
-		n->newValIsAfter = true;
-		n->skipIfNewValExists = $6;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.OldVal = ""
+		n.NewVal = yyDollar[7].str
+		n.NewValNeighbor = yyDollar[9].str
+		n.NewValIsAfter = true
+		n.SkipIfNewValExists = yyDollar[6].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct870(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6174
-	{ /*C
-		AlterEnumStmt *n = makeNode(AlterEnumStmt);
+//line gram.y:6155
+	{
+		n := &AlterEnumStmt{}
 
-		n->typeName = $3;
-		n->oldVal = $6;
-		n->newVal = $8;
-		n->newValNeighbor = NULL;
-		n->newValIsAfter = false;
-		n->skipIfNewValExists = false;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.OldVal = yyDollar[6].str
+		n.NewVal = yyDollar[8].str
+		n.NewValNeighbor = ""
+		n.NewValIsAfter = false
+		n.SkipIfNewValExists = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct871(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6186
-	{ /*C
+//line gram.y:6167
+	{
 		/*
 		 * The following problems must be solved before this can be
 		 * implemented:
@@ -24477,11781 +24222,11326 @@ func yyAct871(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 *   value while the preceding conditions are being checked.
 		 *
 		 * - Possibly more...
-		 * /
-		ereport(ERROR,
-				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("dropping an enum value is not implemented"),
-				 parser_errposition(@4)));
-		*/
+		 */
+		p.fail(yyDollar[4].loc, "dropping an enum value is not implemented")
 	}
 }
 
 func yyAct872(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6214
+//line gram.y:6192
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct873(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6215
+//line gram.y:6193
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct874(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6233
-	{ /*C
-		CreateOpClassStmt *n = makeNode(CreateOpClassStmt);
+//line gram.y:6211
+	{
+		n := &CreateOpClassStmt{}
 
-		n->opclassname = $4;
-		n->isDefault = $5;
-		n->datatype = $8;
-		n->amname = $10;
-		n->opfamilyname = $11;
-		n->items = $13;
-		$$ = (Node *) n;
-		*/
+		n.Opclassname = yyDollar[4].list
+		n.IsDefault = yyDollar[5].boolean
+		n.Datatype = as[*TypeName](yyDollar[8].node)
+		n.Amname = yyDollar[10].str
+		n.Opfamilyname = yyDollar[11].list
+		n.Items = yyDollar[13].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct875(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6247
+//line gram.y:6225
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct876(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6248
+//line gram.y:6226
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct877(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6253
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
-		ObjectWithArgs *owa = makeNode(ObjectWithArgs);
+//line gram.y:6231
+	{
+		n := &CreateOpClassItem{}
+		owa := &ObjectWithArgs{}
 
-		owa->objname = $3;
-		owa->objargs = NIL;
-		n->itemtype = OPCLASS_ITEM_OPERATOR;
-		n->name = owa;
-		n->number = $2;
-		n->order_family = $4;
-		$$ = (Node *) n;
-		*/
+		owa.Objname = yyDollar[3].list
+		owa.Objargs = nil
+		n.Itemtype = opclassItemOperator
+		n.Name = owa
+		n.Number = yyDollar[2].ival
+		n.OrderFamily = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct878(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6267
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
+//line gram.y:6245
+	{
+		n := &CreateOpClassItem{}
 
-		n->itemtype = OPCLASS_ITEM_OPERATOR;
-		n->name = $3;
-		n->number = $2;
-		n->order_family = $4;
-		$$ = (Node *) n;
-		*/
+		n.Itemtype = opclassItemOperator
+		n.Name = as[*ObjectWithArgs](yyDollar[3].node)
+		n.Number = yyDollar[2].ival
+		n.OrderFamily = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct879(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6277
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
+//line gram.y:6255
+	{
+		n := &CreateOpClassItem{}
 
-		n->itemtype = OPCLASS_ITEM_FUNCTION;
-		n->name = $3;
-		n->number = $2;
-		$$ = (Node *) n;
-		*/
+		n.Itemtype = opclassItemFunction
+		n.Name = as[*ObjectWithArgs](yyDollar[3].node)
+		n.Number = yyDollar[2].ival
+		yyVAL.node = n
 	}
 }
 
 func yyAct880(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6286
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
+//line gram.y:6264
+	{
+		n := &CreateOpClassItem{}
 
-		n->itemtype = OPCLASS_ITEM_FUNCTION;
-		n->name = $6;
-		n->number = $2;
-		n->class_args = $4;
-		$$ = (Node *) n;
-		*/
+		n.Itemtype = opclassItemFunction
+		n.Name = as[*ObjectWithArgs](yyDollar[6].node)
+		n.Number = yyDollar[2].ival
+		n.ClassArgs = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct881(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6296
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
+//line gram.y:6274
+	{
+		n := &CreateOpClassItem{}
 
-		n->itemtype = OPCLASS_ITEM_STORAGETYPE;
-		n->storedtype = $2;
-		$$ = (Node *) n;
-		*/
+		n.Itemtype = opclassItemStoragetype
+		n.Storedtype = as[*TypeName](yyDollar[2].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct882(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6305
+//line gram.y:6283
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct883(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6306
+//line gram.y:6284
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct884(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6309
+//line gram.y:6287
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct885(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6310
+//line gram.y:6288
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct886(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6313
+//line gram.y:6291
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct887(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6314
+//line gram.y:6292
 	{
 		yyVAL.list = yyDollar[4].list
 	}
 }
 
 func yyAct888(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6315
+//line gram.y:6293
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct889(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6319
-	{ /*C
+//line gram.y:6297
+	{
 		/*
 		 * RECHECK no longer does anything in opclass definitions,
 		 * but we still accept it to ease porting of old database
 		 * dumps.
-		 * /
-		ereport(NOTICE,
-				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("RECHECK is no longer required"),
-				 errhint("Update your data type."),
-				 parser_errposition(@1)));
-		$$ = true;
-		*/
+		 */
+		/*
+		 * C raises a NOTICE here ("RECHECK is no longer required");
+		 * a NOTICE is no error, so the parser has nothing to report.
+		 */
+		yyVAL.boolean = true
 	}
 }
 
 func yyAct890(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6332
+//line gram.y:6309
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct891(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6338
-	{ /*C
-		CreateOpFamilyStmt *n = makeNode(CreateOpFamilyStmt);
+//line gram.y:6315
+	{
+		n := &CreateOpFamilyStmt{}
 
-		n->opfamilyname = $4;
-		n->amname = $6;
-		$$ = (Node *) n;
-		*/
+		n.Opfamilyname = yyDollar[4].list
+		n.Amname = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct892(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6349
-	{ /*C
-		AlterOpFamilyStmt *n = makeNode(AlterOpFamilyStmt);
+//line gram.y:6326
+	{
+		n := &AlterOpFamilyStmt{}
 
-		n->opfamilyname = $4;
-		n->amname = $6;
-		n->isDrop = false;
-		n->items = $8;
-		$$ = (Node *) n;
-		*/
+		n.Opfamilyname = yyDollar[4].list
+		n.Amname = yyDollar[6].str
+		n.IsDrop = false
+		n.Items = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct893(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6359
-	{ /*C
-		AlterOpFamilyStmt *n = makeNode(AlterOpFamilyStmt);
+//line gram.y:6336
+	{
+		n := &AlterOpFamilyStmt{}
 
-		n->opfamilyname = $4;
-		n->amname = $6;
-		n->isDrop = true;
-		n->items = $8;
-		$$ = (Node *) n;
-		*/
+		n.Opfamilyname = yyDollar[4].list
+		n.Amname = yyDollar[6].str
+		n.IsDrop = true
+		n.Items = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct894(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6371
+//line gram.y:6348
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct895(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6372
+//line gram.y:6349
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct896(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6377
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
+//line gram.y:6354
+	{
+		n := &CreateOpClassItem{}
 
-		n->itemtype = OPCLASS_ITEM_OPERATOR;
-		n->number = $2;
-		n->class_args = $4;
-		$$ = (Node *) n;
-		*/
+		n.Itemtype = opclassItemOperator
+		n.Number = yyDollar[2].ival
+		n.ClassArgs = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct897(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6386
-	{ /*C
-		CreateOpClassItem *n = makeNode(CreateOpClassItem);
+//line gram.y:6363
+	{
+		n := &CreateOpClassItem{}
 
-		n->itemtype = OPCLASS_ITEM_FUNCTION;
-		n->number = $2;
-		n->class_args = $4;
-		$$ = (Node *) n;
-		*/
+		n.Itemtype = opclassItemFunction
+		n.Number = yyDollar[2].ival
+		n.ClassArgs = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct898(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6399
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6376
+	{
+		n := &DropStmt{}
 
-		n->objects = list_make1(lcons(makeString($6), $4));
-		n->removeType = OBJECT_OPCLASS;
-		n->behavior = $7;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.Objects = []Node{listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))}
+		n.RemoveType = OBJECT_OPCLASS
+		n.Behavior = DropBehavior(yyDollar[7].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct899(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6410
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6387
+	{
+		n := &DropStmt{}
 
-		n->objects = list_make1(lcons(makeString($8), $6));
-		n->removeType = OBJECT_OPCLASS;
-		n->behavior = $9;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.Objects = []Node{listNode(append([]Node{makeString(yyDollar[8].str, yyDollar[8].loc)}, yyDollar[6].list...))}
+		n.RemoveType = OBJECT_OPCLASS
+		n.Behavior = DropBehavior(yyDollar[9].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct900(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6424
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6401
+	{
+		n := &DropStmt{}
 
-		n->objects = list_make1(lcons(makeString($6), $4));
-		n->removeType = OBJECT_OPFAMILY;
-		n->behavior = $7;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.Objects = []Node{listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))}
+		n.RemoveType = OBJECT_OPFAMILY
+		n.Behavior = DropBehavior(yyDollar[7].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct901(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6435
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6412
+	{
+		n := &DropStmt{}
 
-		n->objects = list_make1(lcons(makeString($8), $6));
-		n->removeType = OBJECT_OPFAMILY;
-		n->behavior = $9;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.Objects = []Node{listNode(append([]Node{makeString(yyDollar[8].str, yyDollar[8].loc)}, yyDollar[6].list...))}
+		n.RemoveType = OBJECT_OPFAMILY
+		n.Behavior = DropBehavior(yyDollar[9].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct902(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6458
-	{ /*C
-		DropOwnedStmt *n = makeNode(DropOwnedStmt);
+//line gram.y:6435
+	{
+		n := &DropOwnedStmt{}
 
-		n->roles = $4;
-		n->behavior = $5;
-		$$ = (Node *) n;
-		*/
+		n.Roles = yyDollar[4].list
+		n.Behavior = DropBehavior(yyDollar[5].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct903(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6469
-	{ /*C
-		ReassignOwnedStmt *n = makeNode(ReassignOwnedStmt);
+//line gram.y:6446
+	{
+		n := &ReassignOwnedStmt{}
 
-		n->roles = $4;
-		n->newrole = $6;
-		$$ = (Node *) n;
-		*/
+		n.Roles = yyDollar[4].list
+		n.Newrole = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct904(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6488
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6465
+	{
+		n := &DropStmt{}
 
-		n->removeType = $2;
-		n->missing_ok = true;
-		n->objects = $5;
-		n->behavior = $6;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = ObjectType(yyDollar[2].ival)
+		n.MissingOk = true
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct905(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6499
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6476
+	{
+		n := &DropStmt{}
 
-		n->removeType = $2;
-		n->missing_ok = false;
-		n->objects = $3;
-		n->behavior = $4;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = ObjectType(yyDollar[2].ival)
+		n.MissingOk = false
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct906(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6510
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6487
+	{
+		n := &DropStmt{}
 
-		n->removeType = $2;
-		n->missing_ok = true;
-		n->objects = $5;
-		n->behavior = $6;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = ObjectType(yyDollar[2].ival)
+		n.MissingOk = true
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct907(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6521
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6498
+	{
+		n := &DropStmt{}
 
-		n->removeType = $2;
-		n->missing_ok = false;
-		n->objects = $3;
-		n->behavior = $4;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = ObjectType(yyDollar[2].ival)
+		n.MissingOk = false
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct908(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6532
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6509
+	{
+		n := &DropStmt{}
 
-		n->removeType = $2;
-		n->objects = list_make1(lappend($5, makeString($3)));
-		n->behavior = $6;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = ObjectType(yyDollar[2].ival)
+		n.Objects = []Node{listNode(append(yyDollar[5].list, makeString(yyDollar[3].str, yyDollar[3].loc)))}
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct909(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6543
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6520
+	{
+		n := &DropStmt{}
 
-		n->removeType = $2;
-		n->objects = list_make1(lappend($7, makeString($5)));
-		n->behavior = $8;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = ObjectType(yyDollar[2].ival)
+		n.Objects = []Node{listNode(append(yyDollar[7].list, makeString(yyDollar[5].str, yyDollar[5].loc)))}
+		n.Behavior = DropBehavior(yyDollar[8].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct910(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6554
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6531
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_TYPE;
-		n->missing_ok = false;
-		n->objects = $3;
-		n->behavior = $4;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_TYPE
+		n.MissingOk = false
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct911(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6565
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6542
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_TYPE;
-		n->missing_ok = true;
-		n->objects = $5;
-		n->behavior = $6;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_TYPE
+		n.MissingOk = true
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct912(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6576
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6553
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_DOMAIN;
-		n->missing_ok = false;
-		n->objects = $3;
-		n->behavior = $4;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_DOMAIN
+		n.MissingOk = false
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct913(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6587
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6564
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_DOMAIN;
-		n->missing_ok = true;
-		n->objects = $5;
-		n->behavior = $6;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_DOMAIN
+		n.MissingOk = true
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct914(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6598
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6575
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_INDEX;
-		n->missing_ok = false;
-		n->objects = $4;
-		n->behavior = $5;
-		n->concurrent = true;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_INDEX
+		n.MissingOk = false
+		n.Objects = yyDollar[4].list
+		n.Behavior = DropBehavior(yyDollar[5].ival)
+		n.Concurrent = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct915(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6609
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:6586
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_INDEX;
-		n->missing_ok = true;
-		n->objects = $6;
-		n->behavior = $7;
-		n->concurrent = true;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_INDEX
+		n.MissingOk = true
+		n.Objects = yyDollar[6].list
+		n.Behavior = DropBehavior(yyDollar[7].ival)
+		n.Concurrent = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct916(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6623
+//line gram.y:6600
 	{
 		yyVAL.ival = int32(OBJECT_TABLE)
 	}
 }
 
 func yyAct917(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6624
+//line gram.y:6601
 	{
 		yyVAL.ival = int32(OBJECT_SEQUENCE)
 	}
 }
 
 func yyAct918(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6625
+//line gram.y:6602
 	{
 		yyVAL.ival = int32(OBJECT_VIEW)
 	}
 }
 
 func yyAct919(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6626
+//line gram.y:6603
 	{
 		yyVAL.ival = int32(OBJECT_MATVIEW)
 	}
 }
 
 func yyAct920(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6627
+//line gram.y:6604
 	{
 		yyVAL.ival = int32(OBJECT_INDEX)
 	}
 }
 
 func yyAct921(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6628
+//line gram.y:6605
 	{
 		yyVAL.ival = int32(OBJECT_FOREIGN_TABLE)
 	}
 }
 
 func yyAct922(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6629
+//line gram.y:6606
 	{
 		yyVAL.ival = int32(OBJECT_COLLATION)
 	}
 }
 
 func yyAct923(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6630
+//line gram.y:6607
 	{
 		yyVAL.ival = int32(OBJECT_CONVERSION)
 	}
 }
 
 func yyAct924(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6631
+//line gram.y:6608
 	{
 		yyVAL.ival = int32(OBJECT_STATISTIC_EXT)
 	}
 }
 
 func yyAct925(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6632
+//line gram.y:6609
 	{
 		yyVAL.ival = int32(OBJECT_TSPARSER)
 	}
 }
 
 func yyAct926(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6633
+//line gram.y:6610
 	{
 		yyVAL.ival = int32(OBJECT_TSDICTIONARY)
 	}
 }
 
 func yyAct927(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6634
+//line gram.y:6611
 	{
 		yyVAL.ival = int32(OBJECT_TSTEMPLATE)
 	}
 }
 
 func yyAct928(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6635
+//line gram.y:6612
 	{
 		yyVAL.ival = int32(OBJECT_TSCONFIGURATION)
 	}
 }
 
 func yyAct929(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6645
+//line gram.y:6622
 	{
 		yyVAL.ival = yyDollar[1].ival
 	}
 }
 
 func yyAct930(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6646
+//line gram.y:6623
 	{
 		yyVAL.ival = int32(OBJECT_DATABASE)
 	}
 }
 
 func yyAct931(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6647
+//line gram.y:6624
 	{
 		yyVAL.ival = int32(OBJECT_ROLE)
 	}
 }
 
 func yyAct932(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6648
+//line gram.y:6625
 	{
 		yyVAL.ival = int32(OBJECT_SUBSCRIPTION)
 	}
 }
 
 func yyAct933(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6649
+//line gram.y:6626
 	{
 		yyVAL.ival = int32(OBJECT_TABLESPACE)
 	}
 }
 
 func yyAct934(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6653
+//line gram.y:6630
 	{
 		yyVAL.ival = int32(OBJECT_ACCESS_METHOD)
 	}
 }
 
 func yyAct935(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6654
+//line gram.y:6631
 	{
 		yyVAL.ival = int32(OBJECT_EVENT_TRIGGER)
 	}
 }
 
 func yyAct936(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6655
+//line gram.y:6632
 	{
 		yyVAL.ival = int32(OBJECT_EXTENSION)
 	}
 }
 
 func yyAct937(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6656
+//line gram.y:6633
 	{
 		yyVAL.ival = int32(OBJECT_FDW)
 	}
 }
 
 func yyAct938(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6657
+//line gram.y:6634
 	{
 		yyVAL.ival = int32(OBJECT_LANGUAGE)
 	}
 }
 
 func yyAct939(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6658
+//line gram.y:6635
 	{
 		yyVAL.ival = int32(OBJECT_PUBLICATION)
 	}
 }
 
 func yyAct940(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6659
+//line gram.y:6636
 	{
 		yyVAL.ival = int32(OBJECT_SCHEMA)
 	}
 }
 
 func yyAct941(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6660
+//line gram.y:6637
 	{
 		yyVAL.ival = int32(OBJECT_FOREIGN_SERVER)
 	}
 }
 
 func yyAct942(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6665
+//line gram.y:6642
 	{
 		yyVAL.ival = int32(OBJECT_POLICY)
 	}
 }
 
 func yyAct943(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6666
+//line gram.y:6643
 	{
 		yyVAL.ival = int32(OBJECT_RULE)
 	}
 }
 
 func yyAct944(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6667
+//line gram.y:6644
 	{
 		yyVAL.ival = int32(OBJECT_TRIGGER)
 	}
 }
 
 func yyAct945(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6671
-	{ /*C $$ = list_make1($1); */
+//line gram.y:6648
+	{
+		yyVAL.list = []Node{listNode(yyDollar[1].list)}
 	}
 }
 
 func yyAct946(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6672
-	{ /*C $$ = lappend($1, $3); */
+//line gram.y:6649
+	{
+		yyVAL.list = append(yyDollar[1].list, listNode(yyDollar[3].list))
 	}
 }
 
 func yyAct947(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6675
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:6652
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct948(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6676
-	{ /*C $$ = lcons(makeString($1), $2); */
+//line gram.y:6653
+	{
+		yyVAL.list = append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[2].list...)
 	}
 }
 
 func yyAct949(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6680
-	{ /*C $$ = list_make1(makeString($2)); */
+//line gram.y:6657
+	{
+		yyVAL.list = []Node{makeString(yyDollar[2].str, yyDollar[2].loc)}
 	}
 }
 
 func yyAct950(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6682
-	{ /*C $$ = lappend($1, makeString($3)); */
+//line gram.y:6659
+	{
+		yyVAL.list = append(yyDollar[1].list, makeString(yyDollar[3].str, yyDollar[3].loc))
 	}
 }
 
 func yyAct951(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6686
+//line gram.y:6663
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct952(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6687
+//line gram.y:6664
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct953(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6699
-	{ /*C
-		TruncateStmt *n = makeNode(TruncateStmt);
+//line gram.y:6676
+	{
+		n := &TruncateStmt{}
 
-		n->relations = $3;
-		n->restart_seqs = $4;
-		n->behavior = $5;
-		$$ = (Node *) n;
-		*/
+		n.Relations = yyDollar[3].list
+		n.RestartSeqs = yyDollar[4].boolean
+		n.Behavior = DropBehavior(yyDollar[5].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct954(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6710
+//line gram.y:6687
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct955(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6711
+//line gram.y:6688
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct956(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6712
+//line gram.y:6689
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct957(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6724
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6701
+	{
+		n := &CommentStmt{}
 
-		n->objtype = $3;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = ObjectType(yyDollar[3].ival)
+		n.Object = listNode(yyDollar[4].list)
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct958(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6733
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6710
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_COLUMN;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_COLUMN
+		n.Object = listNode(yyDollar[4].list)
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct959(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6742
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6719
+	{
+		n := &CommentStmt{}
 
-		n->objtype = $3;
-		n->object = (Node *) makeString($4);
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = ObjectType(yyDollar[3].ival)
+		n.Object = makeString(yyDollar[4].str, yyDollar[4].loc)
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct960(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6751
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6728
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_TYPE;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_TYPE
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct961(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6760
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6737
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_DOMAIN;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_DOMAIN
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct962(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6769
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6746
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_AGGREGATE;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_AGGREGATE
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct963(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6778
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6755
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_FUNCTION;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_FUNCTION
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct964(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6787
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6764
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_OPERATOR;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_OPERATOR
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct965(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6796
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6773
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_TABCONSTRAINT;
-		n->object = (Node *) lappend($6, makeString($4));
-		n->comment = $8;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_TABCONSTRAINT
+		n.Object = listNode(append(yyDollar[6].list, makeString(yyDollar[4].str, yyDollar[4].loc)))
+		n.Comment = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct966(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6805
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6782
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_DOMCONSTRAINT;
+		n.Objtype = OBJECT_DOMCONSTRAINT
 		/*
 		 * should use Typename not any_name in the production, but
 		 * there's a shift/reduce conflict if we do that, so fix it
 		 * up here.
-		 * /
-		n->object = (Node *) list_make2(makeTypeNameFromNameList($7), makeString($4));
-		n->comment = $9;
-		$$ = (Node *) n;
-		*/
+		 */
+		n.Object = listNode([]Node{makeTypeNameFromNameList(yyDollar[7].list), makeString(yyDollar[4].str, yyDollar[4].loc)})
+		n.Comment = yyDollar[9].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct967(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6819
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6796
+	{
+		n := &CommentStmt{}
 
-		n->objtype = $3;
-		n->object = (Node *) lappend($6, makeString($4));
-		n->comment = $8;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = ObjectType(yyDollar[3].ival)
+		n.Object = listNode(append(yyDollar[6].list, makeString(yyDollar[4].str, yyDollar[4].loc)))
+		n.Comment = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct968(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6828
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6805
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_PROCEDURE;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_PROCEDURE
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct969(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6837
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6814
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_ROUTINE;
-		n->object = (Node *) $4;
-		n->comment = $6;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_ROUTINE
+		n.Object = yyDollar[4].node
+		n.Comment = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct970(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6846
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6823
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_TRANSFORM;
-		n->object = (Node *) list_make2($5, makeString($7));
-		n->comment = $9;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_TRANSFORM
+		n.Object = listNode([]Node{yyDollar[5].node, makeString(yyDollar[7].str, yyDollar[7].loc)})
+		n.Comment = yyDollar[9].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct971(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6855
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6832
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_OPCLASS;
-		n->object = (Node *) lcons(makeString($7), $5);
-		n->comment = $9;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_OPCLASS
+		n.Object = listNode(append([]Node{makeString(yyDollar[7].str, yyDollar[7].loc)}, yyDollar[5].list...))
+		n.Comment = yyDollar[9].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct972(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6864
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6841
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_OPFAMILY;
-		n->object = (Node *) lcons(makeString($7), $5);
-		n->comment = $9;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_OPFAMILY
+		n.Object = listNode(append([]Node{makeString(yyDollar[7].str, yyDollar[7].loc)}, yyDollar[5].list...))
+		n.Comment = yyDollar[9].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct973(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6873
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6850
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_LARGEOBJECT;
-		n->object = (Node *) $5;
-		n->comment = $7;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_LARGEOBJECT
+		n.Object = yyDollar[5].node
+		n.Comment = yyDollar[7].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct974(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6882
-	{ /*C
-		CommentStmt *n = makeNode(CommentStmt);
+//line gram.y:6859
+	{
+		n := &CommentStmt{}
 
-		n->objtype = OBJECT_CAST;
-		n->object = (Node *) list_make2($5, $7);
-		n->comment = $10;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_CAST
+		n.Object = listNode([]Node{yyDollar[5].node, yyDollar[7].node})
+		n.Comment = yyDollar[10].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct975(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6893
+//line gram.y:6870
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct976(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6894
+//line gram.y:6871
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct977(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6910
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6887
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = $5;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = ObjectType(yyDollar[5].ival)
+		n.Object = listNode(yyDollar[6].list)
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct978(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6921
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6898
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_COLUMN;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_COLUMN
+		n.Object = listNode(yyDollar[6].list)
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct979(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6932
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6909
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = $5;
-		n->object = (Node *) makeString($6);
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = ObjectType(yyDollar[5].ival)
+		n.Object = makeString(yyDollar[6].str, yyDollar[6].loc)
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct980(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6943
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6920
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_TYPE;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_TYPE
+		n.Object = yyDollar[6].node
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct981(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6954
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6931
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_DOMAIN;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_DOMAIN
+		n.Object = yyDollar[6].node
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct982(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6965
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6942
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_AGGREGATE;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_AGGREGATE
+		n.Object = yyDollar[6].node
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct983(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6976
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6953
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_FUNCTION;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_FUNCTION
+		n.Object = yyDollar[6].node
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct984(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6987
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6964
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_LARGEOBJECT;
-		n->object = (Node *) $7;
-		n->label = $9;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_LARGEOBJECT
+		n.Object = yyDollar[7].node
+		n.Label = yyDollar[9].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct985(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:6998
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6975
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_PROCEDURE;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_PROCEDURE
+		n.Object = yyDollar[6].node
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct986(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7009
-	{ /*C
-		SecLabelStmt *n = makeNode(SecLabelStmt);
+//line gram.y:6986
+	{
+		n := &SecLabelStmt{}
 
-		n->provider = $3;
-		n->objtype = OBJECT_ROUTINE;
-		n->object = (Node *) $6;
-		n->label = $8;
-		$$ = (Node *) n;
-		*/
+		n.Provider = yyDollar[3].str
+		n.Objtype = OBJECT_ROUTINE
+		n.Object = yyDollar[6].node
+		n.Label = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct987(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7020
+//line gram.y:6997
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct988(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7021
+//line gram.y:6998
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct989(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7024
+//line gram.y:7001
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct990(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7025
+//line gram.y:7002
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct991(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7036
-	{ /*C
-		FetchStmt *n = (FetchStmt *) $2;
+//line gram.y:7013
+	{
+		n := as[*FetchStmt](yyDollar[2].node)
 
-		n->ismove = false;
-		$$ = (Node *) n;
-		*/
+		n.Ismove = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct992(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7043
-	{ /*C
-		FetchStmt *n = (FetchStmt *) $2;
+//line gram.y:7020
+	{
+		n := as[*FetchStmt](yyDollar[2].node)
 
-		n->ismove = true;
-		$$ = (Node *) n;
-		*/
+		n.Ismove = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct993(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7052
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7029
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $1;
-		n->direction = FETCH_FORWARD;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[1].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct994(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7061
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7038
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $2;
-		n->direction = FETCH_FORWARD;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[2].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct995(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7070
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7047
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_FORWARD;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct996(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7079
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7056
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_BACKWARD;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_BACKWARD
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct997(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7088
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7065
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_ABSOLUTE;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_ABSOLUTE
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct998(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7097
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7074
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_ABSOLUTE;
-		n->howMany = -1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_ABSOLUTE
+		n.HowMany = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct999(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7106
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7083
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $4;
-		n->direction = FETCH_ABSOLUTE;
-		n->howMany = $2;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[4].str
+		n.Direction = FETCH_ABSOLUTE
+		n.HowMany = int64(yyDollar[2].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1000(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7115
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7092
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $4;
-		n->direction = FETCH_RELATIVE;
-		n->howMany = $2;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[4].str
+		n.Direction = FETCH_RELATIVE
+		n.HowMany = int64(yyDollar[2].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1001(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7124
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7101
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_FORWARD;
-		n->howMany = $1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = int64(yyDollar[1].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1002(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7133
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7110
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_FORWARD;
-		n->howMany = FETCH_ALL;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = fetchAll
+		yyVAL.node = n
 	}
 }
 
 func yyAct1003(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7142
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7119
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_FORWARD;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1004(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7151
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7128
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $4;
-		n->direction = FETCH_FORWARD;
-		n->howMany = $2;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[4].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = int64(yyDollar[2].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1005(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7160
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7137
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $4;
-		n->direction = FETCH_FORWARD;
-		n->howMany = FETCH_ALL;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[4].str
+		n.Direction = FETCH_FORWARD
+		n.HowMany = fetchAll
+		yyVAL.node = n
 	}
 }
 
 func yyAct1006(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7169
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7146
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $3;
-		n->direction = FETCH_BACKWARD;
-		n->howMany = 1;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[3].str
+		n.Direction = FETCH_BACKWARD
+		n.HowMany = 1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1007(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7178
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7155
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $4;
-		n->direction = FETCH_BACKWARD;
-		n->howMany = $2;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[4].str
+		n.Direction = FETCH_BACKWARD
+		n.HowMany = int64(yyDollar[2].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1008(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7187
-	{ /*C
-		FetchStmt *n = makeNode(FetchStmt);
+//line gram.y:7164
+	{
+		n := &FetchStmt{}
 
-		n->portalname = $4;
-		n->direction = FETCH_BACKWARD;
-		n->howMany = FETCH_ALL;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[4].str
+		n.Direction = FETCH_BACKWARD
+		n.HowMany = fetchAll
+		yyVAL.node = n
 	}
 }
 
 func yyAct1013(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7214
-	{ /*C
-		GrantStmt *n = makeNode(GrantStmt);
+//line gram.y:7191
+	{
+		n := &GrantStmt{}
 
-		n->is_grant = true;
-		n->privileges = $2;
-		n->targtype = ($4)->targtype;
-		n->objtype = ($4)->objtype;
-		n->objects = ($4)->objs;
-		n->grantees = $6;
-		n->grant_option = $7;
-		n->grantor = $8;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = true
+		n.Privileges = yyDollar[2].list
+		n.Targtype = as[*privTarget](yyDollar[4].node).targtype
+		n.Objtype = as[*privTarget](yyDollar[4].node).objtype
+		n.Objects = as[*privTarget](yyDollar[4].node).objs
+		n.Grantees = yyDollar[6].list
+		n.GrantOption = yyDollar[7].boolean
+		n.Grantor = as[*RoleSpec](yyDollar[8].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1014(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7232
-	{ /*C
-		GrantStmt *n = makeNode(GrantStmt);
+//line gram.y:7209
+	{
+		n := &GrantStmt{}
 
-		n->is_grant = false;
-		n->grant_option = false;
-		n->privileges = $2;
-		n->targtype = ($4)->targtype;
-		n->objtype = ($4)->objtype;
-		n->objects = ($4)->objs;
-		n->grantees = $6;
-		n->grantor = $7;
-		n->behavior = $8;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = false
+		n.GrantOption = false
+		n.Privileges = yyDollar[2].list
+		n.Targtype = as[*privTarget](yyDollar[4].node).targtype
+		n.Objtype = as[*privTarget](yyDollar[4].node).objtype
+		n.Objects = as[*privTarget](yyDollar[4].node).objs
+		n.Grantees = yyDollar[6].list
+		n.Grantor = as[*RoleSpec](yyDollar[7].node)
+		n.Behavior = DropBehavior(yyDollar[8].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1015(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7248
-	{ /*C
-		GrantStmt *n = makeNode(GrantStmt);
+//line gram.y:7225
+	{
+		n := &GrantStmt{}
 
-		n->is_grant = false;
-		n->grant_option = true;
-		n->privileges = $5;
-		n->targtype = ($7)->targtype;
-		n->objtype = ($7)->objtype;
-		n->objects = ($7)->objs;
-		n->grantees = $9;
-		n->grantor = $10;
-		n->behavior = $11;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = false
+		n.GrantOption = true
+		n.Privileges = yyDollar[5].list
+		n.Targtype = as[*privTarget](yyDollar[7].node).targtype
+		n.Objtype = as[*privTarget](yyDollar[7].node).objtype
+		n.Objects = as[*privTarget](yyDollar[7].node).objs
+		n.Grantees = yyDollar[9].list
+		n.Grantor = as[*RoleSpec](yyDollar[10].node)
+		n.Behavior = DropBehavior(yyDollar[11].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1016(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7275
+//line gram.y:7252
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1017(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7277
+//line gram.y:7254
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1018(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7279
+//line gram.y:7256
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1019(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7281
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
+//line gram.y:7258
+	{
+		n := &AccessPriv{}
 
-		n->priv_name = NULL;
-		n->cols = $3;
-		$$ = list_make1(n);
-		*/
+		n.PrivName = ""
+		n.Cols = yyDollar[3].list
+		yyVAL.list = []Node{n}
 	}
 }
 
 func yyAct1020(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7289
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
+//line gram.y:7266
+	{
+		n := &AccessPriv{}
 
-		n->priv_name = NULL;
-		n->cols = $4;
-		$$ = list_make1(n);
-		*/
+		n.PrivName = ""
+		n.Cols = yyDollar[4].list
+		yyVAL.list = []Node{n}
 	}
 }
 
 func yyAct1021(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7298
+//line gram.y:7275
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1022(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7299
+//line gram.y:7276
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1023(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7303
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
+//line gram.y:7280
+	{
+		n := &AccessPriv{}
 
-		n->priv_name = pstrdup($1);
-		n->cols = $2;
-		$$ = n;
-		*/
+		n.PrivName = yyDollar[1].str
+		n.Cols = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1024(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7311
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
+//line gram.y:7288
+	{
+		n := &AccessPriv{}
 
-		n->priv_name = pstrdup($1);
-		n->cols = $2;
-		$$ = n;
-		*/
+		n.PrivName = yyDollar[1].str
+		n.Cols = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1025(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7319
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
+//line gram.y:7296
+	{
+		n := &AccessPriv{}
 
-		n->priv_name = pstrdup($1);
-		n->cols = $2;
-		$$ = n;
-		*/
+		n.PrivName = yyDollar[1].str
+		n.Cols = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1026(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7327
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
-		n->priv_name = pstrdup("alter system");
-		n->cols = NIL;
-		$$ = n;
-		*/
+//line gram.y:7304
+	{
+		n := &AccessPriv{}
+		n.PrivName = "alter system"
+		n.Cols = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1027(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7334
-	{ /*C
-		AccessPriv *n = makeNode(AccessPriv);
+//line gram.y:7311
+	{
+		n := &AccessPriv{}
 
-		n->priv_name = $1;
-		n->cols = $2;
-		$$ = n;
-		*/
+		n.PrivName = yyDollar[1].str
+		n.Cols = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1028(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7345
-	{ /*C
-		$$ = list_make1(makeString($1));
-		*/
+//line gram.y:7322
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct1029(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7349
-	{ /*C
-		$$ = lappend($1, makeString($3));
-		*/
+//line gram.y:7326
+	{
+		yyVAL.list = append(yyDollar[1].list, makeString(yyDollar[3].str, yyDollar[3].loc))
 	}
 }
 
 func yyAct1030(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7356
+//line gram.y:7333
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1031(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7358
-	{ /*C
-		$$ = psprintf("%s.%s", $1, $3);
-		*/
+//line gram.y:7335
+	{
+		yyVAL.str = fmt.Sprintf("%s.%s", yyDollar[1].str, yyDollar[3].str)
 	}
 }
 
 func yyAct1032(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7369
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7346
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_TABLE;
-		n->objs = $1;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_TABLE
+		n.objs = yyDollar[1].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1033(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7378
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7355
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_TABLE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_TABLE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1034(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7387
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7364
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_SEQUENCE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_SEQUENCE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1035(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7396
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7373
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_FDW;
-		n->objs = $4;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_FDW
+		n.objs = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1036(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7405
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7382
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_FOREIGN_SERVER;
-		n->objs = $3;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_FOREIGN_SERVER
+		n.objs = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1037(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7414
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7391
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_FUNCTION;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_FUNCTION
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1038(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7423
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7400
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_PROCEDURE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_PROCEDURE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1039(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7432
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7409
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_ROUTINE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_ROUTINE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1040(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7441
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7418
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_DATABASE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_DATABASE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1041(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7450
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7427
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_DOMAIN;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_DOMAIN
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1042(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7459
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7436
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_LANGUAGE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_LANGUAGE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1043(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7468
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7445
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_LARGEOBJECT;
-		n->objs = $3;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_LARGEOBJECT
+		n.objs = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1044(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7477
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_PARAMETER_ACL;
-		n->objs = $2;
-		$$ = n;
-		*/
+//line gram.y:7454
+	{
+		n := &privTarget{}
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_PARAMETER_ACL
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1045(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7485
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7462
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_SCHEMA;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_SCHEMA
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1046(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7494
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7471
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_TABLESPACE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_TABLESPACE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1047(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7503
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7480
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_OBJECT;
-		n->objtype = OBJECT_TYPE;
-		n->objs = $2;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_OBJECT
+		n.objtype = OBJECT_TYPE
+		n.objs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1048(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7512
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7489
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-		n->objtype = OBJECT_TABLE;
-		n->objs = $5;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+		n.objtype = OBJECT_TABLE
+		n.objs = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1049(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7521
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7498
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-		n->objtype = OBJECT_SEQUENCE;
-		n->objs = $5;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+		n.objtype = OBJECT_SEQUENCE
+		n.objs = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1050(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7530
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7507
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-		n->objtype = OBJECT_FUNCTION;
-		n->objs = $5;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+		n.objtype = OBJECT_FUNCTION
+		n.objs = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1051(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7539
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7516
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-		n->objtype = OBJECT_PROCEDURE;
-		n->objs = $5;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+		n.objtype = OBJECT_PROCEDURE
+		n.objs = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1052(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7548
-	{ /*C
-		PrivTarget *n = (PrivTarget *) palloc(sizeof(PrivTarget));
+//line gram.y:7525
+	{
+		n := &privTarget{}
 
-		n->targtype = ACL_TARGET_ALL_IN_SCHEMA;
-		n->objtype = OBJECT_ROUTINE;
-		n->objs = $5;
-		$$ = n;
-		*/
+		n.targtype = ACL_TARGET_ALL_IN_SCHEMA
+		n.objtype = OBJECT_ROUTINE
+		n.objs = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1053(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7560
+//line gram.y:7537
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1054(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7561
+//line gram.y:7538
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1055(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7565
+//line gram.y:7542
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1056(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7566
+//line gram.y:7543
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1057(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7571
+//line gram.y:7548
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1058(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7572
+//line gram.y:7549
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1059(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7583
-	{ /*C
-		GrantRoleStmt *n = makeNode(GrantRoleStmt);
+//line gram.y:7560
+	{
+		n := &GrantRoleStmt{}
 
-		n->is_grant = true;
-		n->granted_roles = $2;
-		n->grantee_roles = $4;
-		n->opt = NIL;
-		n->grantor = $5;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = true
+		n.GrantedRoles = yyDollar[2].list
+		n.GranteeRoles = yyDollar[4].list
+		n.Opt = nil
+		n.Grantor = as[*RoleSpec](yyDollar[5].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1060(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7594
-	{ /*C
-		GrantRoleStmt *n = makeNode(GrantRoleStmt);
+//line gram.y:7571
+	{
+		n := &GrantRoleStmt{}
 
-		n->is_grant = true;
-		n->granted_roles = $2;
-		n->grantee_roles = $4;
-		n->opt = $6;
-		n->grantor = $7;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = true
+		n.GrantedRoles = yyDollar[2].list
+		n.GranteeRoles = yyDollar[4].list
+		n.Opt = yyDollar[6].list
+		n.Grantor = as[*RoleSpec](yyDollar[7].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1061(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7608
-	{ /*C
-		GrantRoleStmt *n = makeNode(GrantRoleStmt);
+//line gram.y:7585
+	{
+		n := &GrantRoleStmt{}
 
-		n->is_grant = false;
-		n->opt = NIL;
-		n->granted_roles = $2;
-		n->grantee_roles = $4;
-		n->grantor = $5;
-		n->behavior = $6;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = false
+		n.Opt = nil
+		n.GrantedRoles = yyDollar[2].list
+		n.GranteeRoles = yyDollar[4].list
+		n.Grantor = as[*RoleSpec](yyDollar[5].node)
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1062(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7620
-	{ /*C
-		GrantRoleStmt *n = makeNode(GrantRoleStmt);
-		DefElem *opt;
+//line gram.y:7597
+	{
+		n := &GrantRoleStmt{}
 
-		opt = makeDefElem(pstrdup($2),
-						  (Node *) makeBoolean(false), @2);
-		n->is_grant = false;
-		n->opt = list_make1(opt);
-		n->granted_roles = $5;
-		n->grantee_roles = $7;
-		n->grantor = $8;
-		n->behavior = $9;
-		$$ = (Node *) n;
-		*/
+		opt := makeDefElem(yyDollar[2].str, makeBoolean(false), yyDollar[2].loc)
+		n.IsGrant = false
+		n.Opt = []Node{opt}
+		n.GrantedRoles = yyDollar[5].list
+		n.GranteeRoles = yyDollar[7].list
+		n.Grantor = as[*RoleSpec](yyDollar[8].node)
+		n.Behavior = DropBehavior(yyDollar[9].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1063(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7637
+//line gram.y:7612
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1064(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7638
+//line gram.y:7613
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1065(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7643
-	{ /*C
-		$$ = makeDefElem(pstrdup($1), $2, @1);
-		*/
+//line gram.y:7618
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1066(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7649
-	{ /*C $$ = (Node *) makeBoolean(true); */
+//line gram.y:7624
+	{
+		yyVAL.node = makeBoolean(true)
 	}
 }
 
 func yyAct1067(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7650
-	{ /*C $$ = (Node *) makeBoolean(true); */
+//line gram.y:7625
+	{
+		yyVAL.node = makeBoolean(true)
 	}
 }
 
 func yyAct1068(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7651
-	{ /*C $$ = (Node *) makeBoolean(false); */
+//line gram.y:7626
+	{
+		yyVAL.node = makeBoolean(false)
 	}
 }
 
 func yyAct1069(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7654
+//line gram.y:7629
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct1070(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7655
+//line gram.y:7630
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1071(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7666
-	{ /*C
-		AlterDefaultPrivilegesStmt *n = makeNode(AlterDefaultPrivilegesStmt);
+//line gram.y:7641
+	{
+		n := &AlterDefaultPrivilegesStmt{}
 
-		n->options = $4;
-		n->action = (GrantStmt *) $5;
-		$$ = (Node *) n;
-		*/
+		n.Options = yyDollar[4].list
+		n.Action = as[*GrantStmt](yyDollar[5].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1072(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7676
+//line gram.y:7651
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1073(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7677
+//line gram.y:7652
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1074(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7682
-	{ /*C
-		$$ = makeDefElem("schemas", (Node *) $3, @1);
-		*/
+//line gram.y:7657
+	{
+		yyVAL.node = makeDefElem("schemas", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct1075(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7686
-	{ /*C
-		$$ = makeDefElem("roles", (Node *) $3, @1);
-		*/
+//line gram.y:7661
+	{
+		yyVAL.node = makeDefElem("roles", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct1076(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7690
-	{ /*C
-		$$ = makeDefElem("roles", (Node *) $3, @1);
-		*/
+//line gram.y:7665
+	{
+		yyVAL.node = makeDefElem("roles", listNode(yyDollar[3].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct1077(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7702
-	{ /*C
-		GrantStmt *n = makeNode(GrantStmt);
+//line gram.y:7677
+	{
+		n := &GrantStmt{}
 
-		n->is_grant = true;
-		n->privileges = $2;
-		n->targtype = ACL_TARGET_DEFAULTS;
-		n->objtype = $4;
-		n->objects = NIL;
-		n->grantees = $6;
-		n->grant_option = $7;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = true
+		n.Privileges = yyDollar[2].list
+		n.Targtype = ACL_TARGET_DEFAULTS
+		n.Objtype = ObjectType(yyDollar[4].ival)
+		n.Objects = nil
+		n.Grantees = yyDollar[6].list
+		n.GrantOption = yyDollar[7].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1078(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7716
-	{ /*C
-		GrantStmt *n = makeNode(GrantStmt);
+//line gram.y:7691
+	{
+		n := &GrantStmt{}
 
-		n->is_grant = false;
-		n->grant_option = false;
-		n->privileges = $2;
-		n->targtype = ACL_TARGET_DEFAULTS;
-		n->objtype = $4;
-		n->objects = NIL;
-		n->grantees = $6;
-		n->behavior = $7;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = false
+		n.GrantOption = false
+		n.Privileges = yyDollar[2].list
+		n.Targtype = ACL_TARGET_DEFAULTS
+		n.Objtype = ObjectType(yyDollar[4].ival)
+		n.Objects = nil
+		n.Grantees = yyDollar[6].list
+		n.Behavior = DropBehavior(yyDollar[7].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1079(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7731
-	{ /*C
-		GrantStmt *n = makeNode(GrantStmt);
+//line gram.y:7706
+	{
+		n := &GrantStmt{}
 
-		n->is_grant = false;
-		n->grant_option = true;
-		n->privileges = $5;
-		n->targtype = ACL_TARGET_DEFAULTS;
-		n->objtype = $7;
-		n->objects = NIL;
-		n->grantees = $9;
-		n->behavior = $10;
-		$$ = (Node *) n;
-		*/
+		n.IsGrant = false
+		n.GrantOption = true
+		n.Privileges = yyDollar[5].list
+		n.Targtype = ACL_TARGET_DEFAULTS
+		n.Objtype = ObjectType(yyDollar[7].ival)
+		n.Objects = nil
+		n.Grantees = yyDollar[9].list
+		n.Behavior = DropBehavior(yyDollar[10].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1080(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7747
-	{ /*C $$ = OBJECT_TABLE; */
+//line gram.y:7722
+	{
+		yyVAL.ival = int32(OBJECT_TABLE)
 	}
 }
 
 func yyAct1081(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7748
-	{ /*C $$ = OBJECT_FUNCTION; */
+//line gram.y:7723
+	{
+		yyVAL.ival = int32(OBJECT_FUNCTION)
 	}
 }
 
 func yyAct1082(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7749
-	{ /*C $$ = OBJECT_FUNCTION; */
+//line gram.y:7724
+	{
+		yyVAL.ival = int32(OBJECT_FUNCTION)
 	}
 }
 
 func yyAct1083(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7750
-	{ /*C $$ = OBJECT_SEQUENCE; */
+//line gram.y:7725
+	{
+		yyVAL.ival = int32(OBJECT_SEQUENCE)
 	}
 }
 
 func yyAct1084(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7751
-	{ /*C $$ = OBJECT_TYPE; */
+//line gram.y:7726
+	{
+		yyVAL.ival = int32(OBJECT_TYPE)
 	}
 }
 
 func yyAct1085(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7752
-	{ /*C $$ = OBJECT_SCHEMA; */
+//line gram.y:7727
+	{
+		yyVAL.ival = int32(OBJECT_SCHEMA)
 	}
 }
 
 func yyAct1086(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7767
-	{ /*C
-		IndexStmt *n = makeNode(IndexStmt);
+//line gram.y:7742
+	{
+		n := &IndexStmt{}
 
-		n->unique = $2;
-		n->concurrent = $4;
-		n->idxname = $5;
-		n->relation = $7;
-		n->accessMethod = $8;
-		n->indexParams = $10;
-		n->indexIncludingParams = $12;
-		n->nulls_not_distinct = !$13;
-		n->options = $14;
-		n->tableSpace = $15;
-		n->whereClause = $16;
-		n->excludeOpNames = NIL;
-		n->idxcomment = NULL;
-		n->indexOid = InvalidOid;
-		n->oldNumber = InvalidRelFileNumber;
-		n->oldCreateSubid = InvalidSubTransactionId;
-		n->oldFirstRelfilelocatorSubid = InvalidSubTransactionId;
-		n->primary = false;
-		n->isconstraint = false;
-		n->deferrable = false;
-		n->initdeferred = false;
-		n->transformed = false;
-		n->if_not_exists = false;
-		n->reset_default_tblspc = false;
-		$$ = (Node *) n;
-		*/
+		n.Unique = yyDollar[2].boolean
+		n.Concurrent = yyDollar[4].boolean
+		n.Idxname = yyDollar[5].str
+		n.Relation = as[*RangeVar](yyDollar[7].node)
+		n.AccessMethod = yyDollar[8].str
+		n.IndexParams = yyDollar[10].list
+		n.IndexIncludingParams = yyDollar[12].list
+		n.NullsNotDistinct = !yyDollar[13].boolean
+		n.Options = yyDollar[14].list
+		n.TableSpace = yyDollar[15].str
+		n.WhereClause = yyDollar[16].node
+		n.ExcludeOpNames = nil
+		n.Idxcomment = ""
+		n.IndexOid = 0
+		n.OldNumber = 0
+		n.OldCreateSubid = 0
+		n.OldFirstRelfilelocatorSubid = 0
+		n.Primary = false
+		n.Isconstraint = false
+		n.Deferrable = false
+		n.Initdeferred = false
+		n.Transformed = false
+		n.IfNotExists = false
+		n.ResetDefaultTblspc = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1087(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7799
-	{ /*C
-		IndexStmt *n = makeNode(IndexStmt);
+//line gram.y:7774
+	{
+		n := &IndexStmt{}
 
-		n->unique = $2;
-		n->concurrent = $4;
-		n->idxname = $8;
-		n->relation = $10;
-		n->accessMethod = $11;
-		n->indexParams = $13;
-		n->indexIncludingParams = $15;
-		n->nulls_not_distinct = !$16;
-		n->options = $17;
-		n->tableSpace = $18;
-		n->whereClause = $19;
-		n->excludeOpNames = NIL;
-		n->idxcomment = NULL;
-		n->indexOid = InvalidOid;
-		n->oldNumber = InvalidRelFileNumber;
-		n->oldCreateSubid = InvalidSubTransactionId;
-		n->oldFirstRelfilelocatorSubid = InvalidSubTransactionId;
-		n->primary = false;
-		n->isconstraint = false;
-		n->deferrable = false;
-		n->initdeferred = false;
-		n->transformed = false;
-		n->if_not_exists = true;
-		n->reset_default_tblspc = false;
-		$$ = (Node *) n;
-		*/
+		n.Unique = yyDollar[2].boolean
+		n.Concurrent = yyDollar[4].boolean
+		n.Idxname = yyDollar[8].str
+		n.Relation = as[*RangeVar](yyDollar[10].node)
+		n.AccessMethod = yyDollar[11].str
+		n.IndexParams = yyDollar[13].list
+		n.IndexIncludingParams = yyDollar[15].list
+		n.NullsNotDistinct = !yyDollar[16].boolean
+		n.Options = yyDollar[17].list
+		n.TableSpace = yyDollar[18].str
+		n.WhereClause = yyDollar[19].node
+		n.ExcludeOpNames = nil
+		n.Idxcomment = ""
+		n.IndexOid = 0
+		n.OldNumber = 0
+		n.OldCreateSubid = 0
+		n.OldFirstRelfilelocatorSubid = 0
+		n.Primary = false
+		n.Isconstraint = false
+		n.Deferrable = false
+		n.Initdeferred = false
+		n.Transformed = false
+		n.IfNotExists = true
+		n.ResetDefaultTblspc = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1088(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7831
+//line gram.y:7806
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1089(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7832
+//line gram.y:7807
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1090(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7836
+//line gram.y:7811
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct1091(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7837
-	{ /*C $$ = DEFAULT_INDEX_TYPE; */
+//line gram.y:7812
+	{
+		yyVAL.str = "btree"
 	}
 }
 
 func yyAct1092(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7840
+//line gram.y:7815
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1093(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7841
+//line gram.y:7816
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1094(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7847
-	{ /*C
-		$$ = makeNode(IndexElem);
-		$$->name = NULL;
-		$$->expr = NULL;
-		$$->indexcolname = NULL;
-		$$->collation = $1;
-		$$->opclass = $2;
-		$$->opclassopts = NIL;
-		$$->ordering = $3;
-		$$->nulls_ordering = $4;
-		*/
+//line gram.y:7822
+	{
+		n := &IndexElem{}
+
+		n.Name = ""
+		n.Expr = nil
+		n.Indexcolname = ""
+		n.Collation = yyDollar[1].list
+		n.Opclass = yyDollar[2].list
+		n.Opclassopts = nil
+		n.Ordering = SortByDir(yyDollar[3].ival)
+		n.NullsOrdering = SortByNulls(yyDollar[4].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1095(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7859
-	{ /*C
-		$$ = makeNode(IndexElem);
-		$$->name = NULL;
-		$$->expr = NULL;
-		$$->indexcolname = NULL;
-		$$->collation = $1;
-		$$->opclass = $2;
-		$$->opclassopts = $3;
-		$$->ordering = $4;
-		$$->nulls_ordering = $5;
-		*/
+//line gram.y:7836
+	{
+		n := &IndexElem{}
+
+		n.Name = ""
+		n.Expr = nil
+		n.Indexcolname = ""
+		n.Collation = yyDollar[1].list
+		n.Opclass = yyDollar[2].list
+		n.Opclassopts = yyDollar[3].list
+		n.Ordering = SortByDir(yyDollar[4].ival)
+		n.NullsOrdering = SortByNulls(yyDollar[5].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1096(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7878
-	{ /*C
-		$$ = $2;
-		$$->name = $1;
-		*/
+//line gram.y:7857
+	{
+		n := as[*IndexElem](yyDollar[2].node)
+
+		n.Name = yyDollar[1].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1097(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7883
-	{ /*C
-		$$ = $2;
-		$$->expr = $1;
-		*/
+//line gram.y:7864
+	{
+		n := as[*IndexElem](yyDollar[2].node)
+
+		n.Expr = yyDollar[1].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1098(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7888
-	{ /*C
-		$$ = $4;
-		$$->expr = $2;
-		*/
+//line gram.y:7871
+	{
+		n := as[*IndexElem](yyDollar[4].node)
+
+		n.Expr = yyDollar[2].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1099(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7894
+//line gram.y:7879
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct1100(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7895
+//line gram.y:7880
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1101(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7898
+//line gram.y:7883
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1102(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7899
+//line gram.y:7884
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1103(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7902
+//line gram.y:7887
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1104(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7903
+//line gram.y:7888
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1105(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7907
-	{ /*C $$ = SORTBY_ASC; */
+//line gram.y:7892
+	{
+		yyVAL.ival = int32(SORTBY_ASC)
 	}
 }
 
 func yyAct1106(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7908
-	{ /*C $$ = SORTBY_DESC; */
+//line gram.y:7893
+	{
+		yyVAL.ival = int32(SORTBY_DESC)
 	}
 }
 
 func yyAct1107(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7909
-	{ /*C $$ = SORTBY_DEFAULT; */
+//line gram.y:7894
+	{
+		yyVAL.ival = int32(SORTBY_DEFAULT)
 	}
 }
 
 func yyAct1108(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7912
-	{ /*C $$ = SORTBY_NULLS_FIRST; */
+//line gram.y:7897
+	{
+		yyVAL.ival = int32(SORTBY_NULLS_FIRST)
 	}
 }
 
 func yyAct1109(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7913
-	{ /*C $$ = SORTBY_NULLS_LAST; */
+//line gram.y:7898
+	{
+		yyVAL.ival = int32(SORTBY_NULLS_LAST)
 	}
 }
 
 func yyAct1110(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7914
-	{ /*C $$ = SORTBY_NULLS_DEFAULT; */
+//line gram.y:7899
+	{
+		yyVAL.ival = int32(SORTBY_NULLS_DEFAULT)
 	}
 }
 
 func yyAct1111(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7932
-	{ /*C
-		CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+//line gram.y:7917
+	{
+		n := &CreateFunctionStmt{}
 
-		n->is_procedure = false;
-		n->replace = $2;
-		n->funcname = $4;
-		n->parameters = $5;
-		n->returnType = $7;
-		n->options = $8;
-		n->sql_body = $9;
-		$$ = (Node *) n;
-		*/
+		n.IsProcedure = false
+		n.Replace = yyDollar[2].boolean
+		n.Funcname = yyDollar[4].list
+		n.Parameters = yyDollar[5].list
+		n.ReturnType = as[*TypeName](yyDollar[7].node)
+		n.Options = yyDollar[8].list
+		n.SqlBody = yyDollar[9].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1112(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7946
-	{ /*C
-		CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+//line gram.y:7931
+	{
+		n := &CreateFunctionStmt{}
 
-		n->is_procedure = false;
-		n->replace = $2;
-		n->funcname = $4;
-		n->parameters = mergeTableFuncParameters($5, $9);
-		n->returnType = TableFuncTypeName($9);
-		n->returnType->location = @7;
-		n->options = $11;
-		n->sql_body = $12;
-		$$ = (Node *) n;
-		*/
+		n.IsProcedure = false
+		n.Replace = yyDollar[2].boolean
+		n.Funcname = yyDollar[4].list
+		n.Parameters = p.mergeTableFuncParameters(yyDollar[5].list, yyDollar[9].list)
+		n.ReturnType = tableFuncTypeName(yyDollar[9].list)
+		n.ReturnType.Location = yyDollar[7].loc
+		n.Options = yyDollar[11].list
+		n.SqlBody = yyDollar[12].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1113(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7961
-	{ /*C
-		CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+//line gram.y:7946
+	{
+		n := &CreateFunctionStmt{}
 
-		n->is_procedure = false;
-		n->replace = $2;
-		n->funcname = $4;
-		n->parameters = $5;
-		n->returnType = NULL;
-		n->options = $6;
-		n->sql_body = $7;
-		$$ = (Node *) n;
-		*/
+		n.IsProcedure = false
+		n.Replace = yyDollar[2].boolean
+		n.Funcname = yyDollar[4].list
+		n.Parameters = yyDollar[5].list
+		n.ReturnType = nil
+		n.Options = yyDollar[6].list
+		n.SqlBody = yyDollar[7].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1114(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7975
-	{ /*C
-		CreateFunctionStmt *n = makeNode(CreateFunctionStmt);
+//line gram.y:7960
+	{
+		n := &CreateFunctionStmt{}
 
-		n->is_procedure = true;
-		n->replace = $2;
-		n->funcname = $4;
-		n->parameters = $5;
-		n->returnType = NULL;
-		n->options = $6;
-		n->sql_body = $7;
-		$$ = (Node *) n;
-		*/
+		n.IsProcedure = true
+		n.Replace = yyDollar[2].boolean
+		n.Funcname = yyDollar[4].list
+		n.Parameters = yyDollar[5].list
+		n.ReturnType = nil
+		n.Options = yyDollar[6].list
+		n.SqlBody = yyDollar[7].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1115(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7990
+//line gram.y:7975
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1116(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7991
+//line gram.y:7976
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1117(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7994
+//line gram.y:7979
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1118(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7995
+//line gram.y:7980
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1119(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:7999
+//line gram.y:7984
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1120(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8000
+//line gram.y:7985
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1121(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8004
+//line gram.y:7989
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1122(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8006
+//line gram.y:7991
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1123(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8011
-	{ /*C
-		ObjectWithArgs *n = makeNode(ObjectWithArgs);
+//line gram.y:7996
+	{
+		n := &ObjectWithArgs{}
 
-		n->objname = $1;
-		n->objargs = extractArgTypes($2);
-		n->objfuncargs = $2;
-		$$ = n;
-		*/
+		n.Objname = yyDollar[1].list
+		n.Objargs = extractArgTypes(yyDollar[2].list)
+		n.Objfuncargs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1124(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8025
-	{ /*C
-		ObjectWithArgs *n = makeNode(ObjectWithArgs);
+//line gram.y:8010
+	{
+		n := &ObjectWithArgs{}
 
-		n->objname = list_make1(makeString(pstrdup($1)));
-		n->args_unspecified = true;
-		$$ = n;
-		*/
+		n.Objname = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
+		n.ArgsUnspecified = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1125(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8033
-	{ /*C
-		ObjectWithArgs *n = makeNode(ObjectWithArgs);
+//line gram.y:8018
+	{
+		n := &ObjectWithArgs{}
 
-		n->objname = list_make1(makeString($1));
-		n->args_unspecified = true;
-		$$ = n;
-		*/
+		n.Objname = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
+		n.ArgsUnspecified = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1126(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8041
-	{ /*C
-		ObjectWithArgs *n = makeNode(ObjectWithArgs);
+//line gram.y:8026
+	{
+		n := &ObjectWithArgs{}
 
-		n->objname = check_func_name(lcons(makeString($1), $2),
-									  yyscanner);
-		n->args_unspecified = true;
-		$$ = n;
-		*/
+		n.Objname = p.checkFuncName(append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[2].list...))
+		n.ArgsUnspecified = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1127(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8056
+//line gram.y:8040
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1128(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8057
+//line gram.y:8041
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1129(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8061
+//line gram.y:8045
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1130(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8063
+//line gram.y:8047
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1131(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8078
-	{ /*C
-		FunctionParameter *n = makeNode(FunctionParameter);
+//line gram.y:8062
+	{
+		n := &FunctionParameter{}
 
-		n->name = $2;
-		n->argType = $3;
-		n->mode = $1;
-		n->defexpr = NULL;
-		$$ = n;
-		*/
+		n.Name = yyDollar[2].str
+		n.ArgType = as[*TypeName](yyDollar[3].node)
+		n.Mode = FunctionParameterMode(yyDollar[1].ival)
+		n.Defexpr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1132(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8088
-	{ /*C
-		FunctionParameter *n = makeNode(FunctionParameter);
+//line gram.y:8072
+	{
+		n := &FunctionParameter{}
 
-		n->name = $1;
-		n->argType = $3;
-		n->mode = $2;
-		n->defexpr = NULL;
-		$$ = n;
-		*/
+		n.Name = yyDollar[1].str
+		n.ArgType = as[*TypeName](yyDollar[3].node)
+		n.Mode = FunctionParameterMode(yyDollar[2].ival)
+		n.Defexpr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1133(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8098
-	{ /*C
-		FunctionParameter *n = makeNode(FunctionParameter);
+//line gram.y:8082
+	{
+		n := &FunctionParameter{}
 
-		n->name = $1;
-		n->argType = $2;
-		n->mode = FUNC_PARAM_DEFAULT;
-		n->defexpr = NULL;
-		$$ = n;
-		*/
+		n.Name = yyDollar[1].str
+		n.ArgType = as[*TypeName](yyDollar[2].node)
+		n.Mode = FUNC_PARAM_DEFAULT
+		n.Defexpr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1134(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8108
-	{ /*C
-		FunctionParameter *n = makeNode(FunctionParameter);
+//line gram.y:8092
+	{
+		n := &FunctionParameter{}
 
-		n->name = NULL;
-		n->argType = $2;
-		n->mode = $1;
-		n->defexpr = NULL;
-		$$ = n;
-		*/
+		n.Name = ""
+		n.ArgType = as[*TypeName](yyDollar[2].node)
+		n.Mode = FunctionParameterMode(yyDollar[1].ival)
+		n.Defexpr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1135(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8118
-	{ /*C
-		FunctionParameter *n = makeNode(FunctionParameter);
+//line gram.y:8102
+	{
+		n := &FunctionParameter{}
 
-		n->name = NULL;
-		n->argType = $1;
-		n->mode = FUNC_PARAM_DEFAULT;
-		n->defexpr = NULL;
-		$$ = n;
-		*/
+		n.Name = ""
+		n.ArgType = as[*TypeName](yyDollar[1].node)
+		n.Mode = FUNC_PARAM_DEFAULT
+		n.Defexpr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1136(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8130
+//line gram.y:8114
 	{
 		yyVAL.ival = int32(FUNC_PARAM_IN)
 	}
 }
 
 func yyAct1137(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8131
+//line gram.y:8115
 	{
 		yyVAL.ival = int32(FUNC_PARAM_OUT)
 	}
 }
 
 func yyAct1138(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8132
+//line gram.y:8116
 	{
 		yyVAL.ival = int32(FUNC_PARAM_INOUT)
 	}
 }
 
 func yyAct1139(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8133
+//line gram.y:8117
 	{
 		yyVAL.ival = int32(FUNC_PARAM_INOUT)
 	}
 }
 
 func yyAct1140(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8134
+//line gram.y:8118
 	{
 		yyVAL.ival = int32(FUNC_PARAM_VARIADIC)
 	}
 }
 
 func yyAct1142(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8145
-	{ /*C
+//line gram.y:8129
+	{
 		/* We can catch over-specified results here if we want to,
 		 * but for now better to silently swallow typmod, etc.
 		 * - thomas 2000-03-22
-		 * /
-		$$ = $1;
-		*/
+		 */
+		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1143(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8159
+//line gram.y:8143
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1144(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8161
-	{ /*C
-		$$ = makeTypeNameFromNameList(lcons(makeString($1), $2));
-		$$->pct_type = true;
-		$$->location = @1;
-		*/
+//line gram.y:8145
+	{
+		t := makeTypeNameFromNameList(append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[2].list...))
+		t.PctType = true
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1145(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8167
-	{ /*C
-		$$ = makeTypeNameFromNameList(lcons(makeString($2), $3));
-		$$->pct_type = true;
-		$$->setof = true;
-		$$->location = @2;
-		*/
+//line gram.y:8152
+	{
+		t := makeTypeNameFromNameList(append([]Node{makeString(yyDollar[2].str, yyDollar[2].loc)}, yyDollar[3].list...))
+		t.PctType = true
+		t.Setof = true
+		t.Location = yyDollar[2].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1146(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8177
+//line gram.y:8163
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1147(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8179
-	{ /*C
-		$$ = $1;
-		$$->defexpr = $3;
-		*/
+//line gram.y:8165
+	{
+		n := as[*FunctionParameter](yyDollar[1].node)
+
+		n.Defexpr = yyDollar[3].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1148(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8184
-	{ /*C
-		$$ = $1;
-		$$->defexpr = $3;
-		*/
+//line gram.y:8172
+	{
+		n := as[*FunctionParameter](yyDollar[1].node)
+
+		n.Defexpr = yyDollar[3].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1149(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8192
-	{ /*C
-		if (!($1->mode == FUNC_PARAM_DEFAULT ||
-			  $1->mode == FUNC_PARAM_IN ||
-			  $1->mode == FUNC_PARAM_VARIADIC))
-			ereport(ERROR,
-					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("aggregates cannot have output arguments"),
-					 parser_errposition(@1)));
-		$$ = $1;
-		*/
+//line gram.y:8182
+	{
+		prm := as[*FunctionParameter](yyDollar[1].node)
+
+		if !(prm.Mode == FUNC_PARAM_DEFAULT ||
+			prm.Mode == FUNC_PARAM_IN ||
+			prm.Mode == FUNC_PARAM_VARIADIC) {
+			p.fail(yyDollar[1].loc, "aggregates cannot have output arguments")
+		}
+		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1150(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8234
-	{ /*C
-		$$ = list_make2(NIL, makeInteger(-1));
-		*/
+//line gram.y:8224
+	{
+		yyVAL.list = []Node{nil, makeInteger(-1)}
 	}
 }
 
 func yyAct1151(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8238
-	{ /*C
-		$$ = list_make2($2, makeInteger(-1));
-		*/
+//line gram.y:8228
+	{
+		yyVAL.list = []Node{listNode(yyDollar[2].list), makeInteger(-1)}
 	}
 }
 
 func yyAct1152(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8242
-	{ /*C
-		$$ = list_make2($4, makeInteger(0));
-		*/
+//line gram.y:8232
+	{
+		yyVAL.list = []Node{listNode(yyDollar[4].list), makeInteger(0)}
 	}
 }
 
 func yyAct1153(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8246
-	{ /*C
-		/* this is the only case requiring consistency checking * /
-		$$ = makeOrderedSetArgs($2, $5, yyscanner);
-		*/
+//line gram.y:8236
+	{
+		/* this is the only case requiring consistency checking */
+		yyVAL.list = p.makeOrderedSetArgs(yyDollar[2].list, yyDollar[5].list)
 	}
 }
 
 func yyAct1154(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8253
+//line gram.y:8243
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1155(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8254
+//line gram.y:8244
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1156(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8259
-	{ /*C
-		ObjectWithArgs *n = makeNode(ObjectWithArgs);
+//line gram.y:8249
+	{
+		n := &ObjectWithArgs{}
 
-		n->objname = $1;
-		n->objargs = extractAggrArgTypes($2);
-		n->objfuncargs = (List *) linitial($2);
-		$$ = n;
-		*/
+		n.Objname = yyDollar[1].list
+		n.Objargs = extractAggrArgTypes(yyDollar[2].list)
+		n.Objfuncargs = asList(yyDollar[2].list[0])
+		yyVAL.node = n
 	}
 }
 
 func yyAct1157(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8270
+//line gram.y:8260
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1158(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8272
+//line gram.y:8262
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1160(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8277
+//line gram.y:8267
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1161(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8282
+//line gram.y:8272
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1162(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8283
+//line gram.y:8273
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1163(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8291
-	{ /*C
-		$$ = makeDefElem("strict", (Node *) makeBoolean(false), @1);
-		*/
+//line gram.y:8281
+	{
+		yyVAL.node = makeDefElem("strict", makeBoolean(false), yyDollar[1].loc)
 	}
 }
 
 func yyAct1164(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8295
-	{ /*C
-		$$ = makeDefElem("strict", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:8285
+	{
+		yyVAL.node = makeDefElem("strict", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1165(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8299
-	{ /*C
-		$$ = makeDefElem("strict", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:8289
+	{
+		yyVAL.node = makeDefElem("strict", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1166(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8303
-	{ /*C
-		$$ = makeDefElem("volatility", (Node *) makeString("immutable"), @1);
-		*/
+//line gram.y:8293
+	{
+		yyVAL.node = makeDefElem("volatility", makeString("immutable", -1), yyDollar[1].loc)
 	}
 }
 
 func yyAct1167(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8307
-	{ /*C
-		$$ = makeDefElem("volatility", (Node *) makeString("stable"), @1);
-		*/
+//line gram.y:8297
+	{
+		yyVAL.node = makeDefElem("volatility", makeString("stable", -1), yyDollar[1].loc)
 	}
 }
 
 func yyAct1168(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8311
-	{ /*C
-		$$ = makeDefElem("volatility", (Node *) makeString("volatile"), @1);
-		*/
+//line gram.y:8301
+	{
+		yyVAL.node = makeDefElem("volatility", makeString("volatile", -1), yyDollar[1].loc)
 	}
 }
 
 func yyAct1169(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8315
-	{ /*C
-		$$ = makeDefElem("security", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:8305
+	{
+		yyVAL.node = makeDefElem("security", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1170(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8319
-	{ /*C
-		$$ = makeDefElem("security", (Node *) makeBoolean(false), @1);
-		*/
+//line gram.y:8309
+	{
+		yyVAL.node = makeDefElem("security", makeBoolean(false), yyDollar[1].loc)
 	}
 }
 
 func yyAct1171(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8323
-	{ /*C
-		$$ = makeDefElem("security", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:8313
+	{
+		yyVAL.node = makeDefElem("security", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1172(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8327
-	{ /*C
-		$$ = makeDefElem("security", (Node *) makeBoolean(false), @1);
-		*/
+//line gram.y:8317
+	{
+		yyVAL.node = makeDefElem("security", makeBoolean(false), yyDollar[1].loc)
 	}
 }
 
 func yyAct1173(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8331
-	{ /*C
-		$$ = makeDefElem("leakproof", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:8321
+	{
+		yyVAL.node = makeDefElem("leakproof", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1174(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8335
-	{ /*C
-		$$ = makeDefElem("leakproof", (Node *) makeBoolean(false), @1);
-		*/
+//line gram.y:8325
+	{
+		yyVAL.node = makeDefElem("leakproof", makeBoolean(false), yyDollar[1].loc)
 	}
 }
 
 func yyAct1175(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8339
-	{ /*C
-		$$ = makeDefElem("cost", (Node *) $2, @1);
-		*/
+//line gram.y:8329
+	{
+		yyVAL.node = makeDefElem("cost", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1176(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8343
-	{ /*C
-		$$ = makeDefElem("rows", (Node *) $2, @1);
-		*/
+//line gram.y:8333
+	{
+		yyVAL.node = makeDefElem("rows", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1177(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8347
-	{ /*C
-		$$ = makeDefElem("support", (Node *) $2, @1);
-		*/
+//line gram.y:8337
+	{
+		yyVAL.node = makeDefElem("support", listNode(yyDollar[2].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct1178(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8351
-	{ /*C
-		/* we abuse the normal content of a DefElem here * /
-		$$ = makeDefElem("set", (Node *) $1, @1);
-		*/
+//line gram.y:8341
+	{
+		/* we abuse the normal content of a DefElem here */
+		yyVAL.node = makeDefElem("set", yyDollar[1].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1179(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8356
-	{ /*C
-		$$ = makeDefElem("parallel", (Node *) makeString($2), @1);
-		*/
+//line gram.y:8346
+	{
+		yyVAL.node = makeDefElem("parallel", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1180(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8363
-	{ /*C
-		$$ = makeDefElem("as", (Node *) $2, @1);
-		*/
+//line gram.y:8353
+	{
+		yyVAL.node = makeDefElem("as", listNode(yyDollar[2].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct1181(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8367
-	{ /*C
-		$$ = makeDefElem("language", (Node *) makeString($2), @1);
-		*/
+//line gram.y:8357
+	{
+		yyVAL.node = makeDefElem("language", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1182(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8371
-	{ /*C
-		$$ = makeDefElem("transform", (Node *) $2, @1);
-		*/
+//line gram.y:8361
+	{
+		yyVAL.node = makeDefElem("transform", listNode(yyDollar[2].list), yyDollar[1].loc)
 	}
 }
 
 func yyAct1183(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8375
-	{ /*C
-		$$ = makeDefElem("window", (Node *) makeBoolean(true), @1);
-		*/
+//line gram.y:8365
+	{
+		yyVAL.node = makeDefElem("window", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1184(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8379
+//line gram.y:8369
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1185(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8382
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:8372
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct1186(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8384
-	{ /*C
-		$$ = list_make2(makeString($1), makeString($3));
-		*/
+//line gram.y:8374
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc), makeString(yyDollar[3].str, yyDollar[3].loc)}
 	}
 }
 
 func yyAct1187(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8390
-	{ /*C
-		ReturnStmt *r = makeNode(ReturnStmt);
+//line gram.y:8380
+	{
+		r := &ReturnStmt{}
 
-		r->returnval = (Node *) $2;
-		$$ = (Node *) r;
-		*/
+		r.Returnval = yyDollar[2].node
+		yyVAL.node = r
 	}
 }
 
 func yyAct1188(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8400
+//line gram.y:8390
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1189(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8402
-	{ /*C
+//line gram.y:8392
+	{
 		/*
 		 * A compound statement is stored as a single-item list
 		 * containing the list of statements as its member.  That
 		 * way, the parse analysis code can tell apart an empty
 		 * body from no body at all.
-		 * /
-		$$ = (Node *) list_make1($3);
-		*/
+		 */
+		yyVAL.node = listNode([]Node{listNode(yyDollar[3].list)})
 	}
 }
 
 func yyAct1190(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8412
+//line gram.y:8402
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1191(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8417
-	{ /*C
-		/* As in stmtmulti, discard empty statements * /
-		if ($2 != NULL)
-			$$ = lappend($1, $2);
-		else
-			$$ = $1;
-		*/
+//line gram.y:8407
+	{
+		/* As in stmtmulti, discard empty statements */
+		if yyDollar[2].node != nil {
+			yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
+		} else {
+			yyVAL.list = yyDollar[1].list
+		}
 	}
 }
 
 func yyAct1192(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8425
+//line gram.y:8416
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1195(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8434
+//line gram.y:8425
 	{
 		yyVAL.list = []Node{yyDollar[3].node}
 	}
 }
 
 func yyAct1196(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8435
+//line gram.y:8426
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[5].node)
 	}
 }
 
 func yyAct1197(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8439
+//line gram.y:8430
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1198(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8440
+//line gram.y:8431
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1199(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8444
-	{ /*C
-		FunctionParameter *n = makeNode(FunctionParameter);
+//line gram.y:8435
+	{
+		n := &FunctionParameter{}
 
-		n->name = $1;
-		n->argType = $2;
-		n->mode = FUNC_PARAM_TABLE;
-		n->defexpr = NULL;
-		$$ = n;
-		*/
+		n.Name = yyDollar[1].str
+		n.ArgType = as[*TypeName](yyDollar[2].node)
+		n.Mode = FUNC_PARAM_TABLE
+		n.Defexpr = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1200(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8457
+//line gram.y:8448
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1201(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8459
+//line gram.y:8450
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1202(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8473
-	{ /*C
-		AlterFunctionStmt *n = makeNode(AlterFunctionStmt);
+//line gram.y:8464
+	{
+		n := &AlterFunctionStmt{}
 
-		n->objtype = OBJECT_FUNCTION;
-		n->func = $3;
-		n->actions = $4;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_FUNCTION
+		n.Func = as[*ObjectWithArgs](yyDollar[3].node)
+		n.Actions = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1203(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8482
-	{ /*C
-		AlterFunctionStmt *n = makeNode(AlterFunctionStmt);
+//line gram.y:8473
+	{
+		n := &AlterFunctionStmt{}
 
-		n->objtype = OBJECT_PROCEDURE;
-		n->func = $3;
-		n->actions = $4;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_PROCEDURE
+		n.Func = as[*ObjectWithArgs](yyDollar[3].node)
+		n.Actions = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1204(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8491
-	{ /*C
-		AlterFunctionStmt *n = makeNode(AlterFunctionStmt);
+//line gram.y:8482
+	{
+		n := &AlterFunctionStmt{}
 
-		n->objtype = OBJECT_ROUTINE;
-		n->func = $3;
-		n->actions = $4;
-		$$ = (Node *) n;
-		*/
+		n.Objtype = OBJECT_ROUTINE
+		n.Func = as[*ObjectWithArgs](yyDollar[3].node)
+		n.Actions = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1205(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8503
+//line gram.y:8494
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1206(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8504
+//line gram.y:8495
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1209(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8528
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8519
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_FUNCTION;
-		n->objects = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_FUNCTION
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1210(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8539
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8530
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_FUNCTION;
-		n->objects = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_FUNCTION
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1211(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8550
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8541
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_PROCEDURE;
-		n->objects = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_PROCEDURE
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1212(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8561
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8552
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_PROCEDURE;
-		n->objects = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_PROCEDURE
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1213(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8572
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8563
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_ROUTINE;
-		n->objects = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_ROUTINE
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1214(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8583
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8574
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_ROUTINE;
-		n->objects = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_ROUTINE
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1215(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8597
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8588
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_AGGREGATE;
-		n->objects = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_AGGREGATE
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1216(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8608
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8599
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_AGGREGATE;
-		n->objects = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_AGGREGATE
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1217(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8622
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8613
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_OPERATOR;
-		n->objects = $3;
-		n->behavior = $4;
-		n->missing_ok = false;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_OPERATOR
+		n.Objects = yyDollar[3].list
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		n.MissingOk = false
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1218(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8633
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8624
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_OPERATOR;
-		n->objects = $5;
-		n->behavior = $6;
-		n->missing_ok = true;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_OPERATOR
+		n.Objects = yyDollar[5].list
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		n.MissingOk = true
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1219(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8647
-	{ /*C
-		   ereport(ERROR,
-				   (errcode(ERRCODE_SYNTAX_ERROR),
-					errmsg("missing argument"),
-					errhint("Use NONE to denote the missing argument of a unary operator."),
-					parser_errposition(@3)));
-		*/
+//line gram.y:8638
+	{
+		// errhint: Use NONE to denote the missing argument of a unary operator.
+		p.fail(yyDollar[3].loc, "missing argument")
 	}
 }
 
 func yyAct1220(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8655
-	{ /*C $$ = list_make2($2, $4); */
+//line gram.y:8643
+	{
+		yyVAL.list = []Node{yyDollar[2].node, yyDollar[4].node}
 	}
 }
 
 func yyAct1221(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8657
-	{ /*C $$ = list_make2(NULL, $4); */
+//line gram.y:8645
+	{
+		yyVAL.list = []Node{nil, yyDollar[4].node}
 	}
 }
 
 func yyAct1222(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8659
-	{ /*C $$ = list_make2($2, NULL); */
+//line gram.y:8647
+	{
+		yyVAL.list = []Node{yyDollar[2].node, nil}
 	}
 }
 
 func yyAct1223(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8664
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:8652
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct1224(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8666
-	{ /*C $$ = lcons(makeString($1), $3); */
+//line gram.y:8654
+	{
+		yyVAL.list = append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[3].list...)
 	}
 }
 
 func yyAct1225(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8670
+//line gram.y:8658
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1226(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8672
+//line gram.y:8660
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1227(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8677
-	{ /*C
-		ObjectWithArgs *n = makeNode(ObjectWithArgs);
+//line gram.y:8665
+	{
+		n := &ObjectWithArgs{}
 
-		n->objname = $1;
-		n->objargs = $2;
-		$$ = n;
-		*/
+		n.Objname = yyDollar[1].list
+		n.Objargs = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1228(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8696
-	{ /*C
-		DoStmt *n = makeNode(DoStmt);
+//line gram.y:8684
+	{
+		n := &DoStmt{}
 
-		n->args = $2;
-		$$ = (Node *) n;
-		*/
+		n.Args = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1229(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8705
+//line gram.y:8693
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1230(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8706
+//line gram.y:8694
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1231(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8711
-	{ /*C
-		$$ = makeDefElem("as", (Node *) makeString($1), @1);
-		*/
+//line gram.y:8699
+	{
+		yyVAL.node = makeDefElem("as", makeString(yyDollar[1].str, yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1232(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8715
-	{ /*C
-		$$ = makeDefElem("language", (Node *) makeString($2), @1);
-		*/
+//line gram.y:8701
+	{
+		yyVAL.node = makeDefElem("language", makeString(yyDollar[2].str, yyDollar[2].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1233(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8728
-	{ /*C
-		CreateCastStmt *n = makeNode(CreateCastStmt);
+//line gram.y:8712
+	{
+		n := &CreateCastStmt{}
 
-		n->sourcetype = $4;
-		n->targettype = $6;
-		n->func = $10;
-		n->context = (CoercionContext) $11;
-		n->inout = false;
-		$$ = (Node *) n;
-		*/
+		n.Sourcetype = as[*TypeName](yyDollar[4].node)
+		n.Targettype = as[*TypeName](yyDollar[6].node)
+		n.Func = as[*ObjectWithArgs](yyDollar[10].node)
+		n.Context = CoercionContext(yyDollar[11].ival)
+		n.Inout = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1234(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8740
-	{ /*C
-		CreateCastStmt *n = makeNode(CreateCastStmt);
+//line gram.y:8724
+	{
+		n := &CreateCastStmt{}
 
-		n->sourcetype = $4;
-		n->targettype = $6;
-		n->func = NULL;
-		n->context = (CoercionContext) $10;
-		n->inout = false;
-		$$ = (Node *) n;
-		*/
+		n.Sourcetype = as[*TypeName](yyDollar[4].node)
+		n.Targettype = as[*TypeName](yyDollar[6].node)
+		n.Func = nil
+		n.Context = CoercionContext(yyDollar[10].ival)
+		n.Inout = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1235(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8752
-	{ /*C
-		CreateCastStmt *n = makeNode(CreateCastStmt);
+//line gram.y:8736
+	{
+		n := &CreateCastStmt{}
 
-		n->sourcetype = $4;
-		n->targettype = $6;
-		n->func = NULL;
-		n->context = (CoercionContext) $10;
-		n->inout = true;
-		$$ = (Node *) n;
-		*/
+		n.Sourcetype = as[*TypeName](yyDollar[4].node)
+		n.Targettype = as[*TypeName](yyDollar[6].node)
+		n.Func = nil
+		n.Context = CoercionContext(yyDollar[10].ival)
+		n.Inout = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1236(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8764
-	{ /*C $$ = COERCION_IMPLICIT; */
+//line gram.y:8748
+	{
+		yyVAL.ival = int32(COERCION_IMPLICIT)
 	}
 }
 
 func yyAct1237(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8765
-	{ /*C $$ = COERCION_ASSIGNMENT; */
+//line gram.y:8749
+	{
+		yyVAL.ival = int32(COERCION_ASSIGNMENT)
 	}
 }
 
 func yyAct1238(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8766
-	{ /*C $$ = COERCION_EXPLICIT; */
+//line gram.y:8750
+	{
+		yyVAL.ival = int32(COERCION_EXPLICIT)
 	}
 }
 
 func yyAct1239(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8771
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8755
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_CAST;
-		n->objects = list_make1(list_make2($5, $7));
-		n->behavior = $9;
-		n->missing_ok = $3;
-		n->concurrent = false;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_CAST
+		n.Objects = []Node{listNode([]Node{yyDollar[5].node, yyDollar[7].node})}
+		n.Behavior = DropBehavior(yyDollar[9].ival)
+		n.MissingOk = yyDollar[3].boolean
+		n.Concurrent = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1240(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8783
+//line gram.y:8767
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1241(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8784
+//line gram.y:8768
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1242(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8795
-	{ /*C
-		CreateTransformStmt *n = makeNode(CreateTransformStmt);
+//line gram.y:8779
+	{
+		n := &CreateTransformStmt{}
 
-		n->replace = $2;
-		n->type_name = $5;
-		n->lang = $7;
-		n->fromsql = linitial($9);
-		n->tosql = lsecond($9);
-		$$ = (Node *) n;
-		*/
+		n.Replace = yyDollar[2].boolean
+		n.TypeName = as[*TypeName](yyDollar[5].node)
+		n.Lang = yyDollar[7].str
+		n.Fromsql = as[*ObjectWithArgs](yyDollar[9].list[0])
+		n.Tosql = as[*ObjectWithArgs](yyDollar[9].list[1])
+		yyVAL.node = n
 	}
 }
 
 func yyAct1243(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8808
-	{ /*C
-		$$ = list_make2($5, $11);
-		*/
+//line gram.y:8792
+	{
+		yyVAL.list = []Node{yyDollar[5].node, yyDollar[11].node}
 	}
 }
 
 func yyAct1244(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8812
-	{ /*C
-		$$ = list_make2($11, $5);
-		*/
+//line gram.y:8794
+	{
+		yyVAL.list = []Node{yyDollar[11].node, yyDollar[5].node}
 	}
 }
 
 func yyAct1245(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8816
-	{ /*C
-		$$ = list_make2($5, NULL);
-		*/
+//line gram.y:8796
+	{
+		yyVAL.list = []Node{yyDollar[5].node, nil}
 	}
 }
 
 func yyAct1246(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8820
-	{ /*C
-		$$ = list_make2(NULL, $5);
-		*/
+//line gram.y:8798
+	{
+		yyVAL.list = []Node{nil, yyDollar[5].node}
 	}
 }
 
 func yyAct1247(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8827
-	{ /*C
-		DropStmt *n = makeNode(DropStmt);
+//line gram.y:8803
+	{
+		n := &DropStmt{}
 
-		n->removeType = OBJECT_TRANSFORM;
-		n->objects = list_make1(list_make2($5, makeString($7)));
-		n->behavior = $8;
-		n->missing_ok = $3;
-		$$ = (Node *) n;
-		*/
+		n.RemoveType = OBJECT_TRANSFORM
+		n.Objects = []Node{listNode([]Node{yyDollar[5].node, makeString(yyDollar[7].str, yyDollar[7].loc)})}
+		n.Behavior = DropBehavior(yyDollar[8].ival)
+		n.MissingOk = yyDollar[3].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1248(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8849
-	{ /*C
-		ReindexStmt *n = makeNode(ReindexStmt);
+//line gram.y:8825
+	{
+		n := &ReindexStmt{}
 
-		n->kind = $3;
-		n->relation = $5;
-		n->name = NULL;
-		n->params = $2;
-		if ($4)
-			n->params = lappend(n->params,
-								makeDefElem("concurrently", NULL, @4));
-		$$ = (Node *) n;
-		*/
+		n.Kind = ReindexObjectType(yyDollar[3].ival)
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Name = ""
+		n.Params = yyDollar[2].list
+		if yyDollar[4].boolean {
+			n.Params = append(n.Params, makeDefElem("concurrently", nil, yyDollar[4].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1249(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8862
-	{ /*C
-		ReindexStmt *n = makeNode(ReindexStmt);
+//line gram.y:8838
+	{
+		n := &ReindexStmt{}
 
-		n->kind = REINDEX_OBJECT_SCHEMA;
-		n->relation = NULL;
-		n->name = $5;
-		n->params = $2;
-		if ($4)
-			n->params = lappend(n->params,
-								makeDefElem("concurrently", NULL, @4));
-		$$ = (Node *) n;
-		*/
+		n.Kind = REINDEX_OBJECT_SCHEMA
+		n.Relation = nil
+		n.Name = yyDollar[5].str
+		n.Params = yyDollar[2].list
+		if yyDollar[4].boolean {
+			n.Params = append(n.Params, makeDefElem("concurrently", nil, yyDollar[4].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1250(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8875
-	{ /*C
-		ReindexStmt *n = makeNode(ReindexStmt);
+//line gram.y:8851
+	{
+		n := &ReindexStmt{}
 
-		n->kind = $3;
-		n->relation = NULL;
-		n->name = $5;
-		n->params = $2;
-		if ($4)
-			n->params = lappend(n->params,
-								makeDefElem("concurrently", NULL, @4));
-		$$ = (Node *) n;
-		*/
+		n.Kind = ReindexObjectType(yyDollar[3].ival)
+		n.Relation = nil
+		n.Name = yyDollar[5].str
+		n.Params = yyDollar[2].list
+		if yyDollar[4].boolean {
+			n.Params = append(n.Params, makeDefElem("concurrently", nil, yyDollar[4].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1251(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8889
-	{ /*C $$ = REINDEX_OBJECT_INDEX; */
+//line gram.y:8865
+	{
+		yyVAL.ival = int32(REINDEX_OBJECT_INDEX)
 	}
 }
 
 func yyAct1252(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8890
-	{ /*C $$ = REINDEX_OBJECT_TABLE; */
+//line gram.y:8866
+	{
+		yyVAL.ival = int32(REINDEX_OBJECT_TABLE)
 	}
 }
 
 func yyAct1253(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8893
-	{ /*C $$ = REINDEX_OBJECT_SYSTEM; */
+//line gram.y:8869
+	{
+		yyVAL.ival = int32(REINDEX_OBJECT_SYSTEM)
 	}
 }
 
 func yyAct1254(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8894
-	{ /*C $$ = REINDEX_OBJECT_DATABASE; */
+//line gram.y:8870
+	{
+		yyVAL.ival = int32(REINDEX_OBJECT_DATABASE)
 	}
 }
 
 func yyAct1255(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8897
+//line gram.y:8873
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1256(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8898
+//line gram.y:8874
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1257(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8909
-	{ /*C
-		AlterTableSpaceOptionsStmt *n =
-			makeNode(AlterTableSpaceOptionsStmt);
+//line gram.y:8885
+	{
+		n := &AlterTableSpaceOptionsStmt{}
 
-		n->tablespacename = $3;
-		n->options = $5;
-		n->isReset = false;
-		$$ = (Node *) n;
-		*/
+		n.Tablespacename = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		n.IsReset = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1258(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8919
-	{ /*C
-		AlterTableSpaceOptionsStmt *n =
-			makeNode(AlterTableSpaceOptionsStmt);
+//line gram.y:8894
+	{
+		n := &AlterTableSpaceOptionsStmt{}
 
-		n->tablespacename = $3;
-		n->options = $5;
-		n->isReset = true;
-		$$ = (Node *) n;
-		*/
+		n.Tablespacename = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		n.IsReset = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1259(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8937
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8911
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_AGGREGATE;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_AGGREGATE
+		n.Object = yyDollar[3].node
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1260(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8947
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8921
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLLATION;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLLATION
+		n.Object = listNode(yyDollar[3].list)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1261(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8957
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8931
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_CONVERSION;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_CONVERSION
+		n.Object = listNode(yyDollar[3].list)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1262(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8967
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8941
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_DATABASE;
-		n->subname = $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_DATABASE
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1263(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8977
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8951
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_DOMAIN;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_DOMAIN
+		n.Object = listNode(yyDollar[3].list)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1264(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8987
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8961
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_DOMCONSTRAINT;
-		n->object = (Node *) $3;
-		n->subname = $6;
-		n->newname = $8;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_DOMCONSTRAINT
+		n.Object = listNode(yyDollar[3].list)
+		n.Subname = yyDollar[6].str
+		n.Newname = yyDollar[8].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1265(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:8997
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8971
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_FDW;
-		n->object = (Node *) makeString($5);
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_FDW
+		n.Object = makeString(yyDollar[5].str, yyDollar[5].loc)
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1266(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9007
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8981
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_FUNCTION;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_FUNCTION
+		n.Object = yyDollar[3].node
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1267(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9017
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:8991
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_ROLE;
-		n->subname = $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_ROLE
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1268(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9027
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9001
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_LANGUAGE;
-		n->object = (Node *) makeString($4);
-		n->newname = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_LANGUAGE
+		n.Object = makeString(yyDollar[4].str, yyDollar[4].loc)
+		n.Newname = yyDollar[7].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1269(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9037
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9011
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_OPCLASS;
-		n->object = (Node *) lcons(makeString($6), $4);
-		n->newname = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_OPCLASS
+		n.Object = listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))
+		n.Newname = yyDollar[9].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1270(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9047
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9021
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_OPFAMILY;
-		n->object = (Node *) lcons(makeString($6), $4);
-		n->newname = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_OPFAMILY
+		n.Object = listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))
+		n.Newname = yyDollar[9].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1271(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9057
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9031
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_POLICY;
-		n->relation = $5;
-		n->subname = $3;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_POLICY
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1272(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9068
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9042
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_POLICY;
-		n->relation = $7;
-		n->subname = $5;
-		n->newname = $10;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_POLICY
+		n.Relation = as[*RangeVar](yyDollar[7].node)
+		n.Subname = yyDollar[5].str
+		n.Newname = yyDollar[10].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1273(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9079
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9053
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_PROCEDURE;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_PROCEDURE
+		n.Object = yyDollar[3].node
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1274(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9089
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9063
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_PUBLICATION;
-		n->object = (Node *) makeString($3);
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_PUBLICATION
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1275(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9099
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9073
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_ROUTINE;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_ROUTINE
+		n.Object = yyDollar[3].node
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1276(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9109
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9083
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_SCHEMA;
-		n->subname = $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_SCHEMA
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1277(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9119
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9093
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_FOREIGN_SERVER;
-		n->object = (Node *) makeString($3);
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_FOREIGN_SERVER
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1278(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9129
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9103
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_SUBSCRIPTION;
-		n->object = (Node *) makeString($3);
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_SUBSCRIPTION
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1279(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9139
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9113
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TABLE;
-		n->relation = $3;
-		n->subname = NULL;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TABLE
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = ""
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1280(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9150
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9124
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TABLE;
-		n->relation = $5;
-		n->subname = NULL;
-		n->newname = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TABLE
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = ""
+		n.Newname = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1281(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9161
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9135
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_SEQUENCE;
-		n->relation = $3;
-		n->subname = NULL;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_SEQUENCE
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = ""
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1282(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9172
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9146
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_SEQUENCE;
-		n->relation = $5;
-		n->subname = NULL;
-		n->newname = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_SEQUENCE
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = ""
+		n.Newname = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1283(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9183
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9157
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_VIEW;
-		n->relation = $3;
-		n->subname = NULL;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_VIEW
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = ""
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1284(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9194
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9168
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_VIEW;
-		n->relation = $5;
-		n->subname = NULL;
-		n->newname = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_VIEW
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = ""
+		n.Newname = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1285(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9205
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9179
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_MATVIEW;
-		n->relation = $4;
-		n->subname = NULL;
-		n->newname = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Subname = ""
+		n.Newname = yyDollar[7].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1286(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9216
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9190
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_MATVIEW;
-		n->relation = $6;
-		n->subname = NULL;
-		n->newname = $9;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Subname = ""
+		n.Newname = yyDollar[9].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1287(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9227
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9201
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_INDEX;
-		n->relation = $3;
-		n->subname = NULL;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_INDEX
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = ""
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1288(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9238
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9212
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_INDEX;
-		n->relation = $5;
-		n->subname = NULL;
-		n->newname = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_INDEX
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = ""
+		n.Newname = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1289(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9249
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9223
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_FOREIGN_TABLE;
-		n->relation = $4;
-		n->subname = NULL;
-		n->newname = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_FOREIGN_TABLE
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Subname = ""
+		n.Newname = yyDollar[7].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1290(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9260
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9234
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_FOREIGN_TABLE;
-		n->relation = $6;
-		n->subname = NULL;
-		n->newname = $9;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_FOREIGN_TABLE
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Subname = ""
+		n.Newname = yyDollar[9].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1291(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9271
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9245
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_TABLE;
-		n->relation = $3;
-		n->subname = $6;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_TABLE
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = yyDollar[6].str
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1292(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9283
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9257
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_TABLE;
-		n->relation = $5;
-		n->subname = $8;
-		n->newname = $10;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_TABLE
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = yyDollar[8].str
+		n.Newname = yyDollar[10].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1293(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9295
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9269
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_VIEW;
-		n->relation = $3;
-		n->subname = $6;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_VIEW
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = yyDollar[6].str
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1294(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9307
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9281
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_VIEW;
-		n->relation = $5;
-		n->subname = $8;
-		n->newname = $10;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_VIEW
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = yyDollar[8].str
+		n.Newname = yyDollar[10].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1295(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9319
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9293
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_MATVIEW;
-		n->relation = $4;
-		n->subname = $7;
-		n->newname = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Subname = yyDollar[7].str
+		n.Newname = yyDollar[9].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1296(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9331
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9305
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_MATVIEW;
-		n->relation = $6;
-		n->subname = $9;
-		n->newname = $11;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Subname = yyDollar[9].str
+		n.Newname = yyDollar[11].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1297(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9343
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9317
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TABCONSTRAINT;
-		n->relation = $3;
-		n->subname = $6;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TABCONSTRAINT
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Subname = yyDollar[6].str
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1298(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9354
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9328
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TABCONSTRAINT;
-		n->relation = $5;
-		n->subname = $8;
-		n->newname = $10;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TABCONSTRAINT
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = yyDollar[8].str
+		n.Newname = yyDollar[10].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1299(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9365
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9339
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_FOREIGN_TABLE;
-		n->relation = $4;
-		n->subname = $7;
-		n->newname = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_FOREIGN_TABLE
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Subname = yyDollar[7].str
+		n.Newname = yyDollar[9].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1300(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9377
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9351
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_COLUMN;
-		n->relationType = OBJECT_FOREIGN_TABLE;
-		n->relation = $6;
-		n->subname = $9;
-		n->newname = $11;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_COLUMN
+		n.RelationType = OBJECT_FOREIGN_TABLE
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Subname = yyDollar[9].str
+		n.Newname = yyDollar[11].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1301(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9389
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9363
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_RULE;
-		n->relation = $5;
-		n->subname = $3;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_RULE
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1302(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9400
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9374
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TRIGGER;
-		n->relation = $5;
-		n->subname = $3;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TRIGGER
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1303(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9411
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9385
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_EVENT_TRIGGER;
-		n->object = (Node *) makeString($4);
-		n->newname = $7;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_EVENT_TRIGGER
+		n.Object = makeString(yyDollar[4].str, yyDollar[4].loc)
+		n.Newname = yyDollar[7].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1304(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9420
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9394
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_ROLE;
-		n->subname = $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_ROLE
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1305(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9430
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9404
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_ROLE;
-		n->subname = $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_ROLE
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1306(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9440
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9414
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TABLESPACE;
-		n->subname = $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TABLESPACE
+		n.Subname = yyDollar[3].str
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1307(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9450
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9424
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_STATISTIC_EXT;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_STATISTIC_EXT
+		n.Object = listNode(yyDollar[3].list)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1308(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9460
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9434
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TSPARSER;
-		n->object = (Node *) $5;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TSPARSER
+		n.Object = listNode(yyDollar[5].list)
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1309(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9470
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9444
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TSDICTIONARY;
-		n->object = (Node *) $5;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TSDICTIONARY
+		n.Object = listNode(yyDollar[5].list)
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1310(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9480
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9454
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TSTEMPLATE;
-		n->object = (Node *) $5;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TSTEMPLATE
+		n.Object = listNode(yyDollar[5].list)
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1311(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9490
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9464
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TSCONFIGURATION;
-		n->object = (Node *) $5;
-		n->newname = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TSCONFIGURATION
+		n.Object = listNode(yyDollar[5].list)
+		n.Newname = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1312(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9500
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9474
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_TYPE;
-		n->object = (Node *) $3;
-		n->newname = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_TYPE
+		n.Object = listNode(yyDollar[3].list)
+		n.Newname = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1313(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9510
-	{ /*C
-		RenameStmt *n = makeNode(RenameStmt);
+//line gram.y:9484
+	{
+		n := &RenameStmt{}
 
-		n->renameType = OBJECT_ATTRIBUTE;
-		n->relationType = OBJECT_TYPE;
-		n->relation = makeRangeVarFromAnyName($3, @3, yyscanner);
-		n->subname = $6;
-		n->newname = $8;
-		n->behavior = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.RenameType = OBJECT_ATTRIBUTE
+		n.RelationType = OBJECT_TYPE
+		n.Relation = p.makeRangeVarFromAnyName(yyDollar[3].list, yyDollar[3].loc)
+		n.Subname = yyDollar[6].str
+		n.Newname = yyDollar[8].str
+		n.Behavior = DropBehavior(yyDollar[9].ival)
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1316(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9528
+//line gram.y:9502
 	{
 		yyVAL.ival = 1
 	}
 }
 
 func yyAct1317(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9529
+//line gram.y:9503
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1318(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9540
-	{ /*C
-		AlterObjectDependsStmt *n = makeNode(AlterObjectDependsStmt);
+//line gram.y:9514
+	{
+		n := &AlterObjectDependsStmt{}
 
-		n->objectType = OBJECT_FUNCTION;
-		n->object = (Node *) $3;
-		n->extname = makeString($8);
-		n->remove = $4;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FUNCTION
+		n.Object = yyDollar[3].node
+		n.Extname = makeString(yyDollar[8].str, yyDollar[8].loc)
+		n.Remove = yyDollar[4].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1319(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9550
-	{ /*C
-		AlterObjectDependsStmt *n = makeNode(AlterObjectDependsStmt);
+//line gram.y:9524
+	{
+		n := &AlterObjectDependsStmt{}
 
-		n->objectType = OBJECT_PROCEDURE;
-		n->object = (Node *) $3;
-		n->extname = makeString($8);
-		n->remove = $4;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_PROCEDURE
+		n.Object = yyDollar[3].node
+		n.Extname = makeString(yyDollar[8].str, yyDollar[8].loc)
+		n.Remove = yyDollar[4].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1320(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9560
-	{ /*C
-		AlterObjectDependsStmt *n = makeNode(AlterObjectDependsStmt);
+//line gram.y:9534
+	{
+		n := &AlterObjectDependsStmt{}
 
-		n->objectType = OBJECT_ROUTINE;
-		n->object = (Node *) $3;
-		n->extname = makeString($8);
-		n->remove = $4;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_ROUTINE
+		n.Object = yyDollar[3].node
+		n.Extname = makeString(yyDollar[8].str, yyDollar[8].loc)
+		n.Remove = yyDollar[4].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1321(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9570
-	{ /*C
-		AlterObjectDependsStmt *n = makeNode(AlterObjectDependsStmt);
+//line gram.y:9544
+	{
+		n := &AlterObjectDependsStmt{}
 
-		n->objectType = OBJECT_TRIGGER;
-		n->relation = $5;
-		n->object = (Node *) list_make1(makeString($3));
-		n->extname = makeString($10);
-		n->remove = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TRIGGER
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Object = listNode([]Node{makeString(yyDollar[3].str, yyDollar[3].loc)})
+		n.Extname = makeString(yyDollar[10].str, yyDollar[10].loc)
+		n.Remove = yyDollar[6].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1322(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9581
-	{ /*C
-		AlterObjectDependsStmt *n = makeNode(AlterObjectDependsStmt);
+//line gram.y:9555
+	{
+		n := &AlterObjectDependsStmt{}
 
-		n->objectType = OBJECT_MATVIEW;
-		n->relation = $4;
-		n->extname = makeString($9);
-		n->remove = $5;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Extname = makeString(yyDollar[9].str, yyDollar[9].loc)
+		n.Remove = yyDollar[5].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1323(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9591
-	{ /*C
-		AlterObjectDependsStmt *n = makeNode(AlterObjectDependsStmt);
+//line gram.y:9565
+	{
+		n := &AlterObjectDependsStmt{}
 
-		n->objectType = OBJECT_INDEX;
-		n->relation = $3;
-		n->extname = makeString($8);
-		n->remove = $4;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_INDEX
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Extname = makeString(yyDollar[8].str, yyDollar[8].loc)
+		n.Remove = yyDollar[4].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1324(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9602
+//line gram.y:9576
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1325(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9603
+//line gram.y:9577
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1326(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9614
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9588
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_AGGREGATE;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_AGGREGATE
+		n.Object = yyDollar[3].node
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1327(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9624
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9598
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_COLLATION;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_COLLATION
+		n.Object = listNode(yyDollar[3].list)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1328(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9634
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9608
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_CONVERSION;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_CONVERSION
+		n.Object = listNode(yyDollar[3].list)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1329(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9644
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9618
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_DOMAIN;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_DOMAIN
+		n.Object = listNode(yyDollar[3].list)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1330(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9654
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9628
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_EXTENSION;
-		n->object = (Node *) makeString($3);
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_EXTENSION
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1331(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9664
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9638
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_FUNCTION;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FUNCTION
+		n.Object = yyDollar[3].node
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1332(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9674
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9648
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_OPERATOR;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_OPERATOR
+		n.Object = yyDollar[3].node
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1333(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9684
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9658
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_OPCLASS;
-		n->object = (Node *) lcons(makeString($6), $4);
-		n->newschema = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_OPCLASS
+		n.Object = listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))
+		n.Newschema = yyDollar[9].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1334(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9694
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9668
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_OPFAMILY;
-		n->object = (Node *) lcons(makeString($6), $4);
-		n->newschema = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_OPFAMILY
+		n.Object = listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))
+		n.Newschema = yyDollar[9].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1335(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9704
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9678
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_PROCEDURE;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_PROCEDURE
+		n.Object = yyDollar[3].node
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1336(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9714
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9688
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_ROUTINE;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_ROUTINE
+		n.Object = yyDollar[3].node
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1337(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9724
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9698
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TABLE;
-		n->relation = $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TABLE
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1338(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9734
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9708
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TABLE;
-		n->relation = $5;
-		n->newschema = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TABLE
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1339(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9744
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9718
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_STATISTIC_EXT;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_STATISTIC_EXT
+		n.Object = listNode(yyDollar[3].list)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1340(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9754
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9728
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TSPARSER;
-		n->object = (Node *) $5;
-		n->newschema = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TSPARSER
+		n.Object = listNode(yyDollar[5].list)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1341(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9764
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9738
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TSDICTIONARY;
-		n->object = (Node *) $5;
-		n->newschema = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TSDICTIONARY
+		n.Object = listNode(yyDollar[5].list)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1342(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9774
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9748
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TSTEMPLATE;
-		n->object = (Node *) $5;
-		n->newschema = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TSTEMPLATE
+		n.Object = listNode(yyDollar[5].list)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1343(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9784
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9758
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TSCONFIGURATION;
-		n->object = (Node *) $5;
-		n->newschema = $8;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TSCONFIGURATION
+		n.Object = listNode(yyDollar[5].list)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1344(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9794
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9768
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_SEQUENCE;
-		n->relation = $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_SEQUENCE
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1345(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9804
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9778
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_SEQUENCE;
-		n->relation = $5;
-		n->newschema = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_SEQUENCE
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1346(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9814
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9788
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_VIEW;
-		n->relation = $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_VIEW
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1347(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9824
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9798
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_VIEW;
-		n->relation = $5;
-		n->newschema = $8;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_VIEW
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Newschema = yyDollar[8].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1348(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9834
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9808
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_MATVIEW;
-		n->relation = $4;
-		n->newschema = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Newschema = yyDollar[7].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1349(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9844
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9818
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_MATVIEW;
-		n->relation = $6;
-		n->newschema = $9;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_MATVIEW
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Newschema = yyDollar[9].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1350(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9854
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9828
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_FOREIGN_TABLE;
-		n->relation = $4;
-		n->newschema = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FOREIGN_TABLE
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.Newschema = yyDollar[7].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1351(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9864
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9838
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_FOREIGN_TABLE;
-		n->relation = $6;
-		n->newschema = $9;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FOREIGN_TABLE
+		n.Relation = as[*RangeVar](yyDollar[6].node)
+		n.Newschema = yyDollar[9].str
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1352(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9874
-	{ /*C
-		AlterObjectSchemaStmt *n = makeNode(AlterObjectSchemaStmt);
+//line gram.y:9848
+	{
+		n := &AlterObjectSchemaStmt{}
 
-		n->objectType = OBJECT_TYPE;
-		n->object = (Node *) $3;
-		n->newschema = $6;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TYPE
+		n.Object = listNode(yyDollar[3].list)
+		n.Newschema = yyDollar[6].str
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1353(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9893
-	{ /*C
-		AlterOperatorStmt *n = makeNode(AlterOperatorStmt);
+//line gram.y:9867
+	{
+		n := &AlterOperatorStmt{}
 
-		n->opername = $3;
-		n->options = $6;
-		$$ = (Node *) n;
-		*/
+		n.Opername = as[*ObjectWithArgs](yyDollar[3].node)
+		n.Options = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1354(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9902
+//line gram.y:9876
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1355(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9903
+//line gram.y:9877
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1356(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9907
-	{ /*C $$ = makeDefElem($1, NULL, @1); */
+//line gram.y:9881
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct1357(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9909
-	{ /*C $$ = makeDefElem($1, (Node *) $3, @1); */
+//line gram.y:9883
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1358(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9911
-	{ /*C $$ = makeDefElem($1, NULL, @1); */
+//line gram.y:9885
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct1359(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9916
+//line gram.y:9890
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1360(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9917
-	{ /*C $$ = (Node *) makeString(pstrdup($1)); */
+//line gram.y:9891
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct1361(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9918
-	{ /*C $$ = (Node *) $1; */
+//line gram.y:9892
+	{
+		yyVAL.node = listNode(yyDollar[1].list)
 	}
 }
 
 func yyAct1362(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9919
+//line gram.y:9893
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1363(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9920
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:9894
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct1364(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9933
-	{ /*C
-		AlterTypeStmt *n = makeNode(AlterTypeStmt);
+//line gram.y:9907
+	{
+		n := &AlterTypeStmt{}
 
-		n->typeName = $3;
-		n->options = $6;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = yyDollar[3].list
+		n.Options = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1365(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9949
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9923
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_AGGREGATE;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_AGGREGATE
+		n.Object = yyDollar[3].node
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1366(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9958
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9932
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_COLLATION;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_COLLATION
+		n.Object = listNode(yyDollar[3].list)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1367(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9967
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9941
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_CONVERSION;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_CONVERSION
+		n.Object = listNode(yyDollar[3].list)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1368(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9976
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9950
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_DATABASE;
-		n->object = (Node *) makeString($3);
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_DATABASE
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1369(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9985
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9959
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_DOMAIN;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_DOMAIN
+		n.Object = listNode(yyDollar[3].list)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1370(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:9994
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9968
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_FUNCTION;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FUNCTION
+		n.Object = yyDollar[3].node
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1371(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10003
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9977
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_LANGUAGE;
-		n->object = (Node *) makeString($4);
-		n->newowner = $7;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_LANGUAGE
+		n.Object = makeString(yyDollar[4].str, yyDollar[4].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[7].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1372(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10012
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9986
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_LARGEOBJECT;
-		n->object = (Node *) $4;
-		n->newowner = $7;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_LARGEOBJECT
+		n.Object = yyDollar[4].node
+		n.Newowner = as[*RoleSpec](yyDollar[7].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1373(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10021
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:9995
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_OPERATOR;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_OPERATOR
+		n.Object = yyDollar[3].node
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1374(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10030
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10004
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_OPCLASS;
-		n->object = (Node *) lcons(makeString($6), $4);
-		n->newowner = $9;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_OPCLASS
+		n.Object = listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))
+		n.Newowner = as[*RoleSpec](yyDollar[9].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1375(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10039
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10013
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_OPFAMILY;
-		n->object = (Node *) lcons(makeString($6), $4);
-		n->newowner = $9;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_OPFAMILY
+		n.Object = listNode(append([]Node{makeString(yyDollar[6].str, yyDollar[6].loc)}, yyDollar[4].list...))
+		n.Newowner = as[*RoleSpec](yyDollar[9].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1376(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10048
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10022
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_PROCEDURE;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_PROCEDURE
+		n.Object = yyDollar[3].node
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1377(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10057
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10031
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_ROUTINE;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_ROUTINE
+		n.Object = yyDollar[3].node
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1378(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10066
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10040
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_SCHEMA;
-		n->object = (Node *) makeString($3);
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_SCHEMA
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1379(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10075
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10049
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_TYPE;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TYPE
+		n.Object = listNode(yyDollar[3].list)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1380(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10084
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10058
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_TABLESPACE;
-		n->object = (Node *) makeString($3);
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TABLESPACE
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1381(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10093
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10067
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_STATISTIC_EXT;
-		n->object = (Node *) $3;
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_STATISTIC_EXT
+		n.Object = listNode(yyDollar[3].list)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1382(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10102
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10076
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_TSDICTIONARY;
-		n->object = (Node *) $5;
-		n->newowner = $8;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TSDICTIONARY
+		n.Object = listNode(yyDollar[5].list)
+		n.Newowner = as[*RoleSpec](yyDollar[8].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1383(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10111
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10085
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_TSCONFIGURATION;
-		n->object = (Node *) $5;
-		n->newowner = $8;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_TSCONFIGURATION
+		n.Object = listNode(yyDollar[5].list)
+		n.Newowner = as[*RoleSpec](yyDollar[8].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1384(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10120
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10094
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_FDW;
-		n->object = (Node *) makeString($5);
-		n->newowner = $8;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FDW
+		n.Object = makeString(yyDollar[5].str, yyDollar[5].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[8].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1385(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10129
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10103
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_FOREIGN_SERVER;
-		n->object = (Node *) makeString($3);
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_FOREIGN_SERVER
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1386(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10138
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10112
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_EVENT_TRIGGER;
-		n->object = (Node *) makeString($4);
-		n->newowner = $7;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_EVENT_TRIGGER
+		n.Object = makeString(yyDollar[4].str, yyDollar[4].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[7].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1387(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10147
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10121
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_PUBLICATION;
-		n->object = (Node *) makeString($3);
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_PUBLICATION
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1388(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10156
-	{ /*C
-		AlterOwnerStmt *n = makeNode(AlterOwnerStmt);
+//line gram.y:10130
+	{
+		n := &AlterOwnerStmt{}
 
-		n->objectType = OBJECT_SUBSCRIPTION;
-		n->object = (Node *) makeString($3);
-		n->newowner = $6;
-		$$ = (Node *) n;
-		*/
+		n.ObjectType = OBJECT_SUBSCRIPTION
+		n.Object = makeString(yyDollar[3].str, yyDollar[3].loc)
+		n.Newowner = as[*RoleSpec](yyDollar[6].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1389(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10184
-	{ /*C
-		CreatePublicationStmt *n = makeNode(CreatePublicationStmt);
+//line gram.y:10158
+	{
+		n := &CreatePublicationStmt{}
 
-		n->pubname = $3;
-		n->options = $4;
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Options = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1390(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10192
-	{ /*C
-		CreatePublicationStmt *n = makeNode(CreatePublicationStmt);
+//line gram.y:10166
+	{
+		n := &CreatePublicationStmt{}
 
-		n->pubname = $3;
-		n->options = $7;
-		n->for_all_tables = true;
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Options = yyDollar[7].list
+		n.ForAllTables = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1391(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10201
-	{ /*C
-		CreatePublicationStmt *n = makeNode(CreatePublicationStmt);
+//line gram.y:10175
+	{
+		n := &CreatePublicationStmt{}
 
-		n->pubname = $3;
-		n->options = $6;
-		n->pubobjects = (List *) $5;
-		preprocess_pubobj_list(n->pubobjects, yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Options = yyDollar[6].list
+		n.Pubobjects = yyDollar[5].list
+		p.preprocessPubobjList(n.Pubobjects)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1392(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10227
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_TABLE;
-		$$->pubtable = makeNode(PublicationTable);
-		$$->pubtable->relation = $2;
-		$$->pubtable->columns = $3;
-		$$->pubtable->whereClause = $4;
-		*/
+//line gram.y:10201
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_TABLE
+		n.Pubtable = &PublicationTable{}
+		n.Pubtable.Relation = as[*RangeVar](yyDollar[2].node)
+		n.Pubtable.Columns = yyDollar[3].list
+		n.Pubtable.WhereClause = yyDollar[4].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1393(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10236
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_TABLES_IN_SCHEMA;
-		$$->name = $4;
-		$$->location = @4;
-		*/
+//line gram.y:10212
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_TABLES_IN_SCHEMA
+		n.Name = yyDollar[4].str
+		n.Location = yyDollar[4].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1394(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10243
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_TABLES_IN_CUR_SCHEMA;
-		$$->location = @4;
-		*/
+//line gram.y:10221
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_TABLES_IN_CUR_SCHEMA
+		n.Location = yyDollar[4].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1395(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10249
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_CONTINUATION;
+//line gram.y:10229
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_CONTINUATION
 		/*
 		 * If either a row filter or column list is specified, create
 		 * a PublicationTable object.
-		 * /
-		if ($2 || $3)
-		{
+		 */
+		if yyDollar[2].list != nil || yyDollar[3].node != nil {
 			/*
 			 * The OptWhereClause must be stored here but it is
 			 * valid only for tables. For non-table objects, an
 			 * error will be thrown later via
 			 * preprocess_pubobj_list().
-			 * /
-			$$->pubtable = makeNode(PublicationTable);
-			$$->pubtable->relation = makeRangeVar(NULL, $1, @1);
-			$$->pubtable->columns = $2;
-			$$->pubtable->whereClause = $3;
+			 */
+			n.Pubtable = &PublicationTable{}
+			n.Pubtable.Relation = makeRangeVar("", yyDollar[1].str, yyDollar[1].loc)
+			n.Pubtable.Columns = yyDollar[2].list
+			n.Pubtable.WhereClause = yyDollar[3].node
+		} else {
+			n.Name = yyDollar[1].str
 		}
-		else
-		{
-			$$->name = $1;
-		}
-		$$->location = @1;
-		*/
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1396(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10276
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_CONTINUATION;
-		$$->pubtable = makeNode(PublicationTable);
-		$$->pubtable->relation = makeRangeVarFromQualifiedName($1, $2, @1, yyscanner);
-		$$->pubtable->columns = $3;
-		$$->pubtable->whereClause = $4;
-		$$->location = @1;
-		*/
+//line gram.y:10255
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_CONTINUATION
+		n.Pubtable = &PublicationTable{}
+		n.Pubtable.Relation = p.makeRangeVarFromQualifiedName(yyDollar[1].str, yyDollar[2].list, yyDollar[1].loc)
+		n.Pubtable.Columns = yyDollar[3].list
+		n.Pubtable.WhereClause = yyDollar[4].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1397(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10287
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_CONTINUATION;
-		$$->pubtable = makeNode(PublicationTable);
-		$$->pubtable->relation = $1;
-		$$->pubtable->columns = $2;
-		$$->pubtable->whereClause = $3;
-		*/
+//line gram.y:10268
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_CONTINUATION
+		n.Pubtable = &PublicationTable{}
+		n.Pubtable.Relation = as[*RangeVar](yyDollar[1].node)
+		n.Pubtable.Columns = yyDollar[2].list
+		n.Pubtable.WhereClause = yyDollar[3].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1398(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10296
-	{ /*C
-		$$ = makeNode(PublicationObjSpec);
-		$$->pubobjtype = PUBLICATIONOBJ_CONTINUATION;
-		$$->location = @1;
-		*/
+//line gram.y:10279
+	{
+		n := &PublicationObjSpec{}
+
+		n.Pubobjtype = PUBLICATIONOBJ_CONTINUATION
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1399(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10304
+//line gram.y:10289
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1400(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10306
+//line gram.y:10291
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1401(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10328
-	{ /*C
-		AlterPublicationStmt *n = makeNode(AlterPublicationStmt);
+//line gram.y:10313
+	{
+		n := &AlterPublicationStmt{}
 
-		n->pubname = $3;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1402(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10336
-	{ /*C
-		AlterPublicationStmt *n = makeNode(AlterPublicationStmt);
+//line gram.y:10321
+	{
+		n := &AlterPublicationStmt{}
 
-		n->pubname = $3;
-		n->pubobjects = $5;
-		preprocess_pubobj_list(n->pubobjects, yyscanner);
-		n->action = AP_AddObjects;
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Pubobjects = yyDollar[5].list
+		p.preprocessPubobjList(n.Pubobjects)
+		n.Action = AP_AddObjects
+		yyVAL.node = n
 	}
 }
 
 func yyAct1403(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10346
-	{ /*C
-		AlterPublicationStmt *n = makeNode(AlterPublicationStmt);
+//line gram.y:10331
+	{
+		n := &AlterPublicationStmt{}
 
-		n->pubname = $3;
-		n->pubobjects = $5;
-		preprocess_pubobj_list(n->pubobjects, yyscanner);
-		n->action = AP_SetObjects;
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Pubobjects = yyDollar[5].list
+		p.preprocessPubobjList(n.Pubobjects)
+		n.Action = AP_SetObjects
+		yyVAL.node = n
 	}
 }
 
 func yyAct1404(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10356
-	{ /*C
-		AlterPublicationStmt *n = makeNode(AlterPublicationStmt);
+//line gram.y:10341
+	{
+		n := &AlterPublicationStmt{}
 
-		n->pubname = $3;
-		n->pubobjects = $5;
-		preprocess_pubobj_list(n->pubobjects, yyscanner);
-		n->action = AP_DropObjects;
-		$$ = (Node *) n;
-		*/
+		n.Pubname = yyDollar[3].str
+		n.Pubobjects = yyDollar[5].list
+		p.preprocessPubobjList(n.Pubobjects)
+		n.Action = AP_DropObjects
+		yyVAL.node = n
 	}
 }
 
 func yyAct1405(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10375
-	{ /*C
-		CreateSubscriptionStmt *n =
-			makeNode(CreateSubscriptionStmt);
-		n->subname = $3;
-		n->conninfo = $5;
-		n->publication = $7;
-		n->options = $8;
-		$$ = (Node *) n;
-		*/
+//line gram.y:10360
+	{
+		n := &CreateSubscriptionStmt{}
+
+		n.Subname = yyDollar[3].str
+		n.Conninfo = yyDollar[5].str
+		n.Publication = yyDollar[7].list
+		n.Options = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1406(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10394
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10379
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_OPTIONS;
-		n->subname = $3;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_OPTIONS
+		n.Subname = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1407(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10404
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10388
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_CONNECTION;
-		n->subname = $3;
-		n->conninfo = $5;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_CONNECTION
+		n.Subname = yyDollar[3].str
+		n.Conninfo = yyDollar[5].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1408(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10414
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10397
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_REFRESH;
-		n->subname = $3;
-		n->options = $6;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_REFRESH
+		n.Subname = yyDollar[3].str
+		n.Options = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1409(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10424
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10406
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_ADD_PUBLICATION;
-		n->subname = $3;
-		n->publication = $6;
-		n->options = $7;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_ADD_PUBLICATION
+		n.Subname = yyDollar[3].str
+		n.Publication = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1410(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10435
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10416
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_DROP_PUBLICATION;
-		n->subname = $3;
-		n->publication = $6;
-		n->options = $7;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_DROP_PUBLICATION
+		n.Subname = yyDollar[3].str
+		n.Publication = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1411(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10446
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10426
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_SET_PUBLICATION;
-		n->subname = $3;
-		n->publication = $6;
-		n->options = $7;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_SET_PUBLICATION
+		n.Subname = yyDollar[3].str
+		n.Publication = yyDollar[6].list
+		n.Options = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1412(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10457
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10436
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_ENABLED;
-		n->subname = $3;
-		n->options = list_make1(makeDefElem("enabled",
-								(Node *) makeBoolean(true), @1));
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_ENABLED
+		n.Subname = yyDollar[3].str
+		n.Options = []Node{makeDefElem("enabled",
+			makeBoolean(true), yyDollar[1].loc)}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1413(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10468
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10446
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_ENABLED;
-		n->subname = $3;
-		n->options = list_make1(makeDefElem("enabled",
-								(Node *) makeBoolean(false), @1));
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_ENABLED
+		n.Subname = yyDollar[3].str
+		n.Options = []Node{makeDefElem("enabled",
+			makeBoolean(false), yyDollar[1].loc)}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1414(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10479
-	{ /*C
-		AlterSubscriptionStmt *n =
-			makeNode(AlterSubscriptionStmt);
+//line gram.y:10456
+	{
+		n := &AlterSubscriptionStmt{}
 
-		n->kind = ALTER_SUBSCRIPTION_SKIP;
-		n->subname = $3;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_SUBSCRIPTION_SKIP
+		n.Subname = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1415(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10497
-	{ /*C
-		DropSubscriptionStmt *n = makeNode(DropSubscriptionStmt);
+//line gram.y:10473
+	{
+		n := &DropSubscriptionStmt{}
 
-		n->subname = $3;
-		n->missing_ok = false;
-		n->behavior = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subname = yyDollar[3].str
+		n.MissingOk = false
+		n.Behavior = DropBehavior(yyDollar[4].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1416(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10506
-	{ /*C
-		DropSubscriptionStmt *n = makeNode(DropSubscriptionStmt);
+//line gram.y:10482
+	{
+		n := &DropSubscriptionStmt{}
 
-		n->subname = $5;
-		n->missing_ok = true;
-		n->behavior = $6;
-		$$ = (Node *) n;
-		*/
+		n.Subname = yyDollar[5].str
+		n.MissingOk = true
+		n.Behavior = DropBehavior(yyDollar[6].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1417(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10525
-	{ /*C
-		RuleStmt   *n = makeNode(RuleStmt);
+//line gram.y:10501
+	{
+		n := &RuleStmt{}
 
-		n->replace = $2;
-		n->relation = $9;
-		n->rulename = $4;
-		n->whereClause = $10;
-		n->event = $7;
-		n->instead = $12;
-		n->actions = $13;
-		$$ = (Node *) n;
-		*/
+		n.Replace = yyDollar[2].boolean
+		n.Relation = as[*RangeVar](yyDollar[9].node)
+		n.Rulename = yyDollar[4].str
+		n.WhereClause = yyDollar[10].node
+		n.Event = CmdType(yyDollar[7].ival)
+		n.Instead = yyDollar[12].boolean
+		n.Actions = yyDollar[13].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1418(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10540
+//line gram.y:10516
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1419(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10541
+//line gram.y:10517
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1420(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10542
+//line gram.y:10518
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1421(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10548
-	{ /*C if ($3 != NULL)
-			$$ = lappend($1, $3);
-		  else
-			$$ = $1;
-		*/
+//line gram.y:10524
+	{
+		if yyDollar[3].node != nil {
+			yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
+		} else {
+			yyVAL.list = yyDollar[1].list
+		}
 	}
 }
 
 func yyAct1422(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10554
-	{ /*C if ($1 != NULL)
-			$$ = list_make1($1);
-		  else
-			$$ = NIL;
-		*/
+//line gram.y:10532
+	{
+		if yyDollar[1].node != nil {
+			yyVAL.list = []Node{yyDollar[1].node}
+		} else {
+			yyVAL.list = nil
+		}
 	}
 }
 
 func yyAct1428(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10570
+//line gram.y:10550
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1429(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10571
+//line gram.y:10551
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1430(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10574
-	{ /*C $$ = CMD_SELECT; */
+//line gram.y:10554
+	{
+		yyVAL.ival = int32(CMD_SELECT)
 	}
 }
 
 func yyAct1431(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10575
-	{ /*C $$ = CMD_UPDATE; */
+//line gram.y:10555
+	{
+		yyVAL.ival = int32(CMD_UPDATE)
 	}
 }
 
 func yyAct1432(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10576
-	{ /*C $$ = CMD_DELETE; */
+//line gram.y:10556
+	{
+		yyVAL.ival = int32(CMD_DELETE)
 	}
 }
 
 func yyAct1433(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10577
-	{ /*C $$ = CMD_INSERT; */
+//line gram.y:10557
+	{
+		yyVAL.ival = int32(CMD_INSERT)
 	}
 }
 
 func yyAct1434(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10581
+//line gram.y:10561
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1435(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10582
+//line gram.y:10562
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1436(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10583
+//line gram.y:10563
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1437(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10596
-	{ /*C
-		NotifyStmt *n = makeNode(NotifyStmt);
+//line gram.y:10576
+	{
+		n := &NotifyStmt{}
 
-		n->conditionname = $2;
-		n->payload = $3;
-		$$ = (Node *) n;
-		*/
+		n.Conditionname = yyDollar[2].str
+		n.Payload = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1438(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10606
+//line gram.y:10586
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct1439(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10607
+//line gram.y:10587
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct1440(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10611
-	{ /*C
-		ListenStmt *n = makeNode(ListenStmt);
+//line gram.y:10591
+	{
+		n := &ListenStmt{}
 
-		n->conditionname = $2;
-		$$ = (Node *) n;
-		*/
+		n.Conditionname = yyDollar[2].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1441(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10621
-	{ /*C
-		UnlistenStmt *n = makeNode(UnlistenStmt);
+//line gram.y:10601
+	{
+		n := &UnlistenStmt{}
 
-		n->conditionname = $2;
-		$$ = (Node *) n;
-		*/
+		n.Conditionname = yyDollar[2].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1442(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10628
-	{ /*C
-		UnlistenStmt *n = makeNode(UnlistenStmt);
+//line gram.y:10608
+	{
+		n := &UnlistenStmt{}
 
-		n->conditionname = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Conditionname = ""
+		yyVAL.node = n
 	}
 }
 
 func yyAct1443(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10648
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10628
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_ROLLBACK;
-		n->options = NIL;
-		n->chain = $3;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_ROLLBACK
+		n.Options = nil
+		n.Chain = yyDollar[3].boolean
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1444(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10658
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10638
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_START;
-		n->options = $3;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_START
+		n.Options = yyDollar[3].list
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1445(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10667
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10647
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_COMMIT;
-		n->options = NIL;
-		n->chain = $3;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_COMMIT
+		n.Options = nil
+		n.Chain = yyDollar[3].boolean
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1446(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10677
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10657
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_ROLLBACK;
-		n->options = NIL;
-		n->chain = $3;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_ROLLBACK
+		n.Options = nil
+		n.Chain = yyDollar[3].boolean
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1447(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10687
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10667
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_SAVEPOINT;
-		n->savepoint_name = $2;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_SAVEPOINT
+		n.SavepointName = yyDollar[2].str
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1448(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10696
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10676
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_RELEASE;
-		n->savepoint_name = $3;
-		n->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_RELEASE
+		n.SavepointName = yyDollar[3].str
+		n.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1449(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10705
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10685
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_RELEASE;
-		n->savepoint_name = $2;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_RELEASE
+		n.SavepointName = yyDollar[2].str
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1450(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10714
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10694
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_ROLLBACK_TO;
-		n->savepoint_name = $5;
-		n->location = @5;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_ROLLBACK_TO
+		n.SavepointName = yyDollar[5].str
+		n.Location = yyDollar[5].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1451(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10723
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10703
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_ROLLBACK_TO;
-		n->savepoint_name = $4;
-		n->location = @4;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_ROLLBACK_TO
+		n.SavepointName = yyDollar[4].str
+		n.Location = yyDollar[4].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1452(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10732
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10712
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_PREPARE;
-		n->gid = $3;
-		n->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_PREPARE
+		n.Gid = yyDollar[3].str
+		n.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1453(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10741
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10721
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_COMMIT_PREPARED;
-		n->gid = $3;
-		n->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_COMMIT_PREPARED
+		n.Gid = yyDollar[3].str
+		n.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1454(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10750
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10730
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_ROLLBACK_PREPARED;
-		n->gid = $3;
-		n->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_ROLLBACK_PREPARED
+		n.Gid = yyDollar[3].str
+		n.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1455(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10762
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10742
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_BEGIN;
-		n->options = $3;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_BEGIN
+		n.Options = yyDollar[3].list
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1456(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10771
-	{ /*C
-		TransactionStmt *n = makeNode(TransactionStmt);
+//line gram.y:10751
+	{
+		n := &TransactionStmt{}
 
-		n->kind = TRANS_STMT_COMMIT;
-		n->options = NIL;
-		n->chain = $3;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Kind = TRANS_STMT_COMMIT
+		n.Options = nil
+		n.Chain = yyDollar[3].boolean
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1460(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10789
-	{ /*C $$ = makeDefElem("transaction_isolation",
-		  makeStringConst($3, @3), @1); */
+//line gram.y:10769
+	{
+		yyVAL.node = makeDefElem("transaction_isolation",
+			makeStringConst(yyDollar[3].str, yyDollar[3].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1461(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10792
-	{ /*C $$ = makeDefElem("transaction_read_only",
-		  makeIntConst(true, @1), @1); */
+//line gram.y:10774
+	{
+		yyVAL.node = makeDefElem("transaction_read_only",
+			makeIntConst(1, yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1462(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10795
-	{ /*C $$ = makeDefElem("transaction_read_only",
-		  makeIntConst(false, @1), @1); */
+//line gram.y:10779
+	{
+		yyVAL.node = makeDefElem("transaction_read_only",
+			makeIntConst(0, yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1463(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10798
-	{ /*C $$ = makeDefElem("transaction_deferrable",
-		  makeIntConst(true, @1), @1); */
+//line gram.y:10784
+	{
+		yyVAL.node = makeDefElem("transaction_deferrable",
+			makeIntConst(1, yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1464(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10801
-	{ /*C $$ = makeDefElem("transaction_deferrable",
-		  makeIntConst(false, @1), @1); */
+//line gram.y:10789
+	{
+		yyVAL.node = makeDefElem("transaction_deferrable",
+			makeIntConst(0, yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1465(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10808
+//line gram.y:10798
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1466(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10810
+//line gram.y:10800
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1467(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10812
+//line gram.y:10802
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1469(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10818
+//line gram.y:10808
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1470(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10822
+//line gram.y:10812
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1471(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10823
+//line gram.y:10813
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1472(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10824
+//line gram.y:10814
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1473(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10838
-	{ /*C
-		ViewStmt   *n = makeNode(ViewStmt);
+//line gram.y:10828
+	{
+		n := &ViewStmt{}
 
-		n->view = $4;
-		n->view->relpersistence = $2;
-		n->aliases = $5;
-		n->query = $8;
-		n->replace = false;
-		n->options = $6;
-		n->withCheckOption = $9;
-		$$ = (Node *) n;
-		*/
+		n.View = as[*RangeVar](yyDollar[4].node)
+		n.View.Relpersistence = string(rune(yyDollar[2].ival))
+		n.Aliases = yyDollar[5].list
+		n.Query = yyDollar[8].node
+		n.Replace = false
+		n.Options = yyDollar[6].list
+		n.WithCheckOption = ViewCheckOption(yyDollar[9].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1474(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10852
-	{ /*C
-		ViewStmt   *n = makeNode(ViewStmt);
+//line gram.y:10842
+	{
+		n := &ViewStmt{}
 
-		n->view = $6;
-		n->view->relpersistence = $4;
-		n->aliases = $7;
-		n->query = $10;
-		n->replace = true;
-		n->options = $8;
-		n->withCheckOption = $11;
-		$$ = (Node *) n;
-		*/
+		n.View = as[*RangeVar](yyDollar[6].node)
+		n.View.Relpersistence = string(rune(yyDollar[4].ival))
+		n.Aliases = yyDollar[7].list
+		n.Query = yyDollar[10].node
+		n.Replace = true
+		n.Options = yyDollar[8].list
+		n.WithCheckOption = ViewCheckOption(yyDollar[11].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1475(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10866
-	{ /*C
-		ViewStmt   *n = makeNode(ViewStmt);
+//line gram.y:10856
+	{
+		n := &ViewStmt{}
 
-		n->view = $5;
-		n->view->relpersistence = $2;
-		n->aliases = $7;
-		n->query = makeRecursiveViewSelect(n->view->relname, n->aliases, $11);
-		n->replace = false;
-		n->options = $9;
-		n->withCheckOption = $12;
-		if (n->withCheckOption != NO_CHECK_OPTION)
-			ereport(ERROR,
-					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("WITH CHECK OPTION not supported on recursive views"),
-					 parser_errposition(@12)));
-		$$ = (Node *) n;
-		*/
+		n.View = as[*RangeVar](yyDollar[5].node)
+		n.View.Relpersistence = string(rune(yyDollar[2].ival))
+		n.Aliases = yyDollar[7].list
+		n.Query = p.makeRecursiveViewSelect(n.View.Relname, n.Aliases, yyDollar[11].node)
+		n.Replace = false
+		n.Options = yyDollar[9].list
+		n.WithCheckOption = ViewCheckOption(yyDollar[12].ival)
+		if n.WithCheckOption != NO_CHECK_OPTION {
+			p.fail(yyDollar[12].loc, "WITH CHECK OPTION not supported on recursive views")
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1476(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10885
-	{ /*C
-		ViewStmt   *n = makeNode(ViewStmt);
+//line gram.y:10873
+	{
+		n := &ViewStmt{}
 
-		n->view = $7;
-		n->view->relpersistence = $4;
-		n->aliases = $9;
-		n->query = makeRecursiveViewSelect(n->view->relname, n->aliases, $13);
-		n->replace = true;
-		n->options = $11;
-		n->withCheckOption = $14;
-		if (n->withCheckOption != NO_CHECK_OPTION)
-			ereport(ERROR,
-					(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					 errmsg("WITH CHECK OPTION not supported on recursive views"),
-					 parser_errposition(@14)));
-		$$ = (Node *) n;
-		*/
+		n.View = as[*RangeVar](yyDollar[7].node)
+		n.View.Relpersistence = string(rune(yyDollar[4].ival))
+		n.Aliases = yyDollar[9].list
+		n.Query = p.makeRecursiveViewSelect(n.View.Relname, n.Aliases, yyDollar[13].node)
+		n.Replace = true
+		n.Options = yyDollar[11].list
+		n.WithCheckOption = ViewCheckOption(yyDollar[14].ival)
+		if n.WithCheckOption != NO_CHECK_OPTION {
+			p.fail(yyDollar[14].loc, "WITH CHECK OPTION not supported on recursive views")
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1477(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10905
-	{ /*C $$ = CASCADED_CHECK_OPTION; */
+//line gram.y:10891
+	{
+		yyVAL.ival = int32(CASCADED_CHECK_OPTION)
 	}
 }
 
 func yyAct1478(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10906
-	{ /*C $$ = CASCADED_CHECK_OPTION; */
+//line gram.y:10892
+	{
+		yyVAL.ival = int32(CASCADED_CHECK_OPTION)
 	}
 }
 
 func yyAct1479(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10907
-	{ /*C $$ = LOCAL_CHECK_OPTION; */
+//line gram.y:10893
+	{
+		yyVAL.ival = int32(LOCAL_CHECK_OPTION)
 	}
 }
 
 func yyAct1480(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10908
-	{ /*C $$ = NO_CHECK_OPTION; */
+//line gram.y:10894
+	{
+		yyVAL.ival = int32(NO_CHECK_OPTION)
 	}
 }
 
 func yyAct1481(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10919
-	{ /*C
-		LoadStmt   *n = makeNode(LoadStmt);
+//line gram.y:10905
+	{
+		n := &LoadStmt{}
 
-		n->filename = $2;
-		$$ = (Node *) n;
-		*/
+		n.Filename = yyDollar[2].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1482(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10936
-	{ /*C
-		CreatedbStmt *n = makeNode(CreatedbStmt);
+//line gram.y:10922
+	{
+		n := &CreatedbStmt{}
 
-		n->dbname = $3;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1483(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10946
+//line gram.y:10932
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1484(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10947
+//line gram.y:10933
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1485(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10951
+//line gram.y:10937
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1486(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10952
+//line gram.y:10938
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1487(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10957
-	{ /*C
-		$$ = makeDefElem($1, $3, @1);
-		*/
+//line gram.y:10943
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[3].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1488(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10961
-	{ /*C
-		$$ = makeDefElem($1, (Node *) makeString($3), @1);
-		*/
+//line gram.y:10945
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, makeString(yyDollar[3].str, yyDollar[3].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct1489(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10965
-	{ /*C
-		$$ = makeDefElem($1, NULL, @1);
-		*/
+//line gram.y:10947
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct1490(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10982
+//line gram.y:10962
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1491(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10983
-	{ /*C $$ = pstrdup("connection_limit"); */
+//line gram.y:10963
+	{
+		yyVAL.str = "connection_limit"
 	}
 }
 
 func yyAct1492(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10984
+//line gram.y:10964
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1493(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10985
+//line gram.y:10965
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1494(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10986
+//line gram.y:10966
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1495(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10987
+//line gram.y:10967
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1496(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:10988
+//line gram.y:10968
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1499(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11008
-	{ /*C
-		AlterDatabaseStmt *n = makeNode(AlterDatabaseStmt);
+//line gram.y:10988
+	{
+		n := &AlterDatabaseStmt{}
 
-		n->dbname = $3;
-		n->options = $5;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.Options = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1500(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11016
-	{ /*C
-		AlterDatabaseStmt *n = makeNode(AlterDatabaseStmt);
+//line gram.y:10996
+	{
+		n := &AlterDatabaseStmt{}
 
-		n->dbname = $3;
-		n->options = $4;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.Options = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1501(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11024
-	{ /*C
-		AlterDatabaseStmt *n = makeNode(AlterDatabaseStmt);
+//line gram.y:11004
+	{
+		n := &AlterDatabaseStmt{}
 
-		n->dbname = $3;
-		n->options = list_make1(makeDefElem("tablespace",
-											(Node *) makeString($6), @6));
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.Options = []Node{makeDefElem("tablespace",
+			makeString(yyDollar[6].str, yyDollar[6].loc), yyDollar[6].loc)}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1502(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11033
-	{ /*C
-		AlterDatabaseRefreshCollStmt *n = makeNode(AlterDatabaseRefreshCollStmt);
+//line gram.y:11013
+	{
+		n := &AlterDatabaseRefreshCollStmt{}
 
-		n->dbname = $3;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1503(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11043
-	{ /*C
-		AlterDatabaseSetStmt *n = makeNode(AlterDatabaseSetStmt);
+//line gram.y:11023
+	{
+		n := &AlterDatabaseSetStmt{}
 
-		n->dbname = $3;
-		n->setstmt = $4;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.Setstmt = as[*VariableSetStmt](yyDollar[4].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1504(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11061
-	{ /*C
-		DropdbStmt *n = makeNode(DropdbStmt);
+//line gram.y:11041
+	{
+		n := &DropdbStmt{}
 
-		n->dbname = $3;
-		n->missing_ok = false;
-		n->options = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.MissingOk = false
+		n.Options = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1505(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11070
-	{ /*C
-		DropdbStmt *n = makeNode(DropdbStmt);
+//line gram.y:11050
+	{
+		n := &DropdbStmt{}
 
-		n->dbname = $5;
-		n->missing_ok = true;
-		n->options = NULL;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[5].str
+		n.MissingOk = true
+		n.Options = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1506(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11079
-	{ /*C
-		DropdbStmt *n = makeNode(DropdbStmt);
+//line gram.y:11059
+	{
+		n := &DropdbStmt{}
 
-		n->dbname = $3;
-		n->missing_ok = false;
-		n->options = $6;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[3].str
+		n.MissingOk = false
+		n.Options = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1507(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11088
-	{ /*C
-		DropdbStmt *n = makeNode(DropdbStmt);
+//line gram.y:11068
+	{
+		n := &DropdbStmt{}
 
-		n->dbname = $5;
-		n->missing_ok = true;
-		n->options = $8;
-		$$ = (Node *) n;
-		*/
+		n.Dbname = yyDollar[5].str
+		n.MissingOk = true
+		n.Options = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1508(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11100
-	{ /*C
-		$$ = list_make1((Node *) $1);
-		*/
+//line gram.y:11080
+	{
+		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1509(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11104
-	{ /*C
-		$$ = lappend($1, (Node *) $3);
-		*/
+//line gram.y:11082
+	{
+		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1510(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11115
-	{ /*C
-		$$ = makeDefElem("force", NULL, @1);
-		*/
+//line gram.y:11091
+	{
+		yyVAL.node = makeDefElem("force", nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct1511(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11127
-	{ /*C
-		AlterCollationStmt *n = makeNode(AlterCollationStmt);
+//line gram.y:11101
+	{
+		n := &AlterCollationStmt{}
 
-		n->collname = $3;
-		$$ = (Node *) n;
-		*/
+		n.Collname = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1512(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11145
-	{ /*C
-		AlterSystemStmt *n = makeNode(AlterSystemStmt);
+//line gram.y:11119
+	{
+		n := &AlterSystemStmt{}
 
-		n->setstmt = $4;
-		$$ = (Node *) n;
-		*/
+		n.Setstmt = as[*VariableSetStmt](yyDollar[4].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1513(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11152
-	{ /*C
-		AlterSystemStmt *n = makeNode(AlterSystemStmt);
+//line gram.y:11126
+	{
+		n := &AlterSystemStmt{}
 
-		n->setstmt = $4;
-		$$ = (Node *) n;
-		*/
+		n.Setstmt = as[*VariableSetStmt](yyDollar[4].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1514(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11169
-	{ /*C
-		CreateDomainStmt *n = makeNode(CreateDomainStmt);
+//line gram.y:11143
+	{
+		n := &CreateDomainStmt{}
 
-		n->domainname = $3;
-		n->typeName = $5;
-		SplitColQualList($6, &n->constraints, &n->collClause,
-						 yyscanner);
-		$$ = (Node *) n;
-		*/
+		n.Domainname = yyDollar[3].list
+		n.TypeName = as[*TypeName](yyDollar[5].node)
+		n.Constraints, n.CollClause = p.splitColQualList(yyDollar[6].list)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1515(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11183
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11156
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'T';
-		n->typeName = $3;
-		n->def = $4;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "T"
+		n.TypeName = yyDollar[3].list
+		n.Def = yyDollar[4].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1516(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11193
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11166
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'N';
-		n->typeName = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "N"
+		n.TypeName = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1517(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11202
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11175
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'O';
-		n->typeName = $3;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "O"
+		n.TypeName = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1518(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11211
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11184
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'C';
-		n->typeName = $3;
-		n->def = $5;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "C"
+		n.TypeName = yyDollar[3].list
+		n.Def = yyDollar[5].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1519(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11221
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11194
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'X';
-		n->typeName = $3;
-		n->name = $6;
-		n->behavior = $7;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "X"
+		n.TypeName = yyDollar[3].list
+		n.Name = yyDollar[6].str
+		n.Behavior = DropBehavior(yyDollar[7].ival)
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1520(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11233
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11206
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'X';
-		n->typeName = $3;
-		n->name = $8;
-		n->behavior = $9;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "X"
+		n.TypeName = yyDollar[3].list
+		n.Name = yyDollar[8].str
+		n.Behavior = DropBehavior(yyDollar[9].ival)
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1521(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11245
-	{ /*C
-		AlterDomainStmt *n = makeNode(AlterDomainStmt);
+//line gram.y:11218
+	{
+		n := &AlterDomainStmt{}
 
-		n->subtype = 'V';
-		n->typeName = $3;
-		n->name = $6;
-		$$ = (Node *) n;
-		*/
+		n.Subtype = "V"
+		n.TypeName = yyDollar[3].list
+		n.Name = yyDollar[6].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1524(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11268
-	{ /*C
-		AlterTSDictionaryStmt *n = makeNode(AlterTSDictionaryStmt);
+//line gram.y:11241
+	{
+		n := &AlterTSDictionaryStmt{}
 
-		n->dictname = $5;
-		n->options = $6;
-		$$ = (Node *) n;
-		*/
+		n.Dictname = yyDollar[5].list
+		n.Options = yyDollar[6].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1525(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11279
-	{ /*C
-		AlterTSConfigurationStmt *n = makeNode(AlterTSConfigurationStmt);
+//line gram.y:11252
+	{
+		n := &AlterTSConfigurationStmt{}
 
-		n->kind = ALTER_TSCONFIG_ADD_MAPPING;
-		n->cfgname = $5;
-		n->tokentype = $9;
-		n->dicts = $11;
-		n->override = false;
-		n->replace = false;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_TSCONFIG_ADD_MAPPING
+		n.Cfgname = yyDollar[5].list
+		n.Tokentype = yyDollar[9].list
+		n.Dicts = yyDollar[11].list
+		n.Override = false
+		n.Replace = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1526(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11291
-	{ /*C
-		AlterTSConfigurationStmt *n = makeNode(AlterTSConfigurationStmt);
+//line gram.y:11264
+	{
+		n := &AlterTSConfigurationStmt{}
 
-		n->kind = ALTER_TSCONFIG_ALTER_MAPPING_FOR_TOKEN;
-		n->cfgname = $5;
-		n->tokentype = $9;
-		n->dicts = $11;
-		n->override = true;
-		n->replace = false;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_TSCONFIG_ALTER_MAPPING_FOR_TOKEN
+		n.Cfgname = yyDollar[5].list
+		n.Tokentype = yyDollar[9].list
+		n.Dicts = yyDollar[11].list
+		n.Override = true
+		n.Replace = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1527(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11303
-	{ /*C
-		AlterTSConfigurationStmt *n = makeNode(AlterTSConfigurationStmt);
+//line gram.y:11276
+	{
+		n := &AlterTSConfigurationStmt{}
 
-		n->kind = ALTER_TSCONFIG_REPLACE_DICT;
-		n->cfgname = $5;
-		n->tokentype = NIL;
-		n->dicts = list_make2($9,$11);
-		n->override = false;
-		n->replace = true;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_TSCONFIG_REPLACE_DICT
+		n.Cfgname = yyDollar[5].list
+		n.Tokentype = nil
+		n.Dicts = []Node{listNode(yyDollar[9].list), listNode(yyDollar[11].list)}
+		n.Override = false
+		n.Replace = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1528(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11315
-	{ /*C
-		AlterTSConfigurationStmt *n = makeNode(AlterTSConfigurationStmt);
+//line gram.y:11288
+	{
+		n := &AlterTSConfigurationStmt{}
 
-		n->kind = ALTER_TSCONFIG_REPLACE_DICT_FOR_TOKEN;
-		n->cfgname = $5;
-		n->tokentype = $9;
-		n->dicts = list_make2($11,$13);
-		n->override = false;
-		n->replace = true;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_TSCONFIG_REPLACE_DICT_FOR_TOKEN
+		n.Cfgname = yyDollar[5].list
+		n.Tokentype = yyDollar[9].list
+		n.Dicts = []Node{listNode(yyDollar[11].list), listNode(yyDollar[13].list)}
+		n.Override = false
+		n.Replace = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1529(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11327
-	{ /*C
-		AlterTSConfigurationStmt *n = makeNode(AlterTSConfigurationStmt);
+//line gram.y:11300
+	{
+		n := &AlterTSConfigurationStmt{}
 
-		n->kind = ALTER_TSCONFIG_DROP_MAPPING;
-		n->cfgname = $5;
-		n->tokentype = $9;
-		n->missing_ok = false;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_TSCONFIG_DROP_MAPPING
+		n.Cfgname = yyDollar[5].list
+		n.Tokentype = yyDollar[9].list
+		n.MissingOk = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1530(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11337
-	{ /*C
-		AlterTSConfigurationStmt *n = makeNode(AlterTSConfigurationStmt);
+//line gram.y:11310
+	{
+		n := &AlterTSConfigurationStmt{}
 
-		n->kind = ALTER_TSCONFIG_DROP_MAPPING;
-		n->cfgname = $5;
-		n->tokentype = $11;
-		n->missing_ok = true;
-		$$ = (Node *) n;
-		*/
+		n.Kind = ALTER_TSCONFIG_DROP_MAPPING
+		n.Cfgname = yyDollar[5].list
+		n.Tokentype = yyDollar[11].list
+		n.MissingOk = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1533(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11366
-	{ /*C
-		CreateConversionStmt *n = makeNode(CreateConversionStmt);
+//line gram.y:11339
+	{
+		n := &CreateConversionStmt{}
 
-		n->conversion_name = $4;
-		n->for_encoding_name = $6;
-		n->to_encoding_name = $8;
-		n->func_name = $10;
-		n->def = $2;
-		$$ = (Node *) n;
-		*/
+		n.ConversionName = yyDollar[4].list
+		n.ForEncodingName = yyDollar[6].str
+		n.ToEncodingName = yyDollar[8].str
+		n.FuncName = yyDollar[10].list
+		n.Def = yyDollar[2].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1534(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11389
-	{ /*C
-		ClusterStmt *n = makeNode(ClusterStmt);
+//line gram.y:11362
+	{
+		n := &ClusterStmt{}
 
-		n->relation = $5;
-		n->indexname = $6;
-		n->params = $3;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Indexname = yyDollar[6].str
+		n.Params = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1535(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11398
-	{ /*C
-		ClusterStmt *n = makeNode(ClusterStmt);
+//line gram.y:11371
+	{
+		n := &ClusterStmt{}
 
-		n->relation = NULL;
-		n->indexname = NULL;
-		n->params = $3;
-		$$ = (Node *) n;
-		*/
+		n.Relation = nil
+		n.Indexname = ""
+		n.Params = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1536(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11408
-	{ /*C
-		ClusterStmt *n = makeNode(ClusterStmt);
+//line gram.y:11381
+	{
+		n := &ClusterStmt{}
 
-		n->relation = $3;
-		n->indexname = $4;
-		n->params = NIL;
-		if ($2)
-			n->params = lappend(n->params, makeDefElem("verbose", NULL, @2));
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.Indexname = yyDollar[4].str
+		n.Params = nil
+		if yyDollar[2].boolean {
+			n.Params = append(n.Params, makeDefElem("verbose", nil, yyDollar[2].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1537(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11420
-	{ /*C
-		ClusterStmt *n = makeNode(ClusterStmt);
+//line gram.y:11394
+	{
+		n := &ClusterStmt{}
 
-		n->relation = NULL;
-		n->indexname = NULL;
-		n->params = NIL;
-		if ($2)
-			n->params = lappend(n->params, makeDefElem("verbose", NULL, @2));
-		$$ = (Node *) n;
-		*/
+		n.Relation = nil
+		n.Indexname = ""
+		n.Params = nil
+		if yyDollar[2].boolean {
+			n.Params = append(n.Params, makeDefElem("verbose", nil, yyDollar[2].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1538(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11432
-	{ /*C
-		ClusterStmt *n = makeNode(ClusterStmt);
+//line gram.y:11407
+	{
+		n := &ClusterStmt{}
 
-		n->relation = $5;
-		n->indexname = $3;
-		n->params = NIL;
-		if ($2)
-			n->params = lappend(n->params, makeDefElem("verbose", NULL, @2));
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[5].node)
+		n.Indexname = yyDollar[3].str
+		n.Params = nil
+		if yyDollar[2].boolean {
+			n.Params = append(n.Params, makeDefElem("verbose", nil, yyDollar[2].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1539(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11445
+//line gram.y:11421
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct1540(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11446
+//line gram.y:11422
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct1541(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11459
-	{ /*C
-		VacuumStmt *n = makeNode(VacuumStmt);
+//line gram.y:11435
+	{
+		n := &VacuumStmt{}
 
-		n->options = NIL;
-		if ($2)
-			n->options = lappend(n->options,
-								 makeDefElem("full", NULL, @2));
-		if ($3)
-			n->options = lappend(n->options,
-								 makeDefElem("freeze", NULL, @3));
-		if ($4)
-			n->options = lappend(n->options,
-								 makeDefElem("verbose", NULL, @4));
-		if ($5)
-			n->options = lappend(n->options,
-								 makeDefElem("analyze", NULL, @5));
-		n->rels = $6;
-		n->is_vacuumcmd = true;
-		$$ = (Node *) n;
-		*/
+		n.Options = nil
+		if yyDollar[2].boolean {
+			n.Options = append(n.Options,
+				makeDefElem("full", nil, yyDollar[2].loc))
+		}
+		if yyDollar[3].boolean {
+			n.Options = append(n.Options,
+				makeDefElem("freeze", nil, yyDollar[3].loc))
+		}
+		if yyDollar[4].boolean {
+			n.Options = append(n.Options,
+				makeDefElem("verbose", nil, yyDollar[4].loc))
+		}
+		if yyDollar[5].boolean {
+			n.Options = append(n.Options,
+				makeDefElem("analyze", nil, yyDollar[5].loc))
+		}
+		n.Rels = yyDollar[6].list
+		n.IsVacuumcmd = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1542(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11480
-	{ /*C
-		VacuumStmt *n = makeNode(VacuumStmt);
+//line gram.y:11460
+	{
+		n := &VacuumStmt{}
 
-		n->options = $3;
-		n->rels = $5;
-		n->is_vacuumcmd = true;
-		$$ = (Node *) n;
-		*/
+		n.Options = yyDollar[3].list
+		n.Rels = yyDollar[5].list
+		n.IsVacuumcmd = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct1543(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11491
-	{ /*C
-		VacuumStmt *n = makeNode(VacuumStmt);
+//line gram.y:11471
+	{
+		n := &VacuumStmt{}
 
-		n->options = NIL;
-		if ($2)
-			n->options = lappend(n->options,
-								 makeDefElem("verbose", NULL, @2));
-		n->rels = $3;
-		n->is_vacuumcmd = false;
-		$$ = (Node *) n;
-		*/
+		n.Options = nil
+		if yyDollar[2].boolean {
+			n.Options = append(n.Options,
+				makeDefElem("verbose", nil, yyDollar[2].loc))
+		}
+		n.Rels = yyDollar[3].list
+		n.IsVacuumcmd = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1544(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11503
-	{ /*C
-		VacuumStmt *n = makeNode(VacuumStmt);
+//line gram.y:11484
+	{
+		n := &VacuumStmt{}
 
-		n->options = $3;
-		n->rels = $5;
-		n->is_vacuumcmd = false;
-		$$ = (Node *) n;
-		*/
+		n.Options = yyDollar[3].list
+		n.Rels = yyDollar[5].list
+		n.IsVacuumcmd = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1545(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11515
+//line gram.y:11496
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1546(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11517
+//line gram.y:11498
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1549(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11527
-	{ /*C
-		$$ = makeDefElem($1, $2, @1);
-		*/
+//line gram.y:11508
+	{
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1550(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11533
+//line gram.y:11512
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1551(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11534
+//line gram.y:11513
 	{
 		yyVAL.str = "analyze"
 	}
 }
 
 func yyAct1552(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11535
+//line gram.y:11514
 	{
 		yyVAL.str = "format"
 	}
 }
 
 func yyAct1553(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11539
-	{ /*C $$ = (Node *) makeString($1); */
+//line gram.y:11518
+	{
+		yyVAL.node = makeString(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct1554(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11540
+//line gram.y:11519
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1555(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11541
+//line gram.y:11520
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1556(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11545
+//line gram.y:11524
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1557(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11546
+//line gram.y:11525
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1558(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11550
+//line gram.y:11529
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1559(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11551
+//line gram.y:11530
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1560(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11554
+//line gram.y:11533
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1561(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11555
+//line gram.y:11534
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1562(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11558
+//line gram.y:11537
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1563(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11559
+//line gram.y:11538
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1564(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11563
+//line gram.y:11542
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1565(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11564
+//line gram.y:11543
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1566(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11569
-	{ /*C
-		$$ = (Node *) makeVacuumRelation($1, InvalidOid, $2);
-		*/
+//line gram.y:11548
+	{
+		yyVAL.node = makeVacuumRelation(as[*RangeVar](yyDollar[1].node), 0, yyDollar[2].list)
 	}
 }
 
 func yyAct1567(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11576
+//line gram.y:11553
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1568(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11578
+//line gram.y:11555
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1569(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11582
+//line gram.y:11559
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1570(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11583
+//line gram.y:11560
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1571(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11597
-	{ /*C
-		ExplainStmt *n = makeNode(ExplainStmt);
+//line gram.y:11574
+	{
+		n := &ExplainStmt{}
 
-		n->query = $2;
-		n->options = NIL;
-		$$ = (Node *) n;
-		*/
+		n.Query = yyDollar[2].node
+		n.Options = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1572(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11605
-	{ /*C
-		ExplainStmt *n = makeNode(ExplainStmt);
+//line gram.y:11582
+	{
+		n := &ExplainStmt{}
 
-		n->query = $4;
-		n->options = list_make1(makeDefElem("analyze", NULL, @2));
-		if ($3)
-			n->options = lappend(n->options,
-								 makeDefElem("verbose", NULL, @3));
-		$$ = (Node *) n;
-		*/
+		n.Query = yyDollar[4].node
+		n.Options = []Node{makeDefElem("analyze", nil, yyDollar[2].loc)}
+		if yyDollar[3].boolean {
+			n.Options = append(n.Options,
+				makeDefElem("verbose", nil, yyDollar[3].loc))
+		}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1573(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11616
-	{ /*C
-		ExplainStmt *n = makeNode(ExplainStmt);
+//line gram.y:11594
+	{
+		n := &ExplainStmt{}
 
-		n->query = $3;
-		n->options = list_make1(makeDefElem("verbose", NULL, @2));
-		$$ = (Node *) n;
-		*/
+		n.Query = yyDollar[3].node
+		n.Options = []Node{makeDefElem("verbose", nil, yyDollar[2].loc)}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1574(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11624
-	{ /*C
-		ExplainStmt *n = makeNode(ExplainStmt);
+//line gram.y:11602
+	{
+		n := &ExplainStmt{}
 
-		n->query = $5;
-		n->options = $3;
-		$$ = (Node *) n;
-		*/
+		n.Query = yyDollar[5].node
+		n.Options = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1585(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11654
-	{ /*C
-		PrepareStmt *n = makeNode(PrepareStmt);
+//line gram.y:11632
+	{
+		n := &PrepareStmt{}
 
-		n->name = $2;
-		n->argtypes = $3;
-		n->query = $5;
-		$$ = (Node *) n;
-		*/
+		n.Name = yyDollar[2].str
+		n.Argtypes = yyDollar[3].list
+		n.Query = yyDollar[5].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1586(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11664
+//line gram.y:11642
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1587(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11665
+//line gram.y:11643
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1593(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11684
-	{ /*C
-		ExecuteStmt *n = makeNode(ExecuteStmt);
+//line gram.y:11662
+	{
+		n := &ExecuteStmt{}
 
-		n->name = $2;
-		n->params = $3;
-		$$ = (Node *) n;
-		*/
+		n.Name = yyDollar[2].str
+		n.Params = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1594(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11693
-	{ /*C
-		CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
-		ExecuteStmt *n = makeNode(ExecuteStmt);
+//line gram.y:11671
+	{
+		ctas := &CreateTableAsStmt{}
+		n := &ExecuteStmt{}
 
-		n->name = $7;
-		n->params = $8;
-		ctas->query = (Node *) n;
-		ctas->into = $4;
-		ctas->objtype = OBJECT_TABLE;
-		ctas->is_select_into = false;
-		ctas->if_not_exists = false;
-		/* cram additional flags into the IntoClause * /
-		$4->rel->relpersistence = $2;
-		$4->skipData = !($9);
-		$$ = (Node *) ctas;
-		*/
+		n.Name = yyDollar[7].str
+		n.Params = yyDollar[8].list
+		ctas.Query = n
+		ctas.Into = as[*IntoClause](yyDollar[4].node)
+		ctas.Objtype = OBJECT_TABLE
+		ctas.IsSelectInto = false
+		ctas.IfNotExists = false
+		/* cram additional flags into the IntoClause */
+		if ctas.Into != nil { // always true once create_as_target is ported
+			ctas.Into.Rel.Relpersistence = string(rune(yyDollar[2].ival))
+			ctas.Into.SkipData = !(yyDollar[9].boolean)
+		}
+		yyVAL.node = ctas
 	}
 }
 
 func yyAct1595(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11711
-	{ /*C
-		CreateTableAsStmt *ctas = makeNode(CreateTableAsStmt);
-		ExecuteStmt *n = makeNode(ExecuteStmt);
+//line gram.y:11691
+	{
+		ctas := &CreateTableAsStmt{}
+		n := &ExecuteStmt{}
 
-		n->name = $10;
-		n->params = $11;
-		ctas->query = (Node *) n;
-		ctas->into = $7;
-		ctas->objtype = OBJECT_TABLE;
-		ctas->is_select_into = false;
-		ctas->if_not_exists = true;
-		/* cram additional flags into the IntoClause * /
-		$7->rel->relpersistence = $2;
-		$7->skipData = !($12);
-		$$ = (Node *) ctas;
-		*/
+		n.Name = yyDollar[10].str
+		n.Params = yyDollar[11].list
+		ctas.Query = n
+		ctas.Into = as[*IntoClause](yyDollar[7].node)
+		ctas.Objtype = OBJECT_TABLE
+		ctas.IsSelectInto = false
+		ctas.IfNotExists = true
+		/* cram additional flags into the IntoClause */
+		if ctas.Into != nil { // always true once create_as_target is ported
+			ctas.Into.Rel.Relpersistence = string(rune(yyDollar[2].ival))
+			ctas.Into.SkipData = !(yyDollar[12].boolean)
+		}
+		yyVAL.node = ctas
 	}
 }
 
 func yyAct1596(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11729
+//line gram.y:11711
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1597(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11730
+//line gram.y:11712
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1598(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11742
-	{ /*C
-		DeallocateStmt *n = makeNode(DeallocateStmt);
+//line gram.y:11724
+	{
+		n := &DeallocateStmt{}
 
-		n->name = $2;
-		n->isall = false;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Name = yyDollar[2].str
+		n.Isall = false
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1599(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11751
-	{ /*C
-		DeallocateStmt *n = makeNode(DeallocateStmt);
+//line gram.y:11733
+	{
+		n := &DeallocateStmt{}
 
-		n->name = $3;
-		n->isall = false;
-		n->location = @3;
-		$$ = (Node *) n;
-		*/
+		n.Name = yyDollar[3].str
+		n.Isall = false
+		n.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1600(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11760
-	{ /*C
-		DeallocateStmt *n = makeNode(DeallocateStmt);
+//line gram.y:11742
+	{
+		n := &DeallocateStmt{}
 
-		n->name = NULL;
-		n->isall = true;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Name = ""
+		n.Isall = true
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1601(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11769
-	{ /*C
-		DeallocateStmt *n = makeNode(DeallocateStmt);
+//line gram.y:11751
+	{
+		n := &DeallocateStmt{}
 
-		n->name = NULL;
-		n->isall = true;
-		n->location = -1;
-		$$ = (Node *) n;
-		*/
+		n.Name = ""
+		n.Isall = true
+		n.Location = -1
+		yyVAL.node = n
 	}
 }
 
 func yyAct1602(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11789
-	{ /*C
-		$5->relation = $4;
-		$5->onConflictClause = $6;
-		$5->returningList = $7;
-		$5->withClause = $1;
-		$$ = (Node *) $5;
-		*/
+//line gram.y:11771
+	{
+		n := as[*InsertStmt](yyDollar[5].node)
+
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.OnConflictClause = as[*OnConflictClause](yyDollar[6].node)
+		n.ReturningList = yyDollar[7].list
+		n.WithClause = as[*WithClause](yyDollar[1].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1603(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11806
+//line gram.y:11790
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1604(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11808
-	{ /*C
-		$1->alias = makeAlias($3, NIL);
-		$$ = $1;
-		*/
+//line gram.y:11792
+	{
+		r := as[*RangeVar](yyDollar[1].node)
+
+		r.Alias = &Alias{Aliasname: yyDollar[3].str}
+		yyVAL.node = r
 	}
 }
 
 func yyAct1605(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11816
-	{ /*C
-		$$ = makeNode(InsertStmt);
-		$$->cols = NIL;
-		$$->selectStmt = $1;
-		*/
+//line gram.y:11802
+	{
+		n := &InsertStmt{}
+		n.Cols = nil
+		n.SelectStmt = yyDollar[1].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1606(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11822
-	{ /*C
-		$$ = makeNode(InsertStmt);
-		$$->cols = NIL;
-		$$->override = $2;
-		$$->selectStmt = $4;
-		*/
+//line gram.y:11809
+	{
+		n := &InsertStmt{}
+		n.Cols = nil
+		n.Override = OverridingKind(yyDollar[2].ival)
+		n.SelectStmt = yyDollar[4].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1607(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11829
-	{ /*C
-		$$ = makeNode(InsertStmt);
-		$$->cols = $2;
-		$$->selectStmt = $4;
-		*/
+//line gram.y:11817
+	{
+		n := &InsertStmt{}
+		n.Cols = yyDollar[2].list
+		n.SelectStmt = yyDollar[4].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1608(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11835
-	{ /*C
-		$$ = makeNode(InsertStmt);
-		$$->cols = $2;
-		$$->override = $5;
-		$$->selectStmt = $7;
-		*/
+//line gram.y:11824
+	{
+		n := &InsertStmt{}
+		n.Cols = yyDollar[2].list
+		n.Override = OverridingKind(yyDollar[5].ival)
+		n.SelectStmt = yyDollar[7].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1609(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11842
-	{ /*C
-		$$ = makeNode(InsertStmt);
-		$$->cols = NIL;
-		$$->selectStmt = NULL;
-		*/
+//line gram.y:11832
+	{
+		n := &InsertStmt{}
+		n.Cols = nil
+		n.SelectStmt = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1610(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11850
-	{ /*C $$ = OVERRIDING_USER_VALUE; */
+//line gram.y:11841
+	{
+		yyVAL.ival = int32(OVERRIDING_USER_VALUE)
 	}
 }
 
 func yyAct1611(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11851
-	{ /*C $$ = OVERRIDING_SYSTEM_VALUE; */
+//line gram.y:11842
+	{
+		yyVAL.ival = int32(OVERRIDING_SYSTEM_VALUE)
 	}
 }
 
 func yyAct1612(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11856
+//line gram.y:11847
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1613(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11858
+//line gram.y:11849
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1614(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11863
-	{ /*C
-		$$ = makeNode(ResTarget);
-		$$->name = $1;
-		$$->indirection = check_indirection($2, yyscanner);
-		$$->val = NULL;
-		$$->location = @1;
-		*/
+//line gram.y:11854
+	{
+		n := &ResTarget{}
+		n.Name = yyDollar[1].str
+		n.Indirection = p.checkIndirection(yyDollar[2].list)
+		n.Val = nil
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1615(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11874
-	{ /*C
-		$$ = makeNode(OnConflictClause);
-		$$->action = ONCONFLICT_UPDATE;
-		$$->infer = $3;
-		$$->targetList = $7;
-		$$->whereClause = $8;
-		$$->location = @1;
-		*/
+//line gram.y:11866
+	{
+		n := &OnConflictClause{}
+		n.Action = ONCONFLICT_UPDATE
+		n.Infer = as[*InferClause](yyDollar[3].node)
+		n.TargetList = yyDollar[7].list
+		n.WhereClause = yyDollar[8].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1616(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11884
-	{ /*C
-		$$ = makeNode(OnConflictClause);
-		$$->action = ONCONFLICT_NOTHING;
-		$$->infer = $3;
-		$$->targetList = NIL;
-		$$->whereClause = NULL;
-		$$->location = @1;
-		*/
+//line gram.y:11877
+	{
+		n := &OnConflictClause{}
+		n.Action = ONCONFLICT_NOTHING
+		n.Infer = as[*InferClause](yyDollar[3].node)
+		n.TargetList = nil
+		n.WhereClause = nil
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1617(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11893
+//line gram.y:11887
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1618(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11898
-	{ /*C
-		$$ = makeNode(InferClause);
-		$$->indexElems = $2;
-		$$->whereClause = $4;
-		$$->conname = NULL;
-		$$->location = @1;
-		*/
+//line gram.y:11892
+	{
+		n := &InferClause{}
+		n.IndexElems = yyDollar[2].list
+		n.WhereClause = yyDollar[4].node
+		n.Conname = ""
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1619(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11907
-	{ /*C
-		$$ = makeNode(InferClause);
-		$$->indexElems = NIL;
-		$$->whereClause = NULL;
-		$$->conname = $3;
-		$$->location = @1;
-		*/
+//line gram.y:11902
+	{
+		n := &InferClause{}
+		n.IndexElems = nil
+		n.WhereClause = nil
+		n.Conname = yyDollar[3].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1620(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11915
+//line gram.y:11911
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1621(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11919
+//line gram.y:11915
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1622(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11920
+//line gram.y:11916
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1623(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11933
-	{ /*C
-		DeleteStmt *n = makeNode(DeleteStmt);
+//line gram.y:11929
+	{
+		n := &DeleteStmt{}
 
-		n->relation = $4;
-		n->usingClause = $5;
-		n->whereClause = $6;
-		n->returningList = $7;
-		n->withClause = $1;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[4].node)
+		n.UsingClause = yyDollar[5].list
+		n.WhereClause = yyDollar[6].node
+		n.ReturningList = yyDollar[7].list
+		n.WithClause = as[*WithClause](yyDollar[1].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1624(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11946
+//line gram.y:11942
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1625(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11947
+//line gram.y:11943
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1626(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11959
-	{ /*C
-		LockStmt   *n = makeNode(LockStmt);
+//line gram.y:11955
+	{
+		n := &LockStmt{}
 
-		n->relations = $3;
-		n->mode = $4;
-		n->nowait = $5;
-		$$ = (Node *) n;
-		*/
+		n.Relations = yyDollar[3].list
+		n.Mode = yyDollar[4].ival
+		n.Nowait = yyDollar[5].boolean
+		yyVAL.node = n
 	}
 }
 
 func yyAct1627(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11969
+//line gram.y:11965
 	{
 		yyVAL.ival = yyDollar[2].ival
 	}
 }
 
 func yyAct1628(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11970
-	{ /*C $$ = AccessExclusiveLock; */
+//line gram.y:11966
+	{
+		yyVAL.ival = AccessExclusiveLock
 	}
 }
 
 func yyAct1629(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11973
-	{ /*C $$ = AccessShareLock; */
+//line gram.y:11969
+	{
+		yyVAL.ival = AccessShareLock
 	}
 }
 
 func yyAct1630(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11974
-	{ /*C $$ = RowShareLock; */
+//line gram.y:11970
+	{
+		yyVAL.ival = RowShareLock
 	}
 }
 
 func yyAct1631(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11975
-	{ /*C $$ = RowExclusiveLock; */
+//line gram.y:11971
+	{
+		yyVAL.ival = RowExclusiveLock
 	}
 }
 
 func yyAct1632(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11976
-	{ /*C $$ = ShareUpdateExclusiveLock; */
+//line gram.y:11972
+	{
+		yyVAL.ival = ShareUpdateExclusiveLock
 	}
 }
 
 func yyAct1633(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11977
-	{ /*C $$ = ShareLock; */
+//line gram.y:11973
+	{
+		yyVAL.ival = ShareLock
 	}
 }
 
 func yyAct1634(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11978
-	{ /*C $$ = ShareRowExclusiveLock; */
+//line gram.y:11974
+	{
+		yyVAL.ival = ShareRowExclusiveLock
 	}
 }
 
 func yyAct1635(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11979
-	{ /*C $$ = ExclusiveLock; */
+//line gram.y:11975
+	{
+		yyVAL.ival = ExclusiveLock
 	}
 }
 
 func yyAct1636(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11980
-	{ /*C $$ = AccessExclusiveLock; */
+//line gram.y:11976
+	{
+		yyVAL.ival = AccessExclusiveLock
 	}
 }
 
 func yyAct1637(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11983
+//line gram.y:11979
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1638(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11984
+//line gram.y:11980
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1639(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11988
-	{ /*C $$ = LockWaitError; */
+//line gram.y:11984
+	{
+		yyVAL.ival = int32(LockWaitError)
 	}
 }
 
 func yyAct1640(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11989
-	{ /*C $$ = LockWaitSkip; */
+//line gram.y:11985
+	{
+		yyVAL.ival = int32(LockWaitSkip)
 	}
 }
 
 func yyAct1641(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:11990
-	{ /*C $$ = LockWaitBlock; */
+//line gram.y:11986
+	{
+		yyVAL.ival = int32(LockWaitBlock)
 	}
 }
 
 func yyAct1642(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12006
-	{ /*C
-		UpdateStmt *n = makeNode(UpdateStmt);
+//line gram.y:12002
+	{
+		n := &UpdateStmt{}
 
-		n->relation = $3;
-		n->targetList = $5;
-		n->fromClause = $6;
-		n->whereClause = $7;
-		n->returningList = $8;
-		n->withClause = $1;
-		$$ = (Node *) n;
-		*/
+		n.Relation = as[*RangeVar](yyDollar[3].node)
+		n.TargetList = yyDollar[5].list
+		n.FromClause = yyDollar[6].list
+		n.WhereClause = yyDollar[7].node
+		n.ReturningList = yyDollar[8].list
+		n.WithClause = as[*WithClause](yyDollar[1].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1643(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12020
+//line gram.y:12016
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1644(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12021
-	{ /*C $$ = list_concat($1,$3); */
+//line gram.y:12017
+	{
+		yyVAL.list = append(yyDollar[1].list, yyDollar[3].list...)
 	}
 }
 
 func yyAct1645(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12026
-	{ /*C
-		$1->val = (Node *) $3;
-		$$ = list_make1($1);
-		*/
+//line gram.y:12022
+	{
+		as[*ResTarget](yyDollar[1].node).Val = yyDollar[3].node
+		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1646(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12031
-	{ /*C
-		int			ncolumns = list_length($2);
-		int			i = 1;
-		ListCell   *col_cell;
+//line gram.y:12027
+	{
+		ncolumns := int32(len(yyDollar[2].list))
+		i := int32(1)
 
-		/* Create a MultiAssignRef source for each target * /
-		foreach(col_cell, $2)
-		{
-			ResTarget  *res_col = (ResTarget *) lfirst(col_cell);
-			MultiAssignRef *r = makeNode(MultiAssignRef);
+		/* Create a MultiAssignRef source for each target */
+		for _, c := range yyDollar[2].list {
+			resCol := as[*ResTarget](c)
+			r := &MultiAssignRef{}
 
-			r->source = (Node *) $5;
-			r->colno = i;
-			r->ncolumns = ncolumns;
-			res_col->val = (Node *) r;
-			i++;
+			r.Source = yyDollar[5].node
+			r.Colno = i
+			r.Ncolumns = ncolumns
+			resCol.Val = r
+			i++
 		}
 
-		$$ = $2;
-		*/
+		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1647(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12055
-	{ /*C
-		$$ = makeNode(ResTarget);
-		$$->name = $1;
-		$$->indirection = check_indirection($2, yyscanner);
-		$$->val = NULL;	/* upper production sets this * /
-		$$->location = @1;
-		*/
+//line gram.y:12049
+	{
+		n := &ResTarget{}
+		n.Name = yyDollar[1].str
+		n.Indirection = p.checkIndirection(yyDollar[2].list)
+		n.Val = nil /* upper production sets this */
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1648(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12065
+//line gram.y:12060
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1649(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12066
-	{ /*C $$ = lappend($1,$3); */
+//line gram.y:12061
+	{
+		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1650(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12083
-	{ /*C
-		MergeStmt  *m = makeNode(MergeStmt);
+//line gram.y:12078
+	{
+		m := &MergeStmt{}
 
-		m->withClause = $1;
-		m->relation = $4;
-		m->sourceRelation = $6;
-		m->joinCondition = $8;
-		m->mergeWhenClauses = $9;
-		m->returningList = $10;
+		m.WithClause = as[*WithClause](yyDollar[1].node)
+		m.Relation = as[*RangeVar](yyDollar[4].node)
+		m.SourceRelation = yyDollar[6].node
+		m.JoinCondition = yyDollar[8].node
+		m.MergeWhenClauses = yyDollar[9].list
+		m.ReturningList = yyDollar[10].list
 
-		$$ = (Node *) m;
-		*/
+		yyVAL.node = m
 	}
 }
 
 func yyAct1651(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12098
+//line gram.y:12093
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1652(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12099
-	{ /*C $$ = lappend($1,$2); */
+//line gram.y:12094
+	{
+		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1653(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12110
-	{ /*C
-		$4->matchKind = $1;
-		$4->condition = $2;
+//line gram.y:12105
+	{
+		n := as[*MergeWhenClause](yyDollar[4].node)
 
-		$$ = (Node *) $4;
-		*/
+		n.MatchKind = MergeMatchKind(yyDollar[1].ival)
+		n.Condition = yyDollar[2].node
+
+		yyVAL.node = n
 	}
 }
 
 func yyAct1654(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12117
-	{ /*C
-		$4->matchKind = $1;
-		$4->condition = $2;
+//line gram.y:12114
+	{
+		n := as[*MergeWhenClause](yyDollar[4].node)
 
-		$$ = (Node *) $4;
-		*/
+		n.MatchKind = MergeMatchKind(yyDollar[1].ival)
+		n.Condition = yyDollar[2].node
+
+		yyVAL.node = n
 	}
 }
 
 func yyAct1655(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12124
-	{ /*C
-		$4->matchKind = $1;
-		$4->condition = $2;
+//line gram.y:12123
+	{
+		n := as[*MergeWhenClause](yyDollar[4].node)
 
-		$$ = (Node *) $4;
-		*/
+		n.MatchKind = MergeMatchKind(yyDollar[1].ival)
+		n.Condition = yyDollar[2].node
+
+		yyVAL.node = n
 	}
 }
 
 func yyAct1656(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12131
-	{ /*C
-		MergeWhenClause *m = makeNode(MergeWhenClause);
+//line gram.y:12132
+	{
+		m := &MergeWhenClause{}
 
-		m->matchKind = $1;
-		m->commandType = CMD_NOTHING;
-		m->condition = $2;
+		m.MatchKind = MergeMatchKind(yyDollar[1].ival)
+		m.CommandType = CMD_NOTHING
+		m.Condition = yyDollar[2].node
 
-		$$ = (Node *) m;
-		*/
+		yyVAL.node = m
 	}
 }
 
 func yyAct1657(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12141
-	{ /*C
-		MergeWhenClause *m = makeNode(MergeWhenClause);
+//line gram.y:12142
+	{
+		m := &MergeWhenClause{}
 
-		m->matchKind = $1;
-		m->commandType = CMD_NOTHING;
-		m->condition = $2;
+		m.MatchKind = MergeMatchKind(yyDollar[1].ival)
+		m.CommandType = CMD_NOTHING
+		m.Condition = yyDollar[2].node
 
-		$$ = (Node *) m;
-		*/
+		yyVAL.node = m
 	}
 }
 
 func yyAct1658(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12153
+//line gram.y:12154
 	{
 		yyVAL.ival = int32(MERGE_WHEN_MATCHED)
 	}
 }
 
 func yyAct1659(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12154
+//line gram.y:12155
 	{
 		yyVAL.ival = int32(MERGE_WHEN_NOT_MATCHED_BY_SOURCE)
 	}
 }
 
 func yyAct1660(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12158
-	{
-		yyVAL.ival = int32(MERGE_WHEN_NOT_MATCHED_BY_TARGET)
-	}
-}
-
-func yyAct1661(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:12159
 	{
 		yyVAL.ival = int32(MERGE_WHEN_NOT_MATCHED_BY_TARGET)
 	}
 }
 
+func yyAct1661(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
+//line gram.y:12160
+	{
+		yyVAL.ival = int32(MERGE_WHEN_NOT_MATCHED_BY_TARGET)
+	}
+}
+
 func yyAct1662(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12163
+//line gram.y:12164
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1663(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12164
+//line gram.y:12165
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1664(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12169
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_UPDATE;
-		n->override = OVERRIDING_NOT_SET;
-		n->targetList = $3;
-		n->values = NIL;
+//line gram.y:12170
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_UPDATE
+		n.Override = OVERRIDING_NOT_SET
+		n.TargetList = yyDollar[3].list
+		n.Values = nil
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct1665(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12182
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_DELETE;
-		n->override = OVERRIDING_NOT_SET;
-		n->targetList = NIL;
-		n->values = NIL;
+//line gram.y:12183
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_DELETE
+		n.Override = OVERRIDING_NOT_SET
+		n.TargetList = nil
+		n.Values = nil
 
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct1666(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12195
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_INSERT;
-		n->override = OVERRIDING_NOT_SET;
-		n->targetList = NIL;
-		n->values = $2;
-		$$ = n;
-		*/
+//line gram.y:12196
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_INSERT
+		n.Override = OVERRIDING_NOT_SET
+		n.TargetList = nil
+		n.Values = yyDollar[2].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1667(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12204
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_INSERT;
-		n->override = $3;
-		n->targetList = NIL;
-		n->values = $5;
-		$$ = n;
-		*/
+//line gram.y:12205
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_INSERT
+		n.Override = OverridingKind(yyDollar[3].ival)
+		n.TargetList = nil
+		n.Values = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1668(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12213
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_INSERT;
-		n->override = OVERRIDING_NOT_SET;
-		n->targetList = $3;
-		n->values = $5;
-		$$ = n;
-		*/
+//line gram.y:12214
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_INSERT
+		n.Override = OVERRIDING_NOT_SET
+		n.TargetList = yyDollar[3].list
+		n.Values = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1669(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12222
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_INSERT;
-		n->override = $6;
-		n->targetList = $3;
-		n->values = $8;
-		$$ = n;
-		*/
+//line gram.y:12223
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_INSERT
+		n.Override = OverridingKind(yyDollar[6].ival)
+		n.TargetList = yyDollar[3].list
+		n.Values = yyDollar[8].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1670(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12231
-	{ /*C
-		MergeWhenClause *n = makeNode(MergeWhenClause);
-		n->commandType = CMD_INSERT;
-		n->override = OVERRIDING_NOT_SET;
-		n->targetList = NIL;
-		n->values = NIL;
-		$$ = n;
-		*/
+//line gram.y:12232
+	{
+		n := &MergeWhenClause{}
+		n.CommandType = CMD_INSERT
+		n.Override = OVERRIDING_NOT_SET
+		n.TargetList = nil
+		n.Values = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1671(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12243
+//line gram.y:12244
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct1672(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12253
-	{ /*C
-		DeclareCursorStmt *n = makeNode(DeclareCursorStmt);
+//line gram.y:12254
+	{
+		n := &DeclareCursorStmt{}
 
-		n->portalname = $2;
-		/* currently we always set FAST_PLAN option * /
-		n->options = $3 | $5 | CURSOR_OPT_FAST_PLAN;
-		n->query = $7;
-		$$ = (Node *) n;
-		*/
+		n.Portalname = yyDollar[2].str
+		/* currently we always set FAST_PLAN option */
+		n.Options = yyDollar[3].ival | yyDollar[5].ival | CURSOR_OPT_FAST_PLAN
+		n.Query = yyDollar[7].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1673(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12264
+//line gram.y:12265
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct1674(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12267
+//line gram.y:12268
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1675(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12268
-	{ /*C $$ = $1 | CURSOR_OPT_NO_SCROLL; */
+//line gram.y:12269
+	{
+		yyVAL.ival = yyDollar[1].ival | CURSOR_OPT_NO_SCROLL
 	}
 }
 
 func yyAct1676(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12269
-	{ /*C $$ = $1 | CURSOR_OPT_SCROLL; */
+//line gram.y:12270
+	{
+		yyVAL.ival = yyDollar[1].ival | CURSOR_OPT_SCROLL
 	}
 }
 
 func yyAct1677(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12270
-	{ /*C $$ = $1 | CURSOR_OPT_BINARY; */
+//line gram.y:12271
+	{
+		yyVAL.ival = yyDollar[1].ival | CURSOR_OPT_BINARY
 	}
 }
 
 func yyAct1678(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12271
-	{ /*C $$ = $1 | CURSOR_OPT_ASENSITIVE; */
+//line gram.y:12272
+	{
+		yyVAL.ival = yyDollar[1].ival | CURSOR_OPT_ASENSITIVE
 	}
 }
 
 func yyAct1679(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12272
-	{ /*C $$ = $1 | CURSOR_OPT_INSENSITIVE; */
+//line gram.y:12273
+	{
+		yyVAL.ival = yyDollar[1].ival | CURSOR_OPT_INSENSITIVE
 	}
 }
 
 func yyAct1680(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12275
+//line gram.y:12276
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1681(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12276
-	{ /*C $$ = CURSOR_OPT_HOLD; */
+//line gram.y:12277
+	{
+		yyVAL.ival = CURSOR_OPT_HOLD
 	}
 }
 
 func yyAct1682(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12277
+//line gram.y:12278
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1685(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12330
-	{
-		yyVAL.node = yyDollar[2].node
-	}
-}
-
-func yyAct1686(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:12331
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
+func yyAct1686(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
+//line gram.y:12332
+	{
+		yyVAL.node = yyDollar[2].node
+	}
+}
+
 func yyAct1687(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12346
+//line gram.y:12347
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1688(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12348
-	{ /*C
-		insertSelectOptions((SelectStmt *) $1, $2, NIL,
-							NULL, NULL,
-							yyscanner);
-		$$ = $1;
-		*/
+//line gram.y:12349
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[1].node), yyDollar[2].list, nil, nil, nil)
+		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1689(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12355
-	{ /*C
-		insertSelectOptions((SelectStmt *) $1, $2, $3,
-							$4,
-							NULL,
-							yyscanner);
-		$$ = $1;
-		*/
+//line gram.y:12354
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[1].node), yyDollar[2].list, yyDollar[3].list,
+			as[*selectLimit](yyDollar[4].node),
+			nil)
+		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1690(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12363
-	{ /*C
-		insertSelectOptions((SelectStmt *) $1, $2, $4,
-							$3,
-							NULL,
-							yyscanner);
-		$$ = $1;
-		*/
+//line gram.y:12361
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[1].node), yyDollar[2].list, yyDollar[4].list,
+			as[*selectLimit](yyDollar[3].node),
+			nil)
+		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1691(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12371
-	{ /*C
-		insertSelectOptions((SelectStmt *) $2, NULL, NIL,
-							NULL,
-							$1,
-							yyscanner);
-		$$ = $2;
-		*/
+//line gram.y:12368
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[2].node), nil, nil,
+			nil,
+			as[*WithClause](yyDollar[1].node))
+		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1692(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12379
-	{ /*C
-		insertSelectOptions((SelectStmt *) $2, $3, NIL,
-							NULL,
-							$1,
-							yyscanner);
-		$$ = $2;
-		*/
+//line gram.y:12375
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[2].node), yyDollar[3].list, nil,
+			nil,
+			as[*WithClause](yyDollar[1].node))
+		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1693(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12387
-	{ /*C
-		insertSelectOptions((SelectStmt *) $2, $3, $4,
-							$5,
-							$1,
-							yyscanner);
-		$$ = $2;
-		*/
+//line gram.y:12382
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[2].node), yyDollar[3].list, yyDollar[4].list,
+			as[*selectLimit](yyDollar[5].node),
+			as[*WithClause](yyDollar[1].node))
+		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1694(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12395
-	{ /*C
-		insertSelectOptions((SelectStmt *) $2, $3, $5,
-							$4,
-							$1,
-							yyscanner);
-		$$ = $2;
-		*/
+//line gram.y:12389
+	{
+		p.insertSelectOptions(as[*SelectStmt](yyDollar[2].node), yyDollar[3].list, yyDollar[5].list,
+			as[*selectLimit](yyDollar[4].node),
+			as[*WithClause](yyDollar[1].node))
+		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1695(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12405
+//line gram.y:12398
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1696(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12406
+//line gram.y:12399
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1697(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12441
-	{ /*C
-		SelectStmt *n = makeNode(SelectStmt);
+//line gram.y:12434
+	{
+		n := &SelectStmt{}
+		g := as[*groupClause](yyDollar[7].node)
 
-		n->targetList = $3;
-		n->intoClause = $4;
-		n->fromClause = $5;
-		n->whereClause = $6;
-		n->groupClause = ($7)->list;
-		n->groupDistinct = ($7)->distinct;
-		n->havingClause = $8;
-		n->windowClause = $9;
-		$$ = (Node *) n;
-		*/
+		n.TargetList = yyDollar[3].list
+		n.IntoClause = as[*IntoClause](yyDollar[4].node)
+		n.FromClause = yyDollar[5].list
+		n.WhereClause = yyDollar[6].node
+		n.GroupClause = g.list
+		n.GroupDistinct = g.distinct
+		n.HavingClause = yyDollar[8].node
+		n.WindowClause = yyDollar[9].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1698(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12457
-	{ /*C
-		SelectStmt *n = makeNode(SelectStmt);
+//line gram.y:12451
+	{
+		n := &SelectStmt{}
+		g := as[*groupClause](yyDollar[7].node)
 
-		n->distinctClause = $2;
-		n->targetList = $3;
-		n->intoClause = $4;
-		n->fromClause = $5;
-		n->whereClause = $6;
-		n->groupClause = ($7)->list;
-		n->groupDistinct = ($7)->distinct;
-		n->havingClause = $8;
-		n->windowClause = $9;
-		$$ = (Node *) n;
-		*/
+		n.DistinctClause = yyDollar[2].list
+		n.TargetList = yyDollar[3].list
+		n.IntoClause = as[*IntoClause](yyDollar[4].node)
+		n.FromClause = yyDollar[5].list
+		n.WhereClause = yyDollar[6].node
+		n.GroupClause = g.list
+		n.GroupDistinct = g.distinct
+		n.HavingClause = yyDollar[8].node
+		n.WindowClause = yyDollar[9].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1699(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12471
+//line gram.y:12466
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1700(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12473
-	{ /*C
-		/* same as SELECT * FROM relation_expr * /
-		ColumnRef  *cr = makeNode(ColumnRef);
-		ResTarget  *rt = makeNode(ResTarget);
-		SelectStmt *n = makeNode(SelectStmt);
+//line gram.y:12468
+	{
+		/* same as SELECT * FROM relation_expr */
+		cr := &ColumnRef{}
+		rt := &ResTarget{}
+		n := &SelectStmt{}
 
-		cr->fields = list_make1(makeNode(A_Star));
-		cr->location = -1;
+		cr.Fields = []Node{&A_Star{}}
+		cr.Location = -1
 
-		rt->name = NULL;
-		rt->indirection = NIL;
-		rt->val = (Node *) cr;
-		rt->location = -1;
+		rt.Name = ""
+		rt.Indirection = nil
+		rt.Val = cr
+		rt.Location = -1
 
-		n->targetList = list_make1(rt);
-		n->fromClause = list_make1($2);
-		$$ = (Node *) n;
-		*/
+		n.TargetList = []Node{rt}
+		n.FromClause = []Node{yyDollar[2].node}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1701(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12492
-	{ /*C
-		$$ = makeSetOp(SETOP_UNION, $3 == SET_QUANTIFIER_ALL, $1, $4);
-		*/
+//line gram.y:12487
+	{
+		yyVAL.node = makeSetOp(SETOP_UNION, SetQuantifier(yyDollar[3].ival) == SET_QUANTIFIER_ALL, yyDollar[1].node, yyDollar[4].node)
 	}
 }
 
 func yyAct1702(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12496
-	{ /*C
-		$$ = makeSetOp(SETOP_INTERSECT, $3 == SET_QUANTIFIER_ALL, $1, $4);
-		*/
+//line gram.y:12489
+	{
+		yyVAL.node = makeSetOp(SETOP_INTERSECT, SetQuantifier(yyDollar[3].ival) == SET_QUANTIFIER_ALL, yyDollar[1].node, yyDollar[4].node)
 	}
 }
 
 func yyAct1703(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12500
-	{ /*C
-		$$ = makeSetOp(SETOP_EXCEPT, $3 == SET_QUANTIFIER_ALL, $1, $4);
-		*/
+//line gram.y:12491
+	{
+		yyVAL.node = makeSetOp(SETOP_EXCEPT, SetQuantifier(yyDollar[3].ival) == SET_QUANTIFIER_ALL, yyDollar[1].node, yyDollar[4].node)
 	}
 }
 
 func yyAct1704(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12515
-	{ /*C
-		$$ = makeNode(WithClause);
-		$$->ctes = $2;
-		$$->recursive = false;
-		$$->location = @1;
-		*/
+//line gram.y:12504
+	{
+		n := &WithClause{}
+		n.Ctes = yyDollar[2].list
+		n.Recursive = false
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1705(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12522
-	{ /*C
-		$$ = makeNode(WithClause);
-		$$->ctes = $2;
-		$$->recursive = false;
-		$$->location = @1;
-		*/
+//line gram.y:12512
+	{
+		n := &WithClause{}
+		n.Ctes = yyDollar[2].list
+		n.Recursive = false
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1706(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12529
-	{ /*C
-		$$ = makeNode(WithClause);
-		$$->ctes = $3;
-		$$->recursive = true;
-		$$->location = @1;
-		*/
+//line gram.y:12520
+	{
+		n := &WithClause{}
+		n.Ctes = yyDollar[3].list
+		n.Recursive = true
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1707(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12538
+//line gram.y:12530
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1708(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12539
+//line gram.y:12531
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1709(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12543
-	{ /*C
-		CommonTableExpr *n = makeNode(CommonTableExpr);
+//line gram.y:12535
+	{
+		n := &CommonTableExpr{}
 
-		n->ctename = $1;
-		n->aliascolnames = $2;
-		n->ctematerialized = $4;
-		n->ctequery = $6;
-		n->search_clause = castNode(CTESearchClause, $8);
-		n->cycle_clause = castNode(CTECycleClause, $9);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Ctename = yyDollar[1].str
+		n.Aliascolnames = yyDollar[2].list
+		n.Ctematerialized = CTEMaterialize(yyDollar[4].ival)
+		n.Ctequery = yyDollar[6].node
+		n.SearchClause = as[*CTESearchClause](yyDollar[8].node)
+		n.CycleClause = as[*CTECycleClause](yyDollar[9].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1710(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12558
-	{ /*C $$ = CTEMaterializeAlways; */
+//line gram.y:12550
+	{
+		yyVAL.ival = int32(CTEMaterializeAlways)
 	}
 }
 
 func yyAct1711(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12559
-	{ /*C $$ = CTEMaterializeNever; */
+//line gram.y:12551
+	{
+		yyVAL.ival = int32(CTEMaterializeNever)
 	}
 }
 
 func yyAct1712(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12560
-	{ /*C $$ = CTEMaterializeDefault; */
+//line gram.y:12552
+	{
+		yyVAL.ival = int32(CTEMaterializeDefault)
 	}
 }
 
 func yyAct1713(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12565
-	{ /*C
-		CTESearchClause *n = makeNode(CTESearchClause);
+//line gram.y:12557
+	{
+		n := &CTESearchClause{}
 
-		n->search_col_list = $5;
-		n->search_breadth_first = false;
-		n->search_seq_column = $7;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.SearchColList = yyDollar[5].list
+		n.SearchBreadthFirst = false
+		n.SearchSeqColumn = yyDollar[7].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1714(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12575
-	{ /*C
-		CTESearchClause *n = makeNode(CTESearchClause);
+//line gram.y:12567
+	{
+		n := &CTESearchClause{}
 
-		n->search_col_list = $5;
-		n->search_breadth_first = true;
-		n->search_seq_column = $7;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.SearchColList = yyDollar[5].list
+		n.SearchBreadthFirst = true
+		n.SearchSeqColumn = yyDollar[7].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1715(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12585
+//line gram.y:12577
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1716(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12590
-	{ /*C
-		CTECycleClause *n = makeNode(CTECycleClause);
+//line gram.y:12582
+	{
+		n := &CTECycleClause{}
 
-		n->cycle_col_list = $2;
-		n->cycle_mark_column = $4;
-		n->cycle_mark_value = $6;
-		n->cycle_mark_default = $8;
-		n->cycle_path_column = $10;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.CycleColList = yyDollar[2].list
+		n.CycleMarkColumn = yyDollar[4].str
+		n.CycleMarkValue = yyDollar[6].node
+		n.CycleMarkDefault = yyDollar[8].node
+		n.CyclePathColumn = yyDollar[10].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1717(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12602
-	{ /*C
-		CTECycleClause *n = makeNode(CTECycleClause);
+//line gram.y:12594
+	{
+		n := &CTECycleClause{}
 
-		n->cycle_col_list = $2;
-		n->cycle_mark_column = $4;
-		n->cycle_mark_value = makeBoolAConst(true, -1);
-		n->cycle_mark_default = makeBoolAConst(false, -1);
-		n->cycle_path_column = $6;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.CycleColList = yyDollar[2].list
+		n.CycleMarkColumn = yyDollar[4].str
+		n.CycleMarkValue = makeBoolAConst(true, -1)
+		n.CycleMarkDefault = makeBoolAConst(false, -1)
+		n.CyclePathColumn = yyDollar[6].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1718(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12614
+//line gram.y:12606
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1719(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12618
+//line gram.y:12610
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1720(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12619
+//line gram.y:12611
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1721(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12624
-	{ /*C
-		$$ = makeNode(IntoClause);
-		$$->rel = $2;
-		$$->colNames = NIL;
-		$$->options = NIL;
-		$$->onCommit = ONCOMMIT_NOOP;
-		$$->tableSpaceName = NULL;
-		$$->viewQuery = NULL;
-		$$->skipData = false;
-		*/
+//line gram.y:12616
+	{
+		n := &IntoClause{}
+		n.Rel = as[*RangeVar](yyDollar[2].node)
+		n.ColNames = nil
+		n.Options = nil
+		n.OnCommit = ONCOMMIT_NOOP
+		n.TableSpaceName = ""
+		n.ViewQuery = nil
+		n.SkipData = false
+		yyVAL.node = n
 	}
 }
 
 func yyAct1722(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12635
+//line gram.y:12628
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1723(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12644
-	{ /*C
-		$$ = $3;
-		$$->relpersistence = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:12637
+	{
+		r := as[*RangeVar](yyDollar[3].node)
+		r.Relpersistence = relpersistenceTemp
+		yyVAL.node = r
 	}
 }
 
 func yyAct1724(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12649
-	{ /*C
-		$$ = $3;
-		$$->relpersistence = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:12643
+	{
+		r := as[*RangeVar](yyDollar[3].node)
+		r.Relpersistence = relpersistenceTemp
+		yyVAL.node = r
 	}
 }
 
 func yyAct1725(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12654
-	{ /*C
-		$$ = $4;
-		$$->relpersistence = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:12649
+	{
+		r := as[*RangeVar](yyDollar[4].node)
+		r.Relpersistence = relpersistenceTemp
+		yyVAL.node = r
 	}
 }
 
 func yyAct1726(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12659
-	{ /*C
-		$$ = $4;
-		$$->relpersistence = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:12655
+	{
+		r := as[*RangeVar](yyDollar[4].node)
+		r.Relpersistence = relpersistenceTemp
+		yyVAL.node = r
 	}
 }
 
 func yyAct1727(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12664
-	{ /*C
-		ereport(WARNING,
-				(errmsg("GLOBAL is deprecated in temporary table creation"),
-				 parser_errposition(@1)));
-		$$ = $4;
-		$$->relpersistence = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:12661
+	{
+		/* ereport(WARNING, "GLOBAL is deprecated in temporary table creation"): no effect on the tree */
+		r := as[*RangeVar](yyDollar[4].node)
+		r.Relpersistence = relpersistenceTemp
+		yyVAL.node = r
 	}
 }
 
 func yyAct1728(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12672
-	{ /*C
-		ereport(WARNING,
-				(errmsg("GLOBAL is deprecated in temporary table creation"),
-				 parser_errposition(@1)));
-		$$ = $4;
-		$$->relpersistence = RELPERSISTENCE_TEMP;
-		*/
+//line gram.y:12668
+	{
+		/* ereport(WARNING, "GLOBAL is deprecated in temporary table creation"): no effect on the tree */
+		r := as[*RangeVar](yyDollar[4].node)
+		r.Relpersistence = relpersistenceTemp
+		yyVAL.node = r
 	}
 }
 
 func yyAct1729(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12680
-	{ /*C
-		$$ = $3;
-		$$->relpersistence = RELPERSISTENCE_UNLOGGED;
-		*/
+//line gram.y:12675
+	{
+		r := as[*RangeVar](yyDollar[3].node)
+		r.Relpersistence = relpersistenceUnlogged
+		yyVAL.node = r
 	}
 }
 
 func yyAct1730(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12685
-	{ /*C
-		$$ = $2;
-		$$->relpersistence = RELPERSISTENCE_PERMANENT;
-		*/
+//line gram.y:12681
+	{
+		r := as[*RangeVar](yyDollar[2].node)
+		r.Relpersistence = relpersistencePermanent
+		yyVAL.node = r
 	}
 }
 
 func yyAct1731(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12690
-	{ /*C
-		$$ = $1;
-		$$->relpersistence = RELPERSISTENCE_PERMANENT;
-		*/
+//line gram.y:12687
+	{
+		r := as[*RangeVar](yyDollar[1].node)
+		r.Relpersistence = relpersistencePermanent
+		yyVAL.node = r
 	}
 }
 
 func yyAct1734(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12701
+//line gram.y:12699
 	{
 		yyVAL.ival = int32(SET_QUANTIFIER_ALL)
 	}
 }
 
 func yyAct1735(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12702
+//line gram.y:12700
 	{
 		yyVAL.ival = int32(SET_QUANTIFIER_DISTINCT)
 	}
 }
 
 func yyAct1736(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12703
+//line gram.y:12701
 	{
 		yyVAL.ival = int32(SET_QUANTIFIER_DEFAULT)
 	}
 }
 
 func yyAct1737(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12710
-	{ /*C $$ = list_make1(NIL); */
+//line gram.y:12708
+	{
+		yyVAL.list = []Node{nil}
 	}
 }
 
 func yyAct1738(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12711
+//line gram.y:12709
 	{
 		yyVAL.list = yyDollar[4].list
 	}
 }
 
 func yyAct1741(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12720
+//line gram.y:12718
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1742(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12721
+//line gram.y:12719
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1743(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12725
+//line gram.y:12723
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1744(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12726
+//line gram.y:12724
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1745(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12730
+//line gram.y:12728
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct1746(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12734
+//line gram.y:12732
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1747(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12735
+//line gram.y:12733
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1748(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12739
-	{ /*C
-		$$ = makeNode(SortBy);
-		$$->node = $1;
-		$$->sortby_dir = SORTBY_USING;
-		$$->sortby_nulls = $4;
-		$$->useOp = $3;
-		$$->location = @3;
-		*/
+//line gram.y:12737
+	{
+		n := &SortBy{}
+		n.Node = yyDollar[1].node
+		n.SortbyDir = SORTBY_USING
+		n.SortbyNulls = SortByNulls(yyDollar[4].ival)
+		n.UseOp = yyDollar[3].list
+		n.Location = yyDollar[3].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1749(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12748
-	{ /*C
-		$$ = makeNode(SortBy);
-		$$->node = $1;
-		$$->sortby_dir = $2;
-		$$->sortby_nulls = $3;
-		$$->useOp = NIL;
-		$$->location = -1;		/* no operator * /
-		*/
+//line gram.y:12747
+	{
+		n := &SortBy{}
+		n.Node = yyDollar[1].node
+		n.SortbyDir = SortByDir(yyDollar[2].ival)
+		n.SortbyNulls = SortByNulls(yyDollar[3].ival)
+		n.UseOp = nil
+		n.Location = -1 /* no operator */
+		yyVAL.node = n
 	}
 }
 
 func yyAct1750(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 //line gram.y:12761
-	{ /*C
-		$$ = $1;
-		($$)->limitOffset = $2;
-		*/
+	{
+		n := as[*selectLimit](yyDollar[1].node)
+		n.limitOffset = yyDollar[2].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1751(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12766
-	{ /*C
-		$$ = $2;
-		($$)->limitOffset = $1;
-		*/
+//line gram.y:12767
+	{
+		n := as[*selectLimit](yyDollar[2].node)
+		n.limitOffset = yyDollar[1].node
+		yyVAL.node = n
 	}
 }
 
 func yyAct1752(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12771
+//line gram.y:12773
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1753(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12773
-	{ /*C
-		SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+//line gram.y:12775
+	{
+		n := &selectLimit{}
 
-		n->limitOffset = $1;
-		n->limitCount = NULL;
-		n->limitOption = LIMIT_OPTION_COUNT;
-		$$ = n;
-		*/
+		n.limitOffset = yyDollar[1].node
+		n.limitCount = nil
+		n.limitOption = LIMIT_OPTION_COUNT
+		yyVAL.node = n
 	}
 }
 
 func yyAct1754(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12784
+//line gram.y:12786
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1755(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12785
+//line gram.y:12787
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1756(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12790
-	{ /*C
-		SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+//line gram.y:12792
+	{
+		n := &selectLimit{}
 
-		n->limitOffset = NULL;
-		n->limitCount = $2;
-		n->limitOption = LIMIT_OPTION_COUNT;
-		$$ = n;
-		*/
+		n.limitOffset = nil
+		n.limitCount = yyDollar[2].node
+		n.limitOption = LIMIT_OPTION_COUNT
+		yyVAL.node = n
 	}
 }
 
 func yyAct1757(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12799
-	{ /*C
-		/* Disabled because it was too confusing, bjm 2002-02-18 * /
-		ereport(ERROR,
-				(errcode(ERRCODE_SYNTAX_ERROR),
-				 errmsg("LIMIT #,# syntax is not supported"),
-				 errhint("Use separate LIMIT and OFFSET clauses."),
-				 parser_errposition(@1)));
-		*/
+//line gram.y:12801
+	{
+		/* Disabled because it was too confusing, bjm 2002-02-18 */
+		p.fail(yyDollar[1].loc, "LIMIT #,# syntax is not supported")
 	}
 }
 
 func yyAct1758(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12815
-	{ /*C
-		SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+//line gram.y:12813
+	{
+		n := &selectLimit{}
 
-		n->limitOffset = NULL;
-		n->limitCount = $3;
-		n->limitOption = LIMIT_OPTION_COUNT;
-		$$ = n;
-		*/
+		n.limitOffset = nil
+		n.limitCount = yyDollar[3].node
+		n.limitOption = LIMIT_OPTION_COUNT
+		yyVAL.node = n
 	}
 }
 
 func yyAct1759(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12824
-	{ /*C
-		SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+//line gram.y:12822
+	{
+		n := &selectLimit{}
 
-		n->limitOffset = NULL;
-		n->limitCount = $3;
-		n->limitOption = LIMIT_OPTION_WITH_TIES;
-		$$ = n;
-		*/
+		n.limitOffset = nil
+		n.limitCount = yyDollar[3].node
+		n.limitOption = LIMIT_OPTION_WITH_TIES
+		yyVAL.node = n
 	}
 }
 
 func yyAct1760(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12833
-	{ /*C
-		SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+//line gram.y:12831
+	{
+		n := &selectLimit{}
 
-		n->limitOffset = NULL;
-		n->limitCount = makeIntConst(1, -1);
-		n->limitOption = LIMIT_OPTION_COUNT;
-		$$ = n;
-		*/
+		n.limitOffset = nil
+		n.limitCount = makeIntConst(1, -1)
+		n.limitOption = LIMIT_OPTION_COUNT
+		yyVAL.node = n
 	}
 }
 
 func yyAct1761(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12842
-	{ /*C
-		SelectLimit *n = (SelectLimit *) palloc(sizeof(SelectLimit));
+//line gram.y:12840
+	{
+		n := &selectLimit{}
 
-		n->limitOffset = NULL;
-		n->limitCount = makeIntConst(1, -1);
-		n->limitOption = LIMIT_OPTION_WITH_TIES;
-		$$ = n;
-		*/
+		n.limitOffset = nil
+		n.limitCount = makeIntConst(1, -1)
+		n.limitOption = LIMIT_OPTION_WITH_TIES
+		yyVAL.node = n
 	}
 }
 
 func yyAct1762(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12854
+//line gram.y:12852
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1763(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12857
+//line gram.y:12855
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1764(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12861
+//line gram.y:12859
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1765(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12863
-	{ /*C
-		/* LIMIT ALL is represented as a NULL constant * /
-		$$ = makeNullAConst(@1);
-		*/
+//line gram.y:12861
+	{
+		/* LIMIT ALL is represented as a NULL constant */
+		yyVAL.node = makeNullAConst(yyDollar[1].loc)
 	}
 }
 
 func yyAct1766(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12870
+//line gram.y:12868
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1767(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12890
+//line gram.y:12888
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1768(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12892
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "+", NULL, $2, @1); */
+//line gram.y:12890
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "+", nil, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1769(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12894
-	{ /*C $$ = doNegate($2, @1); */
+//line gram.y:12892
+	{
+		yyVAL.node = doNegate(yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1770(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12898
-	{ /*C $$ = makeIntConst($1,@1); */
+//line gram.y:12896
+	{
+		yyVAL.node = makeIntConst(yyDollar[1].ival, yyDollar[1].loc)
 	}
 }
 
 func yyAct1771(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12899
-	{ /*C $$ = makeFloatConst($1,@1); */
+//line gram.y:12897
+	{
+		yyVAL.node = makeFloatConst(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct1772(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12903
+//line gram.y:12901
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1773(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12904
+//line gram.y:12902
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1774(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12907
+//line gram.y:12905
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1775(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12908
+//line gram.y:12906
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct1776(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12934
-	{ /*C
-		GroupClause *n = (GroupClause *) palloc(sizeof(GroupClause));
+//line gram.y:12932
+	{
+		n := &groupClause{}
 
-		n->distinct = $3 == SET_QUANTIFIER_DISTINCT;
-		n->list = $4;
-		$$ = n;
-		*/
+		n.distinct = SetQuantifier(yyDollar[3].ival) == SET_QUANTIFIER_DISTINCT
+		n.list = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1777(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12942
-	{ /*C
-		GroupClause *n = (GroupClause *) palloc(sizeof(GroupClause));
+//line gram.y:12940
+	{
+		n := &groupClause{}
 
-		n->distinct = false;
-		n->list = NIL;
-		$$ = n;
-		*/
+		n.distinct = false
+		n.list = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1778(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12952
+//line gram.y:12950
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1779(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12953
-	{ /*C $$ = lappend($1,$3); */
+//line gram.y:12951
+	{
+		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1780(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12957
+//line gram.y:12955
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1781(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12958
+//line gram.y:12956
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1782(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12959
+//line gram.y:12957
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1783(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12960
+//line gram.y:12958
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1784(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12961
+//line gram.y:12959
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1785(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12966
-	{ /*C
-		$$ = (Node *) makeGroupingSet(GROUPING_SET_EMPTY, NIL, @1);
-		*/
+//line gram.y:12964
+	{
+		yyVAL.node = makeGroupingSet(GROUPING_SET_EMPTY, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct1786(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12979
-	{ /*C
-		$$ = (Node *) makeGroupingSet(GROUPING_SET_ROLLUP, $3, @1);
-		*/
+//line gram.y:12975
+	{
+		yyVAL.node = makeGroupingSet(GROUPING_SET_ROLLUP, yyDollar[3].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct1787(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12986
-	{ /*C
-		$$ = (Node *) makeGroupingSet(GROUPING_SET_CUBE, $3, @1);
-		*/
+//line gram.y:12980
+	{
+		yyVAL.node = makeGroupingSet(GROUPING_SET_CUBE, yyDollar[3].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct1788(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12993
-	{ /*C
-		$$ = (Node *) makeGroupingSet(GROUPING_SET_SETS, $4, @1);
-		*/
+//line gram.y:12985
+	{
+		yyVAL.node = makeGroupingSet(GROUPING_SET_SETS, yyDollar[4].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct1789(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:12999
+//line gram.y:12989
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1790(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13000
+//line gram.y:12990
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1791(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13004
+//line gram.y:12994
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1792(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13005
+//line gram.y:12995
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1793(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13009
+//line gram.y:12999
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1794(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13010
+//line gram.y:13000
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1795(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13014
+//line gram.y:13004
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1796(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13015
+//line gram.y:13005
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1797(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13020
-	{ /*C
-		LockingClause *n = makeNode(LockingClause);
+//line gram.y:13010
+	{
+		n := &LockingClause{}
 
-		n->lockedRels = $2;
-		n->strength = $1;
-		n->waitPolicy = $3;
-		$$ = (Node *) n;
-		*/
+		n.LockedRels = yyDollar[2].list
+		n.Strength = LockClauseStrength(yyDollar[1].ival)
+		n.WaitPolicy = LockWaitPolicy(yyDollar[3].ival)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1798(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13031
-	{ /*C $$ = LCS_FORUPDATE; */
+//line gram.y:13021
+	{
+		yyVAL.ival = int32(LCS_FORUPDATE)
 	}
 }
 
 func yyAct1799(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13032
-	{ /*C $$ = LCS_FORNOKEYUPDATE; */
+//line gram.y:13022
+	{
+		yyVAL.ival = int32(LCS_FORNOKEYUPDATE)
 	}
 }
 
 func yyAct1800(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13033
-	{ /*C $$ = LCS_FORSHARE; */
+//line gram.y:13023
+	{
+		yyVAL.ival = int32(LCS_FORSHARE)
 	}
 }
 
 func yyAct1801(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13034
-	{ /*C $$ = LCS_FORKEYSHARE; */
+//line gram.y:13024
+	{
+		yyVAL.ival = int32(LCS_FORKEYSHARE)
 	}
 }
 
 func yyAct1802(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13038
+//line gram.y:13028
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1803(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13039
+//line gram.y:13029
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1804(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13050
-	{ /*C
-		SelectStmt *n = makeNode(SelectStmt);
+//line gram.y:13040
+	{
+		n := &SelectStmt{}
 
-		n->valuesLists = list_make1($3);
-		$$ = (Node *) n;
-		*/
+		n.ValuesLists = []Node{listNode(yyDollar[3].list)}
+		yyVAL.node = n
 	}
 }
 
 func yyAct1805(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13057
-	{ /*C
-		SelectStmt *n = (SelectStmt *) $1;
+//line gram.y:13047
+	{
+		n := as[*SelectStmt](yyDollar[1].node)
 
-		n->valuesLists = lappend(n->valuesLists, $4);
-		$$ = (Node *) n;
-		*/
+		n.ValuesLists = append(n.ValuesLists, listNode(yyDollar[4].list))
+		yyVAL.node = n
 	}
 }
 
 func yyAct1806(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13075
+//line gram.y:13065
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1807(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13076
+//line gram.y:13066
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1808(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13080
+//line gram.y:13070
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1809(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13081
+//line gram.y:13071
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1810(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13088
-	{ /*C
-		$1->alias = $2;
-		$$ = (Node *) $1;
-		*/
+//line gram.y:13078
+	{
+		r := as[*RangeVar](yyDollar[1].node)
+
+		r.Alias = as[*Alias](yyDollar[2].node)
+		yyVAL.node = r
 	}
 }
 
 func yyAct1811(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13093
-	{ /*C
-		RangeTableSample *n = (RangeTableSample *) $3;
+//line gram.y:13085
+	{
+		n := as[*RangeTableSample](yyDollar[3].node)
+		r := as[*RangeVar](yyDollar[1].node)
 
-		$1->alias = $2;
-		/* relation_expr goes inside the RangeTableSample node * /
-		n->relation = (Node *) $1;
-		$$ = (Node *) n;
-		*/
+		r.Alias = as[*Alias](yyDollar[2].node)
+		/* relation_expr goes inside the RangeTableSample node */
+		n.Relation = r
+		yyVAL.node = n
 	}
 }
 
 func yyAct1812(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13102
-	{ /*C
-		RangeFunction *n = (RangeFunction *) $1;
+//line gram.y:13095
+	{
+		n := as[*RangeFunction](yyDollar[1].node)
 
-		n->alias = linitial($2);
-		n->coldeflist = lsecond($2);
-		$$ = (Node *) n;
-		*/
+		n.Alias = as[*Alias](yyDollar[2].list[0])
+		n.Coldeflist = asList(yyDollar[2].list[1])
+		yyVAL.node = n
 	}
 }
 
 func yyAct1813(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13110
-	{ /*C
-		RangeFunction *n = (RangeFunction *) $2;
+//line gram.y:13103
+	{
+		n := as[*RangeFunction](yyDollar[2].node)
 
-		n->lateral = true;
-		n->alias = linitial($3);
-		n->coldeflist = lsecond($3);
-		$$ = (Node *) n;
-		*/
+		n.Lateral = true
+		n.Alias = as[*Alias](yyDollar[3].list[0])
+		n.Coldeflist = asList(yyDollar[3].list[1])
+		yyVAL.node = n
 	}
 }
 
 func yyAct1814(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13119
-	{ /*C
-		RangeTableFunc *n = (RangeTableFunc *) $1;
+//line gram.y:13112
+	{
+		n := as[*RangeTableFunc](yyDollar[1].node)
 
-		n->alias = $2;
-		$$ = (Node *) n;
-		*/
+		n.Alias = as[*Alias](yyDollar[2].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1815(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13126
-	{ /*C
-		RangeTableFunc *n = (RangeTableFunc *) $2;
+//line gram.y:13119
+	{
+		n := as[*RangeTableFunc](yyDollar[2].node)
 
-		n->lateral = true;
-		n->alias = $3;
-		$$ = (Node *) n;
-		*/
+		n.Lateral = true
+		n.Alias = as[*Alias](yyDollar[3].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1816(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13134
-	{ /*C
-		RangeSubselect *n = makeNode(RangeSubselect);
+//line gram.y:13127
+	{
+		n := &RangeSubselect{}
 
-		n->lateral = false;
-		n->subquery = $1;
-		n->alias = $2;
-		$$ = (Node *) n;
-		*/
+		n.Lateral = false
+		n.Subquery = yyDollar[1].node
+		n.Alias = as[*Alias](yyDollar[2].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1817(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13143
-	{ /*C
-		RangeSubselect *n = makeNode(RangeSubselect);
+//line gram.y:13136
+	{
+		n := &RangeSubselect{}
 
-		n->lateral = true;
-		n->subquery = $2;
-		n->alias = $3;
-		$$ = (Node *) n;
-		*/
+		n.Lateral = true
+		n.Subquery = yyDollar[2].node
+		n.Alias = as[*Alias](yyDollar[3].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct1818(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13152
+//line gram.y:13145
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1819(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13154
-	{ /*C
-		$2->alias = $4;
-		$$ = (Node *) $2;
-		*/
+//line gram.y:13147
+	{
+		j := as[*JoinExpr](yyDollar[2].node)
+
+		j.Alias = as[*Alias](yyDollar[4].node)
+		yyVAL.node = j
 	}
 }
 
 func yyAct1820(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13159
-	{ /*C
-		JsonTable  *jt = castNode(JsonTable, $1);
+//line gram.y:13154
+	{
+		jt := as[*JsonTable](yyDollar[1].node)
 
-		jt->alias = $2;
-		$$ = (Node *) jt;
-		*/
+		jt.Alias = as[*Alias](yyDollar[2].node)
+		yyVAL.node = jt
 	}
 }
 
 func yyAct1821(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13166
-	{ /*C
-		JsonTable  *jt = castNode(JsonTable, $2);
+//line gram.y:13161
+	{
+		jt := as[*JsonTable](yyDollar[2].node)
 
-		jt->alias = $3;
-		jt->lateral = true;
-		$$ = (Node *) jt;
-		*/
+		jt.Alias = as[*Alias](yyDollar[3].node)
+		jt.Lateral = true
+		yyVAL.node = jt
 	}
 }
 
 func yyAct1822(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13195
+//line gram.y:13190
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1823(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13197
-	{ /*C
-		/* CROSS JOIN is same as unqualified inner join * /
-		JoinExpr   *n = makeNode(JoinExpr);
+//line gram.y:13192
+	{
+		/* CROSS JOIN is same as unqualified inner join */
+		n := &JoinExpr{}
 
-		n->jointype = JOIN_INNER;
-		n->isNatural = false;
-		n->larg = $1;
-		n->rarg = $4;
-		n->usingClause = NIL;
-		n->join_using_alias = NULL;
-		n->quals = NULL;
-		$$ = n;
-		*/
+		n.Jointype = JOIN_INNER
+		n.IsNatural = false
+		n.Larg = yyDollar[1].node
+		n.Rarg = yyDollar[4].node
+		n.UsingClause = nil
+		n.JoinUsingAlias = nil
+		n.Quals = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct1824(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13211
-	{ /*C
-		JoinExpr   *n = makeNode(JoinExpr);
+//line gram.y:13206
+	{
+		n := &JoinExpr{}
 
-		n->jointype = $2;
-		n->isNatural = false;
-		n->larg = $1;
-		n->rarg = $4;
-		if ($5 != NULL && IsA($5, List))
-		{
-			 /* USING clause * /
-			n->usingClause = linitial_node(List, castNode(List, $5));
-			n->join_using_alias = lsecond_node(Alias, castNode(List, $5));
+		n.Jointype = JoinType(yyDollar[2].ival)
+		n.IsNatural = false
+		n.Larg = yyDollar[1].node
+		n.Rarg = yyDollar[4].node
+		if l, ok := yyDollar[5].node.(*List); ok {
+			/* USING clause */
+			n.UsingClause = asList(l.Items[0])
+			n.JoinUsingAlias = as[*Alias](l.Items[1])
+		} else {
+			/* ON clause */
+			n.Quals = yyDollar[5].node
 		}
-		else
-		{
-			/* ON clause * /
-			n->quals = $5;
-		}
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct1825(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13232
-	{ /*C
-		/* letting join_type reduce to empty doesn't work * /
-		JoinExpr   *n = makeNode(JoinExpr);
+//line gram.y:13224
+	{
+		/* letting join_type reduce to empty doesn't work */
+		n := &JoinExpr{}
 
-		n->jointype = JOIN_INNER;
-		n->isNatural = false;
-		n->larg = $1;
-		n->rarg = $3;
-		if ($4 != NULL && IsA($4, List))
-		{
-			/* USING clause * /
-			n->usingClause = linitial_node(List, castNode(List, $4));
-			n->join_using_alias = lsecond_node(Alias, castNode(List, $4));
+		n.Jointype = JOIN_INNER
+		n.IsNatural = false
+		n.Larg = yyDollar[1].node
+		n.Rarg = yyDollar[3].node
+		if l, ok := yyDollar[4].node.(*List); ok {
+			/* USING clause */
+			n.UsingClause = asList(l.Items[0])
+			n.JoinUsingAlias = as[*Alias](l.Items[1])
+		} else {
+			/* ON clause */
+			n.Quals = yyDollar[4].node
 		}
-		else
-		{
-			/* ON clause * /
-			n->quals = $4;
-		}
-		$$ = n;
-		*/
+		yyVAL.node = n
 	}
 }
 
 func yyAct1826(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13254
-	{ /*C
-		JoinExpr   *n = makeNode(JoinExpr);
+//line gram.y:13243
+	{
+		n := &JoinExpr{}
 
-		n->jointype = $3;
-		n->isNatural = true;
-		n->larg = $1;
-		n->rarg = $5;
-		n->usingClause = NIL; /* figure out which columns later... * /
-		n->join_using_alias = NULL;
-		n->quals = NULL; /* fill later * /
-		$$ = n;
-		*/
+		n.Jointype = JoinType(yyDollar[3].ival)
+		n.IsNatural = true
+		n.Larg = yyDollar[1].node
+		n.Rarg = yyDollar[5].node
+		n.UsingClause = nil /* figure out which columns later... */
+		n.JoinUsingAlias = nil
+		n.Quals = nil /* fill later */
+		yyVAL.node = n
 	}
 }
 
 func yyAct1827(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13267
-	{ /*C
-		/* letting join_type reduce to empty doesn't work * /
-		JoinExpr   *n = makeNode(JoinExpr);
+//line gram.y:13256
+	{
+		/* letting join_type reduce to empty doesn't work */
+		n := &JoinExpr{}
 
-		n->jointype = JOIN_INNER;
-		n->isNatural = true;
-		n->larg = $1;
-		n->rarg = $4;
-		n->usingClause = NIL; /* figure out which columns later... * /
-		n->join_using_alias = NULL;
-		n->quals = NULL; /* fill later * /
-		$$ = n;
-		*/
+		n.Jointype = JOIN_INNER
+		n.IsNatural = true
+		n.Larg = yyDollar[1].node
+		n.Rarg = yyDollar[4].node
+		n.UsingClause = nil /* figure out which columns later... */
+		n.JoinUsingAlias = nil
+		n.Quals = nil /* fill later */
+		yyVAL.node = n
 	}
 }
 
 func yyAct1828(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13284
-	{ /*C
-		$$ = makeNode(Alias);
-		$$->aliasname = $2;
-		$$->colnames = $4;
-		*/
+//line gram.y:13273
+	{
+		n := &Alias{}
+
+		n.Aliasname = yyDollar[2].str
+		n.Colnames = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1829(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13290
-	{ /*C
-		$$ = makeNode(Alias);
-		$$->aliasname = $2;
-		*/
+//line gram.y:13281
+	{
+		n := &Alias{}
+
+		n.Aliasname = yyDollar[2].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1830(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13295
-	{ /*C
-		$$ = makeNode(Alias);
-		$$->aliasname = $1;
-		$$->colnames = $3;
-		*/
+//line gram.y:13288
+	{
+		n := &Alias{}
+
+		n.Aliasname = yyDollar[1].str
+		n.Colnames = yyDollar[3].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct1831(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13301
-	{ /*C
-		$$ = makeNode(Alias);
-		$$->aliasname = $1;
-		*/
+//line gram.y:13296
+	{
+		n := &Alias{}
+
+		n.Aliasname = yyDollar[1].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct1832(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13307
+//line gram.y:13304
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1833(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13308
+//line gram.y:13305
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1834(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13319
-	{ /*C
-		$$ = makeNode(Alias);
-		$$->aliasname = $2;
-		/* the column name list will be inserted later * /
-		*/
+//line gram.y:13316
+	{
+		n := &Alias{}
+
+		n.Aliasname = yyDollar[2].str
+		/* the column name list will be inserted later */
+		yyVAL.node = n
 	}
 }
 
 func yyAct1835(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13324
+//line gram.y:13323
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1836(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13333
-	{ /*C
-		$$ = list_make2($1, NIL);
-		*/
+//line gram.y:13332
+	{
+		yyVAL.list = []Node{yyDollar[1].node, nil}
 	}
 }
 
 func yyAct1837(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13337
-	{ /*C
-		$$ = list_make2(NULL, $3);
-		*/
+//line gram.y:13334
+	{
+		yyVAL.list = []Node{nil, listNode(yyDollar[3].list)}
 	}
 }
 
 func yyAct1838(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13341
-	{ /*C
-		Alias	   *a = makeNode(Alias);
+//line gram.y:13336
+	{
+		a := &Alias{}
 
-		a->aliasname = $2;
-		$$ = list_make2(a, $4);
-		*/
+		a.Aliasname = yyDollar[2].str
+		yyVAL.list = []Node{a, listNode(yyDollar[4].list)}
 	}
 }
 
 func yyAct1839(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13348
-	{ /*C
-		Alias	   *a = makeNode(Alias);
+//line gram.y:13343
+	{
+		a := &Alias{}
 
-		a->aliasname = $1;
-		$$ = list_make2(a, $3);
-		*/
+		a.Aliasname = yyDollar[1].str
+		yyVAL.list = []Node{a, listNode(yyDollar[3].list)}
 	}
 }
 
 func yyAct1840(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13355
-	{ /*C
-		$$ = list_make2(NULL, NIL);
-		*/
+//line gram.y:13350
+	{
+		yyVAL.list = []Node{nil, nil}
 	}
 }
 
 func yyAct1841(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13360
+//line gram.y:13353
 	{
 		yyVAL.ival = int32(JOIN_FULL)
 	}
 }
 
 func yyAct1842(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13361
+//line gram.y:13354
 	{
 		yyVAL.ival = int32(JOIN_LEFT)
 	}
 }
 
 func yyAct1843(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13362
+//line gram.y:13355
 	{
 		yyVAL.ival = int32(JOIN_RIGHT)
 	}
 }
 
 func yyAct1844(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13363
+//line gram.y:13356
 	{
 		yyVAL.ival = int32(JOIN_INNER)
 	}
 }
 
 func yyAct1847(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13384
-	{ /*C
-		$$ = (Node *) list_make2($3, $5);
-		*/
+//line gram.y:13377
+	{
+		yyVAL.node = &List{Items: []Node{listNode(yyDollar[3].list), yyDollar[5].node}}
 	}
 }
 
 func yyAct1848(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13388
+//line gram.y:13379
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1849(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13394
-	{ /*C
-		/* inheritance query, implicitly * /
-		$$ = $1;
-		$$->inh = true;
-		$$->alias = NULL;
-		*/
+//line gram.y:13385
+	{
+		/* inheritance query, implicitly */
+		r := as[*RangeVar](yyDollar[1].node)
+		r.Inh = true
+		r.Alias = nil
+		yyVAL.node = r
 	}
 }
 
 func yyAct1850(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13401
+//line gram.y:13393
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1851(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13406
-	{ /*C
-		/* inheritance query, explicitly * /
-		$$ = $1;
-		$$->inh = true;
-		$$->alias = NULL;
-		*/
+//line gram.y:13398
+	{
+		/* inheritance query, explicitly */
+		r := as[*RangeVar](yyDollar[1].node)
+		r.Inh = true
+		r.Alias = nil
+		yyVAL.node = r
 	}
 }
 
 func yyAct1852(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13413
-	{ /*C
-		/* no inheritance * /
-		$$ = $2;
-		$$->inh = false;
-		$$->alias = NULL;
-		*/
+//line gram.y:13406
+	{
+		/* no inheritance */
+		r := as[*RangeVar](yyDollar[2].node)
+		r.Inh = false
+		r.Alias = nil
+		yyVAL.node = r
 	}
 }
 
 func yyAct1853(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13420
-	{ /*C
-		/* no inheritance, SQL99-style syntax * /
-		$$ = $3;
-		$$->inh = false;
-		$$->alias = NULL;
-		*/
+//line gram.y:13414
+	{
+		/* no inheritance, SQL99-style syntax */
+		r := as[*RangeVar](yyDollar[3].node)
+		r.Inh = false
+		r.Alias = nil
+		yyVAL.node = r
 	}
 }
 
 func yyAct1854(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13430
+//line gram.y:13425
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1855(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13431
+//line gram.y:13426
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1856(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13445
+//line gram.y:13440
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1857(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13447
-	{ /*C
-		Alias	   *alias = makeNode(Alias);
+//line gram.y:13442
+	{
+		alias := &Alias{}
 
-		alias->aliasname = $2;
-		$1->alias = alias;
-		$$ = $1;
-		*/
+		alias.Aliasname = yyDollar[2].str
+		r := as[*RangeVar](yyDollar[1].node)
+		r.Alias = alias
+		yyVAL.node = r
 	}
 }
 
 func yyAct1858(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13455
-	{ /*C
-		Alias	   *alias = makeNode(Alias);
+//line gram.y:13451
+	{
+		alias := &Alias{}
 
-		alias->aliasname = $3;
-		$1->alias = alias;
-		$$ = $1;
-		*/
+		alias.Aliasname = yyDollar[3].str
+		r := as[*RangeVar](yyDollar[1].node)
+		r.Alias = alias
+		yyVAL.node = r
 	}
 }
 
 func yyAct1859(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13469
-	{ /*C
-		RangeTableSample *n = makeNode(RangeTableSample);
+//line gram.y:13466
+	{
+		n := &RangeTableSample{}
 
-		/* n->relation will be filled in later * /
-		n->method = $2;
-		n->args = $4;
-		n->repeatable = $6;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		/* n->relation will be filled in later */
+		n.Method = yyDollar[2].list
+		n.Args = yyDollar[4].list
+		n.Repeatable = yyDollar[6].node
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1860(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13482
+//line gram.y:13479
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct1861(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13483
+//line gram.y:13480
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1862(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13499
-	{ /*C
-		RangeFunction *n = makeNode(RangeFunction);
+//line gram.y:13496
+	{
+		n := &RangeFunction{}
 
-		n->lateral = false;
-		n->ordinality = $2;
-		n->is_rowsfrom = false;
-		n->functions = list_make1(list_make2($1, NIL));
-		/* alias and coldeflist are set by table_ref production * /
-		$$ = (Node *) n;
-		*/
+		n.Lateral = false
+		n.Ordinality = yyDollar[2].boolean
+		n.IsRowsfrom = false
+		n.Functions = []Node{listNode([]Node{yyDollar[1].node, nil})}
+		/* alias and coldeflist are set by table_ref production */
+		yyVAL.node = n
 	}
 }
 
 func yyAct1863(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13510
-	{ /*C
-		RangeFunction *n = makeNode(RangeFunction);
+//line gram.y:13507
+	{
+		n := &RangeFunction{}
 
-		n->lateral = false;
-		n->ordinality = $6;
-		n->is_rowsfrom = true;
-		n->functions = $4;
-		/* alias and coldeflist are set by table_ref production * /
-		$$ = (Node *) n;
-		*/
+		n.Lateral = false
+		n.Ordinality = yyDollar[6].boolean
+		n.IsRowsfrom = true
+		n.Functions = yyDollar[4].list
+		/* alias and coldeflist are set by table_ref production */
+		yyVAL.node = n
 	}
 }
 
 func yyAct1864(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13523
-	{ /*C $$ = list_make2($1, $2); */
+//line gram.y:13520
+	{
+		yyVAL.list = []Node{yyDollar[1].node, listNode(yyDollar[2].list)}
 	}
 }
 
 func yyAct1865(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13527
-	{ /*C $$ = list_make1($1); */
+//line gram.y:13524
+	{
+		yyVAL.list = []Node{listNode(yyDollar[1].list)}
 	}
 }
 
 func yyAct1866(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13528
-	{ /*C $$ = lappend($1, $3); */
+//line gram.y:13525
+	{
+		yyVAL.list = append(yyDollar[1].list, listNode(yyDollar[3].list))
 	}
 }
 
 func yyAct1867(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13531
+//line gram.y:13528
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct1868(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13532
+//line gram.y:13529
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1869(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13535
+//line gram.y:13532
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1870(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13536
+//line gram.y:13533
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1871(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13541
+//line gram.y:13538
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1872(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13542
+//line gram.y:13539
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1873(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13547
+//line gram.y:13544
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct1874(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13549
-	{ /*C
-		CurrentOfExpr *n = makeNode(CurrentOfExpr);
+//line gram.y:13546
+	{
+		n := &CurrentOfExpr{}
 
-		/* cvarno is filled in by parse analysis * /
-		n->cursor_name = $4;
-		n->cursor_param = 0;
-		$$ = (Node *) n;
-		*/
+		/* cvarno is filled in by parse analysis */
+		n.CursorName = yyDollar[4].str
+		n.CursorParam = 0
+		yyVAL.node = n
 	}
 }
 
 func yyAct1875(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13557
+//line gram.y:13554
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1876(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13562
+//line gram.y:13559
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1877(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13563
+//line gram.y:13560
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1878(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13568
+//line gram.y:13565
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1879(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13570
+//line gram.y:13567
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1880(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13574
-	{ /*C
-		ColumnDef *n = makeNode(ColumnDef);
+//line gram.y:13571
+	{
+		n := &ColumnDef{}
 
-		n->colname = $1;
-		n->typeName = $2;
-		n->inhcount = 0;
-		n->is_local = true;
-		n->is_not_null = false;
-		n->is_from_type = false;
-		n->storage = 0;
-		n->raw_default = NULL;
-		n->cooked_default = NULL;
-		n->collClause = (CollateClause *) $3;
-		n->collOid = InvalidOid;
-		n->constraints = NIL;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Colname = yyDollar[1].str
+		n.TypeName = as[*TypeName](yyDollar[2].node)
+		n.Inhcount = 0
+		n.IsLocal = true
+		n.IsNotNull = false
+		n.IsFromType = false
+		n.Storage = ""
+		n.RawDefault = nil
+		n.CookedDefault = nil
+		n.CollClause = as[*CollateClause](yyDollar[3].node)
+		n.CollOid = 0
+		n.Constraints = nil
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1881(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13599
-	{ /*C
-		RangeTableFunc *n = makeNode(RangeTableFunc);
+//line gram.y:13596
+	{
+		n := &RangeTableFunc{}
 
-		n->rowexpr = $3;
-		n->docexpr = $4;
-		n->columns = $6;
-		n->namespaces = NIL;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Rowexpr = yyDollar[3].node
+		n.Docexpr = yyDollar[4].node
+		n.Columns = yyDollar[6].list
+		n.Namespaces = nil
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1882(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13611
-	{ /*C
-		RangeTableFunc *n = makeNode(RangeTableFunc);
+//line gram.y:13608
+	{
+		n := &RangeTableFunc{}
 
-		n->rowexpr = $8;
-		n->docexpr = $9;
-		n->columns = $11;
-		n->namespaces = $5;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Rowexpr = yyDollar[8].node
+		n.Docexpr = yyDollar[9].node
+		n.Columns = yyDollar[11].list
+		n.Namespaces = yyDollar[5].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1883(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13623
+//line gram.y:13620
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1884(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13624
+//line gram.y:13621
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1885(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13629
-	{ /*C
-		RangeTableFuncCol *fc = makeNode(RangeTableFuncCol);
+//line gram.y:13626
+	{
+		fc := &RangeTableFuncCol{}
 
-		fc->colname = $1;
-		fc->for_ordinality = false;
-		fc->typeName = $2;
-		fc->is_not_null = false;
-		fc->colexpr = NULL;
-		fc->coldefexpr = NULL;
-		fc->location = @1;
+		fc.Colname = yyDollar[1].str
+		fc.ForOrdinality = false
+		fc.TypeName = as[*TypeName](yyDollar[2].node)
+		fc.IsNotNull = false
+		fc.Colexpr = nil
+		fc.Coldefexpr = nil
+		fc.Location = yyDollar[1].loc
 
-		$$ = (Node *) fc;
-		*/
+		yyVAL.node = fc
 	}
 }
 
 func yyAct1886(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13643
-	{ /*C
-		RangeTableFuncCol *fc = makeNode(RangeTableFuncCol);
-		ListCell   *option;
-		bool		nullability_seen = false;
+//line gram.y:13640
+	{
+		fc := &RangeTableFuncCol{}
+		nullabilitySeen := false
 
-		fc->colname = $1;
-		fc->typeName = $2;
-		fc->for_ordinality = false;
-		fc->is_not_null = false;
-		fc->colexpr = NULL;
-		fc->coldefexpr = NULL;
-		fc->location = @1;
+		fc.Colname = yyDollar[1].str
+		fc.TypeName = as[*TypeName](yyDollar[2].node)
+		fc.ForOrdinality = false
+		fc.IsNotNull = false
+		fc.Colexpr = nil
+		fc.Coldefexpr = nil
+		fc.Location = yyDollar[1].loc
 
-		foreach(option, $3)
-		{
-			DefElem   *defel = (DefElem *) lfirst(option);
+		for _, option := range yyDollar[3].list {
+			defel := as[*DefElem](option)
 
-			if (strcmp(defel->defname, "default") == 0)
-			{
-				if (fc->coldefexpr != NULL)
-					ereport(ERROR,
-							(errcode(ERRCODE_SYNTAX_ERROR),
-							 errmsg("only one DEFAULT value is allowed"),
-							 parser_errposition(defel->location)));
-				fc->coldefexpr = defel->arg;
-			}
-			else if (strcmp(defel->defname, "path") == 0)
-			{
-				if (fc->colexpr != NULL)
-					ereport(ERROR,
-							(errcode(ERRCODE_SYNTAX_ERROR),
-							 errmsg("only one PATH value per column is allowed"),
-							 parser_errposition(defel->location)));
-				fc->colexpr = defel->arg;
-			}
-			else if (strcmp(defel->defname, "__pg__is_not_null") == 0)
-			{
-				if (nullability_seen)
-					ereport(ERROR,
-							(errcode(ERRCODE_SYNTAX_ERROR),
-							 errmsg("conflicting or redundant NULL / NOT NULL declarations for column \"%s\"", fc->colname),
-							 parser_errposition(defel->location)));
-				fc->is_not_null = boolVal(defel->arg);
-				nullability_seen = true;
-			}
-			else
-			{
-				ereport(ERROR,
-						(errcode(ERRCODE_SYNTAX_ERROR),
-						 errmsg("unrecognized column option \"%s\"",
-								defel->defname),
-						 parser_errposition(defel->location)));
+			if defel.Defname == "default" {
+				if fc.Coldefexpr != nil {
+					p.fail(defel.Location, "only one DEFAULT value is allowed")
+				}
+				fc.Coldefexpr = defel.Arg
+			} else if defel.Defname == "path" {
+				if fc.Colexpr != nil {
+					p.fail(defel.Location, "only one PATH value per column is allowed")
+				}
+				fc.Colexpr = defel.Arg
+			} else if defel.Defname == "__pg__is_not_null" {
+				if nullabilitySeen {
+					p.fail(defel.Location, fmt.Sprintf("conflicting or redundant NULL / NOT NULL declarations for column \"%s\"", fc.Colname))
+				}
+				fc.IsNotNull = as[*Boolean](defel.Arg).Boolval
+				nullabilitySeen = true
+			} else {
+				p.fail(defel.Location, fmt.Sprintf("unrecognized column option \"%s\"", defel.Defname))
 			}
 		}
-		$$ = (Node *) fc;
-		*/
+		yyVAL.node = fc
 	}
 }
 
 func yyAct1887(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13700
-	{ /*C
-		RangeTableFuncCol *fc = makeNode(RangeTableFuncCol);
+//line gram.y:13678
+	{
+		fc := &RangeTableFuncCol{}
 
-		fc->colname = $1;
-		fc->for_ordinality = true;
-		/* other fields are ignored, initialized by makeNode * /
-		fc->location = @1;
+		fc.Colname = yyDollar[1].str
+		fc.ForOrdinality = true
+		/* other fields are ignored, initialized by makeNode */
+		fc.Location = yyDollar[1].loc
 
-		$$ = (Node *) fc;
-		*/
+		yyVAL.node = fc
 	}
 }
 
 func yyAct1888(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13714
+//line gram.y:13692
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1889(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13716
+//line gram.y:13694
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct1890(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13721
-	{ /*C
-		if (strcmp($1, "__pg__is_not_null") == 0)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("option name \"%s\" cannot be used in XMLTABLE", $1),
-					 parser_errposition(@1)));
-		$$ = makeDefElem($1, $2, @1);
-		*/
+//line gram.y:13699
+	{
+		if yyDollar[1].str == "__pg__is_not_null" {
+			p.fail(yyDollar[1].loc, fmt.Sprintf("option name \"%s\" cannot be used in XMLTABLE", yyDollar[1].str))
+		}
+		yyVAL.node = makeDefElem(yyDollar[1].str, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1891(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13730
-	{ /*C $$ = makeDefElem("default", $2, @1); */
+//line gram.y:13706
+	{
+		yyVAL.node = makeDefElem("default", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1892(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13732
-	{ /*C $$ = makeDefElem("__pg__is_not_null", (Node *) makeBoolean(true), @1); */
+//line gram.y:13708
+	{
+		yyVAL.node = makeDefElem("__pg__is_not_null", makeBoolean(true), yyDollar[1].loc)
 	}
 }
 
 func yyAct1893(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13734
-	{ /*C $$ = makeDefElem("__pg__is_not_null", (Node *) makeBoolean(false), @1); */
+//line gram.y:13710
+	{
+		yyVAL.node = makeDefElem("__pg__is_not_null", makeBoolean(false), yyDollar[1].loc)
 	}
 }
 
 func yyAct1894(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13736
-	{ /*C $$ = makeDefElem("path", $2, @1); */
+//line gram.y:13712
+	{
+		yyVAL.node = makeDefElem("path", yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct1895(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13741
+//line gram.y:13717
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1896(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13743
+//line gram.y:13719
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1897(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13748
-	{ /*C
-		$$ = makeNode(ResTarget);
-		$$->name = $3;
-		$$->indirection = NIL;
-		$$->val = $1;
-		$$->location = @1;
-		*/
+//line gram.y:13724
+	{
+		n := &ResTarget{}
+		n.Name = yyDollar[3].str
+		n.Indirection = nil
+		n.Val = yyDollar[1].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1898(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13756
-	{ /*C
-		$$ = makeNode(ResTarget);
-		$$->name = NULL;
-		$$->indirection = NIL;
-		$$->val = $2;
-		$$->location = @1;
-		*/
+//line gram.y:13733
+	{
+		n := &ResTarget{}
+		n.Name = ""
+		n.Indirection = nil
+		n.Val = yyDollar[2].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1899(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13772
-	{ /*C
-		JsonTable *n = makeNode(JsonTable);
-		char	  *pathstring;
+//line gram.y:13750
+	{
+		n := &JsonTable{}
 
-		n->context_item = (JsonValueExpr *) $3;
-		if (!IsA($5, A_Const) ||
-			castNode(A_Const, $5)->val.node.type != T_String)
-			ereport(ERROR,
-					errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-					errmsg("only string constants are supported in JSON_TABLE path specification"),
-					parser_errposition(@5));
-		pathstring = castNode(A_Const, $5)->val.sval.sval;
-		n->pathspec = makeJsonTablePathSpec(pathstring, $6, @5, @6);
-		n->passing = $7;
-		n->columns = $10;
-		n->on_error = (JsonBehavior *) $12;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.ContextItem = as[*JsonValueExpr](yyDollar[3].node)
+		c, ok := yyDollar[5].node.(*A_Const)
+		if !ok {
+			p.fail(yyDollar[5].loc, "only string constants are supported in JSON_TABLE path specification")
+		}
+		s, ok := c.Val.(*String)
+		if !ok {
+			p.fail(yyDollar[5].loc, "only string constants are supported in JSON_TABLE path specification")
+		}
+		pathstring := s.Sval
+		n.Pathspec = makeJsonTablePathSpec(pathstring, yyDollar[6].str, yyDollar[5].loc, yyDollar[6].loc)
+		n.Passing = yyDollar[7].list
+		n.Columns = yyDollar[10].list
+		n.OnError = as[*JsonBehavior](yyDollar[12].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1900(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13794
+//line gram.y:13773
 	{
 		yyVAL.str = yyDollar[2].str
 	}
 }
 
 func yyAct1901(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13795
+//line gram.y:13774
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct1902(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13800
+//line gram.y:13779
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct1903(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13802
+//line gram.y:13781
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct1904(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13807
-	{ /*C
-		JsonTableColumn *n = makeNode(JsonTableColumn);
+//line gram.y:13786
+	{
+		n := &JsonTableColumn{}
 
-		n->coltype = JTC_FOR_ORDINALITY;
-		n->name = $1;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Coltype = JTC_FOR_ORDINALITY
+		n.Name = yyDollar[1].str
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1905(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13820
-	{ /*C
-		JsonTableColumn *n = makeNode(JsonTableColumn);
+//line gram.y:13799
+	{
+		n := &JsonTableColumn{}
 
-		n->coltype = JTC_REGULAR;
-		n->name = $1;
-		n->typeName = $2;
-		n->format = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1);
-		n->pathspec = (JsonTablePathSpec *) $3;
-		n->wrapper = $4;
-		n->quotes = $5;
-		n->on_empty = (JsonBehavior *) linitial($6);
-		n->on_error = (JsonBehavior *) lsecond($6);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Coltype = JTC_REGULAR
+		n.Name = yyDollar[1].str
+		n.TypeName = as[*TypeName](yyDollar[2].node)
+		n.Format = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1)
+		n.Pathspec = as[*JsonTablePathSpec](yyDollar[3].node)
+		n.Wrapper = JsonWrapper(yyDollar[4].ival)
+		n.Quotes = JsonQuotes(yyDollar[5].ival)
+		n.OnEmpty = as[*JsonBehavior](yyDollar[6].list[0])
+		n.OnError = as[*JsonBehavior](yyDollar[6].list[1])
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1906(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13840
-	{ /*C
-		JsonTableColumn *n = makeNode(JsonTableColumn);
+//line gram.y:13819
+	{
+		n := &JsonTableColumn{}
 
-		n->coltype = JTC_FORMATTED;
-		n->name = $1;
-		n->typeName = $2;
-		n->format = (JsonFormat *) $3;
-		n->pathspec = (JsonTablePathSpec *) $4;
-		n->wrapper = $5;
-		n->quotes = $6;
-		n->on_empty = (JsonBehavior *) linitial($7);
-		n->on_error = (JsonBehavior *) lsecond($7);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Coltype = JTC_FORMATTED
+		n.Name = yyDollar[1].str
+		n.TypeName = as[*TypeName](yyDollar[2].node)
+		n.Format = as[*JsonFormat](yyDollar[3].node)
+		n.Pathspec = as[*JsonTablePathSpec](yyDollar[4].node)
+		n.Wrapper = JsonWrapper(yyDollar[5].ival)
+		n.Quotes = JsonQuotes(yyDollar[6].ival)
+		n.OnEmpty = as[*JsonBehavior](yyDollar[7].list[0])
+		n.OnError = as[*JsonBehavior](yyDollar[7].list[1])
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1907(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13858
-	{ /*C
-		JsonTableColumn *n = makeNode(JsonTableColumn);
+//line gram.y:13837
+	{
+		n := &JsonTableColumn{}
 
-		n->coltype = JTC_EXISTS;
-		n->name = $1;
-		n->typeName = $2;
-		n->format = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1);
-		n->wrapper = JSW_NONE;
-		n->quotes = JS_QUOTES_UNSPEC;
-		n->pathspec = (JsonTablePathSpec *) $4;
-		n->on_empty = NULL;
-		n->on_error = (JsonBehavior *) $5;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Coltype = JTC_EXISTS
+		n.Name = yyDollar[1].str
+		n.TypeName = as[*TypeName](yyDollar[2].node)
+		n.Format = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1)
+		n.Wrapper = JSW_NONE
+		n.Quotes = JS_QUOTES_UNSPEC
+		n.Pathspec = as[*JsonTablePathSpec](yyDollar[4].node)
+		n.OnEmpty = nil
+		n.OnError = as[*JsonBehavior](yyDollar[5].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1908(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13875
-	{ /*C
-		JsonTableColumn *n = makeNode(JsonTableColumn);
+//line gram.y:13854
+	{
+		n := &JsonTableColumn{}
 
-		n->coltype = JTC_NESTED;
-		n->pathspec = (JsonTablePathSpec *)
-			makeJsonTablePathSpec($3, NULL, @3, -1);
-		n->columns = $6;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Coltype = JTC_NESTED
+		n.Pathspec = makeJsonTablePathSpec(yyDollar[3].str, "", yyDollar[3].loc, -1)
+		n.Columns = yyDollar[6].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1909(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13887
-	{ /*C
-		JsonTableColumn *n = makeNode(JsonTableColumn);
+//line gram.y:13865
+	{
+		n := &JsonTableColumn{}
 
-		n->coltype = JTC_NESTED;
-		n->pathspec = (JsonTablePathSpec *)
-			makeJsonTablePathSpec($3, $5, @3, @5);
-		n->columns = $8;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Coltype = JTC_NESTED
+		n.Pathspec = makeJsonTablePathSpec(yyDollar[3].str, yyDollar[5].str, yyDollar[3].loc, yyDollar[5].loc)
+		n.Columns = yyDollar[8].list
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct1912(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13906
-	{ /*C $$ = (Node *) makeJsonTablePathSpec($2, NULL, @2, -1); */
+//line gram.y:13883
+	{
+		yyVAL.node = makeJsonTablePathSpec(yyDollar[2].str, "", yyDollar[2].loc, -1)
 	}
 }
 
 func yyAct1913(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13908
+//line gram.y:13885
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct1914(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13922
-	{ /*C
-		$$ = $1;
-		$$->arrayBounds = $2;
-		*/
+//line gram.y:13899
+	{
+		t := as[*TypeName](yyDollar[1].node)
+		t.ArrayBounds = yyDollar[2].list
+		yyVAL.node = t
 	}
 }
 
 func yyAct1915(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13927
-	{ /*C
-		$$ = $2;
-		$$->arrayBounds = $3;
-		$$->setof = true;
-		*/
+//line gram.y:13905
+	{
+		t := as[*TypeName](yyDollar[2].node)
+		t.ArrayBounds = yyDollar[3].list
+		t.Setof = true
+		yyVAL.node = t
 	}
 }
 
 func yyAct1916(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13934
-	{ /*C
-		$$ = $1;
-		$$->arrayBounds = list_make1(makeInteger($4));
-		*/
+//line gram.y:13913
+	{
+		t := as[*TypeName](yyDollar[1].node)
+		t.ArrayBounds = []Node{makeInteger(yyDollar[4].ival)}
+		yyVAL.node = t
 	}
 }
 
 func yyAct1917(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13939
-	{ /*C
-		$$ = $2;
-		$$->arrayBounds = list_make1(makeInteger($5));
-		$$->setof = true;
-		*/
+//line gram.y:13919
+	{
+		t := as[*TypeName](yyDollar[2].node)
+		t.ArrayBounds = []Node{makeInteger(yyDollar[5].ival)}
+		t.Setof = true
+		yyVAL.node = t
 	}
 }
 
 func yyAct1918(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13945
-	{ /*C
-		$$ = $1;
-		$$->arrayBounds = list_make1(makeInteger(-1));
-		*/
+//line gram.y:13926
+	{
+		t := as[*TypeName](yyDollar[1].node)
+		t.ArrayBounds = []Node{makeInteger(-1)}
+		yyVAL.node = t
 	}
 }
 
 func yyAct1919(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13950
-	{ /*C
-		$$ = $2;
-		$$->arrayBounds = list_make1(makeInteger(-1));
-		$$->setof = true;
-		*/
+//line gram.y:13932
+	{
+		t := as[*TypeName](yyDollar[2].node)
+		t.ArrayBounds = []Node{makeInteger(-1)}
+		t.Setof = true
+		yyVAL.node = t
 	}
 }
 
 func yyAct1920(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13959
-	{ /*C  $$ = lappend($1, makeInteger(-1)); */
+//line gram.y:13942
+	{
+		yyVAL.list = append(yyDollar[1].list, makeInteger(-1))
 	}
 }
 
 func yyAct1921(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13961
-	{ /*C  $$ = lappend($1, makeInteger($3)); */
+//line gram.y:13944
+	{
+		yyVAL.list = append(yyDollar[1].list, makeInteger(yyDollar[3].ival))
 	}
 }
 
 func yyAct1922(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13963
+//line gram.y:13946
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1923(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13967
+//line gram.y:13950
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1924(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13968
+//line gram.y:13951
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1925(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13969
+//line gram.y:13952
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1926(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13970
+//line gram.y:13953
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1927(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13971
+//line gram.y:13954
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1928(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13973
-	{ /*C
-		$$ = $1;
-		$$->typmods = $2;
-		*/
+//line gram.y:13956
+	{
+		t := as[*TypeName](yyDollar[1].node)
+		t.Typmods = yyDollar[2].list
+		yyVAL.node = t
 	}
 }
 
 func yyAct1929(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13978
-	{ /*C
-		$$ = $1;
-		$$->typmods = list_make2(makeIntConst(INTERVAL_FULL_RANGE, -1),
-								 makeIntConst($3, @3));
-		*/
+//line gram.y:13962
+	{
+		t := as[*TypeName](yyDollar[1].node)
+		t.Typmods = []Node{makeIntConst(intervalFullRange, -1),
+			makeIntConst(yyDollar[3].ival, yyDollar[3].loc)}
+		yyVAL.node = t
 	}
 }
 
 func yyAct1930(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13983
+//line gram.y:13968
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1931(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13998
+//line gram.y:13983
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1932(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:13999
+//line gram.y:13984
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1933(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14000
+//line gram.y:13985
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1934(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14001
+//line gram.y:13986
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1935(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14002
+//line gram.y:13987
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1936(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14014
-	{ /*C
-		$$ = makeTypeName($1);
-		$$->typmods = $2;
-		$$->location = @1;
-		*/
+//line gram.y:13999
+	{
+		t := makeTypeName(yyDollar[1].str)
+		t.Typmods = yyDollar[2].list
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1937(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14020
-	{ /*C
-		$$ = makeTypeNameFromNameList(lcons(makeString($1), $2));
-		$$->typmods = $3;
-		$$->location = @1;
-		*/
+//line gram.y:14006
+	{
+		t := makeTypeNameFromNameList(append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[2].list...))
+		t.Typmods = yyDollar[3].list
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1938(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14027
+//line gram.y:14014
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct1939(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14028
+//line gram.y:14015
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1940(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14035
-	{ /*C
-		$$ = SystemTypeName("int4");
-		$$->location = @1;
-		*/
+//line gram.y:14022
+	{
+		t := systemTypeName("int4")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1941(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14040
-	{ /*C
-		$$ = SystemTypeName("int4");
-		$$->location = @1;
-		*/
+//line gram.y:14028
+	{
+		t := systemTypeName("int4")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1942(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14045
-	{ /*C
-		$$ = SystemTypeName("int2");
-		$$->location = @1;
-		*/
+//line gram.y:14034
+	{
+		t := systemTypeName("int2")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1943(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14050
-	{ /*C
-		$$ = SystemTypeName("int8");
-		$$->location = @1;
-		*/
+//line gram.y:14040
+	{
+		t := systemTypeName("int8")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1944(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14055
-	{ /*C
-		$$ = SystemTypeName("float4");
-		$$->location = @1;
-		*/
+//line gram.y:14046
+	{
+		t := systemTypeName("float4")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1945(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14060
-	{ /*C
-		$$ = $2;
-		$$->location = @1;
-		*/
+//line gram.y:14052
+	{
+		t := as[*TypeName](yyDollar[2].node)
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1946(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14065
-	{ /*C
-		$$ = SystemTypeName("float8");
-		$$->location = @1;
-		*/
+//line gram.y:14058
+	{
+		t := systemTypeName("float8")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1947(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14070
-	{ /*C
-		$$ = SystemTypeName("numeric");
-		$$->typmods = $2;
-		$$->location = @1;
-		*/
+//line gram.y:14064
+	{
+		t := systemTypeName("numeric")
+		t.Typmods = yyDollar[2].list
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1948(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14076
-	{ /*C
-		$$ = SystemTypeName("numeric");
-		$$->typmods = $2;
-		$$->location = @1;
-		*/
+//line gram.y:14071
+	{
+		t := systemTypeName("numeric")
+		t.Typmods = yyDollar[2].list
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1949(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14082
-	{ /*C
-		$$ = SystemTypeName("numeric");
-		$$->typmods = $2;
-		$$->location = @1;
-		*/
+//line gram.y:14078
+	{
+		t := systemTypeName("numeric")
+		t.Typmods = yyDollar[2].list
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1950(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14088
-	{ /*C
-		$$ = SystemTypeName("bool");
-		$$->location = @1;
-		*/
+//line gram.y:14085
+	{
+		t := systemTypeName("bool")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1951(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14095
-	{ /*C
+//line gram.y:14093
+	{
 		/*
 		 * Check FLOAT() precision limits assuming IEEE floating
 		 * types - thomas 1997-09-18
-		 * /
-		if ($2 < 1)
-			ereport(ERROR,
-					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("precision for type float must be at least 1 bit"),
-					 parser_errposition(@2)));
-		else if ($2 <= 24)
-			$$ = SystemTypeName("float4");
-		else if ($2 <= 53)
-			$$ = SystemTypeName("float8");
-		else
-			ereport(ERROR,
-					(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					 errmsg("precision for type float must be less than 54 bits"),
-					 parser_errposition(@2)));
-		*/
+		 */
+		if yyDollar[2].ival < 1 {
+			p.fail(yyDollar[2].loc, "precision for type float must be at least 1 bit")
+		} else if yyDollar[2].ival <= 24 {
+			yyVAL.node = systemTypeName("float4")
+		} else if yyDollar[2].ival <= 53 {
+			yyVAL.node = systemTypeName("float8")
+		} else {
+			p.fail(yyDollar[2].loc, "precision for type float must be less than 54 bits")
+		}
 	}
 }
 
 func yyAct1952(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14116
-	{ /*C
-		$$ = SystemTypeName("float8");
-		*/
+//line gram.y:14109
+	{
+		yyVAL.node = systemTypeName("float8")
 	}
 }
 
 func yyAct1953(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14126
+//line gram.y:14117
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1954(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14128
+//line gram.y:14119
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1955(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14134
+//line gram.y:14125
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1956(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14136
-	{ /*C
-		$$ = $1;
-		$$->typmods = NIL;
-		*/
+//line gram.y:14127
+	{
+		t := as[*TypeName](yyDollar[1].node)
+		t.Typmods = nil
+		yyVAL.node = t
 	}
 }
 
 func yyAct1957(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14144
-	{ /*C
-		char *typname;
-
-		typname = $2 ? "varbit" : "bit";
-		$$ = SystemTypeName(typname);
-		$$->typmods = $4;
-		$$->location = @1;
-		*/
+//line gram.y:14136
+	{
+		typname := "bit"
+		if yyDollar[2].boolean {
+			typname = "varbit"
+		}
+		t := systemTypeName(typname)
+		t.Typmods = yyDollar[4].list
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1958(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14156
-	{ /*C
-		/* bit defaults to bit(1), varbit to no limit * /
-		if ($2)
-		{
-			$$ = SystemTypeName("varbit");
+//line gram.y:14150
+	{
+		/* bit defaults to bit(1), varbit to no limit */
+		var t *TypeName
+		if yyDollar[2].boolean {
+			t = systemTypeName("varbit")
+		} else {
+			t = systemTypeName("bit")
+			t.Typmods = []Node{makeIntConst(1, -1)}
 		}
-		else
-		{
-			$$ = SystemTypeName("bit");
-			$$->typmods = list_make1(makeIntConst(1, -1));
-		}
-		$$->location = @1;
-		*/
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1959(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14177
+//line gram.y:14170
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1960(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14179
+//line gram.y:14172
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1961(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14183
+//line gram.y:14176
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1962(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14185
-	{ /*C
+//line gram.y:14178
+	{
 		/* Length was not specified so allow to be unrestricted.
 		 * This handles problems with fixed-length (bpchar) strings
 		 * which in column definitions must default to a length
 		 * of one, but should not be constrained if the length
 		 * was not specified.
-		 * /
-		$$ = $1;
-		$$->typmods = NIL;
-		*/
+		 */
+		t := as[*TypeName](yyDollar[1].node)
+		t.Typmods = nil
+		yyVAL.node = t
 	}
 }
 
 func yyAct1963(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14198
-	{ /*C
-		$$ = SystemTypeName($1);
-		$$->typmods = list_make1(makeIntConst($3, @3));
-		$$->location = @1;
-		*/
+//line gram.y:14192
+	{
+		t := systemTypeName(yyDollar[1].str)
+		t.Typmods = []Node{makeIntConst(yyDollar[3].ival, yyDollar[3].loc)}
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1964(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14206
-	{ /*C
-		$$ = SystemTypeName($1);
-		/* char defaults to char(1), varchar to no limit * /
-		if (strcmp($1, "bpchar") == 0)
-			$$->typmods = list_make1(makeIntConst(1, -1));
-		$$->location = @1;
-		*/
+//line gram.y:14201
+	{
+		t := systemTypeName(yyDollar[1].str)
+		/* char defaults to char(1), varchar to no limit */
+		if yyDollar[1].str == "bpchar" {
+			t.Typmods = []Node{makeIntConst(1, -1)}
+		}
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1965(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14216
-	{ /*C $$ = $2 ? "varchar": "bpchar"; */
+//line gram.y:14213
+	{
+		if yyDollar[2].boolean {
+			yyVAL.str = "varchar"
+		} else {
+			yyVAL.str = "bpchar"
+		}
 	}
 }
 
 func yyAct1966(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14218
-	{ /*C $$ = $2 ? "varchar": "bpchar"; */
+//line gram.y:14221
+	{
+		if yyDollar[2].boolean {
+			yyVAL.str = "varchar"
+		} else {
+			yyVAL.str = "bpchar"
+		}
 	}
 }
 
 func yyAct1967(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14220
+//line gram.y:14229
 	{
 		yyVAL.str = "varchar"
 	}
 }
 
 func yyAct1968(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14222
-	{ /*C $$ = $3 ? "varchar": "bpchar"; */
+//line gram.y:14231
+	{
+		if yyDollar[3].boolean {
+			yyVAL.str = "varchar"
+		} else {
+			yyVAL.str = "bpchar"
+		}
 	}
 }
 
 func yyAct1969(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14224
-	{ /*C $$ = $3 ? "varchar": "bpchar"; */
+//line gram.y:14239
+	{
+		if yyDollar[3].boolean {
+			yyVAL.str = "varchar"
+		} else {
+			yyVAL.str = "bpchar"
+		}
 	}
 }
 
 func yyAct1970(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14226
-	{ /*C $$ = $2 ? "varchar": "bpchar"; */
+//line gram.y:14247
+	{
+		if yyDollar[2].boolean {
+			yyVAL.str = "varchar"
+		} else {
+			yyVAL.str = "bpchar"
+		}
 	}
 }
 
 func yyAct1971(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14230
+//line gram.y:14257
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1972(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14231
+//line gram.y:14258
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1973(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14239
-	{ /*C
-		if ($5)
-			$$ = SystemTypeName("timestamptz");
-		else
-			$$ = SystemTypeName("timestamp");
-		$$->typmods = list_make1(makeIntConst($3, @3));
-		$$->location = @1;
-		*/
+//line gram.y:14266
+	{
+		var t *TypeName
+		if yyDollar[5].boolean {
+			t = systemTypeName("timestamptz")
+		} else {
+			t = systemTypeName("timestamp")
+		}
+		t.Typmods = []Node{makeIntConst(yyDollar[3].ival, yyDollar[3].loc)}
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1974(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14248
-	{ /*C
-		if ($2)
-			$$ = SystemTypeName("timestamptz");
-		else
-			$$ = SystemTypeName("timestamp");
-		$$->location = @1;
-		*/
+//line gram.y:14278
+	{
+		var t *TypeName
+		if yyDollar[2].boolean {
+			t = systemTypeName("timestamptz")
+		} else {
+			t = systemTypeName("timestamp")
+		}
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1975(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14256
-	{ /*C
-		if ($5)
-			$$ = SystemTypeName("timetz");
-		else
-			$$ = SystemTypeName("time");
-		$$->typmods = list_make1(makeIntConst($3, @3));
-		$$->location = @1;
-		*/
+//line gram.y:14289
+	{
+		var t *TypeName
+		if yyDollar[5].boolean {
+			t = systemTypeName("timetz")
+		} else {
+			t = systemTypeName("time")
+		}
+		t.Typmods = []Node{makeIntConst(yyDollar[3].ival, yyDollar[3].loc)}
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1976(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14265
-	{ /*C
-		if ($2)
-			$$ = SystemTypeName("timetz");
-		else
-			$$ = SystemTypeName("time");
-		$$->location = @1;
-		*/
+//line gram.y:14301
+	{
+		var t *TypeName
+		if yyDollar[2].boolean {
+			t = systemTypeName("timetz")
+		} else {
+			t = systemTypeName("time")
+		}
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1977(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14276
-	{ /*C
-		$$ = SystemTypeName("interval");
-		$$->location = @1;
-		*/
+//line gram.y:14315
+	{
+		t := systemTypeName("interval")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1978(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14283
+//line gram.y:14323
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct1979(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14284
+//line gram.y:14324
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1980(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14285
+//line gram.y:14325
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct1981(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14290
-	{ /*C $$ = list_make1(makeIntConst(INTERVAL_MASK(YEAR), @1)); */
+//line gram.y:14330
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtYear), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1982(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14292
-	{ /*C $$ = list_make1(makeIntConst(INTERVAL_MASK(MONTH), @1)); */
+//line gram.y:14332
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtMonth), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1983(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14294
-	{ /*C $$ = list_make1(makeIntConst(INTERVAL_MASK(DAY), @1)); */
+//line gram.y:14334
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtDay), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1984(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14296
-	{ /*C $$ = list_make1(makeIntConst(INTERVAL_MASK(HOUR), @1)); */
+//line gram.y:14336
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtHour), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1985(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14298
-	{ /*C $$ = list_make1(makeIntConst(INTERVAL_MASK(MINUTE), @1)); */
+//line gram.y:14338
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtMinute), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1986(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14300
+//line gram.y:14340
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct1987(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14302
-	{ /*C
-		$$ = list_make1(makeIntConst(INTERVAL_MASK(YEAR) |
-									 INTERVAL_MASK(MONTH), @1));
-		*/
+//line gram.y:14342
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtYear)|
+			intervalMask(dtMonth), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1988(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14307
-	{ /*C
-		$$ = list_make1(makeIntConst(INTERVAL_MASK(DAY) |
-									 INTERVAL_MASK(HOUR), @1));
-		*/
+//line gram.y:14347
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtDay)|
+			intervalMask(dtHour), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1989(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14312
-	{ /*C
-		$$ = list_make1(makeIntConst(INTERVAL_MASK(DAY) |
-									 INTERVAL_MASK(HOUR) |
-									 INTERVAL_MASK(MINUTE), @1));
-		*/
+//line gram.y:14352
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtDay)|
+			intervalMask(dtHour)|
+			intervalMask(dtMinute), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1990(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14318
-	{ /*C
-		$$ = $3;
-		linitial($$) = makeIntConst(INTERVAL_MASK(DAY) |
-									INTERVAL_MASK(HOUR) |
-									INTERVAL_MASK(MINUTE) |
-									INTERVAL_MASK(SECOND), @1);
-		*/
+//line gram.y:14358
+	{
+		yyVAL.list = yyDollar[3].list
+		yyVAL.list[0] = makeIntConst(intervalMask(dtDay)|
+			intervalMask(dtHour)|
+			intervalMask(dtMinute)|
+			intervalMask(dtSecond), yyDollar[1].loc)
 	}
 }
 
 func yyAct1991(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14326
-	{ /*C
-		$$ = list_make1(makeIntConst(INTERVAL_MASK(HOUR) |
-									 INTERVAL_MASK(MINUTE), @1));
-		*/
+//line gram.y:14366
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtHour)|
+			intervalMask(dtMinute), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1992(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14331
-	{ /*C
-		$$ = $3;
-		linitial($$) = makeIntConst(INTERVAL_MASK(HOUR) |
-									INTERVAL_MASK(MINUTE) |
-									INTERVAL_MASK(SECOND), @1);
-		*/
+//line gram.y:14371
+	{
+		yyVAL.list = yyDollar[3].list
+		yyVAL.list[0] = makeIntConst(intervalMask(dtHour)|
+			intervalMask(dtMinute)|
+			intervalMask(dtSecond), yyDollar[1].loc)
 	}
 }
 
 func yyAct1993(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14338
-	{ /*C
-		$$ = $3;
-		linitial($$) = makeIntConst(INTERVAL_MASK(MINUTE) |
-									INTERVAL_MASK(SECOND), @1);
-		*/
+//line gram.y:14378
+	{
+		yyVAL.list = yyDollar[3].list
+		yyVAL.list[0] = makeIntConst(intervalMask(dtMinute)|
+			intervalMask(dtSecond), yyDollar[1].loc)
 	}
 }
 
 func yyAct1994(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14344
+//line gram.y:14384
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct1995(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14349
-	{ /*C
-		$$ = list_make1(makeIntConst(INTERVAL_MASK(SECOND), @1));
-		*/
+//line gram.y:14389
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtSecond), yyDollar[1].loc)}
 	}
 }
 
 func yyAct1996(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14353
-	{ /*C
-		$$ = list_make2(makeIntConst(INTERVAL_MASK(SECOND), @1),
-						makeIntConst($3, @3));
-		*/
+//line gram.y:14391
+	{
+		yyVAL.list = []Node{makeIntConst(intervalMask(dtSecond), yyDollar[1].loc),
+			makeIntConst(yyDollar[3].ival, yyDollar[3].loc)}
 	}
 }
 
 func yyAct1997(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14361
-	{ /*C
-		$$ = SystemTypeName("json");
-		$$->location = @1;
-		*/
+//line gram.y:14399
+	{
+		t := systemTypeName("json")
+		t.Location = yyDollar[1].loc
+		yyVAL.node = t
 	}
 }
 
 func yyAct1998(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14396
+//line gram.y:14435
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct1999(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14398
-	{ /*C $$ = makeTypeCast($1, $3, @2); */
+//line gram.y:14437
+	{
+		yyVAL.node = makeTypeCast(yyDollar[1].node, as[*TypeName](yyDollar[3].node), yyDollar[2].loc)
 	}
 }
 
 func yyAct2000(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14400
-	{ /*C
-		CollateClause *n = makeNode(CollateClause);
+//line gram.y:14439
+	{
+		n := &CollateClause{}
 
-		n->arg = $1;
-		n->collname = $3;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Arg = yyDollar[1].node
+		n.Collname = yyDollar[3].list
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2001(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14409
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("timezone"),
-								   list_make2($5, $1),
-								   COERCE_SQL_SYNTAX,
-								   @2);
-		*/
+//line gram.y:14448
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("timezone"),
+			[]Node{yyDollar[5].node, yyDollar[1].node},
+			COERCE_SQL_SYNTAX,
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2002(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14416
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("timezone"),
-								   list_make1($1),
-								   COERCE_SQL_SYNTAX,
-								   -1);
-		*/
+//line gram.y:14455
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("timezone"),
+			[]Node{yyDollar[1].node},
+			COERCE_SQL_SYNTAX,
+			-1)
 	}
 }
 
 func yyAct2003(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14432
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "+", NULL, $2, @1); */
+//line gram.y:14471
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "+", nil, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2004(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14434
-	{ /*C $$ = doNegate($2, @1); */
+//line gram.y:14473
+	{
+		yyVAL.node = doNegate(yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2005(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14436
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "+", $1, $3, @2); */
+//line gram.y:14475
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "+", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2006(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14438
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "-", $1, $3, @2); */
+//line gram.y:14477
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "-", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2007(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14440
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "*", $1, $3, @2); */
+//line gram.y:14479
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "*", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2008(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14442
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "/", $1, $3, @2); */
+//line gram.y:14481
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "/", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2009(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14444
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "%", $1, $3, @2); */
+//line gram.y:14483
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "%", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2010(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14446
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "^", $1, $3, @2); */
+//line gram.y:14485
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "^", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2011(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14448
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "<", $1, $3, @2); */
+//line gram.y:14487
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "<", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2012(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14450
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, ">", $1, $3, @2); */
+//line gram.y:14489
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, ">", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2013(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14452
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "=", $1, $3, @2); */
+//line gram.y:14491
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2014(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14454
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "<=", $1, $3, @2); */
+//line gram.y:14493
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "<=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2015(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14456
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, ">=", $1, $3, @2); */
+//line gram.y:14495
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, ">=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2016(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14458
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "<>", $1, $3, @2); */
+//line gram.y:14497
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "<>", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2017(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14461
-	{ /*C $$ = (Node *) makeA_Expr(AEXPR_OP, $2, $1, $3, @2); */
+//line gram.y:14500
+	{
+		yyVAL.node = makeA_Expr(AEXPR_OP, yyDollar[2].list, yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2018(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14463
-	{ /*C $$ = (Node *) makeA_Expr(AEXPR_OP, $1, NULL, $2, @1); */
+//line gram.y:14502
+	{
+		yyVAL.node = makeA_Expr(AEXPR_OP, yyDollar[1].list, nil, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2019(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14466
-	{ /*C $$ = makeAndExpr($1, $3, @2); */
+//line gram.y:14505
+	{
+		yyVAL.node = makeAndExpr(yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2020(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14468
-	{ /*C $$ = makeOrExpr($1, $3, @2); */
+//line gram.y:14507
+	{
+		yyVAL.node = makeOrExpr(yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2021(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14470
-	{ /*C $$ = makeNotExpr($2, @1); */
+//line gram.y:14509
+	{
+		yyVAL.node = makeNotExpr(yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2022(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14472
-	{ /*C $$ = makeNotExpr($2, @1); */
+//line gram.y:14511
+	{
+		yyVAL.node = makeNotExpr(yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2023(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14475
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_LIKE, "~~",
-									   $1, $3, @2);
-		*/
+//line gram.y:14514
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_LIKE, "~~", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2024(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14480
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("like_escape"),
-									 list_make2($3, $5),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_LIKE, "~~",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14516
+	{
+		n := makeFuncCall(systemFuncName("like_escape"),
+			[]Node{yyDollar[3].node, yyDollar[5].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_LIKE, "~~", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2025(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14489
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_LIKE, "!~~",
-									   $1, $4, @2);
-		*/
+//line gram.y:14524
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_LIKE, "!~~", yyDollar[1].node, yyDollar[4].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2026(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14494
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("like_escape"),
-									 list_make2($4, $6),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_LIKE, "!~~",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14526
+	{
+		n := makeFuncCall(systemFuncName("like_escape"),
+			[]Node{yyDollar[4].node, yyDollar[6].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_LIKE, "!~~", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2027(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14503
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_ILIKE, "~~*",
-									   $1, $3, @2);
-		*/
+//line gram.y:14534
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_ILIKE, "~~*", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2028(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14508
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("like_escape"),
-									 list_make2($3, $5),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_ILIKE, "~~*",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14536
+	{
+		n := makeFuncCall(systemFuncName("like_escape"),
+			[]Node{yyDollar[3].node, yyDollar[5].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_ILIKE, "~~*", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2029(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14517
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_ILIKE, "!~~*",
-									   $1, $4, @2);
-		*/
+//line gram.y:14544
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_ILIKE, "!~~*", yyDollar[1].node, yyDollar[4].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2030(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14522
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("like_escape"),
-									 list_make2($4, $6),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_ILIKE, "!~~*",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14546
+	{
+		n := makeFuncCall(systemFuncName("like_escape"),
+			[]Node{yyDollar[4].node, yyDollar[6].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_ILIKE, "!~~*", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2031(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14532
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("similar_to_escape"),
-									 list_make1($4),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_SIMILAR, "~",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14555
+	{
+		n := makeFuncCall(systemFuncName("similar_to_escape"),
+			[]Node{yyDollar[4].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_SIMILAR, "~", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2032(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14541
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("similar_to_escape"),
-									 list_make2($4, $6),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_SIMILAR, "~",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14563
+	{
+		n := makeFuncCall(systemFuncName("similar_to_escape"),
+			[]Node{yyDollar[4].node, yyDollar[6].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_SIMILAR, "~", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2033(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14550
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("similar_to_escape"),
-									 list_make1($5),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_SIMILAR, "!~",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14571
+	{
+		n := makeFuncCall(systemFuncName("similar_to_escape"),
+			[]Node{yyDollar[5].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_SIMILAR, "!~", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2034(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14559
-	{ /*C
-		FuncCall   *n = makeFuncCall(SystemFuncName("similar_to_escape"),
-									 list_make2($5, $7),
-									 COERCE_EXPLICIT_CALL,
-									 @2);
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_SIMILAR, "!~",
-									   $1, (Node *) n, @2);
-		*/
+//line gram.y:14579
+	{
+		n := makeFuncCall(systemFuncName("similar_to_escape"),
+			[]Node{yyDollar[5].node, yyDollar[7].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[2].loc)
+		yyVAL.node = makeSimpleA_Expr(AEXPR_SIMILAR, "!~", yyDollar[1].node, n, yyDollar[2].loc)
 	}
 }
 
 func yyAct2035(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14578
-	{ /*C
-		NullTest   *n = makeNode(NullTest);
+//line gram.y:14597
+	{
+		n := &NullTest{}
 
-		n->arg = (Expr *) $1;
-		n->nulltesttype = IS_NULL;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Arg = yyDollar[1].node
+		n.Nulltesttype = IS_NULL
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2036(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14587
-	{ /*C
-		NullTest   *n = makeNode(NullTest);
+//line gram.y:14606
+	{
+		n := &NullTest{}
 
-		n->arg = (Expr *) $1;
-		n->nulltesttype = IS_NULL;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Arg = yyDollar[1].node
+		n.Nulltesttype = IS_NULL
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2037(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14596
-	{ /*C
-		NullTest   *n = makeNode(NullTest);
+//line gram.y:14615
+	{
+		n := &NullTest{}
 
-		n->arg = (Expr *) $1;
-		n->nulltesttype = IS_NOT_NULL;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Arg = yyDollar[1].node
+		n.Nulltesttype = IS_NOT_NULL
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2038(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14605
-	{ /*C
-		NullTest   *n = makeNode(NullTest);
+//line gram.y:14624
+	{
+		n := &NullTest{}
 
-		n->arg = (Expr *) $1;
-		n->nulltesttype = IS_NOT_NULL;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.Arg = yyDollar[1].node
+		n.Nulltesttype = IS_NOT_NULL
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2039(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14614
-	{ /*C
-		if (list_length($1) != 2)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("wrong number of parameters on left side of OVERLAPS expression"),
-					 parser_errposition(@1)));
-		if (list_length($3) != 2)
-			ereport(ERROR,
-					(errcode(ERRCODE_SYNTAX_ERROR),
-					 errmsg("wrong number of parameters on right side of OVERLAPS expression"),
-					 parser_errposition(@3)));
-		$$ = (Node *) makeFuncCall(SystemFuncName("overlaps"),
-								   list_concat($1, $3),
-								   COERCE_SQL_SYNTAX,
-								   @2);
-		*/
+//line gram.y:14633
+	{
+		if len(yyDollar[1].list) != 2 {
+			p.fail(yyDollar[1].loc, "wrong number of parameters on left side of OVERLAPS expression")
+		}
+		if len(yyDollar[3].list) != 2 {
+			p.fail(yyDollar[3].loc, "wrong number of parameters on right side of OVERLAPS expression")
+		}
+		yyVAL.node = makeFuncCall(systemFuncName("overlaps"),
+			append(yyDollar[1].list, yyDollar[3].list...),
+			COERCE_SQL_SYNTAX,
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2040(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14631
-	{ /*C
-		BooleanTest *b = makeNode(BooleanTest);
+//line gram.y:14646
+	{
+		b := &BooleanTest{}
 
-		b->arg = (Expr *) $1;
-		b->booltesttype = IS_TRUE;
-		b->location = @2;
-		$$ = (Node *) b;
-		*/
+		b.Arg = yyDollar[1].node
+		b.Booltesttype = IS_TRUE
+		b.Location = yyDollar[2].loc
+		yyVAL.node = b
 	}
 }
 
 func yyAct2041(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14640
-	{ /*C
-		BooleanTest *b = makeNode(BooleanTest);
+//line gram.y:14655
+	{
+		b := &BooleanTest{}
 
-		b->arg = (Expr *) $1;
-		b->booltesttype = IS_NOT_TRUE;
-		b->location = @2;
-		$$ = (Node *) b;
-		*/
+		b.Arg = yyDollar[1].node
+		b.Booltesttype = IS_NOT_TRUE
+		b.Location = yyDollar[2].loc
+		yyVAL.node = b
 	}
 }
 
 func yyAct2042(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14649
-	{ /*C
-		BooleanTest *b = makeNode(BooleanTest);
+//line gram.y:14664
+	{
+		b := &BooleanTest{}
 
-		b->arg = (Expr *) $1;
-		b->booltesttype = IS_FALSE;
-		b->location = @2;
-		$$ = (Node *) b;
-		*/
+		b.Arg = yyDollar[1].node
+		b.Booltesttype = IS_FALSE
+		b.Location = yyDollar[2].loc
+		yyVAL.node = b
 	}
 }
 
 func yyAct2043(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14658
-	{ /*C
-		BooleanTest *b = makeNode(BooleanTest);
+//line gram.y:14673
+	{
+		b := &BooleanTest{}
 
-		b->arg = (Expr *) $1;
-		b->booltesttype = IS_NOT_FALSE;
-		b->location = @2;
-		$$ = (Node *) b;
-		*/
+		b.Arg = yyDollar[1].node
+		b.Booltesttype = IS_NOT_FALSE
+		b.Location = yyDollar[2].loc
+		yyVAL.node = b
 	}
 }
 
 func yyAct2044(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14667
-	{ /*C
-		BooleanTest *b = makeNode(BooleanTest);
+//line gram.y:14682
+	{
+		b := &BooleanTest{}
 
-		b->arg = (Expr *) $1;
-		b->booltesttype = IS_UNKNOWN;
-		b->location = @2;
-		$$ = (Node *) b;
-		*/
+		b.Arg = yyDollar[1].node
+		b.Booltesttype = IS_UNKNOWN
+		b.Location = yyDollar[2].loc
+		yyVAL.node = b
 	}
 }
 
 func yyAct2045(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14676
-	{ /*C
-		BooleanTest *b = makeNode(BooleanTest);
+//line gram.y:14691
+	{
+		b := &BooleanTest{}
 
-		b->arg = (Expr *) $1;
-		b->booltesttype = IS_NOT_UNKNOWN;
-		b->location = @2;
-		$$ = (Node *) b;
-		*/
+		b.Arg = yyDollar[1].node
+		b.Booltesttype = IS_NOT_UNKNOWN
+		b.Location = yyDollar[2].loc
+		yyVAL.node = b
 	}
 }
 
 func yyAct2046(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14685
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_DISTINCT, "=", $1, $5, @2);
-		*/
+//line gram.y:14700
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_DISTINCT, "=", yyDollar[1].node, yyDollar[5].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2047(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14689
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_NOT_DISTINCT, "=", $1, $6, @2);
-		*/
+//line gram.y:14702
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_NOT_DISTINCT, "=", yyDollar[1].node, yyDollar[6].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2048(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14693
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_BETWEEN,
-									   "BETWEEN",
-									   $1,
-									   (Node *) list_make2($4, $6),
-									   @2);
-		*/
+//line gram.y:14704
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_BETWEEN,
+			"BETWEEN",
+			yyDollar[1].node,
+			listNode([]Node{yyDollar[4].node, yyDollar[6].node}),
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2049(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14701
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_NOT_BETWEEN,
-									   "NOT BETWEEN",
-									   $1,
-									   (Node *) list_make2($5, $7),
-									   @2);
-		*/
+//line gram.y:14712
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_NOT_BETWEEN,
+			"NOT BETWEEN",
+			yyDollar[1].node,
+			listNode([]Node{yyDollar[5].node, yyDollar[7].node}),
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2050(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14709
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_BETWEEN_SYM,
-									   "BETWEEN SYMMETRIC",
-									   $1,
-									   (Node *) list_make2($4, $6),
-									   @2);
-		*/
+//line gram.y:14720
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_BETWEEN_SYM,
+			"BETWEEN SYMMETRIC",
+			yyDollar[1].node,
+			listNode([]Node{yyDollar[4].node, yyDollar[6].node}),
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2051(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14717
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_NOT_BETWEEN_SYM,
-									   "NOT BETWEEN SYMMETRIC",
-									   $1,
-									   (Node *) list_make2($5, $7),
-									   @2);
-		*/
+//line gram.y:14728
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_NOT_BETWEEN_SYM,
+			"NOT BETWEEN SYMMETRIC",
+			yyDollar[1].node,
+			listNode([]Node{yyDollar[5].node, yyDollar[7].node}),
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2052(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14725
-	{ /*C
-		/* in_expr returns a SubLink or a list of a_exprs * /
-		if (IsA($3, SubLink))
-		{
-			/* generate foo = ANY (subquery) * /
-			SubLink	   *n = (SubLink *) $3;
-
-			n->subLinkType = ANY_SUBLINK;
-			n->subLinkId = 0;
-			n->testexpr = $1;
-			n->operName = NIL;		/* show it's IN not = ANY * /
-			n->location = @2;
-			$$ = (Node *) n;
+//line gram.y:14736
+	{
+		/* in_expr returns a SubLink or a list of a_exprs */
+		if n, ok := yyDollar[3].node.(*SubLink); ok {
+			/* generate foo = ANY (subquery) */
+			n.SubLinkType = ANY_SUBLINK
+			n.SubLinkId = 0
+			n.Testexpr = yyDollar[1].node
+			n.OperName = nil /* show it's IN not = ANY */
+			n.Location = yyDollar[2].loc
+			yyVAL.node = n
+		} else {
+			/* generate scalar IN expression */
+			yyVAL.node = makeSimpleA_Expr(AEXPR_IN, "=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 		}
-		else
-		{
-			/* generate scalar IN expression * /
-			$$ = (Node *) makeSimpleA_Expr(AEXPR_IN, "=", $1, $3, @2);
-		}
-		*/
 	}
 }
 
 func yyAct2053(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14746
-	{ /*C
-		/* in_expr returns a SubLink or a list of a_exprs * /
-		if (IsA($4, SubLink))
-		{
-			/* generate NOT (foo = ANY (subquery)) * /
-			/* Make an = ANY node * /
-			SubLink	   *n = (SubLink *) $4;
-
-			n->subLinkType = ANY_SUBLINK;
-			n->subLinkId = 0;
-			n->testexpr = $1;
-			n->operName = NIL;		/* show it's IN not = ANY * /
-			n->location = @2;
-			/* Stick a NOT on top; must have same parse location * /
-			$$ = makeNotExpr((Node *) n, @2);
+//line gram.y:14752
+	{
+		/* in_expr returns a SubLink or a list of a_exprs */
+		if n, ok := yyDollar[4].node.(*SubLink); ok {
+			/* generate NOT (foo = ANY (subquery)) */
+			/* Make an = ANY node */
+			n.SubLinkType = ANY_SUBLINK
+			n.SubLinkId = 0
+			n.Testexpr = yyDollar[1].node
+			n.OperName = nil /* show it's IN not = ANY */
+			n.Location = yyDollar[2].loc
+			/* Stick a NOT on top; must have same parse location */
+			yyVAL.node = makeNotExpr(n, yyDollar[2].loc)
+		} else {
+			/* generate scalar NOT IN expression */
+			yyVAL.node = makeSimpleA_Expr(AEXPR_IN, "<>", yyDollar[1].node, yyDollar[4].node, yyDollar[2].loc)
 		}
-		else
-		{
-			/* generate scalar NOT IN expression * /
-			$$ = (Node *) makeSimpleA_Expr(AEXPR_IN, "<>", $1, $4, @2);
-		}
-		*/
 	}
 }
 
 func yyAct2054(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14769
-	{ /*C
-		SubLink	   *n = makeNode(SubLink);
+//line gram.y:14770
+	{
+		n := &SubLink{}
 
-		n->subLinkType = $3;
-		n->subLinkId = 0;
-		n->testexpr = $1;
-		n->operName = $2;
-		n->subselect = $4;
-		n->location = @2;
-		$$ = (Node *) n;
-		*/
+		n.SubLinkType = SubLinkType(yyDollar[3].ival)
+		n.SubLinkId = 0
+		n.Testexpr = yyDollar[1].node
+		n.OperName = yyDollar[2].list
+		n.Subselect = yyDollar[4].node
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2055(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14781
-	{ /*C
-		if ($3 == ANY_SUBLINK)
-			$$ = (Node *) makeA_Expr(AEXPR_OP_ANY, $2, $1, $5, @2);
-		else
-			$$ = (Node *) makeA_Expr(AEXPR_OP_ALL, $2, $1, $5, @2);
-		*/
+//line gram.y:14782
+	{
+		if SubLinkType(yyDollar[3].ival) == ANY_SUBLINK {
+			yyVAL.node = makeA_Expr(AEXPR_OP_ANY, yyDollar[2].list, yyDollar[1].node, yyDollar[5].node, yyDollar[2].loc)
+		} else {
+			yyVAL.node = makeA_Expr(AEXPR_OP_ALL, yyDollar[2].list, yyDollar[1].node, yyDollar[5].node, yyDollar[2].loc)
+		}
 	}
 }
 
 func yyAct2056(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14788
-	{ /*C
+//line gram.y:14790
+	{
 		/* Not sure how to get rid of the parentheses
 		 * but there are lots of shift/reduce errors without them.
 		 *
@@ -36260,348 +35550,337 @@ func yyAct2056(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 * from whatever they are into count(*), and testing the
 		 * entire result equal to one.
 		 * But, will probably implement a separate node in the executor.
-		 * /
-		ereport(ERROR,
-				(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-				 errmsg("UNIQUE predicate is not yet implemented"),
-				 parser_errposition(@1)));
-		*/
+		 */
+		p.fail(yyDollar[1].loc, "UNIQUE predicate is not yet implemented")
 	}
 }
 
 func yyAct2057(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14804
-	{ /*C
-		$$ = makeXmlExpr(IS_DOCUMENT, NULL, NIL,
-						 list_make1($1), @2);
-		*/
+//line gram.y:14803
+	{
+		yyVAL.node = makeXmlExpr(IS_DOCUMENT, "", nil, []Node{yyDollar[1].node}, yyDollar[2].loc)
 	}
 }
 
 func yyAct2058(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14809
-	{ /*C
-		$$ = makeNotExpr(makeXmlExpr(IS_DOCUMENT, NULL, NIL,
-									 list_make1($1), @2),
-						 @2);
-		*/
+//line gram.y:14805
+	{
+		yyVAL.node = makeNotExpr(makeXmlExpr(IS_DOCUMENT, "", nil, []Node{yyDollar[1].node}, yyDollar[2].loc), yyDollar[2].loc)
 	}
 }
 
 func yyAct2059(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14815
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("is_normalized"),
-								   list_make1($1),
-								   COERCE_SQL_SYNTAX,
-								   @2);
-		*/
+//line gram.y:14807
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("is_normalized"),
+			[]Node{yyDollar[1].node},
+			COERCE_SQL_SYNTAX,
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2060(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14822
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("is_normalized"),
-								   list_make2($1, makeStringConst($3, @3)),
-								   COERCE_SQL_SYNTAX,
-								   @2);
-		*/
+//line gram.y:14814
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("is_normalized"),
+			[]Node{yyDollar[1].node, makeStringConst(yyDollar[3].str, yyDollar[3].loc)},
+			COERCE_SQL_SYNTAX,
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2061(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14829
-	{ /*C
-		$$ = makeNotExpr((Node *) makeFuncCall(SystemFuncName("is_normalized"),
-											   list_make1($1),
-											   COERCE_SQL_SYNTAX,
-											   @2),
-						 @2);
-		*/
+//line gram.y:14821
+	{
+		yyVAL.node = makeNotExpr(makeFuncCall(systemFuncName("is_normalized"),
+			[]Node{yyDollar[1].node},
+			COERCE_SQL_SYNTAX,
+			yyDollar[2].loc),
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2062(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14837
-	{ /*C
-		$$ = makeNotExpr((Node *) makeFuncCall(SystemFuncName("is_normalized"),
-											   list_make2($1, makeStringConst($4, @4)),
-											   COERCE_SQL_SYNTAX,
-											   @2),
-						 @2);
-		*/
+//line gram.y:14829
+	{
+		yyVAL.node = makeNotExpr(makeFuncCall(systemFuncName("is_normalized"),
+			[]Node{yyDollar[1].node, makeStringConst(yyDollar[4].str, yyDollar[4].loc)},
+			COERCE_SQL_SYNTAX,
+			yyDollar[2].loc),
+			yyDollar[2].loc)
 	}
 }
 
 func yyAct2063(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14846
-	{ /*C
-		JsonFormat *format = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1);
+//line gram.y:14838
+	{
+		format := makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1)
 
-		$$ = makeJsonIsPredicate($1, format, $3, $4, @1);
-		*/
+		yyVAL.node = makeJsonIsPredicate(yyDollar[1].node, format, JsonValueType(yyDollar[3].ival), yyDollar[4].boolean, yyDollar[1].loc)
 	}
 }
 
 func yyAct2064(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14864
-	{ /*C
-		JsonFormat *format = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1);
+//line gram.y:14856
+	{
+		format := makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1)
 
-		$$ = makeNotExpr(makeJsonIsPredicate($1, format, $4, $5, @1), @1);
-		*/
+		yyVAL.node = makeNotExpr(makeJsonIsPredicate(yyDollar[1].node, format, JsonValueType(yyDollar[4].ival), yyDollar[5].boolean, yyDollar[1].loc), yyDollar[1].loc)
 	}
 }
 
 func yyAct2065(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14881
-	{ /*C
+//line gram.y:14873
+	{
 		/*
 		 * The SQL spec only allows DEFAULT in "contextually typed
 		 * expressions", but for us, it's easier to allow it in
 		 * any a_expr and then throw error during parse analysis
 		 * if it's in an inappropriate context.  This way also
 		 * lets us say something smarter than "syntax error".
-		 * /
-		SetToDefault *n = makeNode(SetToDefault);
+		 */
+		n := &SetToDefault{}
 
-		/* parse analysis will fill in the rest * /
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		/* parse analysis will fill in the rest */
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2066(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14907
+//line gram.y:14899
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2067(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14909
-	{ /*C $$ = makeTypeCast($1, $3, @2); */
+//line gram.y:14901
+	{
+		yyVAL.node = makeTypeCast(yyDollar[1].node, as[*TypeName](yyDollar[3].node), yyDollar[2].loc)
 	}
 }
 
 func yyAct2068(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14911
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "+", NULL, $2, @1); */
+//line gram.y:14903
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "+", nil, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2069(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14913
-	{ /*C $$ = doNegate($2, @1); */
+//line gram.y:14905
+	{
+		yyVAL.node = doNegate(yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2070(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14915
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "+", $1, $3, @2); */
+//line gram.y:14907
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "+", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2071(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14917
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "-", $1, $3, @2); */
+//line gram.y:14909
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "-", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2072(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14919
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "*", $1, $3, @2); */
+//line gram.y:14911
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "*", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2073(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14921
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "/", $1, $3, @2); */
+//line gram.y:14913
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "/", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2074(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14923
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "%", $1, $3, @2); */
+//line gram.y:14915
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "%", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2075(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14925
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "^", $1, $3, @2); */
+//line gram.y:14917
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "^", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2076(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14927
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "<", $1, $3, @2); */
+//line gram.y:14919
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "<", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2077(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14929
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, ">", $1, $3, @2); */
+//line gram.y:14921
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, ">", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2078(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14931
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "=", $1, $3, @2); */
+//line gram.y:14923
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2079(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14933
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "<=", $1, $3, @2); */
+//line gram.y:14925
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "<=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2080(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14935
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, ">=", $1, $3, @2); */
+//line gram.y:14927
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, ">=", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2081(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14937
-	{ /*C $$ = (Node *) makeSimpleA_Expr(AEXPR_OP, "<>", $1, $3, @2); */
+//line gram.y:14929
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_OP, "<>", yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2082(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14939
-	{ /*C $$ = (Node *) makeA_Expr(AEXPR_OP, $2, $1, $3, @2); */
+//line gram.y:14931
+	{
+		yyVAL.node = makeA_Expr(AEXPR_OP, yyDollar[2].list, yyDollar[1].node, yyDollar[3].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2083(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14941
-	{ /*C $$ = (Node *) makeA_Expr(AEXPR_OP, $1, NULL, $2, @1); */
+//line gram.y:14933
+	{
+		yyVAL.node = makeA_Expr(AEXPR_OP, yyDollar[1].list, nil, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2084(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14943
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_DISTINCT, "=", $1, $5, @2);
-		*/
+//line gram.y:14935
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_DISTINCT, "=", yyDollar[1].node, yyDollar[5].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2085(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14947
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_NOT_DISTINCT, "=", $1, $6, @2);
-		*/
+//line gram.y:14937
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_NOT_DISTINCT, "=", yyDollar[1].node, yyDollar[6].node, yyDollar[2].loc)
 	}
 }
 
 func yyAct2086(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14951
-	{ /*C
-		$$ = makeXmlExpr(IS_DOCUMENT, NULL, NIL,
-						 list_make1($1), @2);
-		*/
+//line gram.y:14939
+	{
+		yyVAL.node = makeXmlExpr(IS_DOCUMENT, "", nil, []Node{yyDollar[1].node}, yyDollar[2].loc)
 	}
 }
 
 func yyAct2087(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14956
-	{ /*C
-		$$ = makeNotExpr(makeXmlExpr(IS_DOCUMENT, NULL, NIL,
-									 list_make1($1), @2),
-						 @2);
-		*/
+//line gram.y:14941
+	{
+		yyVAL.node = makeNotExpr(makeXmlExpr(IS_DOCUMENT, "", nil, []Node{yyDollar[1].node}, yyDollar[2].loc), yyDollar[2].loc)
 	}
 }
 
 func yyAct2088(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14971
+//line gram.y:14952
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2089(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14972
+//line gram.y:14953
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2090(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14974
-	{ /*C
-		ParamRef   *p = makeNode(ParamRef);
+//line gram.y:14955
+	{
+		pr := &ParamRef{}
 
-		p->number = $1;
-		p->location = @1;
-		if ($2)
-		{
-			A_Indirection *n = makeNode(A_Indirection);
+		pr.Number = yyDollar[1].ival
+		pr.Location = yyDollar[1].loc
+		if len(yyDollar[2].list) > 0 {
+			n := &A_Indirection{}
 
-			n->arg = (Node *) p;
-			n->indirection = check_indirection($2, yyscanner);
-			$$ = (Node *) n;
+			n.Arg = pr
+			n.Indirection = p.checkIndirection(yyDollar[2].list)
+			yyVAL.node = n
+		} else {
+			yyVAL.node = pr
 		}
-		else
-			$$ = (Node *) p;
-		*/
 	}
 }
 
 func yyAct2091(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:14991
-	{ /*C
-		if ($4)
-		{
-			A_Indirection *n = makeNode(A_Indirection);
+//line gram.y:14971
+	{
+		if len(yyDollar[4].list) > 0 {
+			n := &A_Indirection{}
 
-			n->arg = $2;
-			n->indirection = check_indirection($4, yyscanner);
-			$$ = (Node *) n;
+			n.Arg = yyDollar[2].node
+			n.Indirection = p.checkIndirection(yyDollar[4].list)
+			yyVAL.node = n
+		} else {
+			yyVAL.node = yyDollar[2].node
 		}
-		else
-			$$ = $2;
-		*/
 	}
 }
 
 func yyAct2092(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15004
+//line gram.y:14983
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2093(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15006
+//line gram.y:14985
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2094(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15008
-	{ /*C
-		SubLink	   *n = makeNode(SubLink);
+//line gram.y:14987
+	{
+		n := &SubLink{}
 
-		n->subLinkType = EXPR_SUBLINK;
-		n->subLinkId = 0;
-		n->testexpr = NULL;
-		n->operName = NIL;
-		n->subselect = $1;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.SubLinkType = EXPR_SUBLINK
+		n.SubLinkId = 0
+		n.Testexpr = nil
+		n.OperName = nil
+		n.Subselect = yyDollar[1].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2095(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15020
-	{ /*C
+//line gram.y:14999
+	{
 		/*
 		 * Because the select_with_parens nonterminal is designed
 		 * to "eat" as many levels of parens as possible, the
@@ -36611,194 +35890,182 @@ func yyAct2095(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 * as there are parens around it.  To support applying
 		 * subscripting or field selection to a sub-SELECT result,
 		 * we need this redundant-looking production.
-		 * /
-		SubLink	   *n = makeNode(SubLink);
-		A_Indirection *a = makeNode(A_Indirection);
+		 */
+		n := &SubLink{}
+		a := &A_Indirection{}
 
-		n->subLinkType = EXPR_SUBLINK;
-		n->subLinkId = 0;
-		n->testexpr = NULL;
-		n->operName = NIL;
-		n->subselect = $1;
-		n->location = @1;
-		a->arg = (Node *) n;
-		a->indirection = check_indirection($2, yyscanner);
-		$$ = (Node *) a;
-		*/
+		n.SubLinkType = EXPR_SUBLINK
+		n.SubLinkId = 0
+		n.Testexpr = nil
+		n.OperName = nil
+		n.Subselect = yyDollar[1].node
+		n.Location = yyDollar[1].loc
+		a.Arg = n
+		a.Indirection = p.checkIndirection(yyDollar[2].list)
+		yyVAL.node = a
 	}
 }
 
 func yyAct2096(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15045
-	{ /*C
-		SubLink	   *n = makeNode(SubLink);
+//line gram.y:15024
+	{
+		n := &SubLink{}
 
-		n->subLinkType = EXISTS_SUBLINK;
-		n->subLinkId = 0;
-		n->testexpr = NULL;
-		n->operName = NIL;
-		n->subselect = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.SubLinkType = EXISTS_SUBLINK
+		n.SubLinkId = 0
+		n.Testexpr = nil
+		n.OperName = nil
+		n.Subselect = yyDollar[2].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2097(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15057
-	{ /*C
-		SubLink	   *n = makeNode(SubLink);
+//line gram.y:15036
+	{
+		n := &SubLink{}
 
-		n->subLinkType = ARRAY_SUBLINK;
-		n->subLinkId = 0;
-		n->testexpr = NULL;
-		n->operName = NIL;
-		n->subselect = $2;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.SubLinkType = ARRAY_SUBLINK
+		n.SubLinkId = 0
+		n.Testexpr = nil
+		n.OperName = nil
+		n.Subselect = yyDollar[2].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2098(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15069
-	{ /*C
-		A_ArrayExpr *n = castNode(A_ArrayExpr, $2);
+//line gram.y:15048
+	{
+		/* castNode(A_ArrayExpr, $2), array_expr always makes one */
+		n := as[*A_ArrayExpr](yyDollar[2].node)
 
-		/* point outermost A_ArrayExpr to the ARRAY keyword * /
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		/* point outermost A_ArrayExpr to the ARRAY keyword */
+		if n != nil {
+			n.Location = yyDollar[1].loc
+		}
+		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct2099(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15077
-	{ /*C
-		RowExpr	   *r = makeNode(RowExpr);
+//line gram.y:15059
+	{
+		r := &RowExpr{}
 
-		r->args = $1;
-		r->row_typeid = InvalidOid;	/* not analyzed yet * /
-		r->colnames = NIL;	/* to be filled in during analysis * /
-		r->row_format = COERCE_EXPLICIT_CALL; /* abuse * /
-		r->location = @1;
-		$$ = (Node *) r;
-		*/
+		r.Args = yyDollar[1].list
+		r.RowTypeid = 0                    /* not analyzed yet */
+		r.Colnames = nil                   /* to be filled in during analysis */
+		r.RowFormat = COERCE_EXPLICIT_CALL /* abuse */
+		r.Location = yyDollar[1].loc
+		yyVAL.node = r
 	}
 }
 
 func yyAct2100(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15088
-	{ /*C
-		RowExpr	   *r = makeNode(RowExpr);
+//line gram.y:15070
+	{
+		r := &RowExpr{}
 
-		r->args = $1;
-		r->row_typeid = InvalidOid;	/* not analyzed yet * /
-		r->colnames = NIL;	/* to be filled in during analysis * /
-		r->row_format = COERCE_IMPLICIT_CAST; /* abuse * /
-		r->location = @1;
-		$$ = (Node *) r;
-		*/
+		r.Args = yyDollar[1].list
+		r.RowTypeid = 0                    /* not analyzed yet */
+		r.Colnames = nil                   /* to be filled in during analysis */
+		r.RowFormat = COERCE_IMPLICIT_CAST /* abuse */
+		r.Location = yyDollar[1].loc
+		yyVAL.node = r
 	}
 }
 
 func yyAct2101(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15099
-	{ /*C
-		  GroupingFunc *g = makeNode(GroupingFunc);
+//line gram.y:15081
+	{
+		g := &GroupingFunc{}
 
-		  g->args = $3;
-		  g->location = @1;
-		  $$ = (Node *) g;
-		*/
+		g.Args = yyDollar[3].list
+		g.Location = yyDollar[1].loc
+		yyVAL.node = g
 	}
 }
 
 func yyAct2102(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15109
-	{ /*C
-		$$ = (Node *) makeFuncCall($1, NIL,
-								   COERCE_EXPLICIT_CALL,
-								   @1);
-		*/
+//line gram.y:15091
+	{
+		yyVAL.node = makeFuncCall(yyDollar[1].list, nil, COERCE_EXPLICIT_CALL, yyDollar[1].loc)
 	}
 }
 
 func yyAct2103(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15115
-	{ /*C
-		FuncCall   *n = makeFuncCall($1, $3,
-									 COERCE_EXPLICIT_CALL,
-									 @1);
+//line gram.y:15093
+	{
+		n := makeFuncCall(yyDollar[1].list, yyDollar[3].list,
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 
-		n->agg_order = $4;
-		$$ = (Node *) n;
-		*/
+		n.AggOrder = yyDollar[4].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct2104(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15124
-	{ /*C
-		FuncCall   *n = makeFuncCall($1, list_make1($4),
-									 COERCE_EXPLICIT_CALL,
-									 @1);
+//line gram.y:15102
+	{
+		n := makeFuncCall(yyDollar[1].list, []Node{yyDollar[4].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 
-		n->func_variadic = true;
-		n->agg_order = $5;
-		$$ = (Node *) n;
-		*/
+		n.FuncVariadic = true
+		n.AggOrder = yyDollar[5].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct2105(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15134
-	{ /*C
-		FuncCall   *n = makeFuncCall($1, lappend($3, $6),
-									 COERCE_EXPLICIT_CALL,
-									 @1);
+//line gram.y:15112
+	{
+		n := makeFuncCall(yyDollar[1].list, append(yyDollar[3].list, yyDollar[6].node),
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 
-		n->func_variadic = true;
-		n->agg_order = $7;
-		$$ = (Node *) n;
-		*/
+		n.FuncVariadic = true
+		n.AggOrder = yyDollar[7].list
+		yyVAL.node = n
 	}
 }
 
 func yyAct2106(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15144
-	{ /*C
-		FuncCall   *n = makeFuncCall($1, $4,
-									 COERCE_EXPLICIT_CALL,
-									 @1);
+//line gram.y:15122
+	{
+		n := makeFuncCall(yyDollar[1].list, yyDollar[4].list,
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 
-		n->agg_order = $5;
+		n.AggOrder = yyDollar[5].list
 		/* Ideally we'd mark the FuncCall node to indicate
 		 * "must be an aggregate", but there's no provision
 		 * for that in FuncCall at the moment.
-		 * /
-		$$ = (Node *) n;
-		*/
+		 */
+		yyVAL.node = n
 	}
 }
 
 func yyAct2107(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15157
-	{ /*C
-		FuncCall   *n = makeFuncCall($1, $4,
-									 COERCE_EXPLICIT_CALL,
-									 @1);
+//line gram.y:15135
+	{
+		n := makeFuncCall(yyDollar[1].list, yyDollar[4].list,
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 
-		n->agg_order = $5;
-		n->agg_distinct = true;
-		$$ = (Node *) n;
-		*/
+		n.AggOrder = yyDollar[5].list
+		n.AggDistinct = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct2108(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15167
-	{ /*C
+//line gram.y:15145
+	{
 		/*
 		 * We consider AGGREGATE(*) to invoke a parameterless
 		 * aggregate.  This does the right thing for COUNT(*),
@@ -36808,21 +36075,20 @@ func yyAct2108(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 * The FuncCall node is also marked agg_star = true,
 		 * so that later processing can detect what the argument
 		 * really was.
-		 * /
-		FuncCall   *n = makeFuncCall($1, NIL,
-									 COERCE_EXPLICIT_CALL,
-									 @1);
+		 */
+		n := makeFuncCall(yyDollar[1].list, nil,
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 
-		n->agg_star = true;
-		$$ = (Node *) n;
-		*/
+		n.AggStar = true
+		yyVAL.node = n
 	}
 }
 
 func yyAct2109(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15198
-	{ /*C
-		FuncCall   *n = (FuncCall *) $1;
+//line gram.y:15176
+	{
+		n := as[*FuncCall](yyDollar[1].node)
 
 		/*
 		 * The order clause for WITHIN GROUP and the one for
@@ -36831,333 +36097,307 @@ func yyAct2109(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 * for DISTINCT and VARIADIC here to give a better error
 		 * location.  Other consistency checks are deferred to
 		 * parse analysis.
-		 * /
-		if ($2 != NIL)
-		{
-			if (n->agg_order != NIL)
-				ereport(ERROR,
-						(errcode(ERRCODE_SYNTAX_ERROR),
-						 errmsg("cannot use multiple ORDER BY clauses with WITHIN GROUP"),
-						 parser_errposition(@2)));
-			if (n->agg_distinct)
-				ereport(ERROR,
-						(errcode(ERRCODE_SYNTAX_ERROR),
-						 errmsg("cannot use DISTINCT with WITHIN GROUP"),
-						 parser_errposition(@2)));
-			if (n->func_variadic)
-				ereport(ERROR,
-						(errcode(ERRCODE_SYNTAX_ERROR),
-						 errmsg("cannot use VARIADIC with WITHIN GROUP"),
-						 parser_errposition(@2)));
-			n->agg_order = $2;
-			n->agg_within_group = true;
+		 */
+		if yyDollar[2].list != nil {
+			if n.AggOrder != nil {
+				p.fail(yyDollar[2].loc, "cannot use multiple ORDER BY clauses with WITHIN GROUP")
+			}
+			if n.AggDistinct {
+				p.fail(yyDollar[2].loc, "cannot use DISTINCT with WITHIN GROUP")
+			}
+			if n.FuncVariadic {
+				p.fail(yyDollar[2].loc, "cannot use VARIADIC with WITHIN GROUP")
+			}
+			n.AggOrder = yyDollar[2].list
+			n.AggWithinGroup = true
 		}
-		n->agg_filter = $3;
-		n->over = $4;
-		$$ = (Node *) n;
-		*/
+		n.AggFilter = yyDollar[3].node
+		n.Over = as[*WindowDef](yyDollar[4].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct2110(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15234
-	{ /*C
-		JsonAggConstructor *n = IsA($1, JsonObjectAgg) ?
-			((JsonObjectAgg *) $1)->constructor :
-			((JsonArrayAgg *) $1)->constructor;
+//line gram.y:15205
+	{
+		var n *JsonAggConstructor
 
-		n->agg_filter = $2;
-		n->over = $3;
-		$$ = (Node *) $1;
-		*/
+		switch a := yyDollar[1].node.(type) {
+		case *JsonObjectAgg:
+			n = a.Constructor
+		case *JsonArrayAgg:
+			n = a.Constructor
+		}
+
+		if n != nil {
+			n.AggFilter = yyDollar[2].node
+			n.Over = as[*WindowDef](yyDollar[3].node)
+		}
+		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2111(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15244
+//line gram.y:15222
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2112(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15254
+//line gram.y:15232
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2113(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15255
+//line gram.y:15233
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2114(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15256
+//line gram.y:15234
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2115(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15264
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("pg_collation_for"),
-								   list_make1($4),
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15242
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("pg_collation_for"),
+			[]Node{yyDollar[4].node},
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2116(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15271
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_DATE, -1, @1);
-		*/
+//line gram.y:15249
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_DATE, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2117(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15275
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_TIME, -1, @1);
-		*/
+//line gram.y:15251
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_TIME, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2118(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15279
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_TIME_N, $3, @1);
-		*/
+//line gram.y:15253
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_TIME_N, yyDollar[3].ival, yyDollar[1].loc)
 	}
 }
 
 func yyAct2119(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15283
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_TIMESTAMP, -1, @1);
-		*/
+//line gram.y:15255
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_TIMESTAMP, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2120(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15287
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_TIMESTAMP_N, $3, @1);
-		*/
+//line gram.y:15257
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_TIMESTAMP_N, yyDollar[3].ival, yyDollar[1].loc)
 	}
 }
 
 func yyAct2121(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15291
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_LOCALTIME, -1, @1);
-		*/
+//line gram.y:15259
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_LOCALTIME, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2122(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15295
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_LOCALTIME_N, $3, @1);
-		*/
+//line gram.y:15261
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_LOCALTIME_N, yyDollar[3].ival, yyDollar[1].loc)
 	}
 }
 
 func yyAct2123(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15299
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_LOCALTIMESTAMP, -1, @1);
-		*/
+//line gram.y:15263
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_LOCALTIMESTAMP, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2124(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15303
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_LOCALTIMESTAMP_N, $3, @1);
-		*/
+//line gram.y:15265
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_LOCALTIMESTAMP_N, yyDollar[3].ival, yyDollar[1].loc)
 	}
 }
 
 func yyAct2125(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15307
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_ROLE, -1, @1);
-		*/
+//line gram.y:15267
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_ROLE, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2126(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15311
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_USER, -1, @1);
-		*/
+//line gram.y:15269
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_USER, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2127(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15315
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_SESSION_USER, -1, @1);
-		*/
+//line gram.y:15271
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_SESSION_USER, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2128(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15319
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("system_user"),
-								   NIL,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15273
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("system_user"),
+			nil,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2129(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15326
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_USER, -1, @1);
-		*/
+//line gram.y:15280
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_USER, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2130(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15330
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_CATALOG, -1, @1);
-		*/
+//line gram.y:15282
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_CATALOG, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2131(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15334
-	{ /*C
-		$$ = makeSQLValueFunction(SVFOP_CURRENT_SCHEMA, -1, @1);
-		*/
+//line gram.y:15284
+	{
+		yyVAL.node = makeSQLValueFunction(SVFOP_CURRENT_SCHEMA, -1, yyDollar[1].loc)
 	}
 }
 
 func yyAct2132(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15338
-	{ /*C $$ = makeTypeCast($3, $5, @1); */
+//line gram.y:15286
+	{
+		yyVAL.node = makeTypeCast(yyDollar[3].node, as[*TypeName](yyDollar[5].node), yyDollar[1].loc)
 	}
 }
 
 func yyAct2133(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15340
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("extract"),
-								   $3,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15288
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("extract"),
+			yyDollar[3].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2134(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15347
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("normalize"),
-								   list_make1($3),
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15295
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("normalize"),
+			[]Node{yyDollar[3].node},
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2135(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15354
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("normalize"),
-								   list_make2($3, makeStringConst($5, @5)),
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15302
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("normalize"),
+			[]Node{yyDollar[3].node, makeStringConst(yyDollar[5].str, yyDollar[5].loc)},
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2136(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15361
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("overlay"),
-								   $3,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15309
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("overlay"),
+			yyDollar[3].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2137(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15368
-	{ /*C
+//line gram.y:15316
+	{
 		/*
 		 * allow functions named overlay() to be called without
 		 * special syntax
-		 * /
-		$$ = (Node *) makeFuncCall(list_make1(makeString("overlay")),
-								   $3,
-								   COERCE_EXPLICIT_CALL,
-								   @1);
-		*/
+		 */
+		yyVAL.node = makeFuncCall([]Node{makeString("overlay", -1)},
+			yyDollar[3].list,
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2138(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15379
-	{ /*C
+//line gram.y:15327
+	{
 		/*
 		 * position(A in B) is converted to position(B, A)
 		 *
 		 * We deliberately don't offer a "plain syntax" option
 		 * for position(), because the reversal of the arguments
 		 * creates too much risk of confusion.
-		 * /
-		$$ = (Node *) makeFuncCall(SystemFuncName("position"),
-								   $3,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+		 */
+		yyVAL.node = makeFuncCall(systemFuncName("position"),
+			yyDollar[3].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2139(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15393
-	{ /*C
+//line gram.y:15341
+	{
 		/* substring(A from B for C) is converted to
 		 * substring(A, B, C) - thomas 2000-11-28
-		 * /
-		$$ = (Node *) makeFuncCall(SystemFuncName("substring"),
-								   $3,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+		 */
+		yyVAL.node = makeFuncCall(systemFuncName("substring"),
+			yyDollar[3].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2140(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15403
-	{ /*C
+//line gram.y:15351
+	{
 		/*
 		 * allow functions named substring() to be called without
 		 * special syntax
-		 * /
-		$$ = (Node *) makeFuncCall(list_make1(makeString("substring")),
-								   $3,
-								   COERCE_EXPLICIT_CALL,
-								   @1);
-		*/
+		 */
+		yyVAL.node = makeFuncCall([]Node{makeString("substring", -1)},
+			yyDollar[3].list,
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2141(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15414
-	{ /*C
+//line gram.y:15362
+	{
 		/* TREAT(expr AS target) converts expr of a particular type to target,
 		 * which is defined to be a subtype of the original expression.
 		 * In SQL99, this is intended for use with structured UDTs,
@@ -37166,1435 +36406,1387 @@ func yyAct2141(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 *
 		 * Convert SystemTypeName() to SystemFuncName() even though
 		 * at the moment they result in the same thing.
-		 * /
-		$$ = (Node *) makeFuncCall(SystemFuncName(strVal(llast($5->names))),
-								   list_make1($3),
-								   COERCE_EXPLICIT_CALL,
-								   @1);
-		*/
+		 */
+		names := as[*TypeName](yyDollar[5].node).Names
+
+		yyVAL.node = makeFuncCall(systemFuncName(strVal(names[len(names)-1])),
+			[]Node{yyDollar[3].node},
+			COERCE_EXPLICIT_CALL,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2142(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15430
-	{ /*C
+//line gram.y:15380
+	{
 		/* various trim expressions are defined in SQL
 		 * - thomas 1997-07-19
-		 * /
-		$$ = (Node *) makeFuncCall(SystemFuncName("btrim"),
-								   $4,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+		 */
+		yyVAL.node = makeFuncCall(systemFuncName("btrim"),
+			yyDollar[4].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2143(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15440
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("ltrim"),
-								   $4,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15390
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("ltrim"),
+			yyDollar[4].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2144(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15447
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("rtrim"),
-								   $4,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15397
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("rtrim"),
+			yyDollar[4].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2145(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15454
-	{ /*C
-		$$ = (Node *) makeFuncCall(SystemFuncName("btrim"),
-								   $3,
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+//line gram.y:15404
+	{
+		yyVAL.node = makeFuncCall(systemFuncName("btrim"),
+			yyDollar[3].list,
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2146(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15461
-	{ /*C
-		$$ = (Node *) makeSimpleA_Expr(AEXPR_NULLIF, "=", $3, $5, @1);
-		*/
+//line gram.y:15411
+	{
+		yyVAL.node = makeSimpleA_Expr(AEXPR_NULLIF, "=", yyDollar[3].node, yyDollar[5].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2147(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15465
-	{ /*C
-		CoalesceExpr *c = makeNode(CoalesceExpr);
+//line gram.y:15413
+	{
+		c := &CoalesceExpr{}
 
-		c->args = $3;
-		c->location = @1;
-		$$ = (Node *) c;
-		*/
+		c.Args = yyDollar[3].list
+		c.Location = yyDollar[1].loc
+		yyVAL.node = c
 	}
 }
 
 func yyAct2148(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15473
-	{ /*C
-		MinMaxExpr *v = makeNode(MinMaxExpr);
+//line gram.y:15421
+	{
+		v := &MinMaxExpr{}
 
-		v->args = $3;
-		v->op = IS_GREATEST;
-		v->location = @1;
-		$$ = (Node *) v;
-		*/
+		v.Args = yyDollar[3].list
+		v.Op = IS_GREATEST
+		v.Location = yyDollar[1].loc
+		yyVAL.node = v
 	}
 }
 
 func yyAct2149(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15482
-	{ /*C
-		MinMaxExpr *v = makeNode(MinMaxExpr);
+//line gram.y:15430
+	{
+		v := &MinMaxExpr{}
 
-		v->args = $3;
-		v->op = IS_LEAST;
-		v->location = @1;
-		$$ = (Node *) v;
-		*/
+		v.Args = yyDollar[3].list
+		v.Op = IS_LEAST
+		v.Location = yyDollar[1].loc
+		yyVAL.node = v
 	}
 }
 
 func yyAct2150(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15491
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLCONCAT, NULL, NIL, $3, @1);
-		*/
+//line gram.y:15439
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLCONCAT, "", nil, yyDollar[3].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2151(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15495
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLELEMENT, $4, NIL, NIL, @1);
-		*/
+//line gram.y:15441
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLELEMENT, yyDollar[4].str, nil, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2152(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15499
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLELEMENT, $4, $6, NIL, @1);
-		*/
+//line gram.y:15443
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLELEMENT, yyDollar[4].str, yyDollar[6].list, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2153(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15503
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLELEMENT, $4, NIL, $6, @1);
-		*/
+//line gram.y:15445
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLELEMENT, yyDollar[4].str, nil, yyDollar[6].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2154(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15507
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLELEMENT, $4, $6, $8, @1);
-		*/
+//line gram.y:15447
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLELEMENT, yyDollar[4].str, yyDollar[6].list, yyDollar[8].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2155(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15511
-	{ /*C
+//line gram.y:15449
+	{
 		/* xmlexists(A PASSING [BY REF] B [BY REF]) is
-		 * converted to xmlexists(A, B)* /
-		$$ = (Node *) makeFuncCall(SystemFuncName("xmlexists"),
-								   list_make2($3, $4),
-								   COERCE_SQL_SYNTAX,
-								   @1);
-		*/
+		 * converted to xmlexists(A, B)*/
+		yyVAL.node = makeFuncCall(systemFuncName("xmlexists"),
+			[]Node{yyDollar[3].node, yyDollar[4].node},
+			COERCE_SQL_SYNTAX,
+			yyDollar[1].loc)
 	}
 }
 
 func yyAct2156(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15520
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLFOREST, NULL, $3, NIL, @1);
-		*/
+//line gram.y:15458
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLFOREST, "", yyDollar[3].list, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2157(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15524
-	{ /*C
-		XmlExpr *x = (XmlExpr *)
-			makeXmlExpr(IS_XMLPARSE, NULL, NIL,
-						list_make2($4, makeBoolAConst($5, -1)),
-						@1);
+//line gram.y:15460
+	{
+		x := as[*XmlExpr](makeXmlExpr(IS_XMLPARSE, "", nil,
+			[]Node{yyDollar[4].node, makeBoolAConst(yyDollar[5].boolean, -1)},
+			yyDollar[1].loc))
 
-		x->xmloption = $3;
-		$$ = (Node *) x;
-		*/
+		x.Xmloption = XmlOptionType(yyDollar[3].ival)
+		yyVAL.node = x
 	}
 }
 
 func yyAct2158(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15534
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLPI, $4, NULL, NIL, @1);
-		*/
+//line gram.y:15469
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLPI, yyDollar[4].str, nil, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2159(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15538
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLPI, $4, NULL, list_make1($6), @1);
-		*/
+//line gram.y:15471
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLPI, yyDollar[4].str, nil, []Node{yyDollar[6].node}, yyDollar[1].loc)
 	}
 }
 
 func yyAct2160(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15542
-	{ /*C
-		$$ = makeXmlExpr(IS_XMLROOT, NULL, NIL,
-						 list_make3($3, $5, $6), @1);
-		*/
+//line gram.y:15473
+	{
+		yyVAL.node = makeXmlExpr(IS_XMLROOT, "", nil,
+			[]Node{yyDollar[3].node, yyDollar[5].node, yyDollar[6].node}, yyDollar[1].loc)
 	}
 }
 
 func yyAct2161(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15547
-	{ /*C
-		XmlSerialize *n = makeNode(XmlSerialize);
+//line gram.y:15478
+	{
+		n := &XmlSerialize{}
 
-		n->xmloption = $3;
-		n->expr = $4;
-		n->typeName = $6;
-		n->indent = $7;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Xmloption = XmlOptionType(yyDollar[3].ival)
+		n.Expr = yyDollar[4].node
+		n.TypeName = as[*TypeName](yyDollar[6].node)
+		n.Indent = yyDollar[7].boolean
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2162(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15558
-	{ /*C
-		/* Support for legacy (non-standard) json_object() * /
-		$$ = (Node *) makeFuncCall(SystemFuncName("json_object"),
-								   $3, COERCE_EXPLICIT_CALL, @1);
-		*/
+//line gram.y:15489
+	{
+		/* Support for legacy (non-standard) json_object() */
+		yyVAL.node = makeFuncCall(systemFuncName("json_object"),
+			yyDollar[3].list, COERCE_EXPLICIT_CALL, yyDollar[1].loc)
 	}
 }
 
 func yyAct2163(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15567
-	{ /*C
-		JsonObjectConstructor *n = makeNode(JsonObjectConstructor);
+//line gram.y:15498
+	{
+		n := &JsonObjectConstructor{}
 
-		n->exprs = $3;
-		n->absent_on_null = $4;
-		n->unique = $5;
-		n->output = (JsonOutput *) $6;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Exprs = yyDollar[3].list
+		n.AbsentOnNull = yyDollar[4].boolean
+		n.Unique = yyDollar[5].boolean
+		n.Output = as[*JsonOutput](yyDollar[6].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2164(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15578
-	{ /*C
-		JsonObjectConstructor *n = makeNode(JsonObjectConstructor);
+//line gram.y:15509
+	{
+		n := &JsonObjectConstructor{}
 
-		n->exprs = NULL;
-		n->absent_on_null = false;
-		n->unique = false;
-		n->output = (JsonOutput *) $3;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Exprs = nil
+		n.AbsentOnNull = false
+		n.Unique = false
+		n.Output = as[*JsonOutput](yyDollar[3].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2165(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15593
-	{ /*C
-		JsonArrayConstructor *n = makeNode(JsonArrayConstructor);
+//line gram.y:15524
+	{
+		n := &JsonArrayConstructor{}
 
-		n->exprs = $3;
-		n->absent_on_null = $4;
-		n->output = (JsonOutput *) $5;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Exprs = yyDollar[3].list
+		n.AbsentOnNull = yyDollar[4].boolean
+		n.Output = as[*JsonOutput](yyDollar[5].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2166(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15608
-	{ /*C
-		JsonArrayQueryConstructor *n = makeNode(JsonArrayQueryConstructor);
+//line gram.y:15539
+	{
+		n := &JsonArrayQueryConstructor{}
 
-		n->query = $3;
-		n->format = (JsonFormat *) $4;
-		n->absent_on_null = true;	/* XXX * /
-		n->output = (JsonOutput *) $5;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Query = yyDollar[3].node
+		n.Format = as[*JsonFormat](yyDollar[4].node)
+		n.AbsentOnNull = true /* XXX */
+		n.Output = as[*JsonOutput](yyDollar[5].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2167(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15621
-	{ /*C
-		JsonArrayConstructor *n = makeNode(JsonArrayConstructor);
+//line gram.y:15552
+	{
+		n := &JsonArrayConstructor{}
 
-		n->exprs = NIL;
-		n->absent_on_null = true;
-		n->output = (JsonOutput *) $3;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Exprs = nil
+		n.AbsentOnNull = true
+		n.Output = as[*JsonOutput](yyDollar[3].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2168(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15631
-	{ /*C
-		JsonParseExpr *n = makeNode(JsonParseExpr);
+//line gram.y:15562
+	{
+		n := &JsonParseExpr{}
 
-		n->expr = (JsonValueExpr *) $3;
-		n->unique_keys = $4;
-		n->output = NULL;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Expr = as[*JsonValueExpr](yyDollar[3].node)
+		n.UniqueKeys = yyDollar[4].boolean
+		n.Output = nil
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2169(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15641
-	{ /*C
-		JsonScalarExpr *n = makeNode(JsonScalarExpr);
+//line gram.y:15572
+	{
+		n := &JsonScalarExpr{}
 
-		n->expr = (Expr *) $3;
-		n->output = NULL;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Expr = yyDollar[3].node
+		n.Output = nil
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2170(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15650
-	{ /*C
-		JsonSerializeExpr *n = makeNode(JsonSerializeExpr);
+//line gram.y:15581
+	{
+		n := &JsonSerializeExpr{}
 
-		n->expr = (JsonValueExpr *) $3;
-		n->output = (JsonOutput *) $4;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Expr = as[*JsonValueExpr](yyDollar[3].node)
+		n.Output = as[*JsonOutput](yyDollar[4].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2171(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15659
-	{ /*C
-		MergeSupportFunc *m = makeNode(MergeSupportFunc);
+//line gram.y:15590
+	{
+		m := &MergeSupportFunc{}
 
-		m->msftype = TEXTOID;
-		m->location = @1;
-		$$ = (Node *) m;
-		*/
+		m.Msftype = TEXTOID
+		m.Location = yyDollar[1].loc
+		yyVAL.node = m
 	}
 }
 
 func yyAct2172(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15673
-	{ /*C
-		JsonFuncExpr *n = makeNode(JsonFuncExpr);
+//line gram.y:15604
+	{
+		n := &JsonFuncExpr{}
 
-		n->op = JSON_QUERY_OP;
-		n->context_item = (JsonValueExpr *) $3;
-		n->pathspec = $5;
-		n->passing = $6;
-		n->output = (JsonOutput *) $7;
-		n->wrapper = $8;
-		n->quotes = $9;
-		n->on_empty = (JsonBehavior *) linitial($10);
-		n->on_error = (JsonBehavior *) lsecond($10);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Op = JSON_QUERY_OP
+		n.ContextItem = as[*JsonValueExpr](yyDollar[3].node)
+		n.Pathspec = yyDollar[5].node
+		n.Passing = yyDollar[6].list
+		n.Output = as[*JsonOutput](yyDollar[7].node)
+		n.Wrapper = JsonWrapper(yyDollar[8].ival)
+		n.Quotes = JsonQuotes(yyDollar[9].ival)
+		n.OnEmpty = as[*JsonBehavior](nodeAt(yyDollar[10].list, 0))
+		n.OnError = as[*JsonBehavior](nodeAt(yyDollar[10].list, 1))
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2173(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15692
-	{ /*C
-		JsonFuncExpr *n = makeNode(JsonFuncExpr);
+//line gram.y:15623
+	{
+		n := &JsonFuncExpr{}
 
-		n->op = JSON_EXISTS_OP;
-		n->context_item = (JsonValueExpr *) $3;
-		n->pathspec = $5;
-		n->passing = $6;
-		n->output = NULL;
-		n->on_error = (JsonBehavior *) $7;
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Op = JSON_EXISTS_OP
+		n.ContextItem = as[*JsonValueExpr](yyDollar[3].node)
+		n.Pathspec = yyDollar[5].node
+		n.Passing = yyDollar[6].list
+		n.Output = nil
+		n.OnError = as[*JsonBehavior](yyDollar[7].node)
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2174(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15709
-	{ /*C
-		JsonFuncExpr *n = makeNode(JsonFuncExpr);
+//line gram.y:15640
+	{
+		n := &JsonFuncExpr{}
 
-		n->op = JSON_VALUE_OP;
-		n->context_item = (JsonValueExpr *) $3;
-		n->pathspec = $5;
-		n->passing = $6;
-		n->output = (JsonOutput *) $7;
-		n->on_empty = (JsonBehavior *) linitial($8);
-		n->on_error = (JsonBehavior *) lsecond($8);
-		n->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Op = JSON_VALUE_OP
+		n.ContextItem = as[*JsonValueExpr](yyDollar[3].node)
+		n.Pathspec = yyDollar[5].node
+		n.Passing = yyDollar[6].list
+		n.Output = as[*JsonOutput](yyDollar[7].node)
+		n.OnEmpty = as[*JsonBehavior](nodeAt(yyDollar[8].list, 0))
+		n.OnError = as[*JsonBehavior](nodeAt(yyDollar[8].list, 1))
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2175(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15731
+//line gram.y:15662
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct2176(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15733
-	{ /*C $$ = makeNullAConst(-1); */
+//line gram.y:15664
+	{
+		yyVAL.node = makeNullAConst(-1)
 	}
 }
 
 func yyAct2177(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15737
-	{ /*C $$ = makeIntConst(XML_STANDALONE_YES, -1); */
+//line gram.y:15668
+	{
+		yyVAL.node = makeIntConst(xmlStandaloneYes, -1)
 	}
 }
 
 func yyAct2178(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15739
-	{ /*C $$ = makeIntConst(XML_STANDALONE_NO, -1); */
+//line gram.y:15670
+	{
+		yyVAL.node = makeIntConst(xmlStandaloneNo, -1)
 	}
 }
 
 func yyAct2179(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15741
-	{ /*C $$ = makeIntConst(XML_STANDALONE_NO_VALUE, -1); */
+//line gram.y:15672
+	{
+		yyVAL.node = makeIntConst(xmlStandaloneNoValue, -1)
 	}
 }
 
 func yyAct2180(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15743
-	{ /*C $$ = makeIntConst(XML_STANDALONE_OMITTED, -1); */
+//line gram.y:15674
+	{
+		yyVAL.node = makeIntConst(xmlStandaloneOmitted, -1)
 	}
 }
 
 func yyAct2181(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15746
+//line gram.y:15677
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2182(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15749
+//line gram.y:15680
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2183(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15750
+//line gram.y:15681
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2184(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15754
-	{ /*C
-		$$ = makeNode(ResTarget);
-		$$->name = $3;
-		$$->indirection = NIL;
-		$$->val = (Node *) $1;
-		$$->location = @1;
-		*/
+//line gram.y:15685
+	{
+		n := &ResTarget{}
+		n.Name = yyDollar[3].str
+		n.Indirection = nil
+		n.Val = yyDollar[1].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2185(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15762
-	{ /*C
-		$$ = makeNode(ResTarget);
-		$$->name = NULL;
-		$$->indirection = NIL;
-		$$->val = (Node *) $1;
-		$$->location = @1;
-		*/
+//line gram.y:15694
+	{
+		n := &ResTarget{}
+		n.Name = ""
+		n.Indirection = nil
+		n.Val = yyDollar[1].node
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2186(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15771
-	{ /*C $$ = XMLOPTION_DOCUMENT; */
+//line gram.y:15704
+	{
+		yyVAL.ival = int32(XMLOPTION_DOCUMENT)
 	}
 }
 
 func yyAct2187(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15772
-	{ /*C $$ = XMLOPTION_CONTENT; */
+//line gram.y:15705
+	{
+		yyVAL.ival = int32(XMLOPTION_CONTENT)
 	}
 }
 
 func yyAct2188(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15775
+//line gram.y:15708
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2189(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15776
+//line gram.y:15709
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2190(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15777
+//line gram.y:15710
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2191(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15780
+//line gram.y:15713
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2192(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15781
+//line gram.y:15714
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2193(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15782
+//line gram.y:15715
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2194(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15788
+//line gram.y:15721
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct2195(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15790
+//line gram.y:15723
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct2196(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15792
+//line gram.y:15725
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct2197(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15794
+//line gram.y:15727
 	{
 		yyVAL.node = yyDollar[3].node
 	}
 }
 
 func yyAct2200(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15807
+//line gram.y:15740
 	{
 		yyVAL.list = yyDollar[4].list
 	}
 }
 
 func yyAct2201(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15808
+//line gram.y:15741
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2202(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15812
+//line gram.y:15745
 	{
 		yyVAL.node = yyDollar[4].node
 	}
 }
 
 func yyAct2203(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15813
+//line gram.y:15746
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2204(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15821
+//line gram.y:15754
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct2205(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15822
+//line gram.y:15755
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2206(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15826
+//line gram.y:15759
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2207(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15828
+//line gram.y:15761
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2208(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15833
-	{ /*C
-		WindowDef  *n = $3;
+//line gram.y:15766
+	{
+		n := as[*WindowDef](yyDollar[3].node)
 
-		n->name = $1;
-		$$ = n;
-		*/
+		n.Name = yyDollar[1].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct2209(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15842
+//line gram.y:15775
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct2210(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15844
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15777
+	{
+		n := &WindowDef{}
 
-		n->name = $2;
-		n->refname = NULL;
-		n->partitionClause = NIL;
-		n->orderClause = NIL;
-		n->frameOptions = FRAMEOPTION_DEFAULTS;
-		n->startOffset = NULL;
-		n->endOffset = NULL;
-		n->location = @2;
-		$$ = n;
-		*/
+		n.Name = yyDollar[2].str
+		n.Refname = ""
+		n.PartitionClause = nil
+		n.OrderClause = nil
+		n.FrameOptions = frameoptionDefaults
+		n.StartOffset = nil
+		n.EndOffset = nil
+		n.Location = yyDollar[2].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2211(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15858
+//line gram.y:15791
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2212(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15863
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15796
+	{
+		n := &WindowDef{}
 
-		n->name = NULL;
-		n->refname = $2;
-		n->partitionClause = $3;
-		n->orderClause = $4;
-		/* copy relevant fields of opt_frame_clause * /
-		n->frameOptions = $5->frameOptions;
-		n->startOffset = $5->startOffset;
-		n->endOffset = $5->endOffset;
-		n->location = @1;
-		$$ = n;
-		*/
+		n.Name = ""
+		n.Refname = yyDollar[2].str
+		n.PartitionClause = yyDollar[3].list
+		n.OrderClause = yyDollar[4].list
+		/* copy relevant fields of opt_frame_clause */
+		f := as[*WindowDef](yyDollar[5].node)
+		n.FrameOptions = f.FrameOptions
+		n.StartOffset = f.StartOffset
+		n.EndOffset = f.EndOffset
+		n.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2213(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15889
+//line gram.y:15823
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2214(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15890
+//line gram.y:15824
 	{
 		yyVAL.str = ""
 	}
 }
 
 func yyAct2215(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15893
+//line gram.y:15827
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2216(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15894
+//line gram.y:15828
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2217(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15903
-	{ /*C
-		WindowDef  *n = $2;
+//line gram.y:15837
+	{
+		n := as[*WindowDef](yyDollar[2].node)
 
-		n->frameOptions |= FRAMEOPTION_NONDEFAULT | FRAMEOPTION_RANGE;
-		n->frameOptions |= $3;
-		$$ = n;
-		*/
+		n.FrameOptions |= frameoptionNondefault | frameoptionRange
+		n.FrameOptions |= yyDollar[3].ival
+		yyVAL.node = n
 	}
 }
 
 func yyAct2218(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15911
-	{ /*C
-		WindowDef  *n = $2;
+//line gram.y:15845
+	{
+		n := as[*WindowDef](yyDollar[2].node)
 
-		n->frameOptions |= FRAMEOPTION_NONDEFAULT | FRAMEOPTION_ROWS;
-		n->frameOptions |= $3;
-		$$ = n;
-		*/
+		n.FrameOptions |= frameoptionNondefault | frameoptionRows
+		n.FrameOptions |= yyDollar[3].ival
+		yyVAL.node = n
 	}
 }
 
 func yyAct2219(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15919
-	{ /*C
-		WindowDef  *n = $2;
+//line gram.y:15853
+	{
+		n := as[*WindowDef](yyDollar[2].node)
 
-		n->frameOptions |= FRAMEOPTION_NONDEFAULT | FRAMEOPTION_GROUPS;
-		n->frameOptions |= $3;
-		$$ = n;
-		*/
+		n.FrameOptions |= frameoptionNondefault | frameoptionGroups
+		n.FrameOptions |= yyDollar[3].ival
+		yyVAL.node = n
 	}
 }
 
 func yyAct2220(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15927
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15861
+	{
+		n := &WindowDef{}
 
-		n->frameOptions = FRAMEOPTION_DEFAULTS;
-		n->startOffset = NULL;
-		n->endOffset = NULL;
-		$$ = n;
-		*/
+		n.FrameOptions = frameoptionDefaults
+		n.StartOffset = nil
+		n.EndOffset = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct2221(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15938
-	{ /*C
-		WindowDef  *n = $1;
+//line gram.y:15872
+	{
+		n := as[*WindowDef](yyDollar[1].node)
 
-		/* reject invalid cases * /
-		if (n->frameOptions & FRAMEOPTION_START_UNBOUNDED_FOLLOWING)
-			ereport(ERROR,
-					(errcode(ERRCODE_WINDOWING_ERROR),
-					 errmsg("frame start cannot be UNBOUNDED FOLLOWING"),
-					 parser_errposition(@1)));
-		if (n->frameOptions & FRAMEOPTION_START_OFFSET_FOLLOWING)
-			ereport(ERROR,
-					(errcode(ERRCODE_WINDOWING_ERROR),
-					 errmsg("frame starting from following row cannot end with current row"),
-					 parser_errposition(@1)));
-		n->frameOptions |= FRAMEOPTION_END_CURRENT_ROW;
-		$$ = n;
-		*/
+		/* reject invalid cases */
+		if n.FrameOptions&frameoptionStartUnboundedFollowing != 0 {
+			p.fail(yyDollar[1].loc, "frame start cannot be UNBOUNDED FOLLOWING")
+		}
+		if n.FrameOptions&frameoptionStartOffsetFollowing != 0 {
+			p.fail(yyDollar[1].loc, "frame starting from following row cannot end with current row")
+		}
+		n.FrameOptions |= frameoptionEndCurrentRow
+		yyVAL.node = n
 	}
 }
 
 func yyAct2222(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:15956
-	{ /*C
-		WindowDef  *n1 = $2;
-		WindowDef  *n2 = $4;
+//line gram.y:15886
+	{
+		n1 := as[*WindowDef](yyDollar[2].node)
+		n2 := as[*WindowDef](yyDollar[4].node)
 
-		/* form merged options * /
-		int		frameOptions = n1->frameOptions;
-		/* shift converts START_ options to END_ options * /
-		frameOptions |= n2->frameOptions << 1;
-		frameOptions |= FRAMEOPTION_BETWEEN;
-		/* reject invalid cases * /
-		if (frameOptions & FRAMEOPTION_START_UNBOUNDED_FOLLOWING)
-			ereport(ERROR,
-					(errcode(ERRCODE_WINDOWING_ERROR),
-					 errmsg("frame start cannot be UNBOUNDED FOLLOWING"),
-					 parser_errposition(@2)));
-		if (frameOptions & FRAMEOPTION_END_UNBOUNDED_PRECEDING)
-			ereport(ERROR,
-					(errcode(ERRCODE_WINDOWING_ERROR),
-					 errmsg("frame end cannot be UNBOUNDED PRECEDING"),
-					 parser_errposition(@4)));
-		if ((frameOptions & FRAMEOPTION_START_CURRENT_ROW) &&
-			(frameOptions & FRAMEOPTION_END_OFFSET_PRECEDING))
-			ereport(ERROR,
-					(errcode(ERRCODE_WINDOWING_ERROR),
-					 errmsg("frame starting from current row cannot have preceding rows"),
-					 parser_errposition(@4)));
-		if ((frameOptions & FRAMEOPTION_START_OFFSET_FOLLOWING) &&
-			(frameOptions & (FRAMEOPTION_END_OFFSET_PRECEDING |
-							 FRAMEOPTION_END_CURRENT_ROW)))
-			ereport(ERROR,
-					(errcode(ERRCODE_WINDOWING_ERROR),
-					 errmsg("frame starting from following row cannot have preceding rows"),
-					 parser_errposition(@4)));
-		n1->frameOptions = frameOptions;
-		n1->endOffset = n2->startOffset;
-		$$ = n1;
-		*/
+		/* form merged options */
+		frameOptions := n1.FrameOptions
+		/* shift converts START_ options to END_ options */
+		frameOptions |= n2.FrameOptions << 1
+		frameOptions |= frameoptionBetween
+		/* reject invalid cases */
+		if frameOptions&frameoptionStartUnboundedFollowing != 0 {
+			p.fail(yyDollar[2].loc, "frame start cannot be UNBOUNDED FOLLOWING")
+		}
+		if frameOptions&frameoptionEndUnboundedPreceding != 0 {
+			p.fail(yyDollar[4].loc, "frame end cannot be UNBOUNDED PRECEDING")
+		}
+		if (frameOptions&frameoptionStartCurrentRow != 0) &&
+			(frameOptions&frameoptionEndOffsetPreceding != 0) {
+			p.fail(yyDollar[4].loc, "frame starting from current row cannot have preceding rows")
+		}
+		if (frameOptions&frameoptionStartOffsetFollowing != 0) &&
+			(frameOptions&(frameoptionEndOffsetPreceding|
+				frameoptionEndCurrentRow) != 0) {
+			p.fail(yyDollar[4].loc, "frame starting from following row cannot have preceding rows")
+		}
+		n1.FrameOptions = frameOptions
+		n1.EndOffset = n2.StartOffset
+		yyVAL.node = n1
 	}
 }
 
 func yyAct2223(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16002
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15924
+	{
+		n := &WindowDef{}
 
-		n->frameOptions = FRAMEOPTION_START_UNBOUNDED_PRECEDING;
-		n->startOffset = NULL;
-		n->endOffset = NULL;
-		$$ = n;
-		*/
+		n.FrameOptions = frameoptionStartUnboundedPreceding
+		n.StartOffset = nil
+		n.EndOffset = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct2224(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16011
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15933
+	{
+		n := &WindowDef{}
 
-		n->frameOptions = FRAMEOPTION_START_UNBOUNDED_FOLLOWING;
-		n->startOffset = NULL;
-		n->endOffset = NULL;
-		$$ = n;
-		*/
+		n.FrameOptions = frameoptionStartUnboundedFollowing
+		n.StartOffset = nil
+		n.EndOffset = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct2225(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16020
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15942
+	{
+		n := &WindowDef{}
 
-		n->frameOptions = FRAMEOPTION_START_CURRENT_ROW;
-		n->startOffset = NULL;
-		n->endOffset = NULL;
-		$$ = n;
-		*/
+		n.FrameOptions = frameoptionStartCurrentRow
+		n.StartOffset = nil
+		n.EndOffset = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct2226(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16029
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15951
+	{
+		n := &WindowDef{}
 
-		n->frameOptions = FRAMEOPTION_START_OFFSET_PRECEDING;
-		n->startOffset = $1;
-		n->endOffset = NULL;
-		$$ = n;
-		*/
+		n.FrameOptions = frameoptionStartOffsetPreceding
+		n.StartOffset = yyDollar[1].node
+		n.EndOffset = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct2227(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16038
-	{ /*C
-		WindowDef  *n = makeNode(WindowDef);
+//line gram.y:15960
+	{
+		n := &WindowDef{}
 
-		n->frameOptions = FRAMEOPTION_START_OFFSET_FOLLOWING;
-		n->startOffset = $1;
-		n->endOffset = NULL;
-		$$ = n;
-		*/
+		n.FrameOptions = frameoptionStartOffsetFollowing
+		n.StartOffset = yyDollar[1].node
+		n.EndOffset = nil
+		yyVAL.node = n
 	}
 }
 
 func yyAct2228(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16049
-	{ /*C $$ = FRAMEOPTION_EXCLUDE_CURRENT_ROW; */
+//line gram.y:15971
+	{
+		yyVAL.ival = frameoptionExcludeCurrentRow
 	}
 }
 
 func yyAct2229(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16050
-	{ /*C $$ = FRAMEOPTION_EXCLUDE_GROUP; */
+//line gram.y:15972
+	{
+		yyVAL.ival = frameoptionExcludeGroup
 	}
 }
 
 func yyAct2230(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16051
-	{ /*C $$ = FRAMEOPTION_EXCLUDE_TIES; */
+//line gram.y:15973
+	{
+		yyVAL.ival = frameoptionExcludeTies
 	}
 }
 
 func yyAct2231(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16052
+//line gram.y:15974
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct2232(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16053
+//line gram.y:15975
 	{
 		yyVAL.ival = 0
 	}
 }
 
 func yyAct2233(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16067
+//line gram.y:15989
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2234(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16068
+//line gram.y:15990
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2235(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16069
+//line gram.y:15991
 	{
 		yyVAL.list = append(yyDollar[2].list, yyDollar[4].node)
 	}
 }
 
 func yyAct2236(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16072
+//line gram.y:15994
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2237(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16073
+//line gram.y:15995
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2238(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16076
+//line gram.y:15998
 	{
 		yyVAL.list = append(yyDollar[2].list, yyDollar[4].node)
 	}
 }
 
 func yyAct2239(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16079
-	{ /*C $$ = ANY_SUBLINK; */
+//line gram.y:16001
+	{
+		yyVAL.ival = int32(ANY_SUBLINK)
 	}
 }
 
 func yyAct2240(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16080
-	{ /*C $$ = ANY_SUBLINK; */
+//line gram.y:16002
+	{
+		yyVAL.ival = int32(ANY_SUBLINK)
 	}
 }
 
 func yyAct2241(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16081
-	{ /*C $$ = ALL_SUBLINK; */
+//line gram.y:16003
+	{
+		yyVAL.ival = int32(ALL_SUBLINK)
 	}
 }
 
 func yyAct2242(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16084
+//line gram.y:16006
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2243(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16085
+//line gram.y:16007
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2244(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16088
+//line gram.y:16010
 	{
 		yyVAL.str = "+"
 	}
 }
 
 func yyAct2245(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16089
+//line gram.y:16011
 	{
 		yyVAL.str = "-"
 	}
 }
 
 func yyAct2246(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16090
+//line gram.y:16012
 	{
 		yyVAL.str = "*"
 	}
 }
 
 func yyAct2247(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16091
+//line gram.y:16013
 	{
 		yyVAL.str = "/"
 	}
 }
 
 func yyAct2248(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16092
+//line gram.y:16014
 	{
 		yyVAL.str = "%"
 	}
 }
 
 func yyAct2249(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16093
+//line gram.y:16015
 	{
 		yyVAL.str = "^"
 	}
 }
 
 func yyAct2250(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16094
+//line gram.y:16016
 	{
 		yyVAL.str = "<"
 	}
 }
 
 func yyAct2251(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16095
+//line gram.y:16017
 	{
 		yyVAL.str = ">"
 	}
 }
 
 func yyAct2252(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16096
+//line gram.y:16018
 	{
 		yyVAL.str = "="
 	}
 }
 
 func yyAct2253(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16097
+//line gram.y:16019
 	{
 		yyVAL.str = "<="
 	}
 }
 
 func yyAct2254(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16098
+//line gram.y:16020
 	{
 		yyVAL.str = ">="
 	}
 }
 
 func yyAct2255(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16099
+//line gram.y:16021
 	{
 		yyVAL.str = "<>"
 	}
 }
 
 func yyAct2256(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16103
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:16025
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct2257(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16105
+//line gram.y:16027
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2258(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16110
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:16032
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct2259(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16112
+//line gram.y:16034
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2260(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16117
-	{ /*C $$ = list_make1(makeString($1)); */
+//line gram.y:16039
+	{
+		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct2261(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16119
+//line gram.y:16041
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2262(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16121
-	{ /*C $$ = list_make1(makeString("~~")); */
+//line gram.y:16043
+	{
+		yyVAL.list = []Node{makeString("~~", -1)}
 	}
 }
 
 func yyAct2263(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16123
-	{ /*C $$ = list_make1(makeString("!~~")); */
+//line gram.y:16045
+	{
+		yyVAL.list = []Node{makeString("!~~", -1)}
 	}
 }
 
 func yyAct2264(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16125
-	{ /*C $$ = list_make1(makeString("~~*")); */
+//line gram.y:16047
+	{
+		yyVAL.list = []Node{makeString("~~*", -1)}
 	}
 }
 
 func yyAct2265(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16127
-	{ /*C $$ = list_make1(makeString("!~~*")); */
+//line gram.y:16049
+	{
+		yyVAL.list = []Node{makeString("!~~*", -1)}
 	}
 }
 
 func yyAct2266(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16139
+//line gram.y:16061
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2267(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16141
+//line gram.y:16063
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2268(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16146
+//line gram.y:16068
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2269(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16148
+//line gram.y:16070
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2270(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16152
+//line gram.y:16074
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2271(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16154
-	{ /*C
-		NamedArgExpr *na = makeNode(NamedArgExpr);
+//line gram.y:16076
+	{
+		na := &NamedArgExpr{}
 
-		na->name = $1;
-		na->arg = (Expr *) $3;
-		na->argnumber = -1;		/* until determined * /
-		na->location = @1;
-		$$ = (Node *) na;
-		*/
+		na.Name = yyDollar[1].str
+		na.Arg = yyDollar[3].node
+		na.Argnumber = -1 /* until determined */
+		na.Location = yyDollar[1].loc
+		yyVAL.node = na
 	}
 }
 
 func yyAct2272(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16164
-	{ /*C
-		NamedArgExpr *na = makeNode(NamedArgExpr);
+//line gram.y:16086
+	{
+		na := &NamedArgExpr{}
 
-		na->name = $1;
-		na->arg = (Expr *) $3;
-		na->argnumber = -1;		/* until determined * /
-		na->location = @1;
-		$$ = (Node *) na;
-		*/
+		na.Name = yyDollar[1].str
+		na.Arg = yyDollar[3].node
+		na.Argnumber = -1 /* until determined */
+		na.Location = yyDollar[1].loc
+		yyVAL.node = na
 	}
 }
 
 func yyAct2273(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16175
+//line gram.y:16097
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct2274(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16176
+//line gram.y:16098
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2275(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16179
+//line gram.y:16101
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2276(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16180
+//line gram.y:16102
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2277(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16184
-	{ /*C
-		$$ = makeAArrayExpr($2, @1);
-		*/
+//line gram.y:16106
+	{
+		yyVAL.node = makeAArrayExpr(yyDollar[2].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2278(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16188
-	{ /*C
-		$$ = makeAArrayExpr($2, @1);
-		*/
+//line gram.y:16108
+	{
+		yyVAL.node = makeAArrayExpr(yyDollar[2].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2279(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16192
-	{ /*C
-		$$ = makeAArrayExpr(NIL, @1);
-		*/
+//line gram.y:16110
+	{
+		yyVAL.node = makeAArrayExpr(nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2280(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16197
+//line gram.y:16113
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2281(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16198
+//line gram.y:16114
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2282(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16204
-	{ /*C
-		$$ = list_make2(makeStringConst($1, @1), $3);
-		*/
+//line gram.y:16120
+	{
+		yyVAL.list = []Node{makeStringConst(yyDollar[1].str, yyDollar[1].loc), yyDollar[3].node}
 	}
 }
 
 func yyAct2283(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16213
+//line gram.y:16127
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2284(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16214
+//line gram.y:16128
 	{
 		yyVAL.str = "year"
 	}
 }
 
 func yyAct2285(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16215
+//line gram.y:16129
 	{
 		yyVAL.str = "month"
 	}
 }
 
 func yyAct2286(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16216
+//line gram.y:16130
 	{
 		yyVAL.str = "day"
 	}
 }
 
 func yyAct2287(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16217
+//line gram.y:16131
 	{
 		yyVAL.str = "hour"
 	}
 }
 
 func yyAct2288(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16218
+//line gram.y:16132
 	{
 		yyVAL.str = "minute"
 	}
 }
 
 func yyAct2289(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16219
+//line gram.y:16133
 	{
 		yyVAL.str = "second"
 	}
 }
 
 func yyAct2290(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16220
+//line gram.y:16134
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2291(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16224
+//line gram.y:16138
 	{
 		yyVAL.str = "NFC"
 	}
 }
 
 func yyAct2292(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16225
+//line gram.y:16139
 	{
 		yyVAL.str = "NFD"
 	}
 }
 
 func yyAct2293(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16226
+//line gram.y:16140
 	{
 		yyVAL.str = "NFKC"
 	}
 }
 
 func yyAct2294(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16227
+//line gram.y:16141
 	{
 		yyVAL.str = "NFKD"
 	}
 }
 
 func yyAct2295(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16233
-	{ /*C
-		/* overlay(A PLACING B FROM C FOR D) is converted to overlay(A, B, C, D) * /
-		$$ = list_make4($1, $3, $5, $7);
-		*/
+//line gram.y:16147
+	{
+		/* overlay(A PLACING B FROM C FOR D) is converted to overlay(A, B, C, D) */
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[3].node, yyDollar[5].node, yyDollar[7].node}
 	}
 }
 
 func yyAct2296(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16238
-	{ /*C
-		/* overlay(A PLACING B FROM C) is converted to overlay(A, B, C) * /
-		$$ = list_make3($1, $3, $5);
-		*/
+//line gram.y:16152
+	{
+		/* overlay(A PLACING B FROM C) is converted to overlay(A, B, C) */
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[3].node, yyDollar[5].node}
 	}
 }
 
 func yyAct2297(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16246
-	{ /*C $$ = list_make2($3, $1); */
+//line gram.y:16160
+	{
+		yyVAL.list = []Node{yyDollar[3].node, yyDollar[1].node}
 	}
 }
 
 func yyAct2298(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16268
-	{ /*C
-		$$ = list_make3($1, $3, $5);
-		*/
+//line gram.y:16182
+	{
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[3].node, yyDollar[5].node}
 	}
 }
 
 func yyAct2299(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16272
-	{ /*C
-		/* not legal per SQL, but might as well allow it * /
-		$$ = list_make3($1, $5, $3);
-		*/
+//line gram.y:16184
+	{
+		/* not legal per SQL, but might as well allow it */
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[5].node, yyDollar[3].node}
 	}
 }
 
 func yyAct2300(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16277
-	{ /*C
+//line gram.y:16189
+	{
 		/*
 		 * Because we aren't restricting data types here, this
 		 * syntax can end up resolving to textregexsubstr().
 		 * We've historically allowed that to happen, so continue
 		 * to accept it.  However, ruleutils.c will reverse-list
 		 * such a call in regular function call syntax.
-		 * /
-		$$ = list_make2($1, $3);
-		*/
+		 */
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[3].node}
 	}
 }
 
 func yyAct2301(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16288
-	{ /*C
-		/* not legal per SQL * /
+//line gram.y:16200
+	{
+		/* not legal per SQL */
 
 		/*
 		 * Since there are no cases where this syntax allows
@@ -38604,751 +37796,768 @@ func yyAct2301(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 		 * and we don't want the parser to choose the latter,
 		 * which it is likely to do if the second argument
 		 * is unknown or doesn't have an implicit cast to int4.
-		 * /
-		$$ = list_make3($1, makeIntConst(1, -1),
-						makeTypeCast($3,
-									 SystemTypeName("int4"), -1));
-		*/
+		 */
+		yyVAL.list = []Node{yyDollar[1].node, makeIntConst(1, -1),
+			makeTypeCast(yyDollar[3].node,
+				systemTypeName("int4"), -1)}
 	}
 }
 
 func yyAct2302(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16305
-	{ /*C
-		$$ = list_make3($1, $3, $5);
-		*/
+//line gram.y:16217
+	{
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[3].node, yyDollar[5].node}
 	}
 }
 
 func yyAct2303(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16310
+//line gram.y:16220
 	{
 		yyVAL.list = append(yyDollar[3].list, yyDollar[1].node)
 	}
 }
 
 func yyAct2304(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16311
+//line gram.y:16221
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct2305(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16312
+//line gram.y:16222
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct2306(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16316
-	{ /*C
-		SubLink	   *n = makeNode(SubLink);
+//line gram.y:16226
+	{
+		n := &SubLink{}
 
-		n->subselect = $1;
-		/* other fields will be filled later * /
-		$$ = (Node *) n;
-		*/
+		n.Subselect = yyDollar[1].node
+		/* other fields will be filled later */
+		yyVAL.node = n
 	}
 }
 
 func yyAct2307(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16323
-	{ /*C $$ = (Node *) $2; */
+//line gram.y:16233
+	{
+		yyVAL.node = listNode(yyDollar[2].list)
 	}
 }
 
 func yyAct2308(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16334
-	{ /*C
-		CaseExpr   *c = makeNode(CaseExpr);
+//line gram.y:16244
+	{
+		c := &CaseExpr{}
 
-		c->casetype = InvalidOid; /* not analyzed yet * /
-		c->arg = (Expr *) $2;
-		c->args = $3;
-		c->defresult = (Expr *) $4;
-		c->location = @1;
-		$$ = (Node *) c;
-		*/
+		c.Casetype = 0 /* not analyzed yet */
+		c.Arg = yyDollar[2].node
+		c.Args = yyDollar[3].list
+		c.Defresult = yyDollar[4].node
+		c.Location = yyDollar[1].loc
+		yyVAL.node = c
 	}
 }
 
 func yyAct2309(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16348
+//line gram.y:16258
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2310(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16349
+//line gram.y:16259
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct2311(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16354
-	{ /*C
-		CaseWhen   *w = makeNode(CaseWhen);
+//line gram.y:16264
+	{
+		w := &CaseWhen{}
 
-		w->expr = (Expr *) $2;
-		w->result = (Expr *) $4;
-		w->location = @1;
-		$$ = (Node *) w;
-		*/
+		w.Expr = yyDollar[2].node
+		w.Result = yyDollar[4].node
+		w.Location = yyDollar[1].loc
+		yyVAL.node = w
 	}
 }
 
 func yyAct2312(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16365
+//line gram.y:16275
 	{
 		yyVAL.node = yyDollar[2].node
 	}
 }
 
 func yyAct2313(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16366
+//line gram.y:16276
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2314(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16369
+//line gram.y:16279
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2315(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16370
+//line gram.y:16280
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2316(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16374
-	{ /*C
-		$$ = makeColumnRef($1, NIL, @1, yyscanner);
-		*/
+//line gram.y:16284
+	{
+		yyVAL.node = p.makeColumnRef(yyDollar[1].str, nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2317(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16378
-	{ /*C
-		$$ = makeColumnRef($1, $2, @1, yyscanner);
-		*/
+//line gram.y:16286
+	{
+		yyVAL.node = p.makeColumnRef(yyDollar[1].str, yyDollar[2].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2318(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16385
-	{ /*C
-		$$ = (Node *) makeString($2);
-		*/
+//line gram.y:16291
+	{
+		yyVAL.node = makeString(yyDollar[2].str, yyDollar[2].loc)
 	}
 }
 
 func yyAct2319(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16389
-	{ /*C
-		$$ = (Node *) makeNode(A_Star);
-		*/
+//line gram.y:16293
+	{
+		yyVAL.node = &A_Star{}
 	}
 }
 
 func yyAct2320(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16393
-	{ /*C
-		A_Indices *ai = makeNode(A_Indices);
+//line gram.y:16295
+	{
+		ai := &A_Indices{}
 
-		ai->is_slice = false;
-		ai->lidx = NULL;
-		ai->uidx = $2;
-		$$ = (Node *) ai;
-		*/
+		ai.IsSlice = false
+		ai.Lidx = nil
+		ai.Uidx = yyDollar[2].node
+		yyVAL.node = ai
 	}
 }
 
 func yyAct2321(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16402
-	{ /*C
-		A_Indices *ai = makeNode(A_Indices);
+//line gram.y:16304
+	{
+		ai := &A_Indices{}
 
-		ai->is_slice = true;
-		ai->lidx = $2;
-		ai->uidx = $4;
-		$$ = (Node *) ai;
-		*/
+		ai.IsSlice = true
+		ai.Lidx = yyDollar[2].node
+		ai.Uidx = yyDollar[4].node
+		yyVAL.node = ai
 	}
 }
 
 func yyAct2322(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16413
+//line gram.y:16315
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2323(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16414
+//line gram.y:16316
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2324(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16418
+//line gram.y:16320
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2325(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16419
+//line gram.y:16321
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct2326(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16423
+//line gram.y:16325
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2327(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16424
+//line gram.y:16326
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[2].node)
 	}
 }
 
 func yyAct2330(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16433
+//line gram.y:16335
 	{
 		yyVAL.list = yyDollar[2].list
 	}
 }
 
 func yyAct2331(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16434
+//line gram.y:16336
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2332(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16438
+//line gram.y:16340
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2333(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16439
+//line gram.y:16341
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2334(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16444
-	{ /*C
-		JsonArgument *n = makeNode(JsonArgument);
+//line gram.y:16346
+	{
+		n := &JsonArgument{}
 
-		n->val = (JsonValueExpr *) $1;
-		n->name = $3;
-		$$ = (Node *) n;
-		*/
+		n.Val = as[*JsonValueExpr](yyDollar[1].node)
+		n.Name = yyDollar[3].str
+		yyVAL.node = n
 	}
 }
 
 func yyAct2335(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16455
-	{ /*C $$ = JSW_NONE; */
+//line gram.y:16357
+	{
+		yyVAL.ival = int32(JSW_NONE)
 	}
 }
 
 func yyAct2336(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16456
-	{ /*C $$ = JSW_NONE; */
+//line gram.y:16358
+	{
+		yyVAL.ival = int32(JSW_NONE)
 	}
 }
 
 func yyAct2337(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16457
-	{ /*C $$ = JSW_UNCONDITIONAL; */
+//line gram.y:16359
+	{
+		yyVAL.ival = int32(JSW_UNCONDITIONAL)
 	}
 }
 
 func yyAct2338(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16458
-	{ /*C $$ = JSW_UNCONDITIONAL; */
+//line gram.y:16360
+	{
+		yyVAL.ival = int32(JSW_UNCONDITIONAL)
 	}
 }
 
 func yyAct2339(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16459
-	{ /*C $$ = JSW_CONDITIONAL; */
+//line gram.y:16361
+	{
+		yyVAL.ival = int32(JSW_CONDITIONAL)
 	}
 }
 
 func yyAct2340(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16460
-	{ /*C $$ = JSW_UNCONDITIONAL; */
+//line gram.y:16362
+	{
+		yyVAL.ival = int32(JSW_UNCONDITIONAL)
 	}
 }
 
 func yyAct2341(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16461
-	{ /*C $$ = JSW_CONDITIONAL; */
+//line gram.y:16363
+	{
+		yyVAL.ival = int32(JSW_CONDITIONAL)
 	}
 }
 
 func yyAct2342(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16462
-	{ /*C $$ = JSW_UNCONDITIONAL; */
+//line gram.y:16364
+	{
+		yyVAL.ival = int32(JSW_UNCONDITIONAL)
 	}
 }
 
 func yyAct2343(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16463
-	{ /*C $$ = JSW_UNSPEC; */
+//line gram.y:16365
+	{
+		yyVAL.ival = int32(JSW_UNSPEC)
 	}
 }
 
 func yyAct2344(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16468
-	{ /*C $$ = (Node *) makeJsonBehavior(JSON_BEHAVIOR_DEFAULT, $2, @1); */
+//line gram.y:16370
+	{
+		yyVAL.node = makeJsonBehavior(JSON_BEHAVIOR_DEFAULT, yyDollar[2].node, yyDollar[1].loc)
 	}
 }
 
 func yyAct2345(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16470
-	{ /*C $$ = (Node *) makeJsonBehavior($1, NULL, @1); */
+//line gram.y:16372
+	{
+		yyVAL.node = makeJsonBehavior(JsonBehaviorType(yyDollar[1].ival), nil, yyDollar[1].loc)
 	}
 }
 
 func yyAct2346(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16474
-	{ /*C $$ = JSON_BEHAVIOR_ERROR; */
+//line gram.y:16376
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_ERROR)
 	}
 }
 
 func yyAct2347(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16475
-	{ /*C $$ = JSON_BEHAVIOR_NULL; */
+//line gram.y:16377
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_NULL)
 	}
 }
 
 func yyAct2348(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16476
-	{ /*C $$ = JSON_BEHAVIOR_TRUE; */
+//line gram.y:16378
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_TRUE)
 	}
 }
 
 func yyAct2349(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16477
-	{ /*C $$ = JSON_BEHAVIOR_FALSE; */
+//line gram.y:16379
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_FALSE)
 	}
 }
 
 func yyAct2350(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16478
-	{ /*C $$ = JSON_BEHAVIOR_UNKNOWN; */
+//line gram.y:16380
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_UNKNOWN)
 	}
 }
 
 func yyAct2351(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16479
-	{ /*C $$ = JSON_BEHAVIOR_EMPTY_ARRAY; */
+//line gram.y:16381
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_EMPTY_ARRAY)
 	}
 }
 
 func yyAct2352(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16480
-	{ /*C $$ = JSON_BEHAVIOR_EMPTY_OBJECT; */
+//line gram.y:16382
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_EMPTY_OBJECT)
 	}
 }
 
 func yyAct2353(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16482
-	{ /*C $$ = JSON_BEHAVIOR_EMPTY_ARRAY; */
+//line gram.y:16384
+	{
+		yyVAL.ival = int32(JSON_BEHAVIOR_EMPTY_ARRAY)
 	}
 }
 
 func yyAct2354(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16487
-	{ /*C $$ = list_make2($1, NULL); */
+//line gram.y:16389
+	{
+		yyVAL.list = []Node{yyDollar[1].node, nil}
 	}
 }
 
 func yyAct2355(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16489
-	{ /*C $$ = list_make2(NULL, $1); */
+//line gram.y:16391
+	{
+		yyVAL.list = []Node{nil, yyDollar[1].node}
 	}
 }
 
 func yyAct2356(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16491
-	{ /*C $$ = list_make2($1, $4); */
+//line gram.y:16393
+	{
+		yyVAL.list = []Node{yyDollar[1].node, yyDollar[4].node}
 	}
 }
 
 func yyAct2357(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16493
-	{ /*C $$ = list_make2(NULL, NULL); */
+//line gram.y:16395
+	{
+		yyVAL.list = []Node{nil, nil}
 	}
 }
 
 func yyAct2358(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16498
+//line gram.y:16400
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2359(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16500
+//line gram.y:16402
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2360(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16505
-	{ /*C
-		/* formatted_expr will be set during parse-analysis. * /
-		$$ = (Node *) makeJsonValueExpr((Expr *) $1, NULL,
-										castNode(JsonFormat, $2));
-		*/
+//line gram.y:16407
+	{
+		/* formatted_expr will be set during parse-analysis. */
+		yyVAL.node = makeJsonValueExpr(yyDollar[1].node, nil,
+			as[*JsonFormat](yyDollar[2].node))
 	}
 }
 
 func yyAct2361(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16514
-	{ /*C
-		int		encoding;
+//line gram.y:16416
+	{
+		var encoding JsonEncoding
 
-		if (!pg_strcasecmp($4, "utf8"))
-			encoding = JS_ENC_UTF8;
-		else if (!pg_strcasecmp($4, "utf16"))
-			encoding = JS_ENC_UTF16;
-		else if (!pg_strcasecmp($4, "utf32"))
-			encoding = JS_ENC_UTF32;
-		else
-			ereport(ERROR,
-					errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-					errmsg("unrecognized JSON encoding: %s", $4));
+		switch {
+		case strings.EqualFold(yyDollar[4].str, "utf8"):
+			encoding = JS_ENC_UTF8
+		case strings.EqualFold(yyDollar[4].str, "utf16"):
+			encoding = JS_ENC_UTF16
+		case strings.EqualFold(yyDollar[4].str, "utf32"):
+			encoding = JS_ENC_UTF32
+		default:
+			p.fail(-1, "unrecognized JSON encoding: "+yyDollar[4].str)
+		}
 
-		$$ = (Node *) makeJsonFormat(JS_FORMAT_JSON, encoding, @1);
-		*/
+		yyVAL.node = makeJsonFormat(JS_FORMAT_JSON, encoding, yyDollar[1].loc)
 	}
 }
 
 func yyAct2362(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16531
-	{ /*C
-		$$ = (Node *) makeJsonFormat(JS_FORMAT_JSON, JS_ENC_DEFAULT, @1);
-		*/
+//line gram.y:16433
+	{
+		yyVAL.node = makeJsonFormat(JS_FORMAT_JSON, JS_ENC_DEFAULT, yyDollar[1].loc)
 	}
 }
 
 func yyAct2363(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16538
+//line gram.y:16438
 	{
 		yyVAL.node = yyDollar[1].node
 	}
 }
 
 func yyAct2364(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16540
-	{ /*C
-		$$ = (Node *) makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1);
-		*/
+//line gram.y:16440
+	{
+		yyVAL.node = makeJsonFormat(JS_FORMAT_DEFAULT, JS_ENC_DEFAULT, -1)
 	}
 }
 
 func yyAct2365(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16546
-	{ /*C $$ = JS_QUOTES_KEEP; */
+//line gram.y:16444
+	{
+		yyVAL.ival = int32(JS_QUOTES_KEEP)
 	}
 }
 
 func yyAct2366(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16547
-	{ /*C $$ = JS_QUOTES_KEEP; */
+//line gram.y:16445
+	{
+		yyVAL.ival = int32(JS_QUOTES_KEEP)
 	}
 }
 
 func yyAct2367(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16548
-	{ /*C $$ = JS_QUOTES_OMIT; */
+//line gram.y:16446
+	{
+		yyVAL.ival = int32(JS_QUOTES_OMIT)
 	}
 }
 
 func yyAct2368(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16549
-	{ /*C $$ = JS_QUOTES_OMIT; */
+//line gram.y:16447
+	{
+		yyVAL.ival = int32(JS_QUOTES_OMIT)
 	}
 }
 
 func yyAct2369(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16550
-	{ /*C $$ = JS_QUOTES_UNSPEC; */
+//line gram.y:16448
+	{
+		yyVAL.ival = int32(JS_QUOTES_UNSPEC)
 	}
 }
 
 func yyAct2370(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16555
-	{ /*C
-		JsonOutput *n = makeNode(JsonOutput);
+//line gram.y:16453
+	{
+		n := &JsonOutput{}
 
-		n->typeName = $2;
-		n->returning = makeNode(JsonReturning);
-		n->returning->format = (JsonFormat *) $3;
-		$$ = (Node *) n;
-		*/
+		n.TypeName = as[*TypeName](yyDollar[2].node)
+		n.Returning = &JsonReturning{}
+		n.Returning.Format = as[*JsonFormat](yyDollar[3].node)
+		yyVAL.node = n
 	}
 }
 
 func yyAct2371(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16563
+//line gram.y:16461
 	{
 		yyVAL.node = nil
 	}
 }
 
 func yyAct2372(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16577
-	{ /*C $$ = JS_TYPE_ANY; */
+//line gram.y:16475
+	{
+		yyVAL.ival = int32(JS_TYPE_ANY)
 	}
 }
 
 func yyAct2373(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16578
-	{ /*C $$ = JS_TYPE_ANY; */
+//line gram.y:16476
+	{
+		yyVAL.ival = int32(JS_TYPE_ANY)
 	}
 }
 
 func yyAct2374(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16579
-	{ /*C $$ = JS_TYPE_ARRAY; */
+//line gram.y:16477
+	{
+		yyVAL.ival = int32(JS_TYPE_ARRAY)
 	}
 }
 
 func yyAct2375(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16580
-	{ /*C $$ = JS_TYPE_OBJECT; */
+//line gram.y:16478
+	{
+		yyVAL.ival = int32(JS_TYPE_OBJECT)
 	}
 }
 
 func yyAct2376(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16581
-	{ /*C $$ = JS_TYPE_SCALAR; */
+//line gram.y:16479
+	{
+		yyVAL.ival = int32(JS_TYPE_SCALAR)
 	}
 }
 
 func yyAct2377(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16590
+//line gram.y:16488
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2378(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16591
+//line gram.y:16489
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2379(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16592
+//line gram.y:16490
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2380(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16593
+//line gram.y:16491
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2381(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16594
+//line gram.y:16492
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2382(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16599
+//line gram.y:16497
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2383(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16601
+//line gram.y:16499
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2384(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16611
-	{ /*C $$ = makeJsonKeyValue($1, $3); */
+//line gram.y:16509
+	{
+		yyVAL.node = makeJsonKeyValue(yyDollar[1].node, yyDollar[3].node)
 	}
 }
 
 func yyAct2385(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16614
-	{ /*C $$ = makeJsonKeyValue($1, $3); */
+//line gram.y:16512
+	{
+		yyVAL.node = makeJsonKeyValue(yyDollar[1].node, yyDollar[3].node)
 	}
 }
 
 func yyAct2386(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16619
+//line gram.y:16517
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2387(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16620
+//line gram.y:16518
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2388(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16621
+//line gram.y:16519
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2389(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16625
+//line gram.y:16523
 	{
 		yyVAL.boolean = false
 	}
 }
 
 func yyAct2390(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16626
+//line gram.y:16524
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2391(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16627
+//line gram.y:16525
 	{
 		yyVAL.boolean = true
 	}
 }
 
 func yyAct2392(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16631
+//line gram.y:16529
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2393(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16632
+//line gram.y:16530
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2394(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16642
-	{ /*C
-		JsonObjectAgg *n = makeNode(JsonObjectAgg);
+//line gram.y:16540
+	{
+		n := &JsonObjectAgg{}
 
-		n->arg = (JsonKeyValue *) $3;
-		n->absent_on_null = $4;
-		n->unique = $5;
-		n->constructor = makeNode(JsonAggConstructor);
-		n->constructor->output = (JsonOutput *) $6;
-		n->constructor->agg_order = NULL;
-		n->constructor->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Arg = as[*JsonKeyValue](yyDollar[3].node)
+		n.AbsentOnNull = yyDollar[4].boolean
+		n.Unique = yyDollar[5].boolean
+		n.Constructor = &JsonAggConstructor{}
+		n.Constructor.Output = as[*JsonOutput](yyDollar[6].node)
+		n.Constructor.AggOrder = nil
+		n.Constructor.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2395(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16660
-	{ /*C
-		JsonArrayAgg *n = makeNode(JsonArrayAgg);
+//line gram.y:16558
+	{
+		n := &JsonArrayAgg{}
 
-		n->arg = (JsonValueExpr *) $3;
-		n->absent_on_null = $5;
-		n->constructor = makeNode(JsonAggConstructor);
-		n->constructor->agg_order = $4;
-		n->constructor->output = (JsonOutput *) $6;
-		n->constructor->location = @1;
-		$$ = (Node *) n;
-		*/
+		n.Arg = as[*JsonValueExpr](yyDollar[3].node)
+		n.AbsentOnNull = yyDollar[5].boolean
+		n.Constructor = &JsonAggConstructor{}
+		n.Constructor.AggOrder = yyDollar[4].list
+		n.Constructor.Output = as[*JsonOutput](yyDollar[6].node)
+		n.Constructor.Location = yyDollar[1].loc
+		yyVAL.node = n
 	}
 }
 
 func yyAct2396(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16674
+//line gram.y:16572
 	{
 		yyVAL.list = yyDollar[3].list
 	}
 }
 
 func yyAct2397(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16675
+//line gram.y:16573
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2398(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16685
+//line gram.y:16583
 	{
 		yyVAL.list = yyDollar[1].list
 	}
 }
 
 func yyAct2399(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16686
+//line gram.y:16584
 	{
 		yyVAL.list = nil
 	}
 }
 
 func yyAct2400(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16690
+//line gram.y:16588
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2401(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16691
+//line gram.y:16589
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2402(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16695
+//line gram.y:16593
 	{
 		n := &ResTarget{}
 		n.Name = yyDollar[3].str
@@ -39360,7 +38569,7 @@ func yyAct2402(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2403(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16704
+//line gram.y:16602
 	{
 		n := &ResTarget{}
 		n.Name = yyDollar[2].str
@@ -39372,7 +38581,7 @@ func yyAct2403(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2404(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16713
+//line gram.y:16611
 	{
 		n := &ResTarget{}
 		n.Name = ""
@@ -39384,7 +38593,7 @@ func yyAct2404(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2405(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16722
+//line gram.y:16620
 	{
 		n := &ColumnRef{}
 
@@ -39401,112 +38610,112 @@ func yyAct2405(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2406(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16745
+//line gram.y:16643
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2407(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16746
+//line gram.y:16644
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2408(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16758
+//line gram.y:16656
 	{
 		yyVAL.node = makeRangeVar("", yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct2409(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16760
+//line gram.y:16658
 	{
 		yyVAL.node = p.makeRangeVarFromQualifiedName(yyDollar[1].str, yyDollar[2].list, yyDollar[1].loc)
 	}
 }
 
 func yyAct2410(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16764
+//line gram.y:16662
 	{
 		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct2411(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16766
+//line gram.y:16664
 	{
 		yyVAL.list = append(yyDollar[1].list, makeString(yyDollar[3].str, yyDollar[3].loc))
 	}
 }
 
 func yyAct2412(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16770
+//line gram.y:16668
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2413(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16772
+//line gram.y:16670
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2414(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16774
+//line gram.y:16672
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2415(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16785
+//line gram.y:16683
 	{
 		yyVAL.list = []Node{makeString(yyDollar[1].str, yyDollar[1].loc)}
 	}
 }
 
 func yyAct2416(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16787
+//line gram.y:16685
 	{
 		yyVAL.list = p.checkFuncName(append([]Node{makeString(yyDollar[1].str, yyDollar[1].loc)}, yyDollar[2].list...))
 	}
 }
 
 func yyAct2417(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16795
+//line gram.y:16693
 	{
 		yyVAL.node = makeIntConst(yyDollar[1].ival, yyDollar[1].loc)
 	}
 }
 
 func yyAct2418(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16797
+//line gram.y:16695
 	{
 		yyVAL.node = makeFloatConst(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct2419(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16799
+//line gram.y:16697
 	{
 		yyVAL.node = makeStringConst(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct2420(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16801
+//line gram.y:16699
 	{
 		yyVAL.node = makeBitStringConst(yyDollar[1].str, yyDollar[1].loc)
 	}
 }
 
 func yyAct2421(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16803
+//line gram.y:16701
 	{
 		/* This is a bit constant per SQL99:
 		 * Without Feature F511, "BIT data type",
@@ -39518,7 +38727,7 @@ func yyAct2421(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2422(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16812
+//line gram.y:16710
 	{
 		/* generic type 'literal' syntax */
 		t := makeTypeNameFromNameList(yyDollar[1].list)
@@ -39529,7 +38738,7 @@ func yyAct2422(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2423(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16820
+//line gram.y:16718
 	{
 		/* generic syntax with a type modifier */
 		t := makeTypeNameFromNameList(yyDollar[1].list)
@@ -39556,14 +38765,14 @@ func yyAct2423(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2424(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16844
+//line gram.y:16742
 	{
 		yyVAL.node = makeStringConstCast(yyDollar[2].str, yyDollar[2].loc, as[*TypeName](yyDollar[1].node))
 	}
 }
 
 func yyAct2425(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16846
+//line gram.y:16744
 	{
 		t := as[*TypeName](yyDollar[1].node)
 
@@ -39573,7 +38782,7 @@ func yyAct2425(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2426(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16853
+//line gram.y:16751
 	{
 		t := as[*TypeName](yyDollar[1].node)
 
@@ -39584,63 +38793,63 @@ func yyAct2426(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2427(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16861
+//line gram.y:16759
 	{
 		yyVAL.node = makeBoolAConst(true, yyDollar[1].loc)
 	}
 }
 
 func yyAct2428(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16863
+//line gram.y:16761
 	{
 		yyVAL.node = makeBoolAConst(false, yyDollar[1].loc)
 	}
 }
 
 func yyAct2429(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16865
+//line gram.y:16763
 	{
 		yyVAL.node = makeNullAConst(yyDollar[1].loc)
 	}
 }
 
 func yyAct2430(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16868
+//line gram.y:16766
 	{
 		yyVAL.ival = yyDollar[1].ival
 	}
 }
 
 func yyAct2431(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16869
+//line gram.y:16767
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2432(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16871
+//line gram.y:16769
 	{
 		yyVAL.ival = yyDollar[1].ival
 	}
 }
 
 func yyAct2433(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16872
+//line gram.y:16770
 	{
 		yyVAL.ival = yyDollar[2].ival
 	}
 }
 
 func yyAct2434(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16873
+//line gram.y:16771
 	{
 		yyVAL.ival = -yyDollar[2].ival
 	}
 }
 
 func yyAct2435(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16878
+//line gram.y:16776
 	{
 		spc := as[*RoleSpec](yyDollar[1].node)
 
@@ -39660,7 +38869,7 @@ func yyAct2435(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2436(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16897
+//line gram.y:16795
 	{
 		/*
 		 * "public" and "none" are not keywords, but they must
@@ -39682,42 +38891,42 @@ func yyAct2436(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2437(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16916
+//line gram.y:16814
 	{
 		yyVAL.node = makeRoleSpec(ROLESPEC_CURRENT_ROLE, yyDollar[1].loc)
 	}
 }
 
 func yyAct2438(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16918
+//line gram.y:16816
 	{
 		yyVAL.node = makeRoleSpec(ROLESPEC_CURRENT_USER, yyDollar[1].loc)
 	}
 }
 
 func yyAct2439(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16920
+//line gram.y:16818
 	{
 		yyVAL.node = makeRoleSpec(ROLESPEC_SESSION_USER, yyDollar[1].loc)
 	}
 }
 
 func yyAct2440(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16924
+//line gram.y:16822
 	{
 		yyVAL.list = []Node{yyDollar[1].node}
 	}
 }
 
 func yyAct2441(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16926
+//line gram.y:16824
 	{
 		yyVAL.list = append(yyDollar[1].list, yyDollar[3].node)
 	}
 }
 
 func yyAct2442(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16943
+//line gram.y:16841
 	{
 		n := &SelectStmt{}
 
@@ -39746,7 +38955,7 @@ func yyAct2442(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2443(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16975
+//line gram.y:16873
 	{
 		n := &PLAssignStmt{}
 
@@ -39760,133 +38969,133 @@ func yyAct2443(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
 }
 
 func yyAct2444(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16987
+//line gram.y:16885
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2445(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:16988
+//line gram.y:16886
 	{
 		yyVAL.str = fmt.Sprintf("$%d", yyDollar[1].ival)
 	}
 }
 
 func yyAct2448(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17009
+//line gram.y:16907
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2449(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17010
+//line gram.y:16908
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2450(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17011
+//line gram.y:16909
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2451(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17016
+//line gram.y:16914
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2452(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17017
+//line gram.y:16915
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2453(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17018
+//line gram.y:16916
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2454(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17023
+//line gram.y:16921
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2455(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17024
+//line gram.y:16922
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2456(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17025
+//line gram.y:16923
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2457(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17026
+//line gram.y:16924
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2458(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17032
+//line gram.y:16930
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2459(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17033
+//line gram.y:16931
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2460(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17034
+//line gram.y:16932
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2461(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17035
+//line gram.y:16933
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2462(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17036
+//line gram.y:16934
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2463(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17042
+//line gram.y:16940
 	{
 		yyVAL.str = yyDollar[1].str
 	}
 }
 
 func yyAct2464(p *parser, yyDollar []yySymType, yyVAL *yySymType) {
-//line gram.y:17043
+//line gram.y:16941
 	{
 		yyVAL.str = yyDollar[1].str
 	}
