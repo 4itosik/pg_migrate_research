@@ -11,7 +11,10 @@
 // Rewrite only inserts "auth." into the text of the migration: comments,
 // formatting and quoting stay as they are. It parses the result again and
 // compares its tree with the input's; if anything differs it returns an error
-// instead of unverified SQL. With Options.Placeholder the result is a
+// instead of unverified SQL. SQL that does not parse is a *SyntaxError with
+// the line and column, a failed verification wraps ErrNotVerified, and the
+// warnings ([]Warning) carry the line they are about. With
+// Options.Placeholder the result is a
 // template that package subst turns into the same text for any schema without
 // a parser.
 //
