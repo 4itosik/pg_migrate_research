@@ -360,11 +360,11 @@ func (w *walker) register(rv *RangeVar, kind objKind) {
 		w.r.reg.addTemp(rv.Relname)
 		return
 	}
-	if kind == kindRelation && w.r.reg.temp[rv.Relname] {
-		w.permanent[rv] = true
-		w.untemp = append(w.untemp, rv.Relname)
-	}
 	if rv.Schemaname == "" || rv.Schemaname == w.r.schema {
+		if kind == kindRelation && w.r.reg.temp[rv.Relname] {
+			w.permanent[rv] = true
+			w.untemp = append(w.untemp, rv.Relname)
+		}
 		w.created(kind, rv.Relname)
 	}
 }
