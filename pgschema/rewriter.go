@@ -136,7 +136,7 @@ func (r *Rewriter) Learn(sql string) (err error) {
 	tx := r.reg.begin()
 	defer func() { r.reg.end(tx, err == nil) }()
 	_, err = r.pass(sql, true)
-	return err
+	return located(sql, err)
 }
 
 // Rewrite returns the migration with schema-qualified names and warnings
@@ -152,11 +152,11 @@ func (r *Rewriter) Rewrite(sql string) (_ string, _ []string, err error) {
 	tx := r.reg.begin()
 	defer func() { r.reg.end(tx, err == nil) }()
 	if _, err := r.pass(sql, true); err != nil {
-		return "", nil, err
+		return "", nil, located(sql, err)
 	}
 	a, err := r.pass(sql, false)
 	if err != nil {
-		return "", nil, err
+		return "", nil, located(sql, err)
 	}
 	out, err := applyEdits(sql, a.edits)
 	if err != nil {
@@ -170,10 +170,14 @@ type analysis struct {
 	warns []string
 }
 
-// checkInput refuses a text that cannot be rewritten safely: in a template the
-// placeholder must stand only where the rewriter put it, because subst.Apply
-// replaces it everywhere, in comments and strings as well.
+// checkInput refuses a text that cannot be rewritten safely. A byte order
+// mark is not white space for PostgreSQL. In a template the placeholder must
+// stand only where the rewriter put it, because subst.Apply replaces it
+// everywhere, in comments and strings as well.
 func (r *Rewriter) checkInput(sql string) error {
+	if strings.HasPrefix(sql, "\ufeff") {
+		return &SyntaxError{Line: 1, Column: 1, Msg: "the input starts with a UTF-8 byte order mark (EF BB BF); remove it"}
+	}
 	if r.placeholder && strings.Contains(sql, subst.Placeholder) {
 		return fmt.Errorf("the SQL already contains the placeholder %s, which would be replaced with the schema wherever it stands", subst.Placeholder)
 	}
@@ -193,7 +197,7 @@ func (r *Rewriter) pass(sql string, learnOnly bool) (*analysis, error) {
 func (r *Rewriter) analyze(src string, inBody, learnOnly bool) (*analysis, error) {
 	stmts, err := parse.Parse(src)
 	if err != nil {
-		return nil, err
+		return nil, syntaxError(err)
 	}
 	w := &walker{r: r, src: src, inBody: inBody, learnOnly: learnOnly, done: map[ast.Node]bool{}, permanent: map[*ast.RangeVar]bool{}}
 	for _, raw := range stmts {
@@ -225,10 +229,10 @@ func (r *Rewriter) analyze(src string, inBody, learnOnly bool) (*analysis, error
 func verify(want []*ast.RawStmt, out string) error {
 	got, err := parse.Parse(out)
 	if err != nil {
-		return fmt.Errorf("verification: the rewritten SQL does not parse: %w", err)
+		return fmt.Errorf("%w: the rewritten SQL does not parse: %v", ErrNotVerified, err)
 	}
 	if len(want) != len(got) {
-		return fmt.Errorf("verification: the number of statements changed from %d to %d", len(want), len(got))
+		return fmt.Errorf("%w: the number of statements changed from %d to %d", ErrNotVerified, len(want), len(got))
 	}
 	for i := range want {
 		// Equal first: it allocates nothing, Diff builds a path at every node
@@ -236,7 +240,7 @@ func verify(want []*ast.RawStmt, out string) error {
 		if ast.Equal(want[i], got[i]) {
 			continue
 		}
-		return fmt.Errorf("verification: statement %d differs: %s", i+1, ast.Diff(want[i], got[i]))
+		return fmt.Errorf("%w: statement %d differs: %s", ErrNotVerified, i+1, ast.Diff(want[i], got[i]))
 	}
 	return nil
 }

@@ -44,7 +44,7 @@ func (w *walker) createFunction(n *CreateFunctionStmt) {
 		return
 	}
 	if err != nil {
-		w.fail("function %s: %v", name, err)
+		w.failErr(w.bodyError(err, str, "function "+name+": "))
 		return
 	}
 	w.replaceBody(str.Loc, str, newBody)
@@ -66,10 +66,28 @@ func (w *walker) doStmt(n *DoStmt) {
 	w.triggerVars = nil
 	newBody, err := w.plpgsqlBody(plOptions(nil), str.Sval)
 	if err != nil {
-		w.fail("DO block: %v", err)
+		w.failErr(w.bodyError(err, str, "DO block: "))
 		return
 	}
 	w.replaceBody(str.Loc, str, newBody)
+}
+
+// bodyError is the error of a body that cannot be rewritten, with prefix in
+// front of the message. A syntax error in the body gets its position in the
+// text of the statement: in the body as written when the literal holds the
+// body as it is ($$...$$, '...' without escapes), otherwise at the literal.
+func (w *walker) bodyError(err error, str *String, prefix string) error {
+	pe, ok := err.(*posError)
+	if !ok {
+		return shifted(err, 0, prefix)
+	}
+	if it, terr := w.tokenAt(str.Loc); terr == nil && pe.off >= 0 {
+		raw := w.src[str.Loc : int(str.Loc)+int(it.End)]
+		if start, ok := literalContentStart(raw, str.Sval); ok {
+			return shifted(err, int(str.Loc)+start, prefix)
+		}
+	}
+	return &posError{off: int(str.Loc), msg: prefix + pe.msg}
 }
 
 // replaceBody replaces the body literal at offset loc. A dollar-quoted body
@@ -173,6 +191,9 @@ func triggerVars(n *CreateFunctionStmt) []string {
 func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err error) {
 	pb, err := plpgsql.Parse(body, &opts)
 	if err != nil {
+		if pe, ok := err.(*plpgsql.Error); ok {
+			return "", &posError{off: pe.Pos, msg: "PL/pgSQL: " + pe.Msg}
+		}
 		return "", fmt.Errorf("PL/pgSQL: %w", err)
 	}
 	// a body that cannot be rewritten leaves no objects in the registry,
@@ -186,7 +207,7 @@ func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err
 	for _, f := range pb.Fragments {
 		a, err := w.r.analyzeFragment(f, body, w.learnOnly)
 		if err != nil {
-			return "", fmt.Errorf("PL/pgSQL line %d %q: %w", f.Line, snippet(f.SQL(body)), err)
+			return "", shifted(err, f.Start, fmt.Sprintf("PL/pgSQL line %d %q: ", f.Line, snippet(f.SQL(body))))
 		}
 		w.warns = append(w.warns, a.warns...)
 		edits = append(edits, shiftEdits(a.edits, f.Start)...)
@@ -223,19 +244,19 @@ func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err
 func verifyBody(orig *plpgsql.Body, out string, opts plpgsql.Options) error {
 	nb, err := plpgsql.Parse(out, &opts)
 	if err != nil {
-		return fmt.Errorf("verification: the rewritten PL/pgSQL body does not parse: %w", err)
+		return fmt.Errorf("%w: the rewritten PL/pgSQL body does not parse: %v", ErrNotVerified, err)
 	}
 	if len(nb.Fragments) != len(orig.Fragments) || len(nb.Decls) != len(orig.Decls) || len(nb.Dynamic) != len(orig.Dynamic) {
-		return errors.New("verification: the rewritten PL/pgSQL body has a different structure")
+		return fmt.Errorf("%w: the rewritten PL/pgSQL body has a different structure", ErrNotVerified)
 	}
 	for i, f := range orig.Fragments {
 		if g := nb.Fragments[i]; g.Kind != f.Kind || g.Mode != f.Mode {
-			return fmt.Errorf("verification: fragment %d of the PL/pgSQL body changed its kind", i+1)
+			return fmt.Errorf("%w: fragment %d of the PL/pgSQL body changed its kind", ErrNotVerified, i+1)
 		}
 	}
 	for i, d := range orig.Decls {
 		if g := nb.Decls[i]; g.Kind != d.Kind || g.Name != d.Name {
-			return fmt.Errorf("verification: declaration %d of the PL/pgSQL body changed", i+1)
+			return fmt.Errorf("%w: declaration %d of the PL/pgSQL body changed", ErrNotVerified, i+1)
 		}
 	}
 	return nil
@@ -379,12 +400,12 @@ func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly b
 	// a SELECT in front of it, which accepts things the mode does not
 	// (RETURN INTO x would be SELECT INTO x, a statement that creates a table)
 	if f.Mode != parse.ModeDefault {
-		text := q
+		text, delta := q, 0
 		if f.Kind == plpgsql.KindCaseWhen {
-			text = "x IN (" + q + ")"
+			text, delta = "x IN ("+q+")", -len("x IN (")
 		}
 		if _, err := parse.ParseMode(text, f.Mode); err != nil {
-			return nil, err
+			return nil, shifted(syntaxError(err), delta, "")
 		}
 	}
 	switch f.Mode {
@@ -397,7 +418,7 @@ func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly b
 		}
 		a, err := r.analyze(head+q, true, learnOnly)
 		if err != nil {
-			return nil, err
+			return nil, shifted(err, -len(head), "")
 		}
 		a.edits = shiftEdits(a.edits, -len(head))
 		return a, nil
@@ -408,7 +429,7 @@ func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly b
 		}
 		a, err := r.analyze(prefix+q[off:], true, learnOnly)
 		if err != nil {
-			return nil, err
+			return nil, shifted(err, off-len(prefix), "")
 		}
 		a.edits = shiftEdits(a.edits, off-len(prefix))
 		return a, nil

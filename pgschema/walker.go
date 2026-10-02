@@ -63,6 +63,13 @@ func (w *walker) fail(format string, args ...any) {
 	}
 }
 
+// failErr records err as the error of the walk, if it is the first.
+func (w *walker) failErr(err error) {
+	if w.err == nil {
+		w.err = err
+	}
+}
+
 func (w *walker) warn(format string, args ...any) {
 	if !w.learnOnly {
 		w.warns = append(w.warns, fmt.Sprintf(format, args...))

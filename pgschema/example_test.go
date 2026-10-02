@@ -1,6 +1,7 @@
 package pgschema_test
 
 import (
+	"errors"
 	"fmt"
 	"strings"
 
@@ -37,15 +38,22 @@ CREATE TABLE public.audit (user_id int REFERENCES users (id));`
 }
 
 // SQL that does not parse, or whose rewriting cannot be verified, is an error
-// and not a text: the caller never gets SQL that was not checked.
+// and not a text: the caller never gets SQL that was not checked. SQL that
+// does not parse is a *SyntaxError with the position in the text; a failed
+// verification wraps ErrNotVerified.
 func ExampleRewrite_error() {
 	_, _, err := pgschema.Rewrite("CREATE TABLE users (id int", pgschema.Options{Schema: "auth"})
 	fmt.Println("error:", err)
+	var se *pgschema.SyntaxError
+	if errors.As(err, &se) {
+		fmt.Println("line", se.Line, "column", se.Column, "message", se.Msg)
+	}
 
 	_, _, err = pgschema.Rewrite("SELECT 1", pgschema.Options{Schema: "it's"}) // not a schema name that can be used
 	fmt.Println("error:", err)
 	// Output:
-	// error: syntax error at end of input
+	// error: line 1, column 27: syntax error at end of input
+	// line 1 column 27 message syntax error at end of input
 	// error: subst: schema name "it's" has a character that is not allowed: '\''
 }
 
