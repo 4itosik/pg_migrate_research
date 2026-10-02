@@ -257,6 +257,13 @@ SELECT (SELECT count(*) FROM auth.users WHERE email = 'Alice@Example.com')::text
     || (SELECT auth.check_pwd(id, 'wrong') FROM auth.users)::text
     || ' ' || (SELECT pg_typeof(email)::text FROM auth.users)`
 
+	// gen_random_uuid belongs to the core since PostgreSQL 13, and to pgcrypto
+	// before: there the caller names it, as the README says
+	var extraObjects map[string][]string
+	if srv.Major() < 13 {
+		extraObjects = map[string][]string{"pgcrypto": {"gen_random_uuid"}}
+	}
+
 	setup := func(t *testing.T, extensions string) *harness.Database {
 		db, err := srv.NewDatabase(ctx, "extension_uses")
 		if err != nil {
@@ -294,7 +301,7 @@ SELECT (SELECT count(*) FROM auth.users WHERE email = 'Alice@Example.com')::text
 			t.Fatal("the migration works without the schema of the extensions, the case proves nothing")
 		}
 		db = setup(t, " CREATE EXTENSION pgcrypto SCHEMA ext; CREATE EXTENSION citext SCHEMA ext;")
-		r, err := pgschema.New(pgschema.Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext", "citext": "ext"}})
+		r, err := pgschema.New(pgschema.Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext", "citext": "ext"}, ExtensionObjects: extraObjects})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -305,7 +312,7 @@ SELECT (SELECT count(*) FROM auth.users WHERE email = 'Alice@Example.com')::text
 	})
 	t.Run("created by the migrations in the target schema", func(t *testing.T) {
 		db := setup(t, " ")
-		r, err := pgschema.New(pgschema.Options{Schema: "auth", ExtensionsInSchema: true})
+		r, err := pgschema.New(pgschema.Options{Schema: "auth", ExtensionsInSchema: true, ExtensionObjects: extraObjects})
 		if err != nil {
 			t.Fatal(err)
 		}
