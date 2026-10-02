@@ -114,6 +114,20 @@ func TestRewriteTempScope(t *testing.T) {
 	}
 }
 
+// An explicit SCHEMA in CREATE EXTENSION wins over the configured schema.
+func TestRewriteExplicitExtensionSchemaWins(t *testing.T) {
+	got, _ := rewriteOne(t, Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext"}},
+		"CREATE EXTENSION pgcrypto SCHEMA public; SELECT digest('a', 'md5')")
+	if want := "CREATE EXTENSION pgcrypto SCHEMA public; SELECT public.digest('a', 'md5')"; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+	got, _ = rewriteOne(t, Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext"}},
+		"CREATE EXTENSION pgcrypto SCHEMA pg_catalog; SELECT digest('a', 'md5')")
+	if want := "CREATE EXTENSION pgcrypto SCHEMA pg_catalog; SELECT pg_catalog.digest('a', 'md5')"; got != want {
+		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
 // A failed Rewrite or Learn leaves the Rewriter as it was.
 func TestFailedCallsLeaveNoState(t *testing.T) {
 	r := newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})

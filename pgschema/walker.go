@@ -969,7 +969,7 @@ func objectLabel(t ObjectType) string {
 
 // createExtension decides what CREATE EXTENSION gets. A schema in the
 // statement stays, and the extension is taken to be there when the uses of
-// its objects are to be qualified. A statement without one gets the schema of
+// its objects are to be qualified, whatever schema the options give it. A statement without one gets the schema of
 // the extension if it is configured, or the target schema under
 // ExtensionsInSchema; otherwise it stays and a warning says where the objects
 // go.
@@ -984,10 +984,9 @@ func (w *walker) createExtension(n *CreateExtensionStmt) {
 	}
 	switch {
 	case explicit != "":
+		// the name comes from the SQL, any name can be quoted
 		if active {
-			if r, err := w.r.schemaRefOf(explicit); err == nil {
-				w.r.activateExtension(n.Extname, r)
-			}
+			w.r.moveExtension(n.Extname, &schemaRef{name: explicit, prefix: subst.QuoteIdent(explicit) + "."})
 		}
 		return
 	case !active:

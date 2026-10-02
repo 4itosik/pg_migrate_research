@@ -50,11 +50,15 @@ func (r *Rewriter) schemaRefOf(name string) (*schemaRef, error) {
 // activateExtension makes the uses of the objects of the extension get the
 // schema ref: the contrib objects the library knows and the names the caller
 // gave. A name that an active extension has taken stays with the first one.
+// An extension that is active already keeps its schema.
 func (r *Rewriter) activateExtension(ext string, ref *schemaRef) {
-	if r.activeExt[ext] {
+	if r.activeExt[ext] != nil {
 		return
 	}
-	r.activeExt[ext] = true
+	// the names point to a schema of the extension's own, which moveExtension
+	// changes for all of them
+	ref = &schemaRef{name: ref.name, prefix: ref.prefix}
+	r.activeExt[ext] = ref
 	r.reg.journal(func() { delete(r.activeExt, ext) })
 	objs := contribObjects[ext]
 	extra := r.extraObjects[ext]
@@ -71,6 +75,20 @@ func (r *Rewriter) activateExtension(ext string, ref *schemaRef) {
 	put(r.ext.types, objs.types)
 	put(r.ext.types, extra)
 	put(r.ext.rels, objs.rels)
+}
+
+// moveExtension makes the uses of the objects of the extension get the schema
+// ref from now on, whether it is active or not: CREATE EXTENSION names the
+// schema where the extension is.
+func (r *Rewriter) moveExtension(ext string, ref *schemaRef) {
+	cur := r.activeExt[ext]
+	if cur == nil {
+		r.activateExtension(ext, ref)
+		return
+	}
+	old := *cur
+	*cur = *ref
+	r.reg.journal(func() { *cur = old })
 }
 
 // KnownExtensions lists the extensions whose object names the library knows:

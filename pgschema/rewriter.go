@@ -58,10 +58,10 @@ type Rewriter struct {
 	reg     *registry
 
 	extensionsInSchema bool
-	// extensions: the schema configured for an extension, the objects of the
-	// active ones, the names the caller added
+	// extensions: the schema configured for an extension, the schema of each
+	// active one (the names in ext point to it), the names the caller added
 	configuredExt map[string]*schemaRef
-	activeExt     map[string]bool
+	activeExt     map[string]*schemaRef
 	ext           *extensionUse
 	extraObjects  map[string][]string
 }
@@ -87,7 +87,7 @@ func New(opts Options) (*Rewriter, error) {
 
 		extensionsInSchema: opts.ExtensionsInSchema,
 		configuredExt:      map[string]*schemaRef{},
-		activeExt:          map[string]bool{},
+		activeExt:          map[string]*schemaRef{},
 		ext:                newExtensionUse(),
 		extraObjects:       map[string][]string{},
 	}
