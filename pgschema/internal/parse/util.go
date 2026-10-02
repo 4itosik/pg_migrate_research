@@ -121,46 +121,4 @@ func isNilNode(n Node) bool {
 
 // nodesEqual is equal() for the nodes the grammar compares: structural
 // equality, ignoring the locations.
-func nodesEqual(a, b Node) bool {
-	return valuesEqual(reflect.ValueOf(a), reflect.ValueOf(b))
-}
-
-func valuesEqual(a, b reflect.Value) bool {
-	if a.IsValid() != b.IsValid() {
-		return false
-	}
-	if !a.IsValid() {
-		return true
-	}
-	if a.Type() != b.Type() {
-		return false
-	}
-	switch a.Kind() {
-	case reflect.Pointer, reflect.Interface:
-		if a.IsNil() || b.IsNil() {
-			return a.IsNil() == b.IsNil()
-		}
-		return valuesEqual(a.Elem(), b.Elem())
-	case reflect.Struct:
-		for i := 0; i < a.NumField(); i++ {
-			if name := a.Type().Field(i).Name; name == "Location" || name == "Loc" {
-				continue
-			}
-			if !valuesEqual(a.Field(i), b.Field(i)) {
-				return false
-			}
-		}
-		return true
-	case reflect.Slice:
-		if a.Len() != b.Len() {
-			return false
-		}
-		for i := 0; i < a.Len(); i++ {
-			if !valuesEqual(a.Index(i), b.Index(i)) {
-				return false
-			}
-		}
-		return true
-	}
-	return a.Interface() == b.Interface()
-}
+func nodesEqual(a, b Node) bool { return Equal(a, b) }
