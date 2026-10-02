@@ -1,6 +1,10 @@
 package subst
 
-import "testing"
+import (
+	"os/exec"
+	"strings"
+	"testing"
+)
 
 func TestQuoteIdent(t *testing.T) {
 	tests := map[string]string{
@@ -52,5 +56,19 @@ func TestApplyRejects(t *testing.T) {
 	// quotes in the name are fine: they are doubled
 	if got, err := Apply("pgschema_placeholder.t", `a"b`); err != nil || got != `"a""b".t` {
 		t.Errorf("got %q, %v", got, err)
+	}
+}
+
+// TestNoParser: services import this package for the substitution, and the
+// parser must not come with it.
+func TestNoParser(t *testing.T) {
+	out, err := exec.Command("go", "list", "-deps", ".").Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, pkg := range strings.Fields(string(out)) {
+		if strings.Contains(pkg, "pgschema") && pkg != "github.com/4itosik/pg_migrate_research/pgschema/subst" {
+			t.Errorf("subst depends on %s", pkg)
+		}
 	}
 }

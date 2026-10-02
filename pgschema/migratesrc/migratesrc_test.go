@@ -4,6 +4,7 @@ import (
 	"errors"
 	"io"
 	"io/fs"
+	"os/exec"
 	"strings"
 	"testing"
 
@@ -81,6 +82,21 @@ func TestWrapRejectsSchema(t *testing.T) {
 		d := Wrap(src, bad)
 		if _, _, err := d.ReadUp(1); err == nil {
 			t.Errorf("schema %q: ReadUp succeeded", bad)
+		}
+	}
+}
+
+// TestNoParser: the wrapper is imported by services, which have no parser;
+// of this repository it may depend on package subst only.
+func TestNoParser(t *testing.T) {
+	out, err := exec.Command("go", "list", "-deps", ".").Output()
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, pkg := range strings.Fields(string(out)) {
+		if strings.Contains(pkg, "pgschema") && pkg != "github.com/4itosik/pg_migrate_research/pgschema/migratesrc" &&
+			pkg != "github.com/4itosik/pg_migrate_research/pgschema/subst" {
+			t.Errorf("migratesrc depends on %s", pkg)
 		}
 	}
 }
