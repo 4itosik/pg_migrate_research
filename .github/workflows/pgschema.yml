@@ -89,6 +89,7 @@ jobs:
         working-directory: pgschema/oracle
         env:
           REWRITE_VERSIONS: REL_${{ matrix.pg }}_STABLE
+          PARSE_VERSIONS: REL_${{ matrix.pg }}_STABLE
         run: |
           . ../tools/env.sh ${{ matrix.pg }}
           go vet ./...

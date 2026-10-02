@@ -209,9 +209,12 @@ func TestParseSpeed(t *testing.T) {
 // grouped by the statement type and the path of the field that differs.
 //
 //	PARSE_VERSIONS  regression test branches, default REL_16_STABLE
-//	PARSE_STMT      regexp on the node type of the statement, e.g. ^CreateStmt$
+//	PARSE_STMT      regexp on the node type of the statement, e.g. ^CreateStmt$;
+//	                with it the test only reports and does not fail
+//
+// Any difference fails the test.
+//
 //	PARSE_MAX       samples to print per group of differences (default 1)
-//	PARSE_STRICT=1  fail on any difference
 func TestParseTrees(t *testing.T) {
 	var sources []Statement
 	// the corpus
@@ -234,7 +237,11 @@ func TestParseTrees(t *testing.T) {
 		}
 	}
 	branchesUsed := []string{}
-	if root := os.Getenv("REGRESS_ROOT"); root != "" {
+	root := os.Getenv("REGRESS_ROOT")
+	if root == "" {
+		skipUnlessCI(t, "REGRESS_ROOT is not set; run tools/get-data.sh and source tools/env.sh")
+	}
+	if root != "" {
 		branches := []string{"REL_16_STABLE"}
 		if v := os.Getenv("PARSE_VERSIONS"); v != "" {
 			branches = strings.Fields(v)
@@ -320,7 +327,7 @@ func TestParseTrees(t *testing.T) {
 			t.Logf("        %s", s)
 		}
 	}
-	if (os.Getenv("PARSE_STRICT") != "" || os.Getenv("CI") != "") && equal != total {
+	if filter == nil && equal != total {
 		t.Errorf("%d of %d trees differ", total-equal, total)
 	}
 	if out := os.Getenv("METRICS_OUT"); out != "" && filter == nil {

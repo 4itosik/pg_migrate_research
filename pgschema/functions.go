@@ -168,11 +168,15 @@ func triggerVars(n *CreateFunctionStmt) []string {
 // finds the fragments of SQL (statements, expressions, assignments) and the
 // declarations; each fragment is rewritten as a text of its own with the
 // regular rules, and the types of the declarations are qualified.
-func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (string, error) {
+func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (out string, err error) {
 	pb, err := plpgsql.Parse(body, &opts)
 	if err != nil {
 		return "", fmt.Errorf("PL/pgSQL: %w", err)
 	}
+	// a body that cannot be rewritten leaves no objects in the registry,
+	// as a function that the server would not create
+	tx := w.r.reg.begin()
+	defer func() { w.r.reg.end(tx, err == nil) }()
 	if len(pb.Dynamic) > 0 {
 		w.warn("dynamic SQL (EXECUTE) inside a function body or DO block is not rewritten: %s", snippet(w.stmtText()))
 	}
@@ -199,7 +203,7 @@ func (w *walker) plpgsqlBody(opts plpgsql.Options, body string) (string, error) 
 			edits = append(edits, e)
 		}
 	}
-	out, err := applyEdits(body, edits)
+	out, err = applyEdits(body, edits)
 	if err != nil {
 		return "", err
 	}

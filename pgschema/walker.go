@@ -201,7 +201,7 @@ func (w *walker) handle(node Node) bool {
 	case *CreateTrigStmt:
 		for _, tr := range n.TransitionRels {
 			if t, ok := tr.(*TriggerTransition); ok {
-				w.r.reg.transition[t.Name] = true
+				w.r.reg.addTransition(t.Name)
 			}
 		}
 		w.usedFunctionName(&n.Funcname)
@@ -290,7 +290,7 @@ func (w *walker) rangeVar(rv *RangeVar, cteCheck bool) {
 		return
 	}
 	if rv.Relpersistence == "t" {
-		w.r.reg.temp[rv.Relname] = true
+		w.r.reg.addTemp(rv.Relname)
 		return
 	}
 	if !w.shouldQualifyRelation(rv.Relname, cteCheck) || w.learnOnly {
@@ -307,7 +307,7 @@ func (w *walker) register(rv *RangeVar, kind objKind) {
 		return
 	}
 	if rv.Relpersistence == "t" {
-		w.r.reg.temp[rv.Relname] = true
+		w.r.reg.addTemp(rv.Relname)
 		return
 	}
 	if rv.Schemaname == "" || rv.Schemaname == w.r.schema {

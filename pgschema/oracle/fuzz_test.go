@@ -65,6 +65,10 @@ func compareParse(sql string) string {
 	return ""
 }
 
+// paramMarkerInError matches a syntax error at a parameter marker anywhere in
+// the text of an error.
+var paramMarkerInError = regexp.MustCompile(`syntax error at or near "\$\d+`)
+
 // paramMarkerError matches the syntax error at a parameter marker.
 var paramMarkerError = regexp.MustCompile(`^syntax error at or near "\$\d+"`)
 
@@ -124,6 +128,21 @@ func mutate(rng *rand.Rand, sql string, pool []string) string {
 	}
 	b.WriteString(gaps[len(toks)])
 	return b.String()
+}
+
+// mutateBody damages the dollar-quoted body of a statement at the level of
+// tokens, so that the SQL and PL/pgSQL inside it get the mutations.
+func mutateBody(rng *rand.Rand, sql string, pool []string) string {
+	a := strings.Index(sql, "$$") + 2
+	b := strings.LastIndex(sql, "$$")
+	if a > b {
+		return sql
+	}
+	body := mutate(rng, sql[a:b], pool)
+	if strings.Contains(body, "$$") {
+		return sql
+	}
+	return sql[:a] + body + sql[b:]
 }
 
 // regressStatements returns the statements of the PostgreSQL 16 regression
@@ -247,36 +266,101 @@ func rewriteIssues(p pair, sql string) (issue string) {
 	}()
 	out, _, err := p.our.Rewrite(sql)
 	if err != nil {
+		if strings.Contains(err.Error(), "internal error") {
+			return "internal error: " + err.Error()
+		}
+		// a refusal where the prototype rewrites is a loss; a parameter
+		// marker that libpg_query accepts and PostgreSQL does not is the
+		// documented exception
+		if paramMarkerInError.MatchString(err.Error()) {
+			return ""
+		}
+		if want, _, perr := p.proto.Rewrite(sql); perr == nil && want != sql {
+			return fmt.Sprintf("the library refuses (%v), the prototype rewrites to %q", err, truncate(want, 200))
+		}
 		return ""
 	}
 	if _, perr := Parse(out); perr != nil {
 		return fmt.Sprintf("libpg_query does not parse the output: %v\n    output: %q", perr, truncate(out, 200))
 	}
-	if !isInsertionOnly(sql, out, "auth.") {
+	// a body that libpg_query compiles must compile after the rewriting; the
+	// output for a body it does not compile is not compared with the
+	// prototype's, because the library reads such a body more leniently
+	_, cerr := ParsePlPgSQL(sql)
+	if cerr == nil {
+		if _, cerr := ParsePlPgSQL(out); cerr != nil {
+			return fmt.Sprintf("libpg_query compiles the input body but not the output: %v\n    output: %q", cerr, truncate(out, 200))
+		}
+	}
+	if !isInsertionOnly(sql, out, "auth.") && !requotedBody(sql, out) {
 		return fmt.Sprintf("the output is not the input with insertions of %q\n    output: %q", "auth.", truncate(out, 200))
 	}
-	if want, _, perr := p.proto.Rewrite(sql); perr == nil && want != out {
+	if want, _, perr := p.proto.Rewrite(sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) {
 		return fmt.Sprintf("the output differs from the prototype's:\n%s", firstDiff(want, out))
 	}
 	return ""
 }
 
-// isInsertionOnly reports whether out is in with some occurrences of ins
-// added (a subsequence check on the text, with whole insertions).
-func isInsertionOnly(in, out, ins string) bool {
-	i, o := 0, 0
-	for i < len(in) {
-		switch {
-		case o < len(out) && in[i] == out[o]:
-			i++
-			o++
-		case strings.HasPrefix(out[o:], ins):
-			o += len(ins)
+var typeJunk = regexp.MustCompile(`(?i)%(?:row)?type\s+(\w+)`)
+
+// junkAfterType reports whether a %TYPE or %ROWTYPE declaration is followed by
+// something that is not part of a declaration. libpg_query accepts such text
+// as part of the type name, PostgreSQL gives a syntax error, and the library
+// and the prototype edit the declaration differently; the function does not
+// exist either way.
+func junkAfterType(sql string) bool {
+	for _, m := range typeJunk.FindAllStringSubmatch(sql, -1) {
+		switch strings.ToLower(m[1]) {
+		case "collate", "not", "default":
 		default:
-			return false
+			return true
 		}
 	}
-	return out[o:] == "" || strings.Repeat(ins, strings.Count(out[o:], ins)) == out[o:]
+	return false
+}
+
+// requotedBody reports whether the statement is a function or a DO block whose
+// body the rewriter writes with dollar quotes: the output is then not the
+// input with insertions, which is as documented (the body is edited decoded).
+func requotedBody(in, out string) bool {
+	return !strings.Contains(in, "$") && strings.Contains(out, "$") && strings.Contains(strings.ToLower(in), "'")
+}
+
+// isInsertionOnly reports whether out is in with some occurrences of ins
+// added. Where a character can be matched or taken as the start of an
+// insertion, both are tried.
+func isInsertionOnly(in, out, ins string) bool {
+	memo := map[[2]int]bool{}
+	var f func(i, o int) bool
+	f = func(i, o int) bool {
+		for {
+			if i == len(in) {
+				rest := out[o:]
+				return strings.Repeat(ins, strings.Count(rest, ins)) == rest
+			}
+			if o >= len(out) {
+				return false
+			}
+			lit, add := in[i] == out[o], strings.HasPrefix(out[o:], ins)
+			switch {
+			case lit && add:
+				key := [2]int{i, o}
+				if r, ok := memo[key]; ok {
+					return r
+				}
+				r := f(i+1, o+1) || f(i, o+len(ins))
+				memo[key] = r
+				return r
+			case lit:
+				i, o = i+1, o+1
+			case add:
+				o += len(ins)
+			default:
+				return false
+			}
+		}
+	}
+	return f(0, 0)
 }
 
 // TestRewriteMutations rewrites damaged statements that both parsers accept:
@@ -296,13 +380,27 @@ func TestRewriteMutations(t *testing.T) {
 		_ = pr.proto.Learn(s)
 		_ = pr.our.Learn(s)
 	}
+	var bodies []string // statements with a dollar-quoted body
+	for _, s := range stmts {
+		if strings.Count(s, "$$") == 2 {
+			bodies = append(bodies, s)
+		}
+	}
 	var bad []string
 	rewritten, refused := 0, 0
 	for i := 0; i < n; i++ {
-		s := mutate(rng, stmts[rng.Intn(len(stmts))], pool)
+		var s string
+		if i%2 == 1 && len(bodies) > 0 {
+			s = mutateBody(rng, bodies[rng.Intn(len(bodies))], pool)
+		} else {
+			s = mutate(rng, stmts[rng.Intn(len(stmts))], pool)
+		}
 		if _, err := Parse(s); err != nil {
 			continue
 		}
+		// both learn every statement, whether or not it can be rewritten
+		_ = pr.proto.Learn(s)
+		_ = pr.our.Learn(s)
 		if _, _, err := pr.our.Rewrite(s); err != nil {
 			refused++
 		} else {
