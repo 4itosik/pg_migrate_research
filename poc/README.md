@@ -90,9 +90,10 @@ CGO_ENABLED=0 go build -tags wasm2go ./cmd/pgschema-rewrite
 # мало памяти: компилятор обрабатывает функции пакета по одной (~0,8 ГБ вместо ~1,2 ГБ)
 GOGC=50 go build -tags wasm2go -gcflags=github.com/4itosik/pg_migrate_research/poc/pgquery/internal/libpgquery=-c=1 ./cmd/pgschema-rewrite
 
-# пик памяти компилятора и линковщика по пакетам
+# пик памяти компилятора и линковщика по пакетам; -a пересобирает и то, что уже в кэше
 go build -o /tmp/maxrss ./wasm2go/maxrss
-go build -a -tags wasm2go -toolexec=/tmp/maxrss -o /dev/null ./cmd/pgschema-rewrite
+MAXRSS_LOG=/tmp/maxrss.log go build -a -tags wasm2go -toolexec=/tmp/maxrss -o /dev/null ./cmd/pgschema-rewrite
+sort -t= -k2 -rn /tmp/maxrss.log | head
 
 # перегенерировать internal/libpgquery; wasi-sdk и binaryen скачиваются в ~/.cache/pgquery-wasm2go
 cd wasm2go && ./build.sh

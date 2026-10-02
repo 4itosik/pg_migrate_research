@@ -5,14 +5,16 @@
 //
 //	go build -toolexec=/path/to/maxrss ./...
 //
-// Lines go to $MAXRSS_LOG (default stderr). With MAXRSS_PKG set, only
-// compile steps of packages whose import path contains it are reported.
-// Linux only: Maxrss is in kilobytes there.
+// Lines are appended to $MAXRSS_LOG (default: maxrss.log in the temporary
+// directory), never to stderr: the go command caches what a compile step
+// prints and replays it on later builds. Use -a to measure packages that are
+// already in the build cache. With MAXRSS_PKG set, only compile steps of
+// packages whose import path contains it are reported. Linux only: Maxrss is
+// in kilobytes there.
 package main
 
 import (
 	"fmt"
-	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -34,18 +36,18 @@ func main() {
 			}
 		}
 		if filter := os.Getenv("MAXRSS_PKG"); tool == "link" || pkg != "" && strings.Contains(pkg, filter) {
-			var w io.Writer = os.Stderr
-			if log := os.Getenv("MAXRSS_LOG"); log != "" {
-				if f, err := os.OpenFile(log, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644); err == nil {
-					defer f.Close()
-					w = f
-				}
+			log := os.Getenv("MAXRSS_LOG")
+			if log == "" {
+				log = filepath.Join(os.TempDir(), "maxrss.log")
 			}
 			var rss int64
 			if ru, ok := cmd.ProcessState.SysUsage().(*syscall.Rusage); ok {
 				rss = int64(ru.Maxrss) / 1024
 			}
-			fmt.Fprintf(w, "%s %s maxrss=%dMB wall=%.1fs\n", tool, pkg, rss, time.Since(start).Seconds())
+			if f, err := os.OpenFile(log, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644); err == nil {
+				fmt.Fprintf(f, "%s %s maxrss=%dMB wall=%.1fs\n", tool, pkg, rss, time.Since(start).Seconds())
+				f.Close()
+			}
 		}
 	}
 	if err != nil {
