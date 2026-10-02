@@ -228,7 +228,7 @@ opt_concurrently:
 opt_drop_behavior:
 			CASCADE							{ $$ = int32(DROP_CASCADE) }
 			| RESTRICT						{ $$ = int32(DROP_RESTRICT) }
-			| /* EMPTY */					{ /*C $$ = DROP_RESTRICT; /* default * / */ }
+			| /* EMPTY */					{ $$ = int32(DROP_RESTRICT) /* default */ }
 		;
 
 /*****************************************************************************
@@ -254,14 +254,14 @@ CallStmt:	CALL func_application
 
 CreateRoleStmt:
 			CREATE ROLE RoleId opt_with OptRoleList
-				{ /*C
-					CreateRoleStmt *n = makeNode(CreateRoleStmt);
+				{
+					n := &CreateRoleStmt{}
 
-					n->stmt_type = ROLESTMT_ROLE;
-					n->role = $3;
-					n->options = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.StmtType = ROLESTMT_ROLE
+					n.Role = $3
+					n.Options = $5
+					$$ = n
+				}
 		;
 
 
@@ -287,119 +287,86 @@ AlterOptRoleList:
 
 AlterOptRoleElem:
 			PASSWORD Sconst
-				{ /*C
-					$$ = makeDefElem("password",
-									 (Node *) makeString($2), @1);
-				*/ }
+				{ $$ = makeDefElem("password", makeString($2, @2), @1) }
 			| PASSWORD NULL_P
-				{ /*C
-					$$ = makeDefElem("password", NULL, @1);
-				*/ }
+				{ $$ = makeDefElem("password", nil, @1) }
 			| ENCRYPTED PASSWORD Sconst
-				{ /*C
+				{
 					/*
 					 * These days, passwords are always stored in encrypted
 					 * form, so there is no difference between PASSWORD and
 					 * ENCRYPTED PASSWORD.
-					 * /
-					$$ = makeDefElem("password",
-									 (Node *) makeString($3), @1);
-				*/ }
+					 */
+					$$ = makeDefElem("password", makeString($3, @3), @1)
+				}
 			| UNENCRYPTED PASSWORD Sconst
-				{ /*C
-					ereport(ERROR,
-							(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-							 errmsg("UNENCRYPTED PASSWORD is no longer supported"),
-							 errhint("Remove UNENCRYPTED to store the password in encrypted form instead."),
-							 parser_errposition(@1)));
-				*/ }
+				{ p.fail(@1, "UNENCRYPTED PASSWORD is no longer supported") }
 			| INHERIT
-				{ /*C
-					$$ = makeDefElem("inherit", (Node *) makeBoolean(true), @1);
-				*/ }
+				{ $$ = makeDefElem("inherit", makeBoolean(true), @1) }
 			| CONNECTION LIMIT SignedIconst
-				{ /*C
-					$$ = makeDefElem("connectionlimit", (Node *) makeInteger($3), @1);
-				*/ }
+				{ $$ = makeDefElem("connectionlimit", makeInteger($3), @1) }
 			| VALID UNTIL Sconst
-				{ /*C
-					$$ = makeDefElem("validUntil", (Node *) makeString($3), @1);
-				*/ }
+				{ $$ = makeDefElem("validUntil", makeString($3, @3), @1) }
 		/*	Supported but not documented for roles, for use by ALTER GROUP. */
 			| USER role_list
-				{ /*C
-					$$ = makeDefElem("rolemembers", (Node *) $2, @1);
-				*/ }
+				{ $$ = makeDefElem("rolemembers", listNode($2), @1) }
 			| IDENT
-				{ /*C
+				{
 					/*
 					 * We handle identifiers that aren't parser keywords with
 					 * the following special-case codes, to avoid bloating the
 					 * size of the main parser.
-					 * /
-					if (strcmp($1, "superuser") == 0)
-						$$ = makeDefElem("superuser", (Node *) makeBoolean(true), @1);
-					else if (strcmp($1, "nosuperuser") == 0)
-						$$ = makeDefElem("superuser", (Node *) makeBoolean(false), @1);
-					else if (strcmp($1, "createrole") == 0)
-						$$ = makeDefElem("createrole", (Node *) makeBoolean(true), @1);
-					else if (strcmp($1, "nocreaterole") == 0)
-						$$ = makeDefElem("createrole", (Node *) makeBoolean(false), @1);
-					else if (strcmp($1, "replication") == 0)
-						$$ = makeDefElem("isreplication", (Node *) makeBoolean(true), @1);
-					else if (strcmp($1, "noreplication") == 0)
-						$$ = makeDefElem("isreplication", (Node *) makeBoolean(false), @1);
-					else if (strcmp($1, "createdb") == 0)
-						$$ = makeDefElem("createdb", (Node *) makeBoolean(true), @1);
-					else if (strcmp($1, "nocreatedb") == 0)
-						$$ = makeDefElem("createdb", (Node *) makeBoolean(false), @1);
-					else if (strcmp($1, "login") == 0)
-						$$ = makeDefElem("canlogin", (Node *) makeBoolean(true), @1);
-					else if (strcmp($1, "nologin") == 0)
-						$$ = makeDefElem("canlogin", (Node *) makeBoolean(false), @1);
-					else if (strcmp($1, "bypassrls") == 0)
-						$$ = makeDefElem("bypassrls", (Node *) makeBoolean(true), @1);
-					else if (strcmp($1, "nobypassrls") == 0)
-						$$ = makeDefElem("bypassrls", (Node *) makeBoolean(false), @1);
-					else if (strcmp($1, "noinherit") == 0)
-					{
+					 */
+					switch $1 {
+					case "superuser":
+						$$ = makeDefElem("superuser", makeBoolean(true), @1)
+					case "nosuperuser":
+						$$ = makeDefElem("superuser", makeBoolean(false), @1)
+					case "createrole":
+						$$ = makeDefElem("createrole", makeBoolean(true), @1)
+					case "nocreaterole":
+						$$ = makeDefElem("createrole", makeBoolean(false), @1)
+					case "replication":
+						$$ = makeDefElem("isreplication", makeBoolean(true), @1)
+					case "noreplication":
+						$$ = makeDefElem("isreplication", makeBoolean(false), @1)
+					case "createdb":
+						$$ = makeDefElem("createdb", makeBoolean(true), @1)
+					case "nocreatedb":
+						$$ = makeDefElem("createdb", makeBoolean(false), @1)
+					case "login":
+						$$ = makeDefElem("canlogin", makeBoolean(true), @1)
+					case "nologin":
+						$$ = makeDefElem("canlogin", makeBoolean(false), @1)
+					case "bypassrls":
+						$$ = makeDefElem("bypassrls", makeBoolean(true), @1)
+					case "nobypassrls":
+						$$ = makeDefElem("bypassrls", makeBoolean(false), @1)
+					case "noinherit":
 						/*
 						 * Note that INHERIT is a keyword, so it's handled by main parser, but
 						 * NOINHERIT is handled here.
-						 * /
-						$$ = makeDefElem("inherit", (Node *) makeBoolean(false), @1);
+						 */
+						$$ = makeDefElem("inherit", makeBoolean(false), @1)
+					default:
+						p.fail(@1, fmt.Sprintf("unrecognized role option \"%s\"", $1))
 					}
-					else
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("unrecognized role option \"%s\"", $1),
-									 parser_errposition(@1)));
-				*/ }
+				}
 		;
 
 CreateOptRoleElem:
 			AlterOptRoleElem			{ $$ = $1 }
 			/* The following are not supported by ALTER ROLE/USER/GROUP */
 			| SYSID Iconst
-				{ /*C
-					$$ = makeDefElem("sysid", (Node *) makeInteger($2), @1);
-				*/ }
+				{ $$ = makeDefElem("sysid", makeInteger($2), @1) }
 			| ADMIN role_list
-				{ /*C
-					$$ = makeDefElem("adminmembers", (Node *) $2, @1);
-				*/ }
+				{ $$ = makeDefElem("adminmembers", listNode($2), @1) }
 			| ROLE role_list
-				{ /*C
-					$$ = makeDefElem("rolemembers", (Node *) $2, @1);
-				*/ }
+				{ $$ = makeDefElem("rolemembers", listNode($2), @1) }
 			| IN_P ROLE role_list
-				{ /*C
-					$$ = makeDefElem("addroleto", (Node *) $3, @1);
-				*/ }
+				{ $$ = makeDefElem("addroleto", listNode($3), @1) }
 			| IN_P GROUP_P role_list
-				{ /*C
-					$$ = makeDefElem("addroleto", (Node *) $3, @1);
-				*/ }
+				{ $$ = makeDefElem("addroleto", listNode($3), @1) }
 		;
 
 
@@ -411,14 +378,14 @@ CreateOptRoleElem:
 
 CreateUserStmt:
 			CREATE USER RoleId opt_with OptRoleList
-				{ /*C
-					CreateRoleStmt *n = makeNode(CreateRoleStmt);
+				{
+					n := &CreateRoleStmt{}
 
-					n->stmt_type = ROLESTMT_USER;
-					n->role = $3;
-					n->options = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.StmtType = ROLESTMT_USER
+					n.Role = $3
+					n.Options = $5
+					$$ = n
+				}
 		;
 
 
@@ -430,23 +397,23 @@ CreateUserStmt:
 
 AlterRoleStmt:
 			ALTER ROLE RoleSpec opt_with AlterOptRoleList
-				 { /*C
-					AlterRoleStmt *n = makeNode(AlterRoleStmt);
+				 {
+				 	n := &AlterRoleStmt{}
 
-					n->role = $3;
-					n->action = +1;	/* add, if there are members * /
-					n->options = $5;
-					$$ = (Node *) n;
-				 */ }
+				 	n.Role = as[*RoleSpec]($3)
+				 	n.Action = +1 /* add, if there are members */
+				 	n.Options = $5
+				 	$$ = n
+				 }
 			| ALTER USER RoleSpec opt_with AlterOptRoleList
-				 { /*C
-					AlterRoleStmt *n = makeNode(AlterRoleStmt);
+				 {
+				 	n := &AlterRoleStmt{}
 
-					n->role = $3;
-					n->action = +1;	/* add, if there are members * /
-					n->options = $5;
-					$$ = (Node *) n;
-				 */ }
+				 	n.Role = as[*RoleSpec]($3)
+				 	n.Action = +1 /* add, if there are members */
+				 	n.Options = $5
+				 	$$ = n
+				 }
 		;
 
 opt_in_database:
@@ -456,41 +423,41 @@ opt_in_database:
 
 AlterRoleSetStmt:
 			ALTER ROLE RoleSpec opt_in_database SetResetClause
-				{ /*C
-					AlterRoleSetStmt *n = makeNode(AlterRoleSetStmt);
+				{
+					n := &AlterRoleSetStmt{}
 
-					n->role = $3;
-					n->database = $4;
-					n->setstmt = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Role = as[*RoleSpec]($3)
+					n.Database = $4
+					n.Setstmt = as[*VariableSetStmt]($5)
+					$$ = n
+				}
 			| ALTER ROLE ALL opt_in_database SetResetClause
-				{ /*C
-					AlterRoleSetStmt *n = makeNode(AlterRoleSetStmt);
+				{
+					n := &AlterRoleSetStmt{}
 
-					n->role = NULL;
-					n->database = $4;
-					n->setstmt = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Role = nil
+					n.Database = $4
+					n.Setstmt = as[*VariableSetStmt]($5)
+					$$ = n
+				}
 			| ALTER USER RoleSpec opt_in_database SetResetClause
-				{ /*C
-					AlterRoleSetStmt *n = makeNode(AlterRoleSetStmt);
+				{
+					n := &AlterRoleSetStmt{}
 
-					n->role = $3;
-					n->database = $4;
-					n->setstmt = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Role = as[*RoleSpec]($3)
+					n.Database = $4
+					n.Setstmt = as[*VariableSetStmt]($5)
+					$$ = n
+				}
 			| ALTER USER ALL opt_in_database SetResetClause
-				{ /*C
-					AlterRoleSetStmt *n = makeNode(AlterRoleSetStmt);
+				{
+					n := &AlterRoleSetStmt{}
 
-					n->role = NULL;
-					n->database = $4;
-					n->setstmt = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Role = nil
+					n.Database = $4
+					n.Setstmt = as[*VariableSetStmt]($5)
+					$$ = n
+				}
 		;
 
 
@@ -563,14 +530,14 @@ DropRoleStmt:
 
 CreateGroupStmt:
 			CREATE GROUP_P RoleId opt_with OptRoleList
-				{ /*C
-					CreateRoleStmt *n = makeNode(CreateRoleStmt);
+				{
+					n := &CreateRoleStmt{}
 
-					n->stmt_type = ROLESTMT_GROUP;
-					n->role = $3;
-					n->options = $5;
-					$$ = (Node *) n;
-				*/ }
+					n.StmtType = ROLESTMT_GROUP
+					n.Role = $3
+					n.Options = $5
+					$$ = n
+				}
 		;
 
 
@@ -582,19 +549,18 @@ CreateGroupStmt:
 
 AlterGroupStmt:
 			ALTER GROUP_P RoleSpec add_drop USER role_list
-				{ /*C
-					AlterRoleStmt *n = makeNode(AlterRoleStmt);
+				{
+					n := &AlterRoleStmt{}
 
-					n->role = $3;
-					n->action = $4;
-					n->options = list_make1(makeDefElem("rolemembers",
-														(Node *) $6, @6));
-					$$ = (Node *) n;
-				*/ }
+					n.Role = as[*RoleSpec]($3)
+					n.Action = $4
+					n.Options = []Node{makeDefElem("rolemembers", listNode($6), @6)}
+					$$ = n
+				}
 		;
 
-add_drop:	ADD_P									{ /*C $$ = +1; */ }
-			| DROP									{ /*C $$ = -1; */ }
+add_drop:	ADD_P									{ $$ = 1 }
+			| DROP									{ $$ = -1 }
 		;
 
 
@@ -659,11 +625,12 @@ CreateSchemaStmt:
 
 OptSchemaEltList:
 			OptSchemaEltList schema_stmt
-				{ /*C
-					if (@$ < 0)			/* see comments for YYLLOC_DEFAULT * /
-						@$ = @2;
-					$$ = lappend($1, $2);
-				*/ }
+				{
+					if @$ < 0 { /* see comments for YYLLOC_DEFAULT */
+						@$ = @2
+					}
+					$$ = append($1, $2)
+				}
 			| /* EMPTY */
 				{ $$ = nil }
 		;
@@ -693,189 +660,192 @@ schema_stmt:
 
 VariableSetStmt:
 			SET set_rest
-				{ /*C
-					VariableSetStmt *n = $2;
+				{
+					n := as[*VariableSetStmt]($2)
 
-					n->is_local = false;
-					$$ = (Node *) n;
-				*/ }
+					n.IsLocal = false
+					$$ = n
+				}
 			| SET LOCAL set_rest
-				{ /*C
-					VariableSetStmt *n = $3;
+				{
+					n := as[*VariableSetStmt]($3)
 
-					n->is_local = true;
-					$$ = (Node *) n;
-				*/ }
+					n.IsLocal = true
+					$$ = n
+				}
 			| SET SESSION set_rest
-				{ /*C
-					VariableSetStmt *n = $3;
+				{
+					n := as[*VariableSetStmt]($3)
 
-					n->is_local = false;
-					$$ = (Node *) n;
-				*/ }
+					n.IsLocal = false
+					$$ = n
+				}
 		;
 
 set_rest:
 			TRANSACTION transaction_mode_list
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_MULTI;
-					n->name = "TRANSACTION";
-					n->args = $2;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_MULTI
+					n.Name = "TRANSACTION"
+					n.Args = $2
+					$$ = n
+				}
 			| SESSION CHARACTERISTICS AS TRANSACTION transaction_mode_list
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_MULTI;
-					n->name = "SESSION CHARACTERISTICS";
-					n->args = $5;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_MULTI
+					n.Name = "SESSION CHARACTERISTICS"
+					n.Args = $5
+					$$ = n
+				}
 			| set_rest_more
 			;
 
 generic_set:
 			var_name TO var_list
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = $1;
-					n->args = $3;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = $1
+					n.Args = $3
+					$$ = n
+				}
 			| var_name '=' var_list
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = $1;
-					n->args = $3;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = $1
+					n.Args = $3
+					$$ = n
+				}
 			| var_name TO DEFAULT
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_DEFAULT;
-					n->name = $1;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_DEFAULT
+					n.Name = $1
+					$$ = n
+				}
 			| var_name '=' DEFAULT
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_DEFAULT;
-					n->name = $1;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_DEFAULT
+					n.Name = $1
+					$$ = n
+				}
 		;
 
 set_rest_more:	/* Generic SET syntaxes: */
 			generic_set							{ $$ = $1 }
 			| var_name FROM CURRENT_P
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_CURRENT;
-					n->name = $1;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_CURRENT
+					n.Name = $1
+					$$ = n
+				}
 			/* Special syntaxes mandated by SQL standard: */
 			| TIME ZONE zone_value
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = "timezone";
-					if ($3 != NULL)
-						n->args = list_make1($3);
-					else
-						n->kind = VAR_SET_DEFAULT;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = "timezone"
+					if $3 != nil {
+						n.Args = []Node{$3}
+					} else {
+						n.Kind = VAR_SET_DEFAULT
+					}
+					$$ = n
+				}
 			| CATALOG_P Sconst
-				{ /*C
-					ereport(ERROR,
-							(errcode(ERRCODE_FEATURE_NOT_SUPPORTED),
-							 errmsg("current database cannot be changed"),
-							 parser_errposition(@2)));
-					$$ = NULL; /*not reached* /
-				*/ }
+				{
+					p.fail(@2, "current database cannot be changed")
+					$$ = nil /*not reached*/
+				}
 			| SCHEMA Sconst
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = "search_path";
-					n->args = list_make1(makeStringConst($2, @2));
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = "search_path"
+					n.Args = []Node{makeStringConst($2, @2)}
+					$$ = n
+				}
 			| NAMES opt_encoding
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = "client_encoding";
-					if ($2 != NULL)
-						n->args = list_make1(makeStringConst($2, @2));
-					else
-						n->kind = VAR_SET_DEFAULT;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = "client_encoding"
+					if $2 != "" {
+						n.Args = []Node{makeStringConst($2, @2)}
+					} else {
+						n.Kind = VAR_SET_DEFAULT
+					}
+					$$ = n
+				}
 			| ROLE NonReservedWord_or_Sconst
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = "role";
-					n->args = list_make1(makeStringConst($2, @2));
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = "role"
+					n.Args = []Node{makeStringConst($2, @2)}
+					$$ = n
+				}
 			| SESSION AUTHORIZATION NonReservedWord_or_Sconst
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = "session_authorization";
-					n->args = list_make1(makeStringConst($3, @3));
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = "session_authorization"
+					n.Args = []Node{makeStringConst($3, @3)}
+					$$ = n
+				}
 			| SESSION AUTHORIZATION DEFAULT
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_DEFAULT;
-					n->name = "session_authorization";
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_DEFAULT
+					n.Name = "session_authorization"
+					$$ = n
+				}
 			| XML_P OPTION document_or_content
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_VALUE;
-					n->name = "xmloption";
-					n->args = list_make1(makeStringConst($3 == XMLOPTION_DOCUMENT ? "DOCUMENT" : "CONTENT", @3));
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_VALUE
+					n.Name = "xmloption"
+					if XmlOptionType($3) == XMLOPTION_DOCUMENT {
+						n.Args = []Node{makeStringConst("DOCUMENT", @3)}
+					} else {
+						n.Args = []Node{makeStringConst("CONTENT", @3)}
+					}
+					$$ = n
+				}
 			/* Special syntaxes invented by PostgreSQL: */
 			| TRANSACTION SNAPSHOT Sconst
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_SET_MULTI;
-					n->name = "TRANSACTION SNAPSHOT";
-					n->args = list_make1(makeStringConst($3, @3));
-					$$ = n;
-				*/ }
+					n.Kind = VAR_SET_MULTI
+					n.Name = "TRANSACTION SNAPSHOT"
+					n.Args = []Node{makeStringConst($3, @3)}
+					$$ = n
+				}
 		;
 
 var_name:	ColId								{ $$ = $1 }
 			| var_name '.' ColId
-				{ /*C $$ = psprintf("%s.%s", $1, $3); */ }
+				{ $$ = $1 + "." + $3 }
 		;
 
 var_list:	var_value								{ $$ = []Node{$1} }
@@ -883,9 +853,9 @@ var_list:	var_value								{ $$ = []Node{$1} }
 		;
 
 var_value:	opt_boolean_or_string
-				{ /*C $$ = makeStringConst($1, @1); */ }
+				{ $$ = makeStringConst($1, @1) }
 			| NumericOnly
-				{ /*C $$ = makeAConst($1, @1); */ }
+				{ $$ = makeAConst($1, @1) }
 		;
 
 iso_level:	READ UNCOMMITTED						{ $$ = "read uncommitted" }
@@ -916,39 +886,32 @@ opt_boolean_or_string:
  */
 zone_value:
 			Sconst
-				{ /*C
-					$$ = makeStringConst($1, @1);
-				*/ }
+				{ $$ = makeStringConst($1, @1) }
 			| IDENT
-				{ /*C
-					$$ = makeStringConst($1, @1);
-				*/ }
+				{ $$ = makeStringConst($1, @1) }
 			| ConstInterval Sconst opt_interval
-				{ /*C
-					TypeName   *t = $1;
+				{
+					t := as[*TypeName]($1)
 
-					if ($3 != NIL)
-					{
-						A_Const	   *n = (A_Const *) linitial($3);
+					if $3 != nil {
+						n := as[*A_Const]($3[0])
 
-						if ((n->val.ival.ival & ~(INTERVAL_MASK(HOUR) | INTERVAL_MASK(MINUTE))) != 0)
-							ereport(ERROR,
-									(errcode(ERRCODE_SYNTAX_ERROR),
-									 errmsg("time zone interval must be HOUR or HOUR TO MINUTE"),
-									 parser_errposition(@3)));
+						if (as[*Integer](n.Val).Ival &^ (intervalMask(dtHour) | intervalMask(dtMinute))) != 0 {
+							p.fail(@3, "time zone interval must be HOUR or HOUR TO MINUTE")
+						}
 					}
-					t->typmods = $3;
-					$$ = makeStringConstCast($2, @2, t);
-				*/ }
+					t.Typmods = $3
+					$$ = makeStringConstCast($2, @2, t)
+				}
 			| ConstInterval '(' Iconst ')' Sconst
-				{ /*C
-					TypeName   *t = $1;
+				{
+					t := as[*TypeName]($1)
 
-					t->typmods = list_make2(makeIntConst(INTERVAL_FULL_RANGE, -1),
-											makeIntConst($3, @3));
-					$$ = makeStringConstCast($5, @5, t);
-				*/ }
-			| NumericOnly							{ /*C $$ = makeAConst($1, @1); */ }
+					t.Typmods = []Node{makeIntConst(intervalFullRange, -1),
+						makeIntConst($3, @3)}
+					$$ = makeStringConstCast($5, @5, t)
+				}
+			| NumericOnly							{ $$ = makeAConst($1, @1) }
 			| DEFAULT								{ $$ = nil }
 			| LOCAL									{ $$ = nil }
 		;
@@ -971,110 +934,110 @@ VariableResetStmt:
 reset_rest:
 			generic_reset							{ $$ = $1 }
 			| TIME ZONE
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_RESET;
-					n->name = "timezone";
-					$$ = n;
-				*/ }
+					n.Kind = VAR_RESET
+					n.Name = "timezone"
+					$$ = n
+				}
 			| TRANSACTION ISOLATION LEVEL
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_RESET;
-					n->name = "transaction_isolation";
-					$$ = n;
-				*/ }
+					n.Kind = VAR_RESET
+					n.Name = "transaction_isolation"
+					$$ = n
+				}
 			| SESSION AUTHORIZATION
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_RESET;
-					n->name = "session_authorization";
-					$$ = n;
-				*/ }
+					n.Kind = VAR_RESET
+					n.Name = "session_authorization"
+					$$ = n
+				}
 		;
 
 generic_reset:
 			var_name
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_RESET;
-					n->name = $1;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_RESET
+					n.Name = $1
+					$$ = n
+				}
 			| ALL
-				{ /*C
-					VariableSetStmt *n = makeNode(VariableSetStmt);
+				{
+					n := &VariableSetStmt{}
 
-					n->kind = VAR_RESET_ALL;
-					$$ = n;
-				*/ }
+					n.Kind = VAR_RESET_ALL
+					$$ = n
+				}
 		;
 
 /* SetResetClause allows SET or RESET without LOCAL */
 SetResetClause:
 			SET set_rest					{ $$ = $2 }
-			| VariableResetStmt				{ /*C $$ = (VariableSetStmt *) $1; */ }
+			| VariableResetStmt				{ $$ = $1 }
 		;
 
 /* SetResetClause allows SET or RESET without LOCAL */
 FunctionSetResetClause:
 			SET set_rest_more				{ $$ = $2 }
-			| VariableResetStmt				{ /*C $$ = (VariableSetStmt *) $1; */ }
+			| VariableResetStmt				{ $$ = $1 }
 		;
 
 
 VariableShowStmt:
 			SHOW var_name
-				{ /*C
-					VariableShowStmt *n = makeNode(VariableShowStmt);
+				{
+					n := &VariableShowStmt{}
 
-					n->name = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Name = $2
+					$$ = n
+				}
 			| SHOW TIME ZONE
-				{ /*C
-					VariableShowStmt *n = makeNode(VariableShowStmt);
+				{
+					n := &VariableShowStmt{}
 
-					n->name = "timezone";
-					$$ = (Node *) n;
-				*/ }
+					n.Name = "timezone"
+					$$ = n
+				}
 			| SHOW TRANSACTION ISOLATION LEVEL
-				{ /*C
-					VariableShowStmt *n = makeNode(VariableShowStmt);
+				{
+					n := &VariableShowStmt{}
 
-					n->name = "transaction_isolation";
-					$$ = (Node *) n;
-				*/ }
+					n.Name = "transaction_isolation"
+					$$ = n
+				}
 			| SHOW SESSION AUTHORIZATION
-				{ /*C
-					VariableShowStmt *n = makeNode(VariableShowStmt);
+				{
+					n := &VariableShowStmt{}
 
-					n->name = "session_authorization";
-					$$ = (Node *) n;
-				*/ }
+					n.Name = "session_authorization"
+					$$ = n
+				}
 			| SHOW ALL
-				{ /*C
-					VariableShowStmt *n = makeNode(VariableShowStmt);
+				{
+					n := &VariableShowStmt{}
 
-					n->name = "all";
-					$$ = (Node *) n;
-				*/ }
+					n.Name = "all"
+					$$ = n
+				}
 		;
 
 
 ConstraintsSetStmt:
 			SET CONSTRAINTS constraints_set_list constraints_set_mode
-				{ /*C
-					ConstraintsSetStmt *n = makeNode(ConstraintsSetStmt);
+				{
+					n := &ConstraintsSetStmt{}
 
-					n->constraints = $3;
-					n->deferred = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Constraints = $3
+					n.Deferred = $4
+					$$ = n
+				}
 		;
 
 constraints_set_list:
@@ -1093,11 +1056,11 @@ constraints_set_mode:
  */
 CheckPointStmt:
 			CHECKPOINT
-				{ /*C
-					CheckPointStmt *n = makeNode(CheckPointStmt);
+				{
+					n := &CheckPointStmt{}
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 		;
 
 
@@ -1109,40 +1072,40 @@ CheckPointStmt:
 
 DiscardStmt:
 			DISCARD ALL
-				{ /*C
-					DiscardStmt *n = makeNode(DiscardStmt);
+				{
+					n := &DiscardStmt{}
 
-					n->target = DISCARD_ALL;
-					$$ = (Node *) n;
-				*/ }
+					n.Target = DISCARD_ALL
+					$$ = n
+				}
 			| DISCARD TEMP
-				{ /*C
-					DiscardStmt *n = makeNode(DiscardStmt);
+				{
+					n := &DiscardStmt{}
 
-					n->target = DISCARD_TEMP;
-					$$ = (Node *) n;
-				*/ }
+					n.Target = DISCARD_TEMP
+					$$ = n
+				}
 			| DISCARD TEMPORARY
-				{ /*C
-					DiscardStmt *n = makeNode(DiscardStmt);
+				{
+					n := &DiscardStmt{}
 
-					n->target = DISCARD_TEMP;
-					$$ = (Node *) n;
-				*/ }
+					n.Target = DISCARD_TEMP
+					$$ = n
+				}
 			| DISCARD PLANS
-				{ /*C
-					DiscardStmt *n = makeNode(DiscardStmt);
+				{
+					n := &DiscardStmt{}
 
-					n->target = DISCARD_PLANS;
-					$$ = (Node *) n;
-				*/ }
+					n.Target = DISCARD_PLANS
+					$$ = n
+				}
 			| DISCARD SEQUENCES
-				{ /*C
-					DiscardStmt *n = makeNode(DiscardStmt);
+				{
+					n := &DiscardStmt{}
 
-					n->target = DISCARD_SEQUENCES;
-					$$ = (Node *) n;
-				*/ }
+					n.Target = DISCARD_SEQUENCES
+					$$ = n
+				}
 
 		;
 

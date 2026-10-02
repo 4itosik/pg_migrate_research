@@ -60,3 +60,20 @@ const (
 	casNotValid           = 0x10
 	casNoInherit          = 0x20
 )
+
+// Constants of utils/datetime.h and utils/timestamp.h that the grammar uses
+// for the fields and the ranges of INTERVAL.
+const (
+	dtMonth  = 1
+	dtYear   = 2
+	dtDay    = 3
+	dtHour   = 10
+	dtMinute = 11
+	dtSecond = 12
+
+	intervalFullRange     = 0x7FFF
+	intervalFullPrecision = 0xFFFF
+)
+
+// intervalMask is INTERVAL_MASK.
+func intervalMask(b int32) int32 { return 1 << b }

@@ -15,42 +15,46 @@ target_list:
 		;
 
 target_el:	a_expr AS ColLabel
-				{ /*C
-					$$ = makeNode(ResTarget);
-					$$->name = $3;
-					$$->indirection = NIL;
-					$$->val = (Node *) $1;
-					$$->location = @1;
-				*/ }
+				{
+					n := &ResTarget{}
+					n.Name = $3
+					n.Indirection = nil
+					n.Val = $1
+					n.Location = @1
+					$$ = n
+				}
 			| a_expr BareColLabel
-				{ /*C
-					$$ = makeNode(ResTarget);
-					$$->name = $2;
-					$$->indirection = NIL;
-					$$->val = (Node *) $1;
-					$$->location = @1;
-				*/ }
+				{
+					n := &ResTarget{}
+					n.Name = $2
+					n.Indirection = nil
+					n.Val = $1
+					n.Location = @1
+					$$ = n
+				}
 			| a_expr
-				{ /*C
-					$$ = makeNode(ResTarget);
-					$$->name = NULL;
-					$$->indirection = NIL;
-					$$->val = (Node *) $1;
-					$$->location = @1;
-				*/ }
+				{
+					n := &ResTarget{}
+					n.Name = ""
+					n.Indirection = nil
+					n.Val = $1
+					n.Location = @1
+					$$ = n
+				}
 			| '*'
-				{ /*C
-					ColumnRef  *n = makeNode(ColumnRef);
+				{
+					n := &ColumnRef{}
 
-					n->fields = list_make1(makeNode(A_Star));
-					n->location = @1;
+					n.Fields = []Node{&A_Star{}}
+					n.Location = @1
 
-					$$ = makeNode(ResTarget);
-					$$->name = NULL;
-					$$->indirection = NIL;
-					$$->val = (Node *) n;
-					$$->location = @1;
-				*/ }
+					r := &ResTarget{}
+					r.Name = ""
+					r.Indirection = nil
+					r.Val = n
+					r.Location = @1
+					$$ = r
+				}
 		;
 
 
@@ -74,19 +78,15 @@ qualified_name_list:
  */
 qualified_name:
 			ColId
-				{ /*C
-					$$ = makeRangeVar(NULL, $1, @1);
-				*/ }
+				{ $$ = makeRangeVar("", $1, @1) }
 			| ColId indirection
-				{ /*C
-					$$ = makeRangeVarFromQualifiedName($1, $2, @1, yyscanner);
-				*/ }
+				{ $$ = p.makeRangeVarFromQualifiedName($1, $2, @1) }
 		;
 
 name_list:	name
-					{ /*C $$ = list_make1(makeString($1)); */ }
+					{ $$ = []Node{makeString($1, @1)} }
 			| name_list ',' name
-					{ /*C $$ = lappend($1, makeString($3)); */ }
+					{ $$ = append($1, makeString($3, @3)) }
 		;
 
 
@@ -105,12 +105,9 @@ file_name:	Sconst									{ $$ = $1 };
  * ever implement SQL99-like methods, such syntax may actually become legal!)
  */
 func_name:	type_function_name
-					{ /*C $$ = list_make1(makeString($1)); */ }
+					{ $$ = []Node{makeString($1, @1)} }
 			| ColId indirection
-					{ /*C
-						$$ = check_func_name(lcons(makeString($1), $2),
-											 yyscanner);
-					*/ }
+					{ $$ = p.checkFuncName(append([]Node{makeString($1, @1)}, $2...)) }
 		;
 
 
@@ -118,151 +115,105 @@ func_name:	type_function_name
  * Constants
  */
 AexprConst: Iconst
-				{ /*C
-					$$ = makeIntConst($1, @1);
-				*/ }
+				{ $$ = makeIntConst($1, @1) }
 			| FCONST
-				{ /*C
-					$$ = makeFloatConst($1, @1);
-				*/ }
+				{ $$ = makeFloatConst($1, @1) }
 			| Sconst
-				{ /*C
-					$$ = makeStringConst($1, @1);
-				*/ }
+				{ $$ = makeStringConst($1, @1) }
 			| BCONST
-				{ /*C
-					$$ = makeBitStringConst($1, @1);
-				*/ }
+				{ $$ = makeBitStringConst($1, @1) }
 			| XCONST
-				{ /*C
+				{
 					/* This is a bit constant per SQL99:
 					 * Without Feature F511, "BIT data type",
 					 * a <general literal> shall not be a
 					 * <bit string literal> or a <hex string literal>.
-					 * /
-					$$ = makeBitStringConst($1, @1);
-				*/ }
+					 */
+					$$ = makeBitStringConst($1, @1)
+				}
 			| func_name Sconst
-				{ /*C
-					/* generic type 'literal' syntax * /
-					TypeName   *t = makeTypeNameFromNameList($1);
+				{
+					/* generic type 'literal' syntax */
+					t := makeTypeNameFromNameList($1)
 
-					t->location = @1;
-					$$ = makeStringConstCast($2, @2, t);
-				*/ }
+					t.Location = @1
+					$$ = makeStringConstCast($2, @2, t)
+				}
 			| func_name '(' func_arg_list opt_sort_clause ')' Sconst
-				{ /*C
-					/* generic syntax with a type modifier * /
-					TypeName   *t = makeTypeNameFromNameList($1);
-					ListCell   *lc;
+				{
+					/* generic syntax with a type modifier */
+					t := makeTypeNameFromNameList($1)
 
 					/*
 					 * We must use func_arg_list and opt_sort_clause in the
 					 * production to avoid reduce/reduce conflicts, but we
 					 * don't actually wish to allow NamedArgExpr in this
 					 * context, nor ORDER BY.
-					 * /
-					foreach(lc, $3)
-					{
-						NamedArgExpr *arg = (NamedArgExpr *) lfirst(lc);
-
-						if (IsA(arg, NamedArgExpr))
-							ereport(ERROR,
-									(errcode(ERRCODE_SYNTAX_ERROR),
-									 errmsg("type modifier cannot have parameter name"),
-									 parser_errposition(arg->location)));
+					 */
+					for _, a := range $3 {
+						if arg, ok := a.(*NamedArgExpr); ok {
+							p.fail(arg.Location, "type modifier cannot have parameter name")
+						}
 					}
-					if ($4 != NIL)
-							ereport(ERROR,
-									(errcode(ERRCODE_SYNTAX_ERROR),
-									 errmsg("type modifier cannot have ORDER BY"),
-									 parser_errposition(@4)));
+					if $4 != nil {
+						p.fail(@4, "type modifier cannot have ORDER BY")
+					}
 
-					t->typmods = $3;
-					t->location = @1;
-					$$ = makeStringConstCast($6, @6, t);
-				*/ }
+					t.Typmods = $3
+					t.Location = @1
+					$$ = makeStringConstCast($6, @6, t)
+				}
 			| ConstTypename Sconst
-				{ /*C
-					$$ = makeStringConstCast($2, @2, $1);
-				*/ }
+				{ $$ = makeStringConstCast($2, @2, as[*TypeName]($1)) }
 			| ConstInterval Sconst opt_interval
-				{ /*C
-					TypeName   *t = $1;
+				{
+					t := as[*TypeName]($1)
 
-					t->typmods = $3;
-					$$ = makeStringConstCast($2, @2, t);
-				*/ }
+					t.Typmods = $3
+					$$ = makeStringConstCast($2, @2, t)
+				}
 			| ConstInterval '(' Iconst ')' Sconst
-				{ /*C
-					TypeName   *t = $1;
+				{
+					t := as[*TypeName]($1)
 
-					t->typmods = list_make2(makeIntConst(INTERVAL_FULL_RANGE, -1),
-											makeIntConst($3, @3));
-					$$ = makeStringConstCast($5, @5, t);
-				*/ }
+					t.Typmods = []Node{makeIntConst(intervalFullRange, -1),
+						makeIntConst($3, @3)}
+					$$ = makeStringConstCast($5, @5, t)
+				}
 			| TRUE_P
-				{ /*C
-					$$ = makeBoolAConst(true, @1);
-				*/ }
+				{ $$ = makeBoolAConst(true, @1) }
 			| FALSE_P
-				{ /*C
-					$$ = makeBoolAConst(false, @1);
-				*/ }
+				{ $$ = makeBoolAConst(false, @1) }
 			| NULL_P
-				{ /*C
-					$$ = makeNullAConst(@1);
-				*/ }
+				{ $$ = makeNullAConst(@1) }
 		;
 
 Iconst:		ICONST									{ $$ = $1 };
 Sconst:		SCONST									{ $$ = $1 };
 
 SignedIconst: Iconst								{ $$ = $1 }
-			| '+' Iconst							{ /*C $$ = + $2; */ }
-			| '-' Iconst							{ /*C $$ = - $2; */ }
+			| '+' Iconst							{ $$ = $2 }
+			| '-' Iconst							{ $$ = -$2 }
 		;
 
 /* Role specifications */
 RoleId:		RoleSpec
-				{ /*C
-					RoleSpec   *spc = (RoleSpec *) $1;
+				{
+					spc := as[*RoleSpec]($1)
 
-					switch (spc->roletype)
-					{
-						case ROLESPEC_CSTRING:
-							$$ = spc->rolename;
-							break;
-						case ROLESPEC_PUBLIC:
-							ereport(ERROR,
-									(errcode(ERRCODE_RESERVED_NAME),
-									 errmsg("role name \"%s\" is reserved",
-											"public"),
-									 parser_errposition(@1)));
-							break;
-						case ROLESPEC_SESSION_USER:
-							ereport(ERROR,
-									(errcode(ERRCODE_RESERVED_NAME),
-									 errmsg("%s cannot be used as a role name here",
-											"SESSION_USER"),
-									 parser_errposition(@1)));
-							break;
-						case ROLESPEC_CURRENT_USER:
-							ereport(ERROR,
-									(errcode(ERRCODE_RESERVED_NAME),
-									 errmsg("%s cannot be used as a role name here",
-											"CURRENT_USER"),
-									 parser_errposition(@1)));
-							break;
-						case ROLESPEC_CURRENT_ROLE:
-							ereport(ERROR,
-									(errcode(ERRCODE_RESERVED_NAME),
-									 errmsg("%s cannot be used as a role name here",
-											"CURRENT_ROLE"),
-									 parser_errposition(@1)));
-							break;
+					switch spc.Roletype {
+					case ROLESPEC_CSTRING:
+						$$ = spc.Rolename
+					case ROLESPEC_PUBLIC:
+						p.fail(@1, "role name \"public\" is reserved")
+					case ROLESPEC_SESSION_USER:
+						p.fail(@1, "SESSION_USER cannot be used as a role name here")
+					case ROLESPEC_CURRENT_USER:
+						p.fail(@1, "CURRENT_USER cannot be used as a role name here")
+					case ROLESPEC_CURRENT_ROLE:
+						p.fail(@1, "CURRENT_ROLE cannot be used as a role name here")
 					}
-				*/ }
+				}
 			;
 
 RoleSpec:	NonReservedWord
@@ -312,32 +263,31 @@ PLpgSQL_Expr: opt_distinct_clause opt_target_list
 			from_clause where_clause
 			group_clause having_clause window_clause
 			opt_sort_clause opt_select_limit opt_for_locking_clause
-				{ /*C
-					SelectStmt *n = makeNode(SelectStmt);
+				{
+					n := &SelectStmt{}
 
-					n->distinctClause = $1;
-					n->targetList = $2;
-					n->fromClause = $3;
-					n->whereClause = $4;
-					n->groupClause = ($5)->list;
-					n->groupDistinct = ($5)->distinct;
-					n->havingClause = $6;
-					n->windowClause = $7;
-					n->sortClause = $8;
-					if ($9)
-					{
-						n->limitOffset = $9->limitOffset;
-						n->limitCount = $9->limitCount;
-						if (!n->sortClause &&
-							$9->limitOption == LIMIT_OPTION_WITH_TIES)
-							ereport(ERROR,
-									(errcode(ERRCODE_SYNTAX_ERROR),
-									 errmsg("WITH TIES cannot be specified without ORDER BY clause")));
-						n->limitOption = $9->limitOption;
+					n.DistinctClause = $1
+					n.TargetList = $2
+					n.FromClause = $3
+					n.WhereClause = $4
+					g := as[*groupClause]($5)
+					n.GroupClause = g.list
+					n.GroupDistinct = g.distinct
+					n.HavingClause = $6
+					n.WindowClause = $7
+					n.SortClause = $8
+					if lim := as[*selectLimit]($9); lim != nil {
+						n.LimitOffset = lim.limitOffset
+						n.LimitCount = lim.limitCount
+						if n.SortClause == nil &&
+							lim.limitOption == LIMIT_OPTION_WITH_TIES {
+							p.fail(-1, "WITH TIES cannot be specified without ORDER BY clause")
+						}
+						n.LimitOption = lim.limitOption
 					}
-					n->lockingClause = $10;
-					$$ = (Node *) n;
-				*/ }
+					n.LockingClause = $10
+					$$ = n
+				}
 		;
 
 /*
@@ -345,20 +295,20 @@ PLpgSQL_Expr: opt_distinct_clause opt_target_list
  */
 
 PLAssignStmt: plassign_target opt_indirection plassign_equals PLpgSQL_Expr
-				{ /*C
-					PLAssignStmt *n = makeNode(PLAssignStmt);
+				{
+					n := &PLAssignStmt{}
 
-					n->name = $1;
-					n->indirection = check_indirection($2, yyscanner);
-					/* nnames will be filled by calling production * /
-					n->val = (SelectStmt *) $4;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Name = $1
+					n.Indirection = p.checkIndirection($2)
+					/* nnames will be filled by calling production */
+					n.Val = as[*SelectStmt]($4)
+					n.Location = @1
+					$$ = n
+				}
 		;
 
 plassign_target: ColId							{ $$ = $1 }
-			| PARAM								{ /*C $$ = psprintf("$%d", $1); */ }
+			| PARAM								{ $$ = fmt.Sprintf("$%d", $1) }
 		;
 
 plassign_equals: COLON_EQUALS
