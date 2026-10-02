@@ -24,6 +24,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"unicode"
 	"unicode/utf8"
 )
 
@@ -36,11 +37,8 @@ const maxIdentLen = 63
 
 // Apply replaces the placeholder in tmpl with the schema name, quoted as an
 // identifier when it needs quotes (upper case, a space, a keyword that is not
-// unreserved). It returns an error for a schema name that cannot be put into
-// text safely: empty, longer than 63 bytes, or with a quote ('), a dollar
-// sign ($), a backslash or a control character, or invalid UTF-8. The placeholder stands inside
-// string literals and dollar-quoted bodies too, where such characters would
-// change the meaning of the text.
+// unreserved). It returns an error for a schema name that ValidSchema
+// rejects.
 func Apply(tmpl, schema string) (string, error) {
 	if err := ValidSchema(schema); err != nil {
 		return "", err
@@ -51,8 +49,18 @@ func Apply(tmpl, schema string) (string, error) {
 	return strings.ReplaceAll(tmpl, Placeholder, QuoteIdent(schema)), nil
 }
 
-// ValidSchema checks that a schema name can be substituted.
+// ValidSchema checks that a schema name can be substituted. It rejects a name
+// that cannot be put into text safely: empty, longer than 63 bytes, not valid
+// UTF-8, with a quote ('), a dollar sign ($), a backslash or a control
+// character, with white space at either end, or with /*, */ or --. The
+// placeholder stands inside string literals, dollar-quoted bodies and
+// comments too, where such text would change the meaning of the SQL. It also
+// rejects the names that cannot be the schema of a service: those starting
+// with pg_, which PostgreSQL reserves for system schemas (CREATE SCHEMA
+// rejects them), and information_schema.
 func ValidSchema(schema string) error {
+	first, _ := utf8.DecodeRuneInString(schema)
+	last, _ := utf8.DecodeLastRuneInString(schema)
 	switch {
 	case schema == "":
 		return errors.New("subst: empty schema name")
@@ -60,6 +68,14 @@ func ValidSchema(schema string) error {
 		return fmt.Errorf("subst: schema name %q is longer than %d bytes", schema, maxIdentLen)
 	case !utf8.ValidString(schema):
 		return fmt.Errorf("subst: schema name %q is not valid UTF-8", schema)
+	case strings.HasPrefix(schema, "pg_"):
+		return fmt.Errorf("subst: schema name %q starts with pg_, which PostgreSQL reserves for system schemas", schema)
+	case schema == "information_schema":
+		return errors.New("subst: information_schema is a system schema")
+	case unicode.IsSpace(first) || unicode.IsSpace(last):
+		return fmt.Errorf("subst: schema name %q starts or ends with white space", schema)
+	case strings.Contains(schema, "/*") || strings.Contains(schema, "*/") || strings.Contains(schema, "--"):
+		return fmt.Errorf("subst: schema name %q contains a comment delimiter (/*, */ or --)", schema)
 	}
 	for i := 0; i < len(schema); i++ {
 		if c := schema[i]; c == '\'' || c == '$' || c == '\\' || c < 0x20 || c == 0x7f {

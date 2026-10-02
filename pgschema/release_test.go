@@ -189,4 +189,18 @@ func TestFailedCallsLeaveNoState(t *testing.T) {
 	}
 }
 
+// In placeholder mode a text that already has the placeholder is refused: it
+// would be replaced later, wherever it stands.
+func TestPlaceholderInInput(t *testing.T) {
+	r := newTestRewriter(t, Options{Placeholder: true})
+	for _, sql := range []string{"SELECT 1 -- pgschema_placeholder", "CREATE TABLE pgschema_placeholder.t (id int)", "SELECT 'pgschema_placeholder'"} {
+		if err := r.Learn(sql); err == nil {
+			t.Errorf("Learn %q: no error", sql)
+		}
+		if _, _, err := r.Rewrite(sql); err == nil {
+			t.Errorf("Rewrite %q: no error", sql)
+		}
+	}
+}
+
 func warningText(warns []string) string { return strings.Join(warns, "\n") }

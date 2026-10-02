@@ -48,9 +48,16 @@ func TestApply(t *testing.T) {
 }
 
 func TestApplyRejects(t *testing.T) {
-	for _, bad := range []string{"", "a'b", "a$b", `a\b`, "a\nb", "a\x00b", string(make([]byte, 64)), "a\xffb"} {
+	for _, bad := range []string{"", "a'b", "a$b", `a\b`, "a\nb", "a\x00b", string(make([]byte, 64)), "a\xffb",
+		"pg_temp", "pg_x", "information_schema", " auth", "auth ", "a/*b", "a*/b", "a--b"} {
 		if _, err := Apply("pgschema_placeholder.t", bad); err == nil {
 			t.Errorf("Apply accepted the schema %q", bad)
+		}
+	}
+	// near misses are names like any other
+	for _, good := range []string{"PG_x", "pg", "pgx", "information_schema2", "a b", "a-b", "a/b", "a*b"} {
+		if _, err := Apply("pgschema_placeholder.t", good); err != nil {
+			t.Errorf("Apply rejected the schema %q: %v", good, err)
 		}
 	}
 	// quotes in the name are fine: they are doubled

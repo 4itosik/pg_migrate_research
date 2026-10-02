@@ -45,6 +45,9 @@ func (r *Rewriter) schemaRefOf(name string) (*schemaRef, error) {
 	if err := subst.ValidSchema(name); err != nil {
 		return nil, err
 	}
+	if name == subst.Placeholder {
+		return nil, fmt.Errorf("%s is the placeholder of templates", name)
+	}
 	return &schemaRef{name: name, prefix: subst.QuoteIdent(name) + "."}, nil
 }
 

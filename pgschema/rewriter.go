@@ -3,6 +3,7 @@ package pgschema
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/parse"
@@ -63,10 +64,11 @@ type Options struct {
 // the objects the migrations create (Learn or Rewrite), because type and
 // function references are qualified only for known objects.
 type Rewriter struct {
-	schema  string
-	prefix  string
-	exclude map[string]bool
-	reg     *registry
+	schema      string
+	prefix      string
+	placeholder bool
+	exclude     map[string]bool
+	reg         *registry
 
 	extensionsInSchema bool
 	// extensions: the schema configured for an extension, the schema of each
@@ -98,10 +100,11 @@ func New(opts Options) (*Rewriter, error) {
 		}
 	}
 	r := &Rewriter{
-		schema:  opts.Schema,
-		prefix:  subst.QuoteIdent(opts.Schema) + ".",
-		exclude: map[string]bool{},
-		reg:     newRegistry(),
+		schema:      opts.Schema,
+		prefix:      subst.QuoteIdent(opts.Schema) + ".",
+		placeholder: opts.Placeholder,
+		exclude:     map[string]bool{},
+		reg:         newRegistry(),
 
 		extensionsInSchema: opts.ExtensionsInSchema,
 		configuredExt:      map[string]*schemaRef{},
@@ -127,6 +130,9 @@ func New(opts Options) (*Rewriter, error) {
 // function names a migration uses are qualified only when some migration
 // creates them. With an error the Rewriter stays as it was.
 func (r *Rewriter) Learn(sql string) (err error) {
+	if err := r.checkInput(sql); err != nil {
+		return err
+	}
 	tx := r.reg.begin()
 	defer func() { r.reg.end(tx, err == nil) }()
 	_, err = r.pass(sql, true)
@@ -140,6 +146,9 @@ func (r *Rewriter) Learn(sql string) (err error) {
 // qualified, otherwise Rewrite returns an error instead of unverified SQL, and
 // the Rewriter stays as it was: what the text creates is not learned.
 func (r *Rewriter) Rewrite(sql string) (_ string, _ []string, err error) {
+	if err := r.checkInput(sql); err != nil {
+		return "", nil, err
+	}
 	tx := r.reg.begin()
 	defer func() { r.reg.end(tx, err == nil) }()
 	if _, err := r.pass(sql, true); err != nil {
@@ -159,6 +168,16 @@ func (r *Rewriter) Rewrite(sql string) (_ string, _ []string, err error) {
 type analysis struct {
 	edits []edit
 	warns []string
+}
+
+// checkInput refuses a text that cannot be rewritten safely: in a template the
+// placeholder must stand only where the rewriter put it, because subst.Apply
+// replaces it everywhere, in comments and strings as well.
+func (r *Rewriter) checkInput(sql string) error {
+	if r.placeholder && strings.Contains(sql, subst.Placeholder) {
+		return fmt.Errorf("the SQL already contains the placeholder %s, which would be replaced with the schema wherever it stands", subst.Placeholder)
+	}
+	return nil
 }
 
 // pass analyzes the text of a migration. The temporary relations it creates
