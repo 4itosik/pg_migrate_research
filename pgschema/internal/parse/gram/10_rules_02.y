@@ -9,227 +9,221 @@
 
 AlterTableStmt:
 			ALTER TABLE relation_expr alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $3;
-					n->cmds = $4;
-					n->objtype = OBJECT_TABLE;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.Cmds = $4
+					n.Objtype = OBJECT_TABLE
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER TABLE IF_P EXISTS relation_expr alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $5;
-					n->cmds = $6;
-					n->objtype = OBJECT_TABLE;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($5)
+					n.Cmds = $6
+					n.Objtype = OBJECT_TABLE
+					n.MissingOk = true
+					$$ = n
+				}
 		|	ALTER TABLE relation_expr partition_cmd
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $3;
-					n->cmds = list_make1($4);
-					n->objtype = OBJECT_TABLE;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.Cmds = []Node{$4}
+					n.Objtype = OBJECT_TABLE
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER TABLE IF_P EXISTS relation_expr partition_cmd
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $5;
-					n->cmds = list_make1($6);
-					n->objtype = OBJECT_TABLE;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($5)
+					n.Cmds = []Node{$6}
+					n.Objtype = OBJECT_TABLE
+					n.MissingOk = true
+					$$ = n
+				}
 		|	ALTER TABLE ALL IN_P TABLESPACE name SET TABLESPACE name opt_nowait
-				{ /*C
-					AlterTableMoveAllStmt *n =
-						makeNode(AlterTableMoveAllStmt);
+				{
+					n := &AlterTableMoveAllStmt{}
 
-					n->orig_tablespacename = $6;
-					n->objtype = OBJECT_TABLE;
-					n->roles = NIL;
-					n->new_tablespacename = $9;
-					n->nowait = $10;
-					$$ = (Node *) n;
-				*/ }
+					n.OrigTablespacename = $6
+					n.Objtype = OBJECT_TABLE
+					n.Roles = nil
+					n.NewTablespacename = $9
+					n.Nowait = $10
+					$$ = n
+				}
 		|	ALTER TABLE ALL IN_P TABLESPACE name OWNED BY role_list SET TABLESPACE name opt_nowait
-				{ /*C
-					AlterTableMoveAllStmt *n =
-						makeNode(AlterTableMoveAllStmt);
+				{
+					n := &AlterTableMoveAllStmt{}
 
-					n->orig_tablespacename = $6;
-					n->objtype = OBJECT_TABLE;
-					n->roles = $9;
-					n->new_tablespacename = $12;
-					n->nowait = $13;
-					$$ = (Node *) n;
-				*/ }
+					n.OrigTablespacename = $6
+					n.Objtype = OBJECT_TABLE
+					n.Roles = $9
+					n.NewTablespacename = $12
+					n.Nowait = $13
+					$$ = n
+				}
 		|	ALTER INDEX qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $3;
-					n->cmds = $4;
-					n->objtype = OBJECT_INDEX;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.Cmds = $4
+					n.Objtype = OBJECT_INDEX
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER INDEX IF_P EXISTS qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $5;
-					n->cmds = $6;
-					n->objtype = OBJECT_INDEX;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($5)
+					n.Cmds = $6
+					n.Objtype = OBJECT_INDEX
+					n.MissingOk = true
+					$$ = n
+				}
 		|	ALTER INDEX qualified_name index_partition_cmd
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $3;
-					n->cmds = list_make1($4);
-					n->objtype = OBJECT_INDEX;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.Cmds = []Node{$4}
+					n.Objtype = OBJECT_INDEX
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER INDEX ALL IN_P TABLESPACE name SET TABLESPACE name opt_nowait
-				{ /*C
-					AlterTableMoveAllStmt *n =
-						makeNode(AlterTableMoveAllStmt);
+				{
+					n := &AlterTableMoveAllStmt{}
 
-					n->orig_tablespacename = $6;
-					n->objtype = OBJECT_INDEX;
-					n->roles = NIL;
-					n->new_tablespacename = $9;
-					n->nowait = $10;
-					$$ = (Node *) n;
-				*/ }
+					n.OrigTablespacename = $6
+					n.Objtype = OBJECT_INDEX
+					n.Roles = nil
+					n.NewTablespacename = $9
+					n.Nowait = $10
+					$$ = n
+				}
 		|	ALTER INDEX ALL IN_P TABLESPACE name OWNED BY role_list SET TABLESPACE name opt_nowait
-				{ /*C
-					AlterTableMoveAllStmt *n =
-						makeNode(AlterTableMoveAllStmt);
+				{
+					n := &AlterTableMoveAllStmt{}
 
-					n->orig_tablespacename = $6;
-					n->objtype = OBJECT_INDEX;
-					n->roles = $9;
-					n->new_tablespacename = $12;
-					n->nowait = $13;
-					$$ = (Node *) n;
-				*/ }
+					n.OrigTablespacename = $6
+					n.Objtype = OBJECT_INDEX
+					n.Roles = $9
+					n.NewTablespacename = $12
+					n.Nowait = $13
+					$$ = n
+				}
 		|	ALTER SEQUENCE qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $3;
-					n->cmds = $4;
-					n->objtype = OBJECT_SEQUENCE;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.Cmds = $4
+					n.Objtype = OBJECT_SEQUENCE
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER SEQUENCE IF_P EXISTS qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $5;
-					n->cmds = $6;
-					n->objtype = OBJECT_SEQUENCE;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($5)
+					n.Cmds = $6
+					n.Objtype = OBJECT_SEQUENCE
+					n.MissingOk = true
+					$$ = n
+				}
 		|	ALTER VIEW qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $3;
-					n->cmds = $4;
-					n->objtype = OBJECT_VIEW;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($3)
+					n.Cmds = $4
+					n.Objtype = OBJECT_VIEW
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER VIEW IF_P EXISTS qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $5;
-					n->cmds = $6;
-					n->objtype = OBJECT_VIEW;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($5)
+					n.Cmds = $6
+					n.Objtype = OBJECT_VIEW
+					n.MissingOk = true
+					$$ = n
+				}
 		|	ALTER MATERIALIZED VIEW qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $4;
-					n->cmds = $5;
-					n->objtype = OBJECT_MATVIEW;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($4)
+					n.Cmds = $5
+					n.Objtype = OBJECT_MATVIEW
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER MATERIALIZED VIEW IF_P EXISTS qualified_name alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $6;
-					n->cmds = $7;
-					n->objtype = OBJECT_MATVIEW;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($6)
+					n.Cmds = $7
+					n.Objtype = OBJECT_MATVIEW
+					n.MissingOk = true
+					$$ = n
+				}
 		|	ALTER MATERIALIZED VIEW ALL IN_P TABLESPACE name SET TABLESPACE name opt_nowait
-				{ /*C
-					AlterTableMoveAllStmt *n =
-						makeNode(AlterTableMoveAllStmt);
+				{
+					n := &AlterTableMoveAllStmt{}
 
-					n->orig_tablespacename = $7;
-					n->objtype = OBJECT_MATVIEW;
-					n->roles = NIL;
-					n->new_tablespacename = $10;
-					n->nowait = $11;
-					$$ = (Node *) n;
-				*/ }
+					n.OrigTablespacename = $7
+					n.Objtype = OBJECT_MATVIEW
+					n.Roles = nil
+					n.NewTablespacename = $10
+					n.Nowait = $11
+					$$ = n
+				}
 		|	ALTER MATERIALIZED VIEW ALL IN_P TABLESPACE name OWNED BY role_list SET TABLESPACE name opt_nowait
-				{ /*C
-					AlterTableMoveAllStmt *n =
-						makeNode(AlterTableMoveAllStmt);
+				{
+					n := &AlterTableMoveAllStmt{}
 
-					n->orig_tablespacename = $7;
-					n->objtype = OBJECT_MATVIEW;
-					n->roles = $10;
-					n->new_tablespacename = $13;
-					n->nowait = $14;
-					$$ = (Node *) n;
-				*/ }
+					n.OrigTablespacename = $7
+					n.Objtype = OBJECT_MATVIEW
+					n.Roles = $10
+					n.NewTablespacename = $13
+					n.Nowait = $14
+					$$ = n
+				}
 		|	ALTER FOREIGN TABLE relation_expr alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $4;
-					n->cmds = $5;
-					n->objtype = OBJECT_FOREIGN_TABLE;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($4)
+					n.Cmds = $5
+					n.Objtype = OBJECT_FOREIGN_TABLE
+					n.MissingOk = false
+					$$ = n
+				}
 		|	ALTER FOREIGN TABLE IF_P EXISTS relation_expr alter_table_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					n->relation = $6;
-					n->cmds = $7;
-					n->objtype = OBJECT_FOREIGN_TABLE;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Relation = as[*RangeVar]($6)
+					n.Cmds = $7
+					n.Objtype = OBJECT_FOREIGN_TABLE
+					n.MissingOk = true
+					$$ = n
+				}
 		;
 
 alter_table_cmds:
@@ -240,658 +234,657 @@ alter_table_cmds:
 partition_cmd:
 			/* ALTER TABLE <name> ATTACH PARTITION <table_name> FOR VALUES */
 			ATTACH PARTITION qualified_name PartitionBoundSpec
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					PartitionCmd *cmd = makeNode(PartitionCmd);
+				{
+					n := &AlterTableCmd{}
+					cmd := &PartitionCmd{}
 
-					n->subtype = AT_AttachPartition;
-					cmd->name = $3;
-					cmd->bound = $4;
-					cmd->concurrent = false;
-					n->def = (Node *) cmd;
+					n.Subtype = AT_AttachPartition
+					cmd.Name = as[*RangeVar]($3)
+					cmd.Bound = as[*PartitionBoundSpec]($4)
+					cmd.Concurrent = false
+					n.Def = cmd
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 			/* ALTER TABLE <name> DETACH PARTITION <partition_name> [CONCURRENTLY] */
 			| DETACH PARTITION qualified_name opt_concurrently
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					PartitionCmd *cmd = makeNode(PartitionCmd);
+				{
+					n := &AlterTableCmd{}
+					cmd := &PartitionCmd{}
 
-					n->subtype = AT_DetachPartition;
-					cmd->name = $3;
-					cmd->bound = NULL;
-					cmd->concurrent = $4;
-					n->def = (Node *) cmd;
+					n.Subtype = AT_DetachPartition
+					cmd.Name = as[*RangeVar]($3)
+					cmd.Bound = nil
+					cmd.Concurrent = $4
+					n.Def = cmd
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 			| DETACH PARTITION qualified_name FINALIZE
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					PartitionCmd *cmd = makeNode(PartitionCmd);
+				{
+					n := &AlterTableCmd{}
+					cmd := &PartitionCmd{}
 
-					n->subtype = AT_DetachPartitionFinalize;
-					cmd->name = $3;
-					cmd->bound = NULL;
-					cmd->concurrent = false;
-					n->def = (Node *) cmd;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DetachPartitionFinalize
+					cmd.Name = as[*RangeVar]($3)
+					cmd.Bound = nil
+					cmd.Concurrent = false
+					n.Def = cmd
+
+					$$ = n
+				}
 		;
 
 index_partition_cmd:
 			/* ALTER INDEX <name> ATTACH PARTITION <index_name> */
 			ATTACH PARTITION qualified_name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					PartitionCmd *cmd = makeNode(PartitionCmd);
+				{
+					n := &AlterTableCmd{}
+					cmd := &PartitionCmd{}
 
-					n->subtype = AT_AttachPartition;
-					cmd->name = $3;
-					cmd->bound = NULL;
-					cmd->concurrent = false;
-					n->def = (Node *) cmd;
+					n.Subtype = AT_AttachPartition
+					cmd.Name = as[*RangeVar]($3)
+					cmd.Bound = nil
+					cmd.Concurrent = false
+					n.Def = cmd
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 		;
 
 alter_table_cmd:
 			/* ALTER TABLE <name> ADD <coldef> */
 			ADD_P columnDef
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddColumn;
-					n->def = $2;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddColumn
+					n.Def = $2
+					n.MissingOk = false
+					$$ = n
+				}
 			/* ALTER TABLE <name> ADD IF NOT EXISTS <coldef> */
 			| ADD_P IF_P NOT EXISTS columnDef
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddColumn;
-					n->def = $5;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddColumn
+					n.Def = $5
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TABLE <name> ADD COLUMN <coldef> */
 			| ADD_P COLUMN columnDef
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddColumn;
-					n->def = $3;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddColumn
+					n.Def = $3
+					n.MissingOk = false
+					$$ = n
+				}
 			/* ALTER TABLE <name> ADD COLUMN IF NOT EXISTS <coldef> */
 			| ADD_P COLUMN IF_P NOT EXISTS columnDef
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddColumn;
-					n->def = $6;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddColumn
+					n.Def = $6
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> {SET DEFAULT <expr>|DROP DEFAULT} */
 			| ALTER opt_column ColId alter_column_default
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ColumnDefault;
-					n->name = $3;
-					n->def = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ColumnDefault
+					n.Name = $3
+					n.Def = $4
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> DROP NOT NULL */
 			| ALTER opt_column ColId DROP NOT NULL_P
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropNotNull;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropNotNull
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET NOT NULL */
 			| ALTER opt_column ColId SET NOT NULL_P
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetNotNull;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetNotNull
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET EXPRESSION AS <expr> */
 			| ALTER opt_column ColId SET EXPRESSION AS '(' a_expr ')'
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetExpression;
-					n->name = $3;
-					n->def = $8;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetExpression
+					n.Name = $3
+					n.Def = $8
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> DROP EXPRESSION */
 			| ALTER opt_column ColId DROP EXPRESSION
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropExpression;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropExpression
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> DROP EXPRESSION IF EXISTS */
 			| ALTER opt_column ColId DROP EXPRESSION IF_P EXISTS
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropExpression;
-					n->name = $3;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropExpression
+					n.Name = $3
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET STATISTICS */
 			| ALTER opt_column ColId SET STATISTICS set_statistics_value
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetStatistics;
-					n->name = $3;
-					n->def = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetStatistics
+					n.Name = $3
+					n.Def = $6
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colnum> SET STATISTICS */
 			| ALTER opt_column Iconst SET STATISTICS set_statistics_value
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					if ($3 <= 0 || $3 > PG_INT16_MAX)
-						ereport(ERROR,
-								(errcode(ERRCODE_INVALID_PARAMETER_VALUE),
-								 errmsg("column number must be in range from 1 to %d", PG_INT16_MAX),
-								 parser_errposition(@3)));
+					if $3 <= 0 || $3 > 32767 /* PG_INT16_MAX */ {
+						p.fail(@3, fmt.Sprintf("column number must be in range from 1 to %d", 32767 /* PG_INT16_MAX */))
+					}
 
-					n->subtype = AT_SetStatistics;
-					n->num = (int16) $3;
-					n->def = $6;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetStatistics
+					n.Num = int32(int16($3))
+					n.Def = $6
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET ( column_parameter = value [, ... ] ) */
 			| ALTER opt_column ColId SET reloptions
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetOptions;
-					n->name = $3;
-					n->def = (Node *) $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetOptions
+					n.Name = $3
+					n.Def = listNode($5)
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> RESET ( column_parameter [, ... ] ) */
 			| ALTER opt_column ColId RESET reloptions
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ResetOptions;
-					n->name = $3;
-					n->def = (Node *) $5;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ResetOptions
+					n.Name = $3
+					n.Def = listNode($5)
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET STORAGE <storagemode> */
 			| ALTER opt_column ColId SET column_storage
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetStorage;
-					n->name = $3;
-					n->def = (Node *) makeString($5);
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetStorage
+					n.Name = $3
+					n.Def = makeString($5, @5)
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET COMPRESSION <cm> */
 			| ALTER opt_column ColId SET column_compression
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetCompression;
-					n->name = $3;
-					n->def = (Node *) makeString($5);
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetCompression
+					n.Name = $3
+					n.Def = makeString($5, @5)
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> ADD GENERATED ... AS IDENTITY ... */
 			| ALTER opt_column ColId ADD_P GENERATED generated_when AS IDENTITY_P OptParenthesizedSeqOptList
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					Constraint *c = makeNode(Constraint);
+				{
+					n := &AlterTableCmd{}
+					c := &Constraint{}
 
-					c->contype = CONSTR_IDENTITY;
-					c->generated_when = $6;
-					c->options = $9;
-					c->location = @5;
+					c.Contype = CONSTR_IDENTITY
+					c.GeneratedWhen = string(rune($6))
+					c.Options = $9
+					c.Location = @5
 
-					n->subtype = AT_AddIdentity;
-					n->name = $3;
-					n->def = (Node *) c;
+					n.Subtype = AT_AddIdentity
+					n.Name = $3
+					n.Def = c
 
-					$$ = (Node *) n;
-				*/ }
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> SET <sequence options>/RESET */
 			| ALTER opt_column ColId alter_identity_column_option_list
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetIdentity;
-					n->name = $3;
-					n->def = (Node *) $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetIdentity
+					n.Name = $3
+					n.Def = listNode($4)
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> DROP IDENTITY */
 			| ALTER opt_column ColId DROP IDENTITY_P
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropIdentity;
-					n->name = $3;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropIdentity
+					n.Name = $3
+					n.MissingOk = false
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER [COLUMN] <colname> DROP IDENTITY IF EXISTS */
 			| ALTER opt_column ColId DROP IDENTITY_P IF_P EXISTS
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropIdentity;
-					n->name = $3;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropIdentity
+					n.Name = $3
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TABLE <name> DROP [COLUMN] IF EXISTS <colname> [RESTRICT|CASCADE] */
 			| DROP opt_column IF_P EXISTS ColId opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropColumn;
-					n->name = $5;
-					n->behavior = $6;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropColumn
+					n.Name = $5
+					n.Behavior = DropBehavior($6)
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TABLE <name> DROP [COLUMN] <colname> [RESTRICT|CASCADE] */
 			| DROP opt_column ColId opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropColumn;
-					n->name = $3;
-					n->behavior = $4;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropColumn
+					n.Name = $3
+					n.Behavior = DropBehavior($4)
+					n.MissingOk = false
+					$$ = n
+				}
 			/*
 			 * ALTER TABLE <name> ALTER [COLUMN] <colname> [SET DATA] TYPE <typename>
 			 *		[ USING <expression> ]
 			 */
 			| ALTER opt_column ColId opt_set_data TYPE_P Typename opt_collate_clause alter_using
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					ColumnDef *def = makeNode(ColumnDef);
+				{
+					n := &AlterTableCmd{}
+					def := &ColumnDef{}
 
-					n->subtype = AT_AlterColumnType;
-					n->name = $3;
-					n->def = (Node *) def;
-					/* We only use these fields of the ColumnDef node * /
-					def->typeName = $6;
-					def->collClause = (CollateClause *) $7;
-					def->raw_default = $8;
-					def->location = @3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AlterColumnType
+					n.Name = $3
+					n.Def = def
+					/* We only use these fields of the ColumnDef node */
+					def.TypeName = as[*TypeName]($6)
+					def.CollClause = as[*CollateClause]($7)
+					def.RawDefault = $8
+					def.Location = @3
+					$$ = n
+				}
 			/* ALTER FOREIGN TABLE <name> ALTER [COLUMN] <colname> OPTIONS */
 			| ALTER opt_column ColId alter_generic_options
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AlterColumnGenericOptions;
-					n->name = $3;
-					n->def = (Node *) $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AlterColumnGenericOptions
+					n.Name = $3
+					n.Def = listNode($4)
+					$$ = n
+				}
 			/* ALTER TABLE <name> ADD CONSTRAINT ... */
 			| ADD_P TableConstraint
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddConstraint;
-					n->def = $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddConstraint
+					n.Def = $2
+					$$ = n
+				}
 			/* ALTER TABLE <name> ALTER CONSTRAINT ... */
 			| ALTER CONSTRAINT name ConstraintAttributeSpec
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					Constraint *c = makeNode(Constraint);
+				{
+					n := &AlterTableCmd{}
+					c := &Constraint{}
 
-					n->subtype = AT_AlterConstraint;
-					n->def = (Node *) c;
-					c->contype = CONSTR_FOREIGN; /* others not supported, yet * /
-					c->conname = $3;
-					processCASbits($4, @4, "FOREIGN KEY",
-									&c->deferrable,
-									&c->initdeferred,
-									NULL, NULL, yyscanner);
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AlterConstraint
+					n.Def = c
+					c.Contype = CONSTR_FOREIGN /* others not supported, yet */
+					c.Conname = $3
+					p.processCASbits($4, @4, "FOREIGN KEY",
+						&c.Deferrable,
+						&c.Initdeferred,
+						nil, nil)
+					$$ = n
+				}
 			/* ALTER TABLE <name> VALIDATE CONSTRAINT ... */
 			| VALIDATE CONSTRAINT name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ValidateConstraint;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ValidateConstraint
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> DROP CONSTRAINT IF EXISTS <name> [RESTRICT|CASCADE] */
 			| DROP CONSTRAINT IF_P EXISTS name opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropConstraint;
-					n->name = $5;
-					n->behavior = $6;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropConstraint
+					n.Name = $5
+					n.Behavior = DropBehavior($6)
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TABLE <name> DROP CONSTRAINT <name> [RESTRICT|CASCADE] */
 			| DROP CONSTRAINT name opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropConstraint;
-					n->name = $3;
-					n->behavior = $4;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropConstraint
+					n.Name = $3
+					n.Behavior = DropBehavior($4)
+					n.MissingOk = false
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET WITHOUT OIDS, for backward compat */
 			| SET WITHOUT OIDS
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropOids;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropOids
+					$$ = n
+				}
 			/* ALTER TABLE <name> CLUSTER ON <indexname> */
 			| CLUSTER ON name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ClusterOn;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ClusterOn
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET WITHOUT CLUSTER */
 			| SET WITHOUT CLUSTER
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropCluster;
-					n->name = NULL;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropCluster
+					n.Name = ""
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET LOGGED */
 			| SET LOGGED
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetLogged;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetLogged
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET UNLOGGED */
 			| SET UNLOGGED
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetUnLogged;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetUnLogged
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE TRIGGER <trig> */
 			| ENABLE_P TRIGGER name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableTrig;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableTrig
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE ALWAYS TRIGGER <trig> */
 			| ENABLE_P ALWAYS TRIGGER name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableAlwaysTrig;
-					n->name = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableAlwaysTrig
+					n.Name = $4
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE REPLICA TRIGGER <trig> */
 			| ENABLE_P REPLICA TRIGGER name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableReplicaTrig;
-					n->name = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableReplicaTrig
+					n.Name = $4
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE TRIGGER ALL */
 			| ENABLE_P TRIGGER ALL
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableTrigAll;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableTrigAll
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE TRIGGER USER */
 			| ENABLE_P TRIGGER USER
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableTrigUser;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableTrigUser
+					$$ = n
+				}
 			/* ALTER TABLE <name> DISABLE TRIGGER <trig> */
 			| DISABLE_P TRIGGER name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DisableTrig;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DisableTrig
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> DISABLE TRIGGER ALL */
 			| DISABLE_P TRIGGER ALL
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DisableTrigAll;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DisableTrigAll
+					$$ = n
+				}
 			/* ALTER TABLE <name> DISABLE TRIGGER USER */
 			| DISABLE_P TRIGGER USER
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DisableTrigUser;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DisableTrigUser
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE RULE <rule> */
 			| ENABLE_P RULE name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableRule;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableRule
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE ALWAYS RULE <rule> */
 			| ENABLE_P ALWAYS RULE name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableAlwaysRule;
-					n->name = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableAlwaysRule
+					n.Name = $4
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE REPLICA RULE <rule> */
 			| ENABLE_P REPLICA RULE name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableReplicaRule;
-					n->name = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableReplicaRule
+					n.Name = $4
+					$$ = n
+				}
 			/* ALTER TABLE <name> DISABLE RULE <rule> */
 			| DISABLE_P RULE name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DisableRule;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DisableRule
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> INHERIT <parent> */
 			| INHERIT qualified_name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddInherit;
-					n->def = (Node *) $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddInherit
+					n.Def = $2
+					$$ = n
+				}
 			/* ALTER TABLE <name> NO INHERIT <parent> */
 			| NO INHERIT qualified_name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropInherit;
-					n->def = (Node *) $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropInherit
+					n.Def = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> OF <type_name> */
 			| OF any_name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					TypeName   *def = makeTypeNameFromNameList($2);
+				{
+					n := &AlterTableCmd{}
+					def := makeTypeNameFromNameList($2)
 
-					def->location = @2;
-					n->subtype = AT_AddOf;
-					n->def = (Node *) def;
-					$$ = (Node *) n;
-				*/ }
+					def.Location = @2
+					n.Subtype = AT_AddOf
+					n.Def = def
+					$$ = n
+				}
 			/* ALTER TABLE <name> NOT OF */
 			| NOT OF
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropOf;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropOf
+					$$ = n
+				}
 			/* ALTER TABLE <name> OWNER TO RoleSpec */
 			| OWNER TO RoleSpec
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ChangeOwner;
-					n->newowner = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ChangeOwner
+					n.Newowner = as[*RoleSpec]($3)
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET ACCESS METHOD { <amname> | DEFAULT } */
 			| SET ACCESS METHOD set_access_method_name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetAccessMethod;
-					n->name = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetAccessMethod
+					n.Name = $4
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET TABLESPACE <tablespacename> */
 			| SET TABLESPACE name
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetTableSpace;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetTableSpace
+					n.Name = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> SET (...) */
 			| SET reloptions
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_SetRelOptions;
-					n->def = (Node *) $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_SetRelOptions
+					n.Def = listNode($2)
+					$$ = n
+				}
 			/* ALTER TABLE <name> RESET (...) */
 			| RESET reloptions
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ResetRelOptions;
-					n->def = (Node *) $2;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ResetRelOptions
+					n.Def = listNode($2)
+					$$ = n
+				}
 			/* ALTER TABLE <name> REPLICA IDENTITY */
 			| REPLICA IDENTITY_P replica_identity
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ReplicaIdentity;
-					n->def = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ReplicaIdentity
+					n.Def = $3
+					$$ = n
+				}
 			/* ALTER TABLE <name> ENABLE ROW LEVEL SECURITY */
 			| ENABLE_P ROW LEVEL SECURITY
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_EnableRowSecurity;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_EnableRowSecurity
+					$$ = n
+				}
 			/* ALTER TABLE <name> DISABLE ROW LEVEL SECURITY */
 			| DISABLE_P ROW LEVEL SECURITY
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DisableRowSecurity;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DisableRowSecurity
+					$$ = n
+				}
 			/* ALTER TABLE <name> FORCE ROW LEVEL SECURITY */
 			| FORCE ROW LEVEL SECURITY
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_ForceRowSecurity;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_ForceRowSecurity
+					$$ = n
+				}
 			/* ALTER TABLE <name> NO FORCE ROW LEVEL SECURITY */
 			| NO FORCE ROW LEVEL SECURITY
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_NoForceRowSecurity;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_NoForceRowSecurity
+					$$ = n
+				}
 			| alter_generic_options
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_GenericOptions;
-					n->def = (Node *) $1;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_GenericOptions
+					n.Def = listNode($1)
+					$$ = n
+				}
 		;
 
 alter_column_default:
@@ -901,14 +894,14 @@ alter_column_default:
 
 opt_collate_clause:
 			COLLATE any_name
-				{ /*C
-					CollateClause *n = makeNode(CollateClause);
+				{
+					n := &CollateClause{}
 
-					n->arg = NULL;
-					n->collname = $2;
-					n->location = @1;
-					$$ = (Node *) n;
-				*/ }
+					n.Arg = nil
+					n.Collname = $2
+					n.Location = @1
+					$$ = n
+				}
 			| /* EMPTY */				{ $$ = nil }
 		;
 
@@ -919,37 +912,37 @@ alter_using:
 
 replica_identity:
 			NOTHING
-				{ /*C
-					ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+				{
+					n := &ReplicaIdentityStmt{}
 
-					n->identity_type = REPLICA_IDENTITY_NOTHING;
-					n->name = NULL;
-					$$ = (Node *) n;
-				*/ }
+					n.IdentityType = "n" /* REPLICA_IDENTITY_NOTHING */
+					n.Name = ""
+					$$ = n
+				}
 			| FULL
-				{ /*C
-					ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+				{
+					n := &ReplicaIdentityStmt{}
 
-					n->identity_type = REPLICA_IDENTITY_FULL;
-					n->name = NULL;
-					$$ = (Node *) n;
-				*/ }
+					n.IdentityType = "f" /* REPLICA_IDENTITY_FULL */
+					n.Name = ""
+					$$ = n
+				}
 			| DEFAULT
-				{ /*C
-					ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+				{
+					n := &ReplicaIdentityStmt{}
 
-					n->identity_type = REPLICA_IDENTITY_DEFAULT;
-					n->name = NULL;
-					$$ = (Node *) n;
-				*/ }
+					n.IdentityType = "d" /* REPLICA_IDENTITY_DEFAULT */
+					n.Name = ""
+					$$ = n
+				}
 			| USING INDEX name
-				{ /*C
-					ReplicaIdentityStmt *n = makeNode(ReplicaIdentityStmt);
+				{
+					n := &ReplicaIdentityStmt{}
 
-					n->identity_type = REPLICA_IDENTITY_INDEX;
-					n->name = $3;
-					$$ = (Node *) n;
-				*/ }
+					n.IdentityType = "i" /* REPLICA_IDENTITY_INDEX */
+					n.Name = $3
+					$$ = n
+				}
 ;
 
 reloptions:
@@ -968,22 +961,22 @@ reloption_list:
 /* This should match def_elem and also allow qualified names */
 reloption_elem:
 			ColLabel '=' def_arg
-				{ /*C
-					$$ = makeDefElem($1, (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem($1, $3, @1)
+				}
 			| ColLabel
-				{ /*C
-					$$ = makeDefElem($1, NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem($1, nil, @1)
+				}
 			| ColLabel '.' ColLabel '=' def_arg
-				{ /*C
-					$$ = makeDefElemExtended($1, $3, (Node *) $5,
-											 DEFELEM_UNSPEC, @1);
-				*/ }
+				{
+					$$ = makeDefElemExtended($1, $3, $5,
+											 DEFELEM_UNSPEC, @1)
+				}
 			| ColLabel '.' ColLabel
-				{ /*C
-					$$ = makeDefElemExtended($1, $3, NULL, DEFELEM_UNSPEC, @1);
-				*/ }
+				{
+					$$ = makeDefElemExtended($1, $3, nil, DEFELEM_UNSPEC, @1)
+				}
 		;
 
 alter_identity_column_option_list:
@@ -995,32 +988,31 @@ alter_identity_column_option_list:
 
 alter_identity_column_option:
 			RESTART
-				{ /*C
-					$$ = makeDefElem("restart", NULL, @1);
-				*/ }
+				{
+					$$ = makeDefElem("restart", nil, @1)
+				}
 			| RESTART opt_with NumericOnly
-				{ /*C
-					$$ = makeDefElem("restart", (Node *) $3, @1);
-				*/ }
+				{
+					$$ = makeDefElem("restart", $3, @1)
+				}
 			| SET SeqOptElem
-				{ /*C
-					if (strcmp($2->defname, "as") == 0 ||
-						strcmp($2->defname, "restart") == 0 ||
-						strcmp($2->defname, "owned_by") == 0)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("sequence option \"%s\" not supported here", $2->defname),
-								 parser_errposition(@2)));
-					$$ = $2;
-				*/ }
+				{
+					opt := as[*DefElem]($2)
+					if opt != nil && (opt.Defname == "as" ||
+						opt.Defname == "restart" ||
+						opt.Defname == "owned_by") {
+						p.fail(@2, fmt.Sprintf("sequence option \"%s\" not supported here", opt.Defname))
+					}
+					$$ = $2
+				}
 			| SET GENERATED generated_when
-				{ /*C
-					$$ = makeDefElem("generated", (Node *) makeInteger($3), @1);
-				*/ }
+				{
+					$$ = makeDefElem("generated", makeInteger($3), @1)
+				}
 		;
 
 set_statistics_value:
-			SignedIconst					{ /*C $$ = (Node *) makeInteger($1); */ }
+			SignedIconst					{ $$ = makeInteger($1) }
 			| DEFAULT						{ $$ = nil }
 		;
 
@@ -1032,101 +1024,88 @@ set_access_method_name:
 PartitionBoundSpec:
 			/* a HASH partition */
 			FOR VALUES WITH '(' hash_partbound ')'
-				{ /*C
-					ListCell   *lc;
-					PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+				{
+					n := &PartitionBoundSpec{}
 
-					n->strategy = PARTITION_STRATEGY_HASH;
-					n->modulus = n->remainder = -1;
+					n.Strategy = "h" /* PARTITION_STRATEGY_HASH */
+					n.Modulus, n.Remainder = -1, -1
 
-					foreach (lc, $5)
-					{
-						DefElem    *opt = lfirst_node(DefElem, lc);
+					for _, lc := range $5 {
+						opt := as[*DefElem](lc)
 
-						if (strcmp(opt->defname, "modulus") == 0)
-						{
-							if (n->modulus != -1)
-								ereport(ERROR,
-										(errcode(ERRCODE_DUPLICATE_OBJECT),
-										 errmsg("modulus for hash partition provided more than once"),
-										 parser_errposition(opt->location)));
-							n->modulus = defGetInt32(opt);
+						if opt.Defname == "modulus" {
+							if n.Modulus != -1 {
+								p.fail(opt.Location, "modulus for hash partition provided more than once")
+							}
+							n.Modulus = p.defGetInt32(opt)
+						} else if opt.Defname == "remainder" {
+							if n.Remainder != -1 {
+								p.fail(opt.Location, "remainder for hash partition provided more than once")
+							}
+							n.Remainder = p.defGetInt32(opt)
+						} else {
+							p.fail(opt.Location,
+								fmt.Sprintf("unrecognized hash partition bound specification \"%s\"",
+									opt.Defname))
 						}
-						else if (strcmp(opt->defname, "remainder") == 0)
-						{
-							if (n->remainder != -1)
-								ereport(ERROR,
-										(errcode(ERRCODE_DUPLICATE_OBJECT),
-										 errmsg("remainder for hash partition provided more than once"),
-										 parser_errposition(opt->location)));
-							n->remainder = defGetInt32(opt);
-						}
-						else
-							ereport(ERROR,
-									(errcode(ERRCODE_SYNTAX_ERROR),
-									 errmsg("unrecognized hash partition bound specification \"%s\"",
-											opt->defname),
-									 parser_errposition(opt->location)));
 					}
 
-					if (n->modulus == -1)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("modulus for hash partition must be specified")));
-					if (n->remainder == -1)
-						ereport(ERROR,
-								(errcode(ERRCODE_SYNTAX_ERROR),
-								 errmsg("remainder for hash partition must be specified")));
+					if n.Modulus == -1 {
+						p.fail(-1, "modulus for hash partition must be specified")
+					}
+					if n.Remainder == -1 {
+						p.fail(-1, "remainder for hash partition must be specified")
+					}
 
-					n->location = @3;
+					n.Location = @3
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 
 			/* a LIST partition */
 			| FOR VALUES IN_P '(' expr_list ')'
-				{ /*C
-					PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+				{
+					n := &PartitionBoundSpec{}
 
-					n->strategy = PARTITION_STRATEGY_LIST;
-					n->is_default = false;
-					n->listdatums = $5;
-					n->location = @3;
+					n.Strategy = "l" /* PARTITION_STRATEGY_LIST */
+					n.IsDefault = false
+					n.Listdatums = $5
+					n.Location = @3
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 
 			/* a RANGE partition */
 			| FOR VALUES FROM '(' expr_list ')' TO '(' expr_list ')'
-				{ /*C
-					PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+				{
+					n := &PartitionBoundSpec{}
 
-					n->strategy = PARTITION_STRATEGY_RANGE;
-					n->is_default = false;
-					n->lowerdatums = $5;
-					n->upperdatums = $9;
-					n->location = @3;
+					n.Strategy = "r" /* PARTITION_STRATEGY_RANGE */
+					n.IsDefault = false
+					n.Lowerdatums = $5
+					n.Upperdatums = $9
+					n.Location = @3
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 
 			/* a DEFAULT partition */
 			| DEFAULT
-				{ /*C
-					PartitionBoundSpec *n = makeNode(PartitionBoundSpec);
+				{
+					n := &PartitionBoundSpec{}
 
-					n->is_default = true;
-					n->location = @1;
+					n.IsDefault = true
+					n.Location = @1
 
-					$$ = n;
-				*/ }
+					$$ = n
+				}
 		;
 
 hash_partbound_elem:
 		NonReservedWord Iconst
-			{ /*C
-				$$ = makeDefElem($1, (Node *) makeInteger($2), @1);
-			*/ }
+			{
+				$$ = makeDefElem($1, makeInteger($2), @1)
+			}
 		;
 
 hash_partbound:
@@ -1145,15 +1124,15 @@ hash_partbound:
 
 AlterCompositeTypeStmt:
 			ALTER TYPE_P any_name alter_type_cmds
-				{ /*C
-					AlterTableStmt *n = makeNode(AlterTableStmt);
+				{
+					n := &AlterTableStmt{}
 
-					/* can't use qualified_name, sigh * /
-					n->relation = makeRangeVarFromAnyName($3, @3, yyscanner);
-					n->cmds = $4;
-					n->objtype = OBJECT_TYPE;
-					$$ = (Node *) n;
-				*/ }
+					/* can't use qualified_name, sigh */
+					n.Relation = p.makeRangeVarFromAnyName($3, @3)
+					n.Cmds = $4
+					n.Objtype = OBJECT_TYPE
+					$$ = n
+				}
 			;
 
 alter_type_cmds:
@@ -1164,52 +1143,52 @@ alter_type_cmds:
 alter_type_cmd:
 			/* ALTER TYPE <name> ADD ATTRIBUTE <coldef> [RESTRICT|CASCADE] */
 			ADD_P ATTRIBUTE TableFuncElement opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_AddColumn;
-					n->def = $3;
-					n->behavior = $4;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AddColumn
+					n.Def = $3
+					n.Behavior = DropBehavior($4)
+					$$ = n
+				}
 			/* ALTER TYPE <name> DROP ATTRIBUTE IF EXISTS <attname> [RESTRICT|CASCADE] */
 			| DROP ATTRIBUTE IF_P EXISTS ColId opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropColumn;
-					n->name = $5;
-					n->behavior = $6;
-					n->missing_ok = true;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropColumn
+					n.Name = $5
+					n.Behavior = DropBehavior($6)
+					n.MissingOk = true
+					$$ = n
+				}
 			/* ALTER TYPE <name> DROP ATTRIBUTE <attname> [RESTRICT|CASCADE] */
 			| DROP ATTRIBUTE ColId opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
+				{
+					n := &AlterTableCmd{}
 
-					n->subtype = AT_DropColumn;
-					n->name = $3;
-					n->behavior = $4;
-					n->missing_ok = false;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_DropColumn
+					n.Name = $3
+					n.Behavior = DropBehavior($4)
+					n.MissingOk = false
+					$$ = n
+				}
 			/* ALTER TYPE <name> ALTER ATTRIBUTE <attname> [SET DATA] TYPE <typename> [RESTRICT|CASCADE] */
 			| ALTER ATTRIBUTE ColId opt_set_data TYPE_P Typename opt_collate_clause opt_drop_behavior
-				{ /*C
-					AlterTableCmd *n = makeNode(AlterTableCmd);
-					ColumnDef *def = makeNode(ColumnDef);
+				{
+					n := &AlterTableCmd{}
+					def := &ColumnDef{}
 
-					n->subtype = AT_AlterColumnType;
-					n->name = $3;
-					n->def = (Node *) def;
-					n->behavior = $8;
-					/* We only use these fields of the ColumnDef node * /
-					def->typeName = $6;
-					def->collClause = (CollateClause *) $7;
-					def->raw_default = NULL;
-					def->location = @3;
-					$$ = (Node *) n;
-				*/ }
+					n.Subtype = AT_AlterColumnType
+					n.Name = $3
+					n.Def = def
+					n.Behavior = DropBehavior($8)
+					/* We only use these fields of the ColumnDef node */
+					def.TypeName = as[*TypeName]($6)
+					def.CollClause = as[*CollateClause]($7)
+					def.RawDefault = nil
+					def.Location = @3
+					$$ = n
+				}
 		;
 
