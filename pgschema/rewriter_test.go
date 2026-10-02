@@ -71,6 +71,17 @@ func TestRewrite(t *testing.T) {
 		{"rename", "ALTER TABLE t RENAME TO u; ALTER TABLE u RENAME COLUMN a TO b", "ALTER TABLE auth.t RENAME TO u; ALTER TABLE auth.u RENAME COLUMN a TO b"},
 		{"comments and strings are not touched", "-- t\nSELECT 't', $$ from t $$ /* from t */ FROM t",
 			"-- t\nSELECT 't', $$ from t $$ /* from t */ FROM auth.t"},
+		{"add constraint is not a column", "ALTER TABLE t ADD CONSTRAINT c CHECK (a > 0)", "ALTER TABLE auth.t ADD CONSTRAINT c CHECK (a > 0)"},
+		{"unnest of a subquery is a function", "SELECT * FROM unnest((SELECT arr FROM t))", "SELECT * FROM unnest((SELECT arr FROM auth.t))"},
+		{"transition tables stay in the body",
+			"CREATE FUNCTION tf() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN INSERT INTO audit SELECT * FROM newrows; RETURN NULL; END $$;\nCREATE TRIGGER tg AFTER INSERT ON t REFERENCING NEW TABLE AS newrows FOR EACH STATEMENT EXECUTE FUNCTION tf()",
+			"CREATE FUNCTION auth.tf() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN INSERT INTO auth.audit SELECT * FROM newrows; RETURN NULL; END $$;\nCREATE TRIGGER tg AFTER INSERT ON auth.t REFERENCING NEW TABLE AS newrows FOR EACH STATEMENT EXECUTE FUNCTION auth.tf()"},
+		{"functions of extensions and built-ins stay", "SELECT gen_random_uuid(), crypt('x', gen_salt('bf')), now(), lower(name) FROM t",
+			"SELECT gen_random_uuid(), crypt('x', gen_salt('bf')), now(), lower(name) FROM auth.t"},
+		{"an escape string body is requoted", `CREATE FUNCTION e() RETURNS bigint LANGUAGE sql AS E'SELECT count(*) FROM t WHERE x = \'a\''`,
+			"CREATE FUNCTION auth.e() RETURNS bigint LANGUAGE sql AS $$SELECT count(*) FROM auth.t WHERE x = 'a'$$"},
+		{"information_schema is left alone", "SELECT * FROM information_schema.tables JOIN t ON true",
+			"SELECT * FROM information_schema.tables JOIN auth.t ON true"},
 		{"no sql", "-- nothing here\n", "-- nothing here\n"},
 	}
 	for _, tc := range tests {
