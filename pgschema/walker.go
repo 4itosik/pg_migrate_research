@@ -247,13 +247,7 @@ func (w *walker) handle(node Node) bool {
 	case *CreateOpClassStmt, *CreateOpFamilyStmt, *AlterOpFamilyStmt:
 		w.warn("operator classes and families are not rewritten: %s", snippet(w.stmtText()))
 	case *CreateExtensionStmt:
-		switch {
-		case defElem(n.Options, "schema") != nil: // the statement names a schema: it stays
-		case w.r.extensionsInSchema:
-			w.extensionSchema(n)
-		default:
-			w.warn("CREATE EXTENSION without SCHEMA creates objects in the first schema of search_path: %s", snippet(w.stmtText()))
-		}
+		w.createExtension(n)
 	case *VariableSetStmt:
 		if strings.EqualFold(n.Name, "search_path") {
 			w.warn("migration changes search_path: %s", snippet(w.stmtText()))
@@ -307,8 +301,12 @@ func (w *walker) rangeVar(rv *RangeVar, cteCheck bool) {
 	if !w.shouldQualifyRelation(rv.Relname, cteCheck) || w.learnOnly {
 		return
 	}
-	if w.qualifyAt(rv.Location, rv.Relname) {
-		rv.Schemaname = w.r.schema
+	ref := w.r.ext.rels[rv.Relname] // a table or view of an extension, else ours
+	if ref == nil {
+		ref = w.r.targetRef()
+	}
+	if w.qualifyAtRef(rv.Location, rv.Relname, ref) {
+		rv.Schemaname = ref.name
 	}
 }
 
@@ -463,7 +461,11 @@ func (w *walker) typeName(tn *TypeName, definition bool) {
 		}
 		return
 	}
-	if len(names) != 1 || !(definition || w.r.reg.isType(names[0])) {
+	if len(names) != 1 {
+		return
+	}
+	ref := w.typeRef(names[0], definition)
+	if ref == nil {
 		return
 	}
 	loc := tn.Location
@@ -472,9 +474,27 @@ func (w *walker) typeName(tn *TypeName, definition bool) {
 			loc = s.Loc
 		}
 	}
-	if w.qualifyAt(loc, names[0]) {
-		tn.Names = prepend(tn.Names, w.schemaNode())
+	if w.qualifyAtRef(loc, names[0], ref) {
+		tn.Names = prepend(tn.Names, refNode(ref))
 	}
+}
+
+// typeRef is the schema a type name gets: the target schema for a type that a
+// migration creates (or for the name of a type being defined), the schema of
+// the extension for a type of an active extension, nil for any other.
+func (w *walker) typeRef(name string, definition bool) *schemaRef {
+	if definition || w.r.reg.isType(name) {
+		return w.r.targetRef()
+	}
+	return w.r.ext.types[name]
+}
+
+// funcRef is the schema a function name gets, like typeRef.
+func (w *walker) funcRef(name string) *schemaRef {
+	if w.r.reg.functions[name] {
+		return w.r.targetRef()
+	}
+	return w.r.ext.funcs[name]
 }
 
 var relationArgFunctions = map[string]bool{
@@ -503,8 +523,10 @@ func (w *walker) funcCall(fc *FuncCall) {
 			w.warn("migration changes search_path: %s", snippet(w.stmtText()))
 		}
 	}
-	if len(names) == 1 && w.r.reg.functions[base] && !w.learnOnly && w.qualifyAt(fc.Location, base) {
-		fc.Funcname = prepend(fc.Funcname, w.schemaNode())
+	if len(names) == 1 && !w.learnOnly {
+		if ref := w.funcRef(base); ref != nil && w.qualifyAtRef(fc.Location, base, ref) {
+			fc.Funcname = prepend(fc.Funcname, refNode(ref))
+		}
 	}
 }
 
@@ -530,10 +552,12 @@ func (w *walker) typeCast(tc *TypeCast) {
 // trigger function) if the function is created by the migrations.
 func (w *walker) usedFunctionName(names *[]Node) {
 	parts := strs(*names)
-	if len(parts) != 1 || !w.r.reg.functions[parts[0]] || w.learnOnly {
+	if len(parts) != 1 || w.learnOnly {
 		return
 	}
-	w.qualifyFirst(names)
+	if ref := w.funcRef(parts[0]); ref != nil {
+		w.qualifyFirstRef(names, ref)
+	}
 }
 
 // ---- names with a position of their own -------------------------------------
@@ -557,7 +581,10 @@ func (w *walker) defName(names *[]Node, kind objKind) {
 
 // qualifyFirst qualifies the name list names: the schema goes before its
 // first name, and the list gets the schema as a new first element.
-func (w *walker) qualifyFirst(names *[]Node) bool {
+func (w *walker) qualifyFirst(names *[]Node) bool { return w.qualifyFirstRef(names, w.r.targetRef()) }
+
+// qualifyFirstRef is qualifyFirst with the schema ref.
+func (w *walker) qualifyFirstRef(names *[]Node, ref *schemaRef) bool {
 	if len(*names) == 0 {
 		return false
 	}
@@ -566,10 +593,10 @@ func (w *walker) qualifyFirst(names *[]Node) bool {
 		w.fail("no position for the name %q in: %s", strings.Join(strs(*names), "."), snippet(w.stmtText()))
 		return false
 	}
-	if !w.qualifyAt(first.Loc, first.Sval) {
+	if !w.qualifyAtRef(first.Loc, first.Sval, ref) {
 		return false
 	}
-	*names = prepend(*names, w.schemaNode())
+	*names = prepend(*names, refNode(ref))
 	return true
 }
 
@@ -748,6 +775,11 @@ func (w *walker) tokenAt(loc int32) (lex.Item, error) {
 // qualifyAt inserts the schema before the identifier at byte offset loc,
 // after checking that the position points at the expected name.
 func (w *walker) qualifyAt(loc int32, name string) bool {
+	return w.qualifyAtRef(loc, name, w.r.targetRef())
+}
+
+// qualifyAtRef is qualifyAt with the schema ref.
+func (w *walker) qualifyAtRef(loc int32, name string, ref *schemaRef) bool {
 	it, err := w.tokenAt(loc)
 	if err != nil {
 		w.fail("%v for %q in: %s", err, name, snippet(w.stmtText()))
@@ -761,11 +793,14 @@ func (w *walker) qualifyAt(loc int32, name string) bool {
 		w.fail("the token at offset %d is %q, expected %q", loc, w.src[int(loc)+int(it.Start):int(loc)+int(it.End)], name)
 		return false
 	}
-	w.edits = append(w.edits, edit{start: int(loc), end: int(loc), text: w.r.prefix})
+	w.edits = append(w.edits, edit{start: int(loc), end: int(loc), text: ref.prefix})
 	return true
 }
 
-func (w *walker) schemaNode() *String { return &String{Sval: w.r.schema, Loc: -1} }
+func (w *walker) schemaNode() *String { return refNode(w.r.targetRef()) }
+
+// refNode is the schema of ref as a name in a name list.
+func refNode(ref *schemaRef) *String { return &String{Sval: ref.name, Loc: -1} }
 
 func prepend(list []Node, n Node) []Node { return append([]Node{n}, list...) }
 
@@ -839,13 +874,41 @@ func objectLabel(t ObjectType) string {
 	return strings.ToLower(strings.ReplaceAll(strings.TrimPrefix(t.String(), "OBJECT_"), "_", " "))
 }
 
-// extensionSchema adds SCHEMA <schema> at the end of CREATE EXTENSION. The
-// options of the statement come in any order, so the end is as good a place
-// as any; it is the end of the last token, not of the statement, which may
-// end with a comment.
-func (w *walker) extensionSchema(n *CreateExtensionStmt) {
-	w.warn("the objects of extension %s are created in schema %s, and their unqualified uses in migrations are not rewritten (their names are not known): %s",
-		n.Extname, w.r.schema, snippet(w.stmtText()))
+// createExtension decides what CREATE EXTENSION gets. A schema in the
+// statement stays, and the extension is taken to be there when the uses of
+// its objects are to be qualified. A statement without one gets the schema of
+// the extension if it is configured, or the target schema under
+// ExtensionsInSchema; otherwise it stays and a warning says where the objects
+// go.
+func (w *walker) createExtension(n *CreateExtensionStmt) {
+	explicit := ""
+	if d := defElem(n.Options, "schema"); d != nil {
+		explicit = constStringValue(d.Arg)
+	}
+	ref, active := w.r.configuredExt[n.Extname]
+	if !active && w.r.extensionsInSchema {
+		ref, active = w.r.targetRef(), true
+	}
+	switch {
+	case explicit != "":
+		if active {
+			if r, err := w.r.schemaRefOf(explicit); err == nil {
+				w.r.activateExtension(n.Extname, r)
+			}
+		}
+		return
+	case !active:
+		w.warn("CREATE EXTENSION without SCHEMA creates objects in the first schema of search_path: %s", snippet(w.stmtText()))
+		return
+	}
+	w.r.activateExtension(n.Extname, ref)
+	if contribObjects[n.Extname].ops {
+		w.warn("the operators of extension %s are found through the search_path, and the library does not rewrite operators: with the extension outside it the core's operators are used instead (citext = becomes text =): %s",
+			n.Extname, snippet(w.stmtText()))
+	}
+	if !w.r.knowsExtension(n.Extname) {
+		w.warn("the objects of extension %s are not known to the library, so their unqualified uses are not rewritten (give the names in ExtensionObjects): %s", n.Extname, snippet(w.stmtText()))
+	}
 	if w.learnOnly {
 		return
 	}
@@ -868,7 +931,10 @@ func (w *walker) extensionSchema(n *CreateExtensionStmt) {
 		w.fail("cannot find the end of CREATE EXTENSION")
 		return
 	}
+	// the options come in any order, so the end is as good a place as any; it
+	// is the end of the last token, not of the statement, which may end with
+	// a comment
 	pos := w.stmtStart + end
-	w.edits = append(w.edits, edit{start: pos, end: pos, text: " SCHEMA " + subst.QuoteIdent(w.r.schema)})
-	n.Options = append(n.Options, &DefElem{Defname: "schema", Arg: w.schemaNode(), Defaction: DEFELEM_UNSPEC, Location: -1})
+	w.edits = append(w.edits, edit{start: pos, end: pos, text: " SCHEMA " + subst.QuoteIdent(ref.name)})
+	n.Options = append(n.Options, &DefElem{Defname: "schema", Arg: refNode(ref), Defaction: DEFELEM_UNSPEC, Location: -1})
 }

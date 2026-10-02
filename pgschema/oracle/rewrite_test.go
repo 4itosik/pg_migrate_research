@@ -374,3 +374,70 @@ func TestSchemaNamesOnServer(t *testing.T) {
 	}
 	writeMetrics(t, []string{"stage5", "schema_names"}, map[string]any{"runs": runs, "cases_per_run": len(cases), "failed": totalFailed})
 }
+
+// TestRewriteWithAllExtensions rewrites the statements of the regression tests
+// of PostgreSQL 16 with every contrib extension switched on, in a schema of
+// its own: the names of the extensions are common words (each, delete, exist,
+// cube, similarity), so this is where a rule that puts a schema on a wrong name
+// would be found. Every output must parse in libpg_query, and nothing may be
+// refused that the run without extensions rewrites.
+func TestRewriteWithAllExtensions(t *testing.T) {
+	root := os.Getenv("REGRESS_ROOT")
+	if root == "" {
+		skipUnlessCI(t, "REGRESS_ROOT is not set; run tools/get-data.sh and source tools/env.sh")
+	}
+	files, err := LoadRegress(filepath.Join(root, "REL_16_STABLE"))
+	if err != nil {
+		skipUnlessCI(t, err.Error())
+	}
+	exts := map[string]string{}
+	for _, e := range pgschema.KnownExtensions() {
+		exts[e] = "ext"
+	}
+	var total, changed, refused, plainRefused, unparsable int
+	for _, f := range files {
+		var accepted []string
+		for _, s := range f.Statements {
+			if _, err := Parse(s); err == nil {
+				accepted = append(accepted, s)
+			}
+		}
+		plain, _ := pgschema.New(pgschema.Options{Schema: "auth"})
+		with, err := pgschema.New(pgschema.Options{Schema: "auth", Extensions: exts})
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, s := range accepted {
+			_ = plain.Learn(s)
+			_ = with.Learn(s)
+		}
+		for _, s := range accepted {
+			total++
+			_, _, perr := plain.Rewrite(s)
+			out, _, werr := with.Rewrite(s)
+			if perr != nil {
+				plainRefused++
+			}
+			if werr != nil {
+				refused++
+				if perr == nil {
+					t.Errorf("%s: refused with extensions, not without: %v\n    %q", f.Name, werr, truncate(s, 120))
+				}
+				continue
+			}
+			if perr == nil && out != s {
+				if _, err := Parse(out); err != nil {
+					unparsable++
+					t.Errorf("%s: libpg_query does not parse the output: %v\n    %q", f.Name, err, truncate(out, 160))
+				}
+				if strings.Contains(out, "ext.") && !strings.Contains(s, "ext.") {
+					changed++
+					if os.Getenv("SHOW_EXT") != "" {
+						t.Logf("%s: %q", f.Name, truncate(out, 200))
+					}
+				}
+			}
+		}
+	}
+	t.Logf("%d statements: %d got an extension schema, refused %d (%d without extensions), %d unparsable", total, changed, refused, plainRefused, unparsable)
+}

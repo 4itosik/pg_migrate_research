@@ -175,3 +175,22 @@ func TestExtensionsInSchemaFlag(t *testing.T) {
 		}
 	}
 }
+
+func TestExtensionFlags(t *testing.T) {
+	root := t.TempDir()
+	src, dst := filepath.Join(root, "src"), filepath.Join(root, "dst")
+	write(t, src, "001_a.up.sql", "CREATE EXTENSION pgcrypto;\nCREATE TABLE t (g geometry, h bytea DEFAULT digest('x', 'md5'), c citext, d float DEFAULT st_area(g));\n")
+	var out, errb bytes.Buffer
+	args := []string{"rewrite", "-schema", "auth", "-src", src, "-dst", dst,
+		"-extension", "pgcrypto", "-extension", "citext=ext", "-extension", "postgis=ext", "-extension-objects", "postgis=geometry, st_area"}
+	if code := run(args, &out, &errb); code != 0 {
+		t.Fatalf("exit %d: %s", code, errb.String())
+	}
+	want := "CREATE EXTENSION pgcrypto SCHEMA auth;\nCREATE TABLE auth.t (g ext.geometry, h bytea DEFAULT auth.digest('x', 'md5'), c ext.citext, d float DEFAULT ext.st_area(g));\n"
+	if b, _ := os.ReadFile(filepath.Join(dst, "001_a.up.sql")); string(b) != want {
+		t.Errorf("got %q, want %q", b, want)
+	}
+	if code := run([]string{"rewrite", "-schema", "auth", "-src", src, "-dst", dst, "-extension", "=x"}, &out, &errb); code != 2 {
+		t.Errorf("an empty extension name: exit %d", code)
+	}
+}

@@ -284,13 +284,18 @@ func plVars(pb *plpgsql.Body, special []string) map[string]bool {
 // table created by the migrations.
 func (w *walker) declEdit(body string, t *plpgsql.TypeRef, vars map[string]bool) (edit, bool, error) {
 	var qualify bool
+	ref := w.r.targetRef()
 	switch t.Kind {
 	case plpgsql.TypeRow:
 		qualify = len(t.Names) == 1 && w.shouldQualifyRelation(t.Names[0].Text, false)
 	case plpgsql.TypeColumn:
 		qualify = len(t.Names) == 2 && !vars[t.Names[0].Text] && w.shouldQualifyRelation(t.Names[0].Text, false)
 	case plpgsql.TypePlain:
-		qualify = len(t.Names) == 1 && w.r.reg.isType(t.Names[0].Text)
+		if len(t.Names) == 1 {
+			if r := w.typeRef(t.Names[0].Text, false); r != nil {
+				ref, qualify = r, true
+			}
+		}
 	}
 	if !qualify {
 		return edit{}, false, nil
@@ -305,7 +310,7 @@ func (w *walker) declEdit(body string, t *plpgsql.TypeRef, vars map[string]bool)
 	if err := checkTypeText(body[t.Start:t.End], t); err != nil {
 		return edit{}, false, fmt.Errorf("%s in a declaration of the PL/pgSQL body: %v", errInvalidType, err)
 	}
-	return edit{start: n.Start, end: n.Start, text: w.r.prefix}, true, nil
+	return edit{start: n.Start, end: n.Start, text: ref.prefix}, true, nil
 }
 
 // errInvalidType starts the error for a declaration with text that is not a

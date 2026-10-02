@@ -476,10 +476,14 @@ func TestRewriteExtensions(t *testing.T) {
 			}
 		})
 	}
-	// the new warning says what is not rewritten
+	// an extension whose objects the library knows needs no warning, one it
+	// does not know does: its uses are not rewritten
 	r = newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})
-	if _, warns, err := r.Rewrite("CREATE EXTENSION pgcrypto"); err != nil || !strings.Contains(strings.Join(warns, "\n"), "unqualified uses") {
-		t.Errorf("warnings %q, %v", warns, err)
+	if _, warns, err := r.Rewrite("CREATE EXTENSION pgcrypto"); err != nil || len(warns) != 0 {
+		t.Errorf("a known extension: warnings %q, %v", warns, err)
+	}
+	if _, warns, err := r.Rewrite("CREATE EXTENSION postgis"); err != nil || !strings.Contains(strings.Join(warns, "\n"), "not known to the library") {
+		t.Errorf("an unknown extension: warnings %q, %v", warns, err)
 	}
 	// a template: the placeholder goes where the schema does
 	r = newTestRewriter(t, Options{Placeholder: true, ExtensionsInSchema: true})
@@ -495,4 +499,116 @@ func TestRewriteExtensions(t *testing.T) {
 	if err := r.Learn("CREATE EXTENSION pgcrypto"); err != nil {
 		t.Fatal(err)
 	}
+}
+
+// The uses of an extension in SQL: a function such as digest() or a type such
+// as citext get the schema where the extension is installed, if the caller says
+// where.
+func TestRewriteExtensionUses(t *testing.T) {
+	const migration = `CREATE TABLE users (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    email citext NOT NULL,
+    pwd text DEFAULT crypt('x', gen_salt('bf')),
+    h text GENERATED ALWAYS AS (encode(digest(email::text, 'sha256'), 'hex')) STORED
+);
+CREATE FUNCTION fp(k text) RETURNS text LANGUAGE plpgsql AS $$
+DECLARE c citext := k;
+BEGIN
+  RETURN encode(hmac(c::text, 'k', 'sha1'), 'hex') || uuid_generate_v4()::text;
+END $$;
+CREATE TRIGGER touch BEFORE UPDATE ON users FOR EACH ROW EXECUTE FUNCTION moddatetime(updated_at);
+SELECT public.digest('a', 'md5'), now(), lower('A')`
+	t.Run("nothing configured: as before", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth"})
+		got, _, err := r.Rewrite(migration)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if strings.Contains(got, "ext.") || strings.Contains(got, "auth.citext") || strings.Contains(got, "auth.digest") {
+			t.Errorf("an extension object got a schema:\n%s", got)
+		}
+	})
+	t.Run("installed in another schema", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext", "citext": "ext", "uuid-ossp": "ext", "moddatetime": "ext"}})
+		got, _, err := r.Rewrite(migration)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := strings.NewReplacer(
+			"CREATE TABLE users", "CREATE TABLE auth.users",
+			"gen_random_uuid()", "gen_random_uuid()", // the core has it: no schema
+			"email citext", "email ext.citext",
+			"crypt('x', gen_salt('bf'))", "ext.crypt('x', ext.gen_salt('bf'))",
+			"digest(email::text", "ext.digest(email::text",
+			"CREATE FUNCTION fp", "CREATE FUNCTION auth.fp",
+			"c citext", "c ext.citext",
+			"hmac(", "ext.hmac(",
+			"uuid_generate_v4()", "ext.uuid_generate_v4()",
+			"ON users FOR EACH ROW EXECUTE FUNCTION moddatetime", "ON auth.users FOR EACH ROW EXECUTE FUNCTION ext.moddatetime",
+		).Replace(migration)
+		if got != want {
+			t.Errorf("got\n%s\nwant\n%s", got, want)
+		}
+	})
+	t.Run("installed in the target schema", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": ""}})
+		got, _, err := r.Rewrite("SELECT digest('a', 'md5'), gen_random_uuid()")
+		if err != nil || got != "SELECT auth.digest('a', 'md5'), gen_random_uuid()" {
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("a function of a migration wins over an extension's", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext"}})
+		got, _, err := r.Rewrite("CREATE FUNCTION digest(a text) RETURNS text LANGUAGE sql AS 'SELECT a'; SELECT digest('x')")
+		if err != nil || got != "CREATE FUNCTION auth.digest(a text) RETURNS text LANGUAGE sql AS 'SELECT a'; SELECT auth.digest('x')" {
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("a name outside the extension and a name with a schema stay", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext"}})
+		got, _, err := r.Rewrite("SELECT lower('A'), public.digest('a', 'md5'), ext.digest('a', 'md5'), pg_catalog.now()")
+		if err != nil || got != "SELECT lower('A'), public.digest('a', 'md5'), ext.digest('a', 'md5'), pg_catalog.now()" {
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("names the caller adds", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", Extensions: map[string]string{"postgis": "ext"}, ExtensionObjects: map[string][]string{"postgis": {"st_distance", "geometry"}}})
+		got, _, err := r.Rewrite("CREATE TABLE p (g geometry); SELECT st_distance(a, b) FROM p")
+		if err != nil || got != "CREATE TABLE auth.p (g ext.geometry); SELECT ext.st_distance(a, b) FROM auth.p" {
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("an extension that the migrations create", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})
+		up := "CREATE EXTENSION IF NOT EXISTS citext;\nCREATE TABLE t (e citext, h bytea DEFAULT digest('x', 'md5'))"
+		if err := r.Learn(up); err != nil {
+			t.Fatal(err)
+		}
+		got, _, err := r.Rewrite(up)
+		want := "CREATE EXTENSION IF NOT EXISTS citext SCHEMA auth;\nCREATE TABLE auth.t (e auth.citext, h bytea DEFAULT digest('x', 'md5'))"
+		if err != nil || got != want { // digest belongs to pgcrypto, which the migrations do not create
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("an extension created in a schema the statement names", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Schema: "auth", ExtensionsInSchema: true})
+		up := "CREATE EXTENSION citext SCHEMA public; CREATE TABLE t (e citext)"
+		got, _, err := r.Rewrite(up)
+		if err != nil || got != "CREATE EXTENSION citext SCHEMA public; CREATE TABLE auth.t (e public.citext)" {
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("a template", func(t *testing.T) {
+		r := newTestRewriter(t, Options{Placeholder: true, Extensions: map[string]string{"pgcrypto": "", "citext": "ext"}})
+		got, _, err := r.Rewrite("CREATE EXTENSION pgcrypto; CREATE EXTENSION citext; SELECT digest('a', 'md5'), 'x'::citext")
+		want := "CREATE EXTENSION pgcrypto SCHEMA pgschema_placeholder; CREATE EXTENSION citext SCHEMA ext; SELECT pgschema_placeholder.digest('a', 'md5'), 'x'::ext.citext"
+		if err != nil || got != want {
+			t.Errorf("got %q, %v", got, err)
+		}
+	})
+	t.Run("a schema that cannot be used", func(t *testing.T) {
+		if _, err := New(Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "a'b"}}); err == nil {
+			t.Error("the schema a'b was accepted")
+		}
+	})
 }

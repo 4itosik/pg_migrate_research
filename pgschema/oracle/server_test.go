@@ -221,3 +221,105 @@ func TestExtensionSchemaOnServer(t *testing.T) {
 		db.Drop(ctx)
 	}
 }
+
+// TestExtensionUsesOnServer runs a migration that uses the objects of
+// extensions in SQL and in a PL/pgSQL body on a live server, with a
+// search_path that has neither the target schema nor the schema of the
+// extensions: unrewritten it fails, rewritten it works.
+func TestExtensionUsesOnServer(t *testing.T) {
+	if !haveServer() {
+		skipUnlessCI(t, "no PostgreSQL server: set PG_BIN or PG_DSN (tools/env.sh)")
+	}
+	ctx := context.Background()
+	srv, err := harness.StartServer(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer srv.Stop()
+
+	const migration = `CREATE TABLE users (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    email citext NOT NULL,
+    pwd text DEFAULT crypt('secret', gen_salt('md5')),
+    fp text GENERATED ALWAYS AS (encode(digest(lower(email::text), 'sha256'), 'hex')) STORED
+);
+CREATE FUNCTION check_pwd(u uuid, p text) RETURNS boolean LANGUAGE plpgsql AS $$
+DECLARE e citext;
+BEGIN
+  SELECT email INTO e FROM users WHERE id = u;
+  RETURN e IS NOT NULL AND EXISTS (SELECT 1 FROM users WHERE id = u AND pwd = crypt(p, pwd));
+END $$;`
+	// the comparison is case-sensitive on purpose: the operators of citext are
+	// not in the search_path either, and the server falls back to text = text
+	const checks = `INSERT INTO auth.users (email) VALUES ('Alice@Example.com');
+SELECT (SELECT count(*) FROM auth.users WHERE email = 'Alice@Example.com')::text
+    || (SELECT auth.check_pwd(id, 'secret') FROM auth.users)::text
+    || (SELECT auth.check_pwd(id, 'wrong') FROM auth.users)::text
+    || ' ' || (SELECT pg_typeof(email)::text FROM auth.users)`
+
+	setup := func(t *testing.T, extensions string) *harness.Database {
+		db, err := srv.NewDatabase(ctx, "extension_uses")
+		if err != nil {
+			t.Fatal(err)
+		}
+		t.Cleanup(func() { db.Drop(ctx) })
+		if err := db.Exec(ctx, "CREATE SCHEMA auth; CREATE SCHEMA ext; CREATE SCHEMA trap;"+extensions+"SET search_path TO trap, public"); err != nil {
+			t.Fatal(err)
+		}
+		return db
+	}
+	apply := func(t *testing.T, db *harness.Database, r *pgschema.Rewriter, sql string) {
+		t.Helper()
+		out, _, err := r.Rewrite(sql)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := db.Exec(ctx, out); err != nil {
+			t.Fatalf("the migration fails: %v\n%s", err, out)
+		}
+	}
+
+	t.Run("installed in another schema", func(t *testing.T) {
+		db := setup(t, " CREATE EXTENSION pgcrypto SCHEMA ext; CREATE EXTENSION citext SCHEMA ext;")
+		// not told where the extensions are: the migration fails on the server
+		plain, err := pgschema.New(pgschema.Options{Schema: "auth"})
+		if err != nil {
+			t.Fatal(err)
+		}
+		out, _, err := plain.Rewrite(migration)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := db.Exec(ctx, out); err == nil {
+			t.Fatal("the migration works without the schema of the extensions, the case proves nothing")
+		}
+		db = setup(t, " CREATE EXTENSION pgcrypto SCHEMA ext; CREATE EXTENSION citext SCHEMA ext;")
+		r, err := pgschema.New(pgschema.Options{Schema: "auth", Extensions: map[string]string{"pgcrypto": "ext", "citext": "ext"}})
+		if err != nil {
+			t.Fatal(err)
+		}
+		apply(t, db, r, migration)
+		if got, err := db.QueryStrings(ctx, checks); err != nil || len(got) == 0 || got[len(got)-1] != "1truefalse ext.citext" {
+			t.Errorf("checks: %v, %v", got, err)
+		}
+	})
+	t.Run("created by the migrations in the target schema", func(t *testing.T) {
+		db := setup(t, " ")
+		r, err := pgschema.New(pgschema.Options{Schema: "auth", ExtensionsInSchema: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		up := "CREATE EXTENSION IF NOT EXISTS pgcrypto;\nCREATE EXTENSION IF NOT EXISTS citext;\n" + migration
+		if err := r.Learn(up); err != nil {
+			t.Fatal(err)
+		}
+		apply(t, db, r, up)
+		if got, err := db.QueryStrings(ctx, checks); err != nil || len(got) == 0 || got[len(got)-1] != "1truefalse auth.citext" {
+			t.Errorf("checks: %v, %v", got, err)
+		}
+		in, err := db.QueryStrings(ctx, "SELECT string_agg(extnamespace::regnamespace::text, ',' ORDER BY extname) FROM pg_extension WHERE extname IN ('citext', 'pgcrypto')")
+		if err != nil || len(in) != 1 || in[0] != "auth,auth" {
+			t.Errorf("the extensions are in %v (%v)", in, err)
+		}
+	})
+}

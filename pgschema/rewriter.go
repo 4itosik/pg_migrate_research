@@ -31,6 +31,21 @@ type Options struct {
 	// an extension provides: with this on, unqualified uses of its functions
 	// and types are not rewritten (a warning says so).
 	ExtensionsInSchema bool
+	// Extensions says where the extensions are installed, by name: the value
+	// is the schema, "" is the target schema. The unqualified uses in the
+	// migrations of what such an extension provides, a function (crypt,
+	// uuid_generate_v4) or a type (citext, hstore), get that schema. The
+	// library knows the names of the extensions of PostgreSQL's contrib
+	// (extensions_gen.go) without the names that the core has too
+	// (gen_random_uuid, which belongs to the core since PostgreSQL 13); for
+	// others, and for names it does not have, see ExtensionObjects. A
+	// CREATE EXTENSION of such an extension that has no SCHEMA gets the
+	// schema. An extension that is not listed is left as it was.
+	Extensions map[string]string
+	// ExtensionObjects adds names of functions and types to the extensions
+	// of Extensions (and to ExtensionsInSchema), by extension name. It is for
+	// the extensions outside contrib.
+	ExtensionObjects map[string][]string
 }
 
 // Rewriter qualifies the names in the migrations of one schema. It remembers
@@ -43,6 +58,12 @@ type Rewriter struct {
 	reg     *registry
 
 	extensionsInSchema bool
+	// extensions: the schema configured for an extension, the objects of the
+	// active ones, the names the caller added
+	configuredExt map[string]*schemaRef
+	activeExt     map[string]bool
+	ext           *extensionUse
+	extraObjects  map[string][]string
 }
 
 // New creates a Rewriter.
@@ -65,6 +86,13 @@ func New(opts Options) (*Rewriter, error) {
 		reg:     newRegistry(),
 
 		extensionsInSchema: opts.ExtensionsInSchema,
+		configuredExt:      map[string]*schemaRef{},
+		activeExt:          map[string]bool{},
+		ext:                newExtensionUse(),
+		extraObjects:       map[string][]string{},
+	}
+	if err := r.initExtensions(opts); err != nil {
+		return nil, err
 	}
 	for _, n := range opts.ExcludeRelations {
 		r.exclude[n] = true

@@ -19,7 +19,9 @@
 // which is the check for CI that the generated files are up to date.
 //
 // Names that already have a schema are left as they are. CREATE EXTENSION
-// stays as written unless -extensions-in-schema adds SCHEMA to it.
+// stays as written unless -extensions-in-schema adds SCHEMA to it. The uses of
+// what an extension provides (digest(), uuid_generate_v4(), the type citext)
+// get a schema only for the extensions named with -extension.
 //
 // Warnings (dynamic SQL, lookups in the system catalogs, SET search_path, ...)
 // go to stderr; -fail-on-warning turns them into a failure.
@@ -46,7 +48,7 @@ var migrationFile = regexp.MustCompile(`^(\d+)_.*\.(up|down)\.sql$`)
 
 func run(args []string, stdout, stderr io.Writer) int {
 	if len(args) == 0 || args[0] != "rewrite" {
-		fmt.Fprintln(stderr, "usage: pgschema rewrite (-schema NAME | -placeholder) -src DIR -dst DIR [-exclude a,b] [-extensions-in-schema] [-check] [-fail-on-warning]")
+		fmt.Fprintln(stderr, "usage: pgschema rewrite (-schema NAME | -placeholder) -src DIR -dst DIR [-exclude a,b] [-extensions-in-schema] [-extension name[=schema]] [-extension-objects name=a,b] [-check] [-fail-on-warning]")
 		return 2
 	}
 	fs := flag.NewFlagSet("rewrite", flag.ContinueOnError)
@@ -57,6 +59,26 @@ func run(args []string, stdout, stderr io.Writer) int {
 	dst := fs.String("dst", "", "directory for the rewritten migrations")
 	exclude := fs.String("exclude", "", "comma-separated relation names, as PostgreSQL stores them, that stay unqualified (they live in other schemas)")
 	extensions := fs.Bool("extensions-in-schema", false, "add SCHEMA <schema> to CREATE EXTENSION statements that have none (by default they stay as written, with a warning)")
+	extensionSchemas := map[string]string{}
+	fs.Func("extension", "an extension and the schema it is installed in, name[=schema]; without a schema the target one. The uses of its functions and types in the migrations get that schema. Repeatable", func(v string) error {
+		name, schema, _ := strings.Cut(v, "=")
+		if name == "" {
+			return errors.New("the extension name is empty")
+		}
+		extensionSchemas[name] = schema
+		return nil
+	})
+	extensionObjects := map[string][]string{}
+	fs.Func("extension-objects", "names of functions and types of an extension that the library does not know, name=a,b,c. Repeatable", func(v string) error {
+		name, list, ok := strings.Cut(v, "=")
+		if !ok || name == "" || list == "" {
+			return errors.New("want name=a,b,c")
+		}
+		for _, n := range strings.Split(list, ",") {
+			extensionObjects[name] = append(extensionObjects[name], strings.TrimSpace(n))
+		}
+		return nil
+	})
 	check := fs.Bool("check", false, "write nothing; fail if the destination is not what the command would write")
 	failOnWarning := fs.Bool("fail-on-warning", false, "exit with status 1 when there are warnings")
 	if err := fs.Parse(args[1:]); err != nil {
@@ -79,7 +101,8 @@ func run(args []string, stdout, stderr io.Writer) int {
 			ex = append(ex, strings.TrimSpace(name))
 		}
 	}
-	r, err := pgschema.New(pgschema.Options{Schema: *schema, Placeholder: *placeholder, ExcludeRelations: ex, ExtensionsInSchema: *extensions})
+	r, err := pgschema.New(pgschema.Options{Schema: *schema, Placeholder: *placeholder, ExcludeRelations: ex, ExtensionsInSchema: *extensions,
+		Extensions: extensionSchemas, ExtensionObjects: extensionObjects})
 	if err != nil {
 		fmt.Fprintln(stderr, "pgschema:", err)
 		return 2
