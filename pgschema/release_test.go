@@ -76,4 +76,42 @@ func TestRewriteNestedRegclassCasts(t *testing.T) {
 	}
 }
 
+// A temporary table hides a relation of the same name only in the text that
+// creates it, from its CREATE onward, until a permanent CREATE of the name.
+func TestRewriteTempScope(t *testing.T) {
+	r := newTestRewriter(t, Options{Schema: "auth"})
+	if err := r.Learn("CREATE TEMP TABLE users AS SELECT 1"); err != nil {
+		t.Fatal(err)
+	}
+	got, _, err := r.Rewrite("CREATE TABLE users (id int); INSERT INTO users VALUES (1)")
+	if err != nil || got != "CREATE TABLE auth.users (id int); INSERT INTO auth.users VALUES (1)" {
+		t.Errorf("a temp name of Learn: %q, %v", got, err)
+	}
+	tests := []struct{ name, sql, want string }{
+		{"in the same text from the CREATE onward",
+			"INSERT INTO tmp VALUES (0); CREATE TEMP TABLE tmp (id int); INSERT INTO tmp VALUES (1)",
+			"INSERT INTO auth.tmp VALUES (0); CREATE TEMP TABLE tmp (id int); INSERT INTO tmp VALUES (1)"},
+		{"a permanent CREATE ends it for the statements after it",
+			"CREATE TEMP TABLE tmp (id int); CREATE TABLE tmp AS SELECT * FROM tmp; INSERT INTO tmp VALUES (2)",
+			"CREATE TEMP TABLE tmp (id int); CREATE TABLE auth.tmp AS SELECT * FROM tmp; INSERT INTO auth.tmp VALUES (2)"},
+		{"in a body of the same text",
+			"DO $$ BEGIN CREATE TEMP TABLE x (a int); INSERT INTO x VALUES (1); END $$; INSERT INTO x VALUES (2)",
+			"DO $$ BEGIN CREATE TEMP TABLE x (a int); INSERT INTO x VALUES (1); END $$; INSERT INTO x VALUES (2)"},
+	}
+	for _, tc := range tests {
+		t.Run(tc.name, func(t *testing.T) {
+			r := newTestRewriter(t, Options{Schema: "auth"})
+			got, _, err := r.Rewrite(tc.sql)
+			if err != nil || got != tc.want {
+				t.Errorf("got\n%s (%v)\nwant\n%s", got, err, tc.want)
+			}
+			// and nothing is left for the next text
+			got, _, err = r.Rewrite("INSERT INTO tmp VALUES (3); INSERT INTO x VALUES (3)")
+			if err != nil || got != "INSERT INTO auth.tmp VALUES (3); INSERT INTO auth.x VALUES (3)" {
+				t.Errorf("the next text: %q, %v", got, err)
+			}
+		})
+	}
+}
+
 func warningText(warns []string) string { return strings.Join(warns, "\n") }

@@ -9,7 +9,7 @@ type registry struct {
 	relations  map[string]bool // tables, views, sequences, indexes, composite types
 	types      map[string]bool // enums, domains, composite and range types
 	functions  map[string]bool // functions, procedures, aggregates
-	temp       map[string]bool // temporary relations
+	temp       map[string]bool // temporary relations of the text being analyzed
 	transition map[string]bool // trigger transition tables (REFERENCING ... AS name)
 
 	// While a transaction is open the names put in the maps are journaled, so

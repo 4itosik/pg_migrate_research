@@ -105,7 +105,7 @@ func New(opts Options) (*Rewriter, error) {
 // function names a migration uses are qualified only when some migration
 // creates them.
 func (r *Rewriter) Learn(sql string) error {
-	_, err := r.analyze(sql, false, true)
+	_, err := r.pass(sql, true)
 	return err
 }
 
@@ -118,7 +118,7 @@ func (r *Rewriter) Rewrite(sql string) (string, []string, error) {
 	if err := r.Learn(sql); err != nil {
 		return "", nil, err
 	}
-	a, err := r.analyze(sql, false, false)
+	a, err := r.pass(sql, false)
 	if err != nil {
 		return "", nil, err
 	}
@@ -134,6 +134,14 @@ type analysis struct {
 	warns []string
 }
 
+// pass analyzes the text of a migration. The temporary relations it creates
+// hide relations of the same name only in this text: they are forgotten before
+// every pass.
+func (r *Rewriter) pass(sql string, learnOnly bool) (*analysis, error) {
+	r.reg.temp = map[string]bool{}
+	return r.analyze(sql, false, learnOnly)
+}
+
 // analyze parses src, collects edits and verifies them. inBody is set for
 // the text of a function body.
 func (r *Rewriter) analyze(src string, inBody, learnOnly bool) (*analysis, error) {
@@ -141,7 +149,7 @@ func (r *Rewriter) analyze(src string, inBody, learnOnly bool) (*analysis, error
 	if err != nil {
 		return nil, err
 	}
-	w := &walker{r: r, src: src, inBody: inBody, learnOnly: learnOnly, done: map[ast.Node]bool{}}
+	w := &walker{r: r, src: src, inBody: inBody, learnOnly: learnOnly, done: map[ast.Node]bool{}, permanent: map[*ast.RangeVar]bool{}}
 	for _, raw := range stmts {
 		w.beginStmt(raw)
 		w.visit(raw.Stmt)

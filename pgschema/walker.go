@@ -25,6 +25,12 @@ type walker struct {
 	scopes []map[string]bool // CTE names visible at the current node
 	done   map[Node]bool
 
+	// relations that a statement creates as permanent ones while a temporary
+	// relation of the name exists: the CREATE gets the schema, the statements
+	// after it no longer see the temporary one
+	permanent map[*RangeVar]bool
+	untemp    []string
+
 	stmtStart, stmtEnd int
 	catalogRef         bool
 	triggerVars        []string // special variables of the function being rewritten
@@ -40,6 +46,10 @@ func (w *walker) beginStmt(raw *RawStmt) {
 }
 
 func (w *walker) endStmt() {
+	for _, name := range w.untemp {
+		delete(w.r.reg.temp, name)
+	}
+	w.untemp = nil
 	if w.catalogRef {
 		w.warn("lookup in system catalogs by name, check that it takes the target schema into account: %s", snippet(w.stmtText()))
 	}
@@ -272,12 +282,18 @@ var catalogRelations = map[string]bool{
 }
 
 func (w *walker) shouldQualifyRelation(name string, cteCheck bool) bool {
+	return w.qualifiesRelation(name, cteCheck, true)
+}
+
+// qualifiesRelation is shouldQualifyRelation; temp says whether a temporary
+// relation of the name hides it.
+func (w *walker) qualifiesRelation(name string, cteCheck, temp bool) bool {
 	switch {
 	case name == "":
 		return false
 	case cteCheck && w.inCTE(name):
 		return false
-	case w.r.reg.temp[name]:
+	case temp && w.r.reg.temp[name]:
 		return false
 	case strings.HasPrefix(name, "pg_"):
 		return false
@@ -304,7 +320,7 @@ func (w *walker) rangeVar(rv *RangeVar, cteCheck bool) {
 		w.r.reg.addTemp(rv.Relname)
 		return
 	}
-	if !w.shouldQualifyRelation(rv.Relname, cteCheck) || w.learnOnly {
+	if !w.qualifiesRelation(rv.Relname, cteCheck, !w.permanent[rv]) || w.learnOnly {
 		return
 	}
 	ref := w.r.ext.rels[rv.Relname] // a table or view of an extension, else ours
@@ -324,6 +340,10 @@ func (w *walker) register(rv *RangeVar, kind objKind) {
 	if rv.Relpersistence == "t" {
 		w.r.reg.addTemp(rv.Relname)
 		return
+	}
+	if kind == kindRelation && w.r.reg.temp[rv.Relname] {
+		w.permanent[rv] = true
+		w.untemp = append(w.untemp, rv.Relname)
 	}
 	if rv.Schemaname == "" || rv.Schemaname == w.r.schema {
 		w.created(kind, rv.Relname)
