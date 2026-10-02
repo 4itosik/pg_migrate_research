@@ -148,10 +148,69 @@
   },
   "stage2": {
     "parser": {
+      "acceptance": {
+        "REL_12_STABLE": {
+          "accepted_by_both": 32024,
+          "accepted_by_libpg_query": 32024,
+          "accepted_only_by_library": 0,
+          "panics": 0,
+          "rejected_by_both": 243,
+          "rejected_by_library": 0,
+          "rejected_with_different_error": 0
+        },
+        "REL_13_STABLE": {
+          "accepted_by_both": 34733,
+          "accepted_by_libpg_query": 34733,
+          "accepted_only_by_library": 0,
+          "panics": 0,
+          "rejected_by_both": 272,
+          "rejected_by_library": 0,
+          "rejected_with_different_error": 0
+        },
+        "REL_14_STABLE": {
+          "accepted_by_both": 37777,
+          "accepted_by_libpg_query": 37777,
+          "accepted_only_by_library": 0,
+          "panics": 0,
+          "rejected_by_both": 275,
+          "rejected_by_library": 0,
+          "rejected_with_different_error": 0
+        },
+        "REL_15_STABLE": {
+          "accepted_by_both": 41116,
+          "accepted_by_libpg_query": 41116,
+          "accepted_only_by_library": 0,
+          "panics": 0,
+          "rejected_by_both": 482,
+          "rejected_by_library": 0,
+          "rejected_with_different_error": 0
+        },
+        "REL_16_STABLE": {
+          "accepted_by_both": 42798,
+          "accepted_by_libpg_query": 42798,
+          "accepted_only_by_library": 0,
+          "panics": 0,
+          "rejected_by_both": 525,
+          "rejected_by_library": 0,
+          "rejected_with_different_error": 4
+        }
+      },
       "speed_pg16": {
-        "first_parse_us": 200.984,
+        "first_parse_us": 629.481,
         "statements": 42798,
-        "us_per_statement": 9.041353264171223
+        "us_per_statement": 11.042779639235478
+      },
+      "trees": {
+        "equal": 188760,
+        "groups": 0,
+        "statements": 188760,
+        "versions": [
+          "REL_12_STABLE",
+          "REL_13_STABLE",
+          "REL_14_STABLE",
+          "REL_15_STABLE",
+          "REL_16_STABLE"
+        ]
       }
     }
   }

@@ -48,7 +48,8 @@ func TestParseAcceptance(t *testing.T) {
 			if err != nil {
 				skipUnlessCI(t, err.Error())
 			}
-			var theirsOK, oursOK, bothOK, onlyOurs, onlyTheirs, panics int
+			var theirsOK, oursOK, bothOK, onlyOurs, onlyTheirs, panics, bothRejected, errDiffs int
+			var errSamples []string
 			var samplesTheirs, samplesOurs []string
 			byToken := map[string]int{}
 			for _, f := range files {
@@ -59,6 +60,17 @@ func TestParseAcceptance(t *testing.T) {
 						panics++
 					}
 					switch {
+					case werr != nil && gerr != nil:
+						// both reject: the message and the cursor should agree too
+						wmsg, wpos := ErrorInfo(werr)
+						ge, _ := gerr.(*parse.Error)
+						if ge == nil || ge.Msg != wmsg || ge.CursorPos(s) != wpos {
+							errDiffs++
+							if len(errSamples) < 8 {
+								errSamples = append(errSamples, fmt.Sprintf("%s#%d: ours %q at %d, libpg_query %q at %d", f.Name, i, gerr, errPos(gerr, s), wmsg, wpos))
+							}
+						}
+						bothRejected++
 					case werr == nil && gerr == nil:
 						theirsOK++
 						oursOK++
@@ -98,7 +110,12 @@ func TestParseAcceptance(t *testing.T) {
 			for _, s := range samplesOurs {
 				t.Log("accepted by the library: " + s)
 			}
+			t.Logf("rejected by both: %d, of them with a different message or cursor: %d", bothRejected, errDiffs)
+			for _, e := range errSamples {
+				t.Log("  error: " + e)
+			}
 			report[branch] = map[string]any{
+				"rejected_by_both": bothRejected, "rejected_with_different_error": errDiffs,
 				"accepted_by_libpg_query": theirsOK, "accepted_by_both": bothOK,
 				"rejected_by_library": onlyTheirs, "accepted_only_by_library": onlyOurs, "panics": panics,
 			}
@@ -320,4 +337,11 @@ func safeDiff(ours []*ast.RawStmt, theirs *pg.ParseResult) (d *Diff) {
 		}
 	}()
 	return DiffStatements(ours, theirs)
+}
+
+func errPos(err error, src string) int {
+	if e, ok := err.(*parse.Error); ok {
+		return e.CursorPos(src)
+	}
+	return 0
 }
