@@ -1,6 +1,7 @@
 package oracle
 
 import (
+	"errors"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -25,6 +26,10 @@ func safeParse(sql string) (stmts int, err error) {
 		}
 	}()
 	s, err := parse.Parse(sql)
+	var ie *parse.InternalError
+	if errors.As(err, &ie) {
+		err = fmt.Errorf("panic: %v\n%s", ie.Value, ie.Stack)
+	}
 	return len(s), err
 }
 

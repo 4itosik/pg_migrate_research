@@ -8,7 +8,8 @@
 // Portions Copyright (c) 1994, Regents of the University of California
 //
 // PostgreSQL License: see ../../LICENSE.PostgreSQL. The descriptions come
-// from libpg_query (BSD-3-Clause, Copyright (c) 2015, Lukas Fittl).
+// from libpg_query (BSD-3-Clause, Copyright (c) 2015, Lukas Fittl;
+// see ../../LICENSE.libpg_query).
 
 package ast
 

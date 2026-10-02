@@ -1,3 +1,10 @@
+// This file is derived from PostgreSQL (src/backend/nodes/makefuncs.c).
+//
+// Portions Copyright (c) 1996-2024, PostgreSQL Global Development Group
+// Portions Copyright (c) 1994, Regents of the University of California
+//
+// PostgreSQL License: see ../../LICENSE.PostgreSQL.
+
 package parse
 
 // Ports of the functions of src/backend/nodes/makefuncs.c and of the value

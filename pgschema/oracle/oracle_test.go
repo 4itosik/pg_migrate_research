@@ -10,7 +10,7 @@ import (
 
 // skipUnlessCI skips a test whose data or server is not available, but fails
 // it when CI is set: a pipeline must not go green without running the check.
-func skipUnlessCI(t *testing.T, msg string) {
+func skipUnlessCI(t testing.TB, msg string) {
 	t.Helper()
 	if os.Getenv("CI") != "" {
 		t.Fatal("CI is set but the check cannot run: " + msg)

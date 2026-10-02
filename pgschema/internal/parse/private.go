@@ -1,3 +1,10 @@
+// This file is derived from PostgreSQL (src/backend/parser/gram.y).
+//
+// Portions Copyright (c) 1996-2024, PostgreSQL Global Development Group
+// Portions Copyright (c) 1994, Regents of the University of California
+//
+// PostgreSQL License: see ../../LICENSE.PostgreSQL.
+
 package parse
 
 import . "github.com/4itosik/pg_migrate_research/pgschema/internal/ast"

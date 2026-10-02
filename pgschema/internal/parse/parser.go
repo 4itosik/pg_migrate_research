@@ -1,6 +1,15 @@
+// This file is derived from PostgreSQL (src/backend/parser/parser.c and gram.y).
+//
+// Portions Copyright (c) 1996-2024, PostgreSQL Global Development Group
+// Portions Copyright (c) 1994, Regents of the University of California
+//
+// PostgreSQL License: see ../../LICENSE.PostgreSQL.
+
 package parse
 
 import (
+	"fmt"
+	"runtime/debug"
 	"sync"
 
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
@@ -47,16 +56,29 @@ func ParseMode(src string, mode Mode) (result []ast.Node, err error) {
 	p := &parser{src: src, sc: lex.NewScanner(src), mode: mode}
 	defer func() {
 		if r := recover(); r != nil {
-			a, ok := r.(parseAbort)
-			if !ok {
-				panic(r)
+			if a, ok := r.(parseAbort); ok {
+				result, err = nil, a.err
+				return
 			}
-			result, err = nil, a.err
+			// a defect of the parser must not take down the caller: the
+			// rewriter turns it into a refusal
+			result, err = nil, &InternalError{Value: r, Stack: debug.Stack()}
 		}
 	}()
 	initTokens()
 	yyParse(p)
 	return p.result, nil
+}
+
+// InternalError is returned when the parser itself fails, which is a defect
+// of the library and not a mistake in the SQL. Value is what panicked.
+type InternalError struct {
+	Value any
+	Stack []byte
+}
+
+func (e *InternalError) Error() string {
+	return fmt.Sprintf("internal error of the SQL parser: %v", e.Value)
 }
 
 // parseAbort is the panic that ends a parse at the first error.

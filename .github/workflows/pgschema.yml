@@ -37,6 +37,25 @@ jobs:
       - name: test
         working-directory: pgschema
         run: go test -count=1 ./...
+      - name: build the CLI
+        working-directory: pgschema
+        run: go build -o /tmp/pgschema ./cmd/pgschema
+
+  # The golang-migrate wrapper is a module of its own: only it imports
+  # golang-migrate.
+  migratesrc:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: pgschema/migratesrc/go.mod
+          cache-dependency-path: pgschema/migratesrc/go.sum
+      - name: vet and test
+        working-directory: pgschema/migratesrc
+        run: |
+          go vet ./...
+          go test -count=1 ./...
 
   # The oracle: libpg_query and the prototype as references, the live
   # PostgreSQL harness, the regression tests of every version.
@@ -53,6 +72,7 @@ jobs:
           go-version-file: pgschema/go.mod
           cache-dependency-path: |
             pgschema/oracle/go.sum
+            pgschema/migratesrc/go.sum
             poc/pgquery/go.sum
             poc/harness/go.sum
       - uses: actions/cache@v4
@@ -67,6 +87,8 @@ jobs:
         run: pgschema/tools/baseline.sh ${{ matrix.pg }}
       - name: oracle tests
         working-directory: pgschema/oracle
+        env:
+          REWRITE_VERSIONS: REL_${{ matrix.pg }}_STABLE
         run: |
           . ../tools/env.sh ${{ matrix.pg }}
           go vet ./...
