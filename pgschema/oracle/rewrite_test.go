@@ -121,10 +121,10 @@ func firstDiff(want, got string) string {
 	wl, gl := strings.Split(want, "\n"), strings.Split(got, "\n")
 	for i := 0; i < len(wl) && i < len(gl); i++ {
 		if wl[i] != gl[i] {
-			return fmt.Sprintf("  line %d\n  prototype: %s\n  library:   %s", i+1, wl[i], gl[i])
+			return fmt.Sprintf("  line %d\n  want: %s\n  got:  %s", i+1, wl[i], gl[i])
 		}
 	}
-	return fmt.Sprintf("  prototype has %d lines, library %d", len(wl), len(gl))
+	return fmt.Sprintf("  want %d lines, got %d", len(wl), len(gl))
 }
 
 // TestRewriteRegress rewrites every statement of the regression tests that
