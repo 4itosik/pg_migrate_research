@@ -1,0 +1,4 @@
+# Baseline schemas depend on the server version and are recreated by
+# tools/baseline.sh; rewritten files of the prototype are not needed.
+results/pg*/baseline-schema/
+results/pg*/oracle-prototype/

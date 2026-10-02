@@ -1,0 +1,192 @@
+{
+  "candidate": "noop",
+  "library": "original SQL, search_path = trap, public",
+  "mode": "noop",
+  "server_version": "13.23",
+  "results": [
+    {
+      "case": "01_tables_basic",
+      "title": "Таблицы, FK, индексы",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.users\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "02_alter_rename_comment",
+      "title": "ALTER, RENAME, COMMENT ON",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.customers\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "03_sequences_defaults",
+      "title": "Последовательности и regclass-литералы",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.invoices\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "04_types_enums_domains",
+      "title": "Типы: enum, domain, composite",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.members\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "05_views_matviews",
+      "title": "Представления и матпредставления",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.products\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "06_dml_data_migration",
+      "title": "DML: перенос данных",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.user_roles\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "07_cte_scoping",
+      "title": "CTE и области видимости",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.category_paths\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "08_functions_sql",
+      "title": "SQL-функции и процедуры",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.prices\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "09_plpgsql_trigger",
+      "title": "PL/pgSQL: триггерная функция",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.documents\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "10_plpgsql_advanced",
+      "title": "PL/pgSQL: сложные тела",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: function auth.credit(integer, integer) does not exist (SQLSTATE 42883)"
+    },
+    {
+      "case": "11_do_blocks",
+      "title": "DO-блоки",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.jobs\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "12_dynamic_sql",
+      "title": "Динамический SQL (EXECUTE)",
+      "expect": "limitation",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.audit_log\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "13_partitions_inheritance",
+      "title": "Партиции и наследование",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.events\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "14_grants_policies",
+      "title": "GRANT/REVOKE и RLS",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.tenants\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "15_quoting_and_qualified",
+      "title": "Кавычки и уже квалифицированные имена",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.order\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "16_extensions_catalogs_temp",
+      "title": "Расширения, системные каталоги, temp-таблицы",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.api_keys\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "17_misc_ddl",
+      "title": "Прочий DDL",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.metrics\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "18_concurrent_index",
+      "title": "CREATE INDEX CONCURRENTLY",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: index missing (SQLSTATE P0001)"
+    },
+    {
+      "case": "19_triggers_transition_tables",
+      "title": "Триггеры: transition tables, INSTEAD OF, constraint trigger",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.items_view\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "20_lexical_traps",
+      "title": "Лексические ловушки",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.notes\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "21_cross_file_registry",
+      "title": "Объекты из предыдущих миграций",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.tasks\" does not exist (SQLSTATE 42P01)"
+    },
+    {
+      "case": "22_sql_standard_body",
+      "title": "SQL-функции со стандартным телом",
+      "expect": "pass",
+      "status": "skip",
+      "stage": "version",
+      "error": "needs PostgreSQL 14 or newer"
+    },
+    {
+      "case": "23_statistics_target",
+      "title": "Цель статистики для CREATE STATISTICS",
+      "expect": "pass",
+      "status": "fail",
+      "stage": "check",
+      "error": "ERROR: relation \"auth.samples\" does not exist (SQLSTATE 42P01)"
+    }
+  ]
+}

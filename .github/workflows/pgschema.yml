@@ -1,0 +1,86 @@
+name: pgschema
+
+on:
+  push:
+    paths:
+      - 'pgschema/**'
+      - 'poc/corpus/**'
+      - 'poc/harness/**'
+      - 'poc/pgquery/**'
+      - 'poc/get-*.sh'
+      - '.github/workflows/pgschema.yml'
+  pull_request:
+    paths:
+      - 'pgschema/**'
+      - 'poc/corpus/**'
+      - 'poc/harness/**'
+      - 'poc/pgquery/**'
+      - 'poc/get-*.sh'
+      - '.github/workflows/pgschema.yml'
+
+env:
+  CGO_ENABLED: '0'
+
+jobs:
+  # The library: standard library only, no cgo, no WebAssembly.
+  library:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: pgschema/go.mod
+          cache-dependency-path: pgschema/go.mod
+      - name: vet
+        working-directory: pgschema
+        run: go vet ./...
+      - name: test
+        working-directory: pgschema
+        run: go test -count=1 ./...
+
+  # The oracle: libpg_query and the prototype as references, the live
+  # PostgreSQL harness, the regression tests of every version.
+  oracle:
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        pg: [12, 13, 14, 15, 16]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: pgschema/go.mod
+          cache-dependency-path: |
+            pgschema/oracle/go.sum
+            poc/pgquery/go.sum
+            poc/harness/go.sum
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/pgschema
+          key: pgschema-data-${{ matrix.pg }}-${{ hashFiles('pgschema/tools/*.sh', 'poc/get-*.sh') }}
+      - name: data
+        env:
+          PG_MAJORS: ${{ matrix.pg }}
+        run: pgschema/tools/get-data.sh
+      - name: harness control (baseline schemas, no-op)
+        run: pgschema/tools/baseline.sh ${{ matrix.pg }}
+      - name: oracle tests
+        working-directory: pgschema/oracle
+        run: |
+          . ../tools/env.sh ${{ matrix.pg }}
+          go vet ./...
+          go test -count=1 -timeout 30m ./...
+      - name: metrics
+        if: matrix.pg == 16
+        working-directory: pgschema/oracle
+        run: |
+          . ../tools/env.sh 16
+          go run ./cmd/metrics -out ../results/metrics.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: results-pg${{ matrix.pg }}
+          path: |
+            pgschema/results/pg${{ matrix.pg }}/*.json
+            pgschema/results/metrics.json

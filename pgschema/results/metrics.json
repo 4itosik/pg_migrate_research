@@ -1,0 +1,78 @@
+{
+  "dataset": {
+    "corpus": {
+      "bytes": 20750,
+      "cases": 23,
+      "migration_files": 54
+    },
+    "regress": {
+      "REL_12_STABLE": {
+        "accepted_by_libpgq": 32024,
+        "files": 189,
+        "nodes_per_statement": {
+          "max": 853,
+          "mean": 12.445353484886335,
+          "median": 9,
+          "p90": 23,
+          "p99": 66
+        },
+        "statements": 32267
+      },
+      "REL_13_STABLE": {
+        "accepted_by_libpgq": 34733,
+        "files": 197,
+        "nodes_per_statement": {
+          "max": 853,
+          "mean": 12.680707108513518,
+          "median": 9,
+          "p90": 24,
+          "p99": 67
+        },
+        "statements": 35005
+      },
+      "REL_14_STABLE": {
+        "accepted_by_libpgq": 37777,
+        "files": 206,
+        "nodes_per_statement": {
+          "max": 853,
+          "mean": 12.721656034094819,
+          "median": 9,
+          "p90": 24,
+          "p99": 68
+        },
+        "statements": 38052
+      },
+      "REL_15_STABLE": {
+        "accepted_by_libpgq": 41116,
+        "files": 217,
+        "nodes_per_statement": {
+          "max": 853,
+          "mean": 12.508950286992897,
+          "median": 9,
+          "p90": 23,
+          "p99": 67
+        },
+        "statements": 41598
+      },
+      "REL_16_STABLE": {
+        "accepted_by_libpgq": 42798,
+        "files": 220,
+        "nodes_per_statement": {
+          "max": 853,
+          "mean": 12.541590728538717,
+          "median": 9,
+          "p90": 24,
+          "p99": 66
+        },
+        "statements": 43323
+      }
+    }
+  },
+  "environment": {
+    "cpus": 4,
+    "generated": "2026-10-02T12:41:44Z",
+    "go": "go1.26.1",
+    "goarch": "amd64",
+    "goos": "linux"
+  }
+}
