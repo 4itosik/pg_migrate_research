@@ -95,8 +95,11 @@ type parser struct {
 	la            lex.Item // lookahead token of base_yylex
 	haveLA        bool
 
-	// the last token handed to the parser, for syntax errors
+	// the last token handed to the parser, for syntax errors; escEnd is the end
+	// of the UESCAPE string that base_yylex has taken into a U&"..." or U&'...'
+	// token, 0 when there is none
 	lastStart, lastEnd int32
+	escEnd             int32
 
 	result []ast.Node
 }
@@ -113,12 +116,17 @@ func (p *parser) yyerror(msg string) {
 	panic(parseAbort{p.syntaxError(msg)})
 }
 
+// syntaxError words an error at the last token handed to the parser. The text
+// "at or near" is the buffer up to the end of the current match of flex, as
+// PostgreSQL prints it: the token alone, because base_yylex hides what it has
+// read ahead, except for a UESCAPE clause that it has read to the end, which
+// the text then includes.
 func (p *parser) syntaxError(msg string) *Error {
 	loc := int(p.lastStart)
 	if loc >= len(p.src) {
 		return &Error{Msg: msg + " at end of input", Loc: loc}
 	}
-	return &Error{Msg: msg + " at or near \"" + p.src[p.lastStart:p.lastEnd] + "\"", Loc: loc}
+	return &Error{Msg: msg + " at or near \"" + p.src[p.lastStart:max(p.lastEnd, p.escEnd)] + "\"", Loc: loc}
 }
 
 // Error is called by the generated parser on a syntax error.
@@ -167,6 +175,7 @@ func (p *parser) Lex(lval *yySymType) int {
 		}
 		return int(tokMap[t])
 	}
+	p.escEnd = 0
 	it, err := p.token()
 	if err != nil {
 		panic(parseAbort{err.(*Error)})
@@ -248,6 +257,7 @@ func (p *parser) token() (lex.Item, error) {
 				return it, p.syntaxError("invalid Unicode escape character")
 			}
 			escape = esc.Str[0]
+			p.escEnd = esc.End
 			p.haveLA = false
 		}
 		str, err := udeescape(it.Str, escape, it.Start)

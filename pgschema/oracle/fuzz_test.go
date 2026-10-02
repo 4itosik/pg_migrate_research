@@ -13,6 +13,7 @@ import (
 	"unicode/utf8"
 
 	"github.com/4itosik/pg_migrate_research/pgschema"
+	"github.com/4itosik/pg_migrate_research/pgschema/internal/ast"
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/lex"
 	"github.com/4itosik/pg_migrate_research/pgschema/internal/parse"
 	"github.com/4itosik/pg_migrate_research/poc/harness"
@@ -23,8 +24,9 @@ import (
 // and its cursor, the trees with the positions.
 //
 // Two differences from libpg_query are deliberate and not reported, see
-// docs/differences.md: the library checks the encoding of the whole text first,
-// as PostgreSQL does before it parses (libpg_query does not), and it does not
+// docs/differences.md: the library checks the encoding of the whole text first
+// (invalid UTF-8, a NUL), as PostgreSQL does before it parses (libpg_query
+// does not; its C string ends at a NUL), and it does not
 // accept the parameter markers ($1) that libpg_query's own patches allow in
 // the places of string constants (PASSWORD $1, SET search_path = $1,
 // type $1), where PostgreSQL itself gives a syntax error.
@@ -35,14 +37,16 @@ func compareParse(sql string) string {
 	if errors.As(gerr, &ie) {
 		return fmt.Sprintf("the library panics: %v\n%s", ie.Value, ie.Stack)
 	}
-	if !utf8.ValidString(sql) {
+	if !utf8.ValidString(sql) || strings.IndexByte(sql, 0) >= 0 {
 		if ge, ok := gerr.(*parse.Error); !ok || !strings.HasPrefix(ge.Msg, "invalid byte sequence for encoding") {
-			return fmt.Sprintf("invalid UTF-8 is not rejected as PostgreSQL does: %v", gerr)
+			return fmt.Sprintf("invalid UTF-8 or a NUL is not rejected as PostgreSQL does: %v", gerr)
 		}
 		return ""
 	}
 	switch {
-	case werr == nil && gerr != nil && paramMarkerError.MatchString(gerr.Error()):
+	case gerr != nil && paramMarkerError.MatchString(gerr.Error()):
+		// libpg_query takes the marker as a constant and goes on, whether it
+		// accepts the statement in the end or fails further on
 		return ""
 	case werr != nil && gerr != nil:
 		wmsg, wpos := ErrorInfo(werr)
@@ -265,6 +269,13 @@ func rewriteIssues(p pair, sql string) (issue string) {
 		}
 	}()
 	out, _, err := p.our.Rewrite(sql)
+	if !utf8.ValidString(sql) || strings.IndexByte(sql, 0) >= 0 {
+		// as the server, the library rejects such a text before parsing
+		if err == nil || !strings.Contains(err.Error(), "invalid byte sequence") {
+			return fmt.Sprintf("invalid UTF-8 or a NUL is not refused: %v", err)
+		}
+		return ""
+	}
 	if err != nil {
 		if strings.Contains(err.Error(), "internal error") {
 			return "internal error: " + err.Error()
@@ -275,7 +286,10 @@ func rewriteIssues(p pair, sql string) (issue string) {
 		if paramMarkerInError.MatchString(err.Error()) {
 			return ""
 		}
-		if want, _, perr := p.proto.Rewrite(sql); perr == nil && want != sql {
+		if !bodiesComplete(sql) {
+			return ""
+		}
+		if want, perr := safeProto(p.proto, sql); perr == nil && want != sql {
 			return fmt.Sprintf("the library refuses (%v), the prototype rewrites to %q", err, truncate(want, 200))
 		}
 		return ""
@@ -283,22 +297,38 @@ func rewriteIssues(p pair, sql string) (issue string) {
 	if _, perr := Parse(out); perr != nil {
 		return fmt.Sprintf("libpg_query does not parse the output: %v\n    output: %q", perr, truncate(out, 200))
 	}
+	if !bodiesComplete(sql) {
+		return "" // the compiler and the prototype of libpg_query trap on it
+	}
 	// a body that libpg_query compiles must compile after the rewriting; the
 	// output for a body it does not compile is not compared with the
 	// prototype's, because the library reads such a body more leniently
-	_, cerr := ParsePlPgSQL(sql)
+	cerr := safeCompile(sql)
 	if cerr == nil {
-		if _, cerr := ParsePlPgSQL(out); cerr != nil {
+		if cerr := safeCompile(out); cerr != nil {
 			return fmt.Sprintf("libpg_query compiles the input body but not the output: %v\n    output: %q", cerr, truncate(out, 200))
 		}
 	}
 	if !isInsertionOnly(sql, out, "auth.") && !requotedBody(sql, out) {
 		return fmt.Sprintf("the output is not the input with insertions of %q\n    output: %q", "auth.", truncate(out, 200))
 	}
-	if want, _, perr := p.proto.Rewrite(sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) {
+	if want, perr := safeProto(p.proto, sql); perr == nil && want != out && cerr == nil && !junkAfterType(sql) && trimQuoted(want) != trimQuoted(out) {
 		return fmt.Sprintf("the output differs from the prototype's:\n%s", firstDiff(want, out))
 	}
 	return ""
+}
+
+var quotedLiteral = regexp.MustCompile(`[eE]?'([^']*)'|\$\$([^$]*)\$\$`)
+
+// trimQuoted writes every simple string literal as '...' with the white space
+// at its edges stripped: the prototype writes the literal of a relation name
+// again in that form and trims the name in nextval(' s '), the library keeps
+// the literal as written (docs/differences.md).
+func trimQuoted(s string) string {
+	return quotedLiteral.ReplaceAllStringFunc(s, func(m string) string {
+		sub := quotedLiteral.FindStringSubmatch(m)
+		return "'" + strings.TrimSpace(sub[1]+sub[2]) + "'"
+	})
 }
 
 var typeJunk = regexp.MustCompile(`(?i)%(?:row)?type\s+(\w+)`)
@@ -317,6 +347,63 @@ func junkAfterType(sql string) bool {
 		}
 	}
 	return false
+}
+
+// bodiesComplete reports whether every function and DO block of sql has a body
+// (an AS clause). The PL/pgSQL compiler of libpg_query traps on a function
+// without one, and a WebAssembly instance that has trapped fails on every
+// later call, so such inputs must not reach it.
+func bodiesComplete(sql string) bool {
+	stmts, err := parse.Parse(sql)
+	if err != nil {
+		return false
+	}
+	has := func(opts []ast.Node) bool {
+		for _, o := range opts {
+			if d, ok := o.(*ast.DefElem); ok && d.Defname == "as" {
+				return true
+			}
+		}
+		return false
+	}
+	for _, raw := range stmts {
+		switch n := raw.Stmt.(type) {
+		case *ast.CreateFunctionStmt:
+			if !has(n.Options) && n.SqlBody == nil {
+				return false
+			}
+		case *ast.DoStmt:
+			if !has(n.Args) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// safeCompile compiles the PL/pgSQL of sql with libpg_query. The compiler
+// of libpg_query can crash (a WebAssembly trap) on a function without a body;
+// that is its failure, reported as an error.
+func safeCompile(sql string) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("libpg_query crashes: %v", r)
+		}
+	}()
+	_, err = ParsePlPgSQL(sql)
+	return err
+}
+
+// safeProto rewrites sql with the prototype, which relies on libpg_query and
+// fails with it.
+func safeProto(p *Prototype, sql string) (out string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = fmt.Errorf("the prototype crashes: %v", r)
+		}
+	}()
+	out, _, err = p.Rewrite(sql)
+	return out, err
 }
 
 // requotedBody reports whether the statement is a function or a DO block whose
@@ -444,4 +531,58 @@ func FuzzRewrite(f *testing.F) {
 			t.Errorf("%s\ninput: %q", d, sql)
 		}
 	})
+}
+
+// FuzzLex compares the lexer with libpg_query's Scan under the native fuzzer:
+// tokens, offsets, keyword categories, errors and their cursor.
+//
+//	go test -run '^$' -fuzz FuzzLex -fuzztime 5m .
+func FuzzLex(f *testing.F) {
+	for _, s := range fragments {
+		f.Add(s)
+	}
+	for _, s := range []string{
+		"SELECT 'a' 'b', E'\\x41\\u00e9', U&'d\\0061t' UESCAPE '!', $tag$ x $tag$, 1_000, 0x1F, .5e-3, a.b, \"q\"\"q\" /* c /* n */ */ -- e\n",
+		"SELECT $1, $a, x::int, a<>b, a!=b, a<=b, ~~* '%', :=, =>, ..",
+	} {
+		f.Add(s)
+	}
+	f.Fuzz(func(t *testing.T, sql string) {
+		// the parser entry points reject a NUL and invalid UTF-8 first, as the
+		// server does; libpg_query's C string ends at a NUL
+		if len(sql) > 4000 || !utf8.ValidString(sql) || strings.IndexByte(sql, 0) >= 0 {
+			t.Skip()
+		}
+		if d, _, _, _ := diffScan(sql); d != "" {
+			t.Errorf("%s\n%q", d, sql)
+		}
+	})
+}
+
+// TestParseErrorCases compares the errors on inputs found by fuzzing and by
+// hand: the text "at or near", which runs to the end of what the scanner has
+// read, and the cursor.
+func TestParseErrorCases(t *testing.T) {
+	for _, sql := range []string{
+		"U&''UESCAPE'X'",  // the UESCAPE clause is part of the text
+		"U&'a' UESCAPE",   // no escape string
+		"U&'a' UESCAPE 1", // not a string
+		"U&'a' UESCAPE 'ab'",
+		"SELECT U&'d\\0061' UESCAPE '\\' x y",
+		"SELECT U&\"d\\0061\" UESCAPE '!' FROM",
+		"SELECT 1 WITH x", // WITH looks ahead, the text is WITH
+		"SELECT NOT",
+		"SELECT a NOT x",
+		"SELECT * FROM t WITH ORDINALITY x",
+		"SELECT x NULLS y",
+		"SELECT 1 FORMAT JSON x",
+		"CREATE TABLE t (a int) WITH OIDS",
+		"SELECT",
+		"SELECT 1 +",
+		"SELECT ,",
+	} {
+		if d := compareParse(sql); d != "" {
+			t.Errorf("%s\n    %q", d, sql)
+		}
+	}
 }

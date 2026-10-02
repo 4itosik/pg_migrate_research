@@ -348,9 +348,37 @@ func (w *walker) literal(n Node, qualify func(name string) bool) {
 		w.fail("cannot locate string literal %q", val)
 		return
 	}
-	newVal := w.r.prefix + strings.TrimSpace(val)
-	w.edits = append(w.edits, edit{start: int(c.Location), end: int(c.Location) + int(it.End), text: quoteLiteral(newVal)})
+	// the schema goes in front of the name, after any white space: an
+	// insertion into the literal as written when its value is the text between
+	// the delimiters, otherwise the literal is written again
+	k := len(val) - len(strings.TrimLeft(val, " \t\n\r\f\v"))
+	newVal := val[:k] + w.r.prefix + val[k:]
+	raw := w.src[c.Location : int(c.Location)+int(it.End)]
+	if start, ok := literalContentStart(raw, val); ok {
+		pos := int(c.Location) + start + k
+		w.edits = append(w.edits, edit{start: pos, end: pos, text: w.r.prefix})
+	} else {
+		w.edits = append(w.edits, edit{start: int(c.Location), end: int(c.Location) + int(it.End), text: quoteLiteral(newVal)})
+	}
 	str.Sval = newVal
+}
+
+// literalContentStart returns the offset in the text raw of a string literal
+// at which its value starts, when the value is the text between the
+// delimiters as it stands (no escapes, no doubled quotes): '...', E'...' or
+// $tag$...$tag$.
+func literalContentStart(raw, val string) (int, bool) {
+	for _, q := range []string{"'", "E'", "e'"} {
+		if strings.HasPrefix(raw, q) && len(raw) >= len(q)+1 && strings.HasSuffix(raw, "'") && raw[len(q):len(raw)-1] == val {
+			return len(q), true
+		}
+	}
+	if strings.HasPrefix(raw, "$") {
+		if n := strings.IndexByte(raw[1:], '$') + 2; n >= 2 && len(raw) >= 2*n && raw[n:len(raw)-n] == val {
+			return n, true
+		}
+	}
+	return 0, false
 }
 
 // ---- CTE scopes ------------------------------------------------------------
