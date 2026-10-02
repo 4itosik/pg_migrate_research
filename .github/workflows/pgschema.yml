@@ -100,7 +100,7 @@ jobs:
         run: |
           . ../tools/env.sh 16
           go run ./cmd/metrics -out ../results/metrics.json
-          METRICS_OUT=$PWD/../results/metrics.json go test -count=1 -run 'TestLexRegress|TestLexSpeed' .
+          METRICS_OUT=$PWD/../results/metrics.json go test -count=1 -timeout 30m -run 'TestLexRegress|TestLexSpeed|TestParseAcceptance|TestParseTrees|TestParseSpeed|TestRewriteSpeed' .
           go run ./cmd/buildmetrics -out ../results/metrics.json
       - uses: actions/upload-artifact@v4
         if: always()

@@ -748,8 +748,11 @@ func (w *walker) qualifyAt(loc int32, name string) bool {
 		w.fail("%v for %q in: %s", err, name, snippet(w.stmtText()))
 		return false
 	}
-	ident := it.Tok == lex.IDENT || (it.Kind != lex.NoKeyword && it.Kind != lex.ReservedKeyword)
-	if !ident || it.Str != name {
+	// the value of U&"..." is not decoded by the scanner (the parser does it
+	// with the UESCAPE clause), so its text cannot be compared with the name;
+	// the check of the whole tree after the edit covers it
+	ident := it.Tok == lex.IDENT || it.Tok == lex.UIDENT || (it.Kind != lex.NoKeyword && it.Kind != lex.ReservedKeyword)
+	if !ident || (it.Tok != lex.UIDENT && it.Str != name) {
 		w.fail("the token at offset %d is %q, expected %q", loc, w.src[int(loc)+int(it.Start):int(loc)+int(it.End)], name)
 		return false
 	}

@@ -93,6 +93,8 @@ func TestRewrite(t *testing.T) {
 			"CREATE FUNCTION auth.e() RETURNS bigint LANGUAGE sql AS $$SELECT count(*) FROM auth.t WHERE x = 'a'$$"},
 		{"information_schema is left alone", "SELECT * FROM information_schema.tables JOIN t ON true",
 			"SELECT * FROM information_schema.tables JOIN auth.t ON true"},
+		{"a name with Unicode escapes", `CREATE TABLE U&"d\0061t" (id int); SELECT * FROM U&"d!0061t" UESCAPE '!'`,
+			`CREATE TABLE auth.U&"d\0061t" (id int); SELECT * FROM auth.U&"d!0061t" UESCAPE '!'`},
 		{"no sql", "-- nothing here\n", "-- nothing here\n"},
 	}
 	for _, tc := range tests {
