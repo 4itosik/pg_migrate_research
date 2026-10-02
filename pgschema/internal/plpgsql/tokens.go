@@ -30,13 +30,17 @@ type token struct {
 	quoted bool
 	// res is a keyword reserved by PL/pgSQL.
 	res bool
+	// dotted is a word followed by . and another word: plpgsql_yylex joins
+	// such words into one compound identifier before it looks for the
+	// unreserved keywords, so next.x or alias.t is a name, never the keyword.
+	dotted bool
 }
 
 func (t *token) is(c byte) bool { return t.Tok == lex.Token(c) }
 
 // kw reports whether t is the unquoted word or reserved keyword s: what
 // tok_is_keyword and the unreserved keyword lookup recognise.
-func (t *token) kw(s string) bool { return (t.word || t.res) && !t.quoted && t.text == s }
+func (t *token) kw(s string) bool { return (t.word || t.res) && !t.quoted && !t.dotted && t.text == s }
 
 func (t *token) op(s string) bool { return t.Tok == lex.Op && t.Str == s }
 
@@ -100,5 +104,9 @@ func scan(src string) ([]token, error) {
 		toks = append(toks, makeToken(src, it))
 	}
 	n := int32(len(src))
-	return append(toks, token{Item: lex.Item{Start: n, End: n}}), nil
+	toks = append(toks, token{Item: lex.Item{Start: n, End: n}})
+	for i := 0; i+2 < len(toks); i++ {
+		toks[i].dotted = toks[i].word && toks[i+1].is('.') && toks[i+2].word
+	}
+	return toks, nil
 }

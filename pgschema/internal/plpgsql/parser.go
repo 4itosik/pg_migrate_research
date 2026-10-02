@@ -202,7 +202,7 @@ func (p *parser) assignTarget(i int) (n int, ok bool) {
 			if j = p.skipGroup(j); j < 0 {
 				return 0, false
 			}
-		case t.is('.') && p.tok(j+1).text != "":
+		case t.is('.') && (p.tok(j+1).text != "" || p.tok(j+1).is('*')): // field, or .* as in new.* := rec
 			j += 2
 		default:
 			return n, t.Tok == lex.COLON_EQUALS || t.is('=')
@@ -672,14 +672,14 @@ func (p *parser) returnStmt() *Stmt {
 	case t.Tok == 0:
 		p.failAt(int(t.Start), "unexpected end of function definition")
 	case t.is(';'):
-	case t.kw("next"):
+	case t.kw("next") && !p.tok(p.pos+1).is('.'): // next.x is a name, not RETURN NEXT
 		p.next()
 		s.Kind = StmtReturnNext
 		if !p.cur().is(';') {
 			p.expr(s, uSemi, ";", s.Line, KindExpr)
 			return p.finish(s)
 		}
-	case t.kw("query"):
+	case t.kw("query") && !p.tok(p.pos+1).is('.'): // query.x is a name
 		p.next()
 		s.Kind = StmtReturnQuery
 		if e := p.cur(); e.res && e.text == "execute" {

@@ -23,6 +23,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"io"
@@ -51,19 +52,28 @@ func run(args []string, stdout, stderr io.Writer) int {
 	placeholder := fs.Bool("placeholder", false, "write templates with the placeholder instead of a schema")
 	src := fs.String("src", "", "directory with the migrations")
 	dst := fs.String("dst", "", "directory for the rewritten migrations")
-	exclude := fs.String("exclude", "", "comma-separated relations that stay unqualified (they live in other schemas)")
+	exclude := fs.String("exclude", "", "comma-separated relation names, as PostgreSQL stores them, that stay unqualified (they live in other schemas)")
 	check := fs.Bool("check", false, "write nothing; fail if the destination is not what the command would write")
 	failOnWarning := fs.Bool("fail-on-warning", false, "exit with status 1 when there are warnings")
 	if err := fs.Parse(args[1:]); err != nil {
+		if errors.Is(err, flag.ErrHelp) {
+			return 0
+		}
 		return 2
 	}
 	if *src == "" || *dst == "" || (*schema == "") == !*placeholder {
 		fmt.Fprintln(stderr, "pgschema rewrite: -src, -dst and exactly one of -schema and -placeholder are required")
 		return 2
 	}
+	if same, err := sameDir(*src, *dst); err == nil && same {
+		fmt.Fprintln(stderr, "pgschema rewrite: -src and -dst must be different directories")
+		return 2
+	}
 	var ex []string
 	if *exclude != "" {
-		ex = strings.Split(*exclude, ",")
+		for _, name := range strings.Split(*exclude, ",") {
+			ex = append(ex, strings.TrimSpace(name))
+		}
 	}
 	r, err := pgschema.New(pgschema.Options{Schema: *schema, Placeholder: *placeholder, ExcludeRelations: ex})
 	if err != nil {
@@ -108,30 +118,54 @@ func run(args []string, stdout, stderr io.Writer) int {
 		}
 		out[f] = res
 	}
-	if failed {
+	if failed || (warned && *failOnWarning) {
 		return 1
 	}
 	if *check {
 		if !compareDir(*dst, out, stderr) {
 			return 1
 		}
-	} else {
-		if err := os.MkdirAll(*dst, 0o755); err != nil {
+		return 0
+	}
+	if err := os.MkdirAll(*dst, 0o755); err != nil {
+		fmt.Fprintln(stderr, "pgschema:", err)
+		return 1
+	}
+	for _, f := range files {
+		if err := os.WriteFile(filepath.Join(*dst, f), []byte(out[f]), 0o644); err != nil {
 			fmt.Fprintln(stderr, "pgschema:", err)
 			return 1
 		}
-		for _, f := range files {
-			if err := os.WriteFile(filepath.Join(*dst, f), []byte(out[f]), 0o644); err != nil {
-				fmt.Fprintln(stderr, "pgschema:", err)
-				return 1
-			}
+	}
+	// the destination is generated: a migration that is gone from the source
+	// must not stay in it (-check reports such a file)
+	removed := 0
+	for _, name := range staleFiles(*dst, out) {
+		if err := os.Remove(filepath.Join(*dst, name)); err != nil {
+			fmt.Fprintln(stderr, "pgschema:", err)
+			return 1
 		}
-		fmt.Fprintf(stdout, "%d files written to %s\n", len(files), *dst)
+		removed++
 	}
-	if warned && *failOnWarning {
-		return 1
+	fmt.Fprintf(stdout, "%d files written to %s", len(files), *dst)
+	if removed > 0 {
+		fmt.Fprintf(stdout, ", %d stale removed", removed)
 	}
+	fmt.Fprintln(stdout)
 	return 0
+}
+
+// sameDir reports whether two paths are the same existing directory.
+func sameDir(a, b string) (bool, error) {
+	ia, err := os.Stat(a)
+	if err != nil {
+		return false, err
+	}
+	ib, err := os.Stat(b)
+	if err != nil {
+		return false, err
+	}
+	return os.SameFile(ia, ib), nil
 }
 
 // listMigrations returns the migration files of dir ordered by version.
@@ -166,23 +200,37 @@ func listMigrations(dir string) ([]string, error) {
 // returns true when there are none.
 func compareDir(dir string, want map[string]string, stderr io.Writer) bool {
 	ok := true
-	for f, text := range want {
+	names := make([]string, 0, len(want))
+	for f := range want {
+		names = append(names, f)
+	}
+	sort.Strings(names)
+	for _, f := range names {
 		got, err := os.ReadFile(filepath.Join(dir, f))
 		switch {
 		case err != nil:
 			fmt.Fprintf(stderr, "%s: missing in %s\n", f, dir)
 			ok = false
-		case string(got) != text:
+		case string(got) != want[f]:
 			fmt.Fprintf(stderr, "%s: differs from what the command writes\n", f)
 			ok = false
 		}
 	}
+	for _, f := range staleFiles(dir, want) {
+		fmt.Fprintf(stderr, "%s: stale, there is no such migration in the source\n", f)
+		ok = false
+	}
+	return ok
+}
+
+// staleFiles lists the migration files of dir that are not in want.
+func staleFiles(dir string, want map[string]string) []string {
+	var stale []string
 	entries, _ := os.ReadDir(dir)
 	for _, e := range entries {
 		if _, in := want[e.Name()]; !e.IsDir() && migrationFile.MatchString(e.Name()) && !in {
-			fmt.Fprintf(stderr, "%s: stale, there is no such migration in the source\n", e.Name())
-			ok = false
+			stale = append(stale, e.Name())
 		}
 	}
-	return ok
+	return stale
 }

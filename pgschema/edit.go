@@ -56,10 +56,13 @@ func quoteLiteral(s string) string {
 	return `'` + strings.ReplaceAll(s, `'`, `''`) + `'`
 }
 
-// dollarQuote quotes a function body with a tag that does not occur in it.
+// dollarQuote quotes a function body with a tag that closes the literal where
+// the body ends: the tag must not occur in the body, nor appear earlier
+// because the body ends with the start of it (a body that ends with $ and the
+// tag $$ would close one character too early).
 func dollarQuote(body string) string {
 	tag := "$$"
-	for i := 0; strings.Contains(body, tag); i++ {
+	for i := 0; strings.Index(body+tag, tag) != len(body); i++ {
 		tag = fmt.Sprintf("$body%d$", i)
 	}
 	return tag + body + tag

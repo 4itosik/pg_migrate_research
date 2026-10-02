@@ -1,8 +1,10 @@
 package pgschema
 
 import (
+	"fmt"
 	"strings"
 	"testing"
+	"time"
 )
 
 func newTestRewriter(t *testing.T, opts Options) *Rewriter {
@@ -64,6 +66,12 @@ func TestRewrite(t *testing.T) {
 			"CREATE FUNCTION auth.g() RETURNS bigint LANGUAGE sql AS $$ SELECT count(*) FROM auth.t $$"},
 		{"sql function body in quotes is requoted", "CREATE FUNCTION g() RETURNS bigint LANGUAGE sql AS 'SELECT count(*) FROM t'",
 			"CREATE FUNCTION auth.g() RETURNS bigint LANGUAGE sql AS $$SELECT count(*) FROM auth.t$$"},
+		{"a quoted body that ends with a dollar sign", "CREATE FUNCTION g() RETURNS bigint LANGUAGE sql AS 'SELECT count(*) FROM t -- $'",
+			"CREATE FUNCTION auth.g() RETURNS bigint LANGUAGE sql AS $body0$SELECT count(*) FROM auth.t -- $$body0$"},
+		{"a table function with one column of a created type", "CREATE TYPE mood AS ENUM ('a'); CREATE FUNCTION f() RETURNS TABLE (m mood) LANGUAGE sql AS 'SELECT NULL::mood'",
+			"CREATE TYPE auth.mood AS ENUM ('a'); CREATE FUNCTION auth.f() RETURNS TABLE (m auth.mood) LANGUAGE sql AS $$SELECT NULL::auth.mood$$"},
+		{"a table function with several columns", "CREATE TYPE mood AS ENUM ('a'); CREATE FUNCTION f() RETURNS TABLE (a int, m mood) LANGUAGE sql AS 'SELECT 1, NULL::mood'",
+			"CREATE TYPE auth.mood AS ENUM ('a'); CREATE FUNCTION auth.f() RETURNS TABLE (a int, m auth.mood) LANGUAGE sql AS $$SELECT 1, NULL::auth.mood$$"},
 		{"sql standard body", "CREATE FUNCTION h() RETURNS int LANGUAGE sql BEGIN ATOMIC SELECT 1 FROM t; END",
 			"CREATE FUNCTION auth.h() RETURNS int LANGUAGE sql BEGIN ATOMIC SELECT 1 FROM auth.t; END"},
 		{"trigger", "CREATE FUNCTION tf() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN RETURN NEW; END $$; CREATE TRIGGER tg BEFORE INSERT ON t FOR EACH ROW EXECUTE FUNCTION tf()",
@@ -131,6 +139,9 @@ func TestRewritePLpgSQL(t *testing.T) {
 		{"declarations",
 			"CREATE TYPE mood AS ENUM ('a'); CREATE TABLE t (id int, c int);\nCREATE FUNCTION f() RETURNS void LANGUAGE plpgsql AS $$\nDECLARE a t%ROWTYPE; b t.c%TYPE; m mood; i int;\nBEGIN NULL; END $$",
 			"CREATE TYPE auth.mood AS ENUM ('a'); CREATE TABLE auth.t (id int, c int);\nCREATE FUNCTION auth.f() RETURNS void LANGUAGE plpgsql AS $$\nDECLARE a auth.t%ROWTYPE; b auth.t.c%TYPE; m auth.mood; i int;\nBEGIN NULL; END $$"},
+		{"array of a column type",
+			"CREATE TABLE t (c int);\nCREATE FUNCTION f() RETURNS void LANGUAGE plpgsql AS $$ DECLARE b t.c%TYPE[]; a t%ROWTYPE; BEGIN NULL; END $$",
+			"CREATE TABLE auth.t (c int);\nCREATE FUNCTION auth.f() RETURNS void LANGUAGE plpgsql AS $$ DECLARE b auth.t.c%TYPE[]; a auth.t%ROWTYPE; BEGIN NULL; END $$"},
 		{"a variable shadows a table in %TYPE",
 			"CREATE TABLE t (c int);\nCREATE FUNCTION f(t record) RETURNS void LANGUAGE plpgsql AS $$ DECLARE b t.c%TYPE; BEGIN NULL; END $$",
 			"CREATE TABLE auth.t (c int);\nCREATE FUNCTION auth.f(t record) RETURNS void LANGUAGE plpgsql AS $$ DECLARE b t.c%TYPE; BEGIN NULL; END $$"},
@@ -179,6 +190,10 @@ func TestRewriteWarnings(t *testing.T) {
 		{"extension", "CREATE EXTENSION pgcrypto", "CREATE EXTENSION without SCHEMA"},
 		{"catalog lookup", "SELECT * FROM pg_class WHERE relname = 't'", "system catalogs"},
 		{"current_schema", "SELECT current_schema()", "current_schema"},
+		{"range type", "CREATE TYPE r AS RANGE (subtype = int)", "constructor functions of a range type"},
+		{"collation", "CREATE COLLATION c (provider = libc, locale = 'C')", "created by a migration is not qualified"},
+		{"text search configuration", "CREATE TEXT SEARCH CONFIGURATION c (COPY = simple)", "created by a migration is not qualified"},
+		{"schema elements", "CREATE SCHEMA s CREATE TABLE a (id int)", "elements of CREATE SCHEMA"},
 		{"other language", "CREATE FUNCTION f() RETURNS int LANGUAGE plpython3u AS $$ return 1 $$", "LANGUAGE plpython3u"},
 	}
 	for _, tc := range tests {
@@ -251,7 +266,13 @@ func TestRewriteLearnAcrossFiles(t *testing.T) {
 
 func TestRewriteRefusesInvalidSQL(t *testing.T) {
 	r := newTestRewriter(t, Options{Schema: "auth"})
-	for _, sql := range []string{"CREATE TABLE (", "SELECT FROM FROM", "CREATE FUNCTION f() RETURNS int LANGUAGE sql AS 'not sql'",
+	if err := r.Learn("CREATE TYPE mood AS ENUM ('a'); CREATE TABLE t (c int)"); err != nil {
+		t.Fatal(err)
+	}
+	for _, sql := range []string{
+		// a declaration whose type text is not a type name
+		"CREATE FUNCTION f() RETURNS void LANGUAGE plpgsql AS $$ DECLARE m mood int; BEGIN NULL; END $$",
+		"CREATE FUNCTION f() RETURNS void LANGUAGE plpgsql AS $$ DECLARE m t%ROWTYPE ROWTYPE; BEGIN NULL; END $$", "CREATE TABLE (", "SELECT FROM FROM", "CREATE FUNCTION f() RETURNS int LANGUAGE sql AS 'not sql'",
 		"DO $$ BEGIN SELECT FROM FROM; END $$", "SELECT 'a\xffb'"} {
 		if out, _, err := r.Rewrite(sql); err == nil {
 			t.Errorf("%q: no error, output %q", sql, out)
@@ -268,5 +289,78 @@ func TestPlaceholder(t *testing.T) {
 	want := "CREATE TABLE pgschema_placeholder.t (id serial); SELECT nextval('pgschema_placeholder.t_id_seq'), 'pgschema_placeholder.t'::regclass"
 	if got != want {
 		t.Errorf("got %q, want %q", got, want)
+	}
+}
+
+// A fragment of a PL/pgSQL body must parse in its own mode: "RETURN INTO x" is
+// not SELECT INTO x, which would create a table.
+func TestRewriteRefusesFragmentsOutsideTheirMode(t *testing.T) {
+	r := newTestRewriter(t, Options{Schema: "auth"})
+	for _, body := range []string{"BEGIN RETURN INTO x; END", "DECLARE v int; BEGIN v := INTO x; END", "BEGIN PERFORM 1; IF INTO x THEN NULL; END IF; END"} {
+		sql := "CREATE FUNCTION f() RETURNS int LANGUAGE plpgsql AS $$ " + body + " $$"
+		if out, _, err := r.Rewrite(sql); err == nil {
+			t.Errorf("%q: no error, output %q", body, out)
+		}
+	}
+	// and nothing is learned from the refused body
+	if _, _, err := r.Rewrite("CREATE FUNCTION g() RETURNS int LANGUAGE plpgsql AS $$ BEGIN RETURN INTO t; END $$"); err == nil {
+		t.Fatal("no error")
+	}
+	got, _, err := r.Rewrite("SELECT * FROM t")
+	if err != nil || got != "SELECT * FROM auth.t" {
+		t.Errorf("got %q, %v", got, err)
+	}
+}
+
+// Verification must stay linear in the size of the statement: a data migration
+// is often one huge INSERT ... SELECT ... UNION ALL, or a long expression.
+func TestRewriteLargeStatements(t *testing.T) {
+	var rows, terms []string
+	for i := 0; i < 6000; i++ {
+		rows = append(rows, fmt.Sprintf("SELECT %d, 'name%d'", i, i))
+	}
+	for i := 0; i < 20000; i++ {
+		terms = append(terms, "1")
+	}
+	inputs := map[string]string{
+		"union all rows": "INSERT INTO users (id, name) " + strings.Join(rows, " UNION ALL ") + ";",
+		"long sum":       "SELECT " + strings.Join(terms, " + ") + " FROM users;",
+		"deep parens":    "SELECT " + strings.Repeat("(", 5000) + "1" + strings.Repeat(")", 5000) + " FROM users;",
+	}
+	for name, sql := range inputs {
+		start := time.Now()
+		r := newTestRewriter(t, Options{Schema: "auth"})
+		out, _, err := r.Rewrite(sql)
+		if err != nil {
+			t.Fatalf("%s: %v", name, err)
+		}
+		if d := time.Since(start); d > 10*time.Second {
+			t.Errorf("%s: %d bytes took %s", name, len(sql), d)
+		}
+		if !strings.Contains(out, "auth.users") {
+			t.Errorf("%s: users is not qualified", name)
+		}
+	}
+}
+
+// The template does not know the target schema, so a migration that names it
+// ("auth.users") is not the same to the rewriter in the two modes: with the
+// schema it recognizes the objects the migration creates, with the placeholder
+// they belong to another schema. The README says that placeholder and direct
+// rewriting agree for migrations that do not spell the target schema.
+func TestPlaceholderDoesNotKnowTheTargetSchema(t *testing.T) {
+	sql := "CREATE TYPE auth.mood AS ENUM ('a'); CREATE TABLE auth.t (m mood)"
+	direct := newTestRewriter(t, Options{Schema: "auth"})
+	tmpl := newTestRewriter(t, Options{Placeholder: true})
+	want, _, err := direct.Rewrite(sql)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got, _, err := tmpl.Rewrite(sql)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if want != "CREATE TYPE auth.mood AS ENUM ('a'); CREATE TABLE auth.t (m auth.mood)" || got != sql {
+		t.Errorf("direct %q, template %q", want, got)
 	}
 }

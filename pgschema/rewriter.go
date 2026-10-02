@@ -135,9 +135,12 @@ func verify(want []*ast.RawStmt, out string) error {
 		return fmt.Errorf("verification: the number of statements changed from %d to %d", len(want), len(got))
 	}
 	for i := range want {
-		if d := ast.Diff(want[i], got[i]); d != "" {
-			return fmt.Errorf("verification: statement %d differs: %s", i+1, d)
+		// Equal first: it allocates nothing, Diff builds a path at every node
+		// and is for the message only
+		if ast.Equal(want[i], got[i]) {
+			continue
 		}
+		return fmt.Errorf("verification: statement %d differs: %s", i+1, ast.Diff(want[i], got[i]))
 	}
 	return nil
 }

@@ -23,13 +23,18 @@ import (
 // a description of the first difference, or "": acceptance, the error message
 // and its cursor, the trees with the positions.
 //
-// Two differences from libpg_query are deliberate and not reported, see
-// docs/differences.md: the library checks the encoding of the whole text first
-// (invalid UTF-8, a NUL), as PostgreSQL does before it parses (libpg_query
-// does not; its C string ends at a NUL), and it does not
-// accept the parameter markers ($1) that libpg_query's own patches allow in
-// the places of string constants (PASSWORD $1, SET search_path = $1,
-// type $1), where PostgreSQL itself gives a syntax error.
+// Three differences from libpg_query are deliberate and not reported, see
+// docs/differences.md:
+//
+//   - a string continued across a comment: the server and the library
+//     continue it, libpg_query does not;
+//   - the library checks the encoding of the whole text first (invalid UTF-8,
+//     a NUL), as PostgreSQL does before it parses; libpg_query does not, and
+//     its C string ends at a NUL;
+//   - the library does not accept the parameter markers ($1) that libpg_query's
+//     own patches allow in the places of string constants (PASSWORD $1,
+//     SET search_path = $1, type $1), where PostgreSQL itself gives a syntax
+//     error.
 func compareParse(sql string) string {
 	theirs, werr := Parse(sql)
 	ours, gerr := parse.Parse(sql)
@@ -44,6 +49,10 @@ func compareParse(sql string) string {
 		return ""
 	}
 	switch {
+	case werr != nil && gerr == nil && lexDeviates(sql):
+		// a string continued across a comment: the server and the library
+		// continue it, libpg_query does not (docs/differences.md)
+		return ""
 	case gerr != nil && paramMarkerError.MatchString(gerr.Error()):
 		// libpg_query takes the marker as a constant and goes on, whether it
 		// accepts the statement in the end or fails further on
@@ -67,6 +76,37 @@ func compareParse(sql string) string {
 		return "the trees differ: " + d.String()
 	}
 	return ""
+}
+
+// lexDeviates reports whether the text is scanned differently in the way
+// libpg_query scans it (lex.Scanner.LibpgQueryCompat) and in the way the
+// server does.
+func lexDeviates(sql string) bool {
+	scan := func(compat bool) (toks [][3]int, err error) {
+		sc := lex.NewScanner(sql)
+		sc.LibpgQueryCompat = compat
+		for {
+			it, err := sc.Next()
+			if err != nil {
+				return toks, err
+			}
+			if it.Tok == 0 {
+				return toks, nil
+			}
+			toks = append(toks, [3]int{int(it.Tok), int(it.Start), int(it.End)})
+		}
+	}
+	a, aerr := scan(false)
+	b, berr := scan(true)
+	if (aerr == nil) != (berr == nil) || len(a) != len(b) {
+		return true
+	}
+	for i := range a {
+		if a[i] != b[i] {
+			return true
+		}
+	}
+	return false
 }
 
 // paramMarkerInError matches a syntax error at a parameter marker anywhere in
@@ -217,7 +257,7 @@ func TestParseMutations(t *testing.T) {
 			accepted++
 		}
 		if d := compareParse(s); d != "" {
-			bad = append(bad, fmt.Sprintf("%s\n    %q", d, truncate(s, 200)))
+			bad = append(bad, fmt.Sprintf("%s\n    %q", d, truncate(s, 1500)))
 		}
 	}
 	t.Logf("%d inputs in %s, %d accepted by the library, %d differences", n, time.Since(start).Round(time.Second), accepted, len(bad))
@@ -287,6 +327,11 @@ func rewriteIssues(p pair, sql string) (issue string) {
 			return ""
 		}
 		if !bodiesComplete(sql) {
+			return ""
+		}
+		// a declaration whose type is not a type name: the server does not
+		// create the function, libpg_query compiles it without a catalog
+		if strings.Contains(err.Error(), "invalid type in a declaration") {
 			return ""
 		}
 		if want, perr := safeProto(p.proto, sql); perr == nil && want != sql {
@@ -410,7 +455,7 @@ func safeProto(p *Prototype, sql string) (out string, err error) {
 // body the rewriter writes with dollar quotes: the output is then not the
 // input with insertions, which is as documented (the body is edited decoded).
 func requotedBody(in, out string) bool {
-	return !strings.Contains(in, "$") && strings.Contains(out, "$") && strings.Contains(strings.ToLower(in), "'")
+	return strings.Count(out, "$") > strings.Count(in, "$") && strings.Contains(in, "'")
 }
 
 // isInsertionOnly reports whether out is in with some occurrences of ins
@@ -453,14 +498,18 @@ func isInsertionOnly(in, out, ins string) bool {
 // TestRewriteMutations rewrites damaged statements that both parsers accept:
 // the library must not panic, must give SQL that libpg_query parses and that
 // is the input with insertions, and must agree with the prototype wherever
-// both rewrite. REWRITE_MUTATIONS sets the number of inputs.
+// both rewrite. REWRITE_MUTATIONS sets the number of inputs, REWRITE_SEED the seed.
 func TestRewriteMutations(t *testing.T) {
 	n := 20000
 	if v := os.Getenv("REWRITE_MUTATIONS"); v != "" {
 		fmt.Sscan(v, &n)
 	}
+	seed := int64(5)
+	if v := os.Getenv("REWRITE_SEED"); v != "" {
+		fmt.Sscan(v, &seed)
+	}
 	stmts := regressStatements(t, 800)
-	rng := rand.New(rand.NewSource(5))
+	rng := rand.New(rand.NewSource(seed))
 	pool := tokenPool(stmts, rng)
 	pr := newPair(t)
 	for _, s := range stmts[:min(len(stmts), 4000)] {

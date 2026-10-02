@@ -170,6 +170,7 @@ func (w *walker) handle(node Node) bool {
 		w.defName(&n.TypeName, kindType)
 	case *CreateRangeStmt:
 		w.defName(&n.TypeName, kindType)
+		w.warn("the constructor functions of a range type are not qualified where they are called: %s", snippet(w.stmtText()))
 	case *CreateDomainStmt:
 		w.defName(&n.Domainname, kindType)
 	case *AlterEnumStmt:
@@ -186,8 +187,13 @@ func (w *walker) handle(node Node) bool {
 			w.defName(&n.Defnames, kindFunction)
 		case OBJECT_COLLATION, OBJECT_TSPARSER, OBJECT_TSDICTIONARY, OBJECT_TSTEMPLATE, OBJECT_TSCONFIGURATION:
 			w.defName(&n.Defnames, kindNone)
+			w.warn("%s created by a migration is not qualified where it is used (COLLATE, text search functions, ...): %s", n.Kind, snippet(w.stmtText()))
 		default:
 			w.warn("%s is not rewritten: %s", n.Kind, snippet(w.stmtText()))
+		}
+	case *CreateSchemaStmt:
+		if len(n.SchemaElts) > 0 {
+			w.warn("the elements of CREATE SCHEMA belong to the new schema and get the target schema, which the server rejects; create the objects in separate statements: %s", snippet(w.stmtText()))
 		}
 	case *CreateStatsStmt:
 		w.defName(&n.Defnames, kindNone)

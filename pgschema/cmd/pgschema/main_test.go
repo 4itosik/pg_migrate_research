@@ -93,3 +93,62 @@ func TestUsageAndErrors(t *testing.T) {
 		t.Errorf("a syntax error: exit %d, %q", code, errb.String())
 	}
 }
+
+func TestStaleFilesAreRemoved(t *testing.T) {
+	root := t.TempDir()
+	src, dst := filepath.Join(root, "src"), filepath.Join(root, "dst")
+	write(t, src, "001_a.up.sql", "CREATE TABLE a (id int);\n")
+	write(t, dst, "002_gone.up.sql", "SELECT 1;\n")
+	write(t, dst, "notes.txt", "not a migration, stays")
+	var out, errb bytes.Buffer
+	if code := run([]string{"rewrite", "-schema", "auth", "-src", src, "-dst", dst}, &out, &errb); code != 0 {
+		t.Fatalf("exit %d: %s", code, errb.String())
+	}
+	if _, err := os.Stat(filepath.Join(dst, "002_gone.up.sql")); err == nil {
+		t.Error("the stale migration is still there")
+	}
+	if _, err := os.Stat(filepath.Join(dst, "notes.txt")); err != nil {
+		t.Error("a file that is not a migration was removed")
+	}
+	if !strings.Contains(out.String(), "1 stale removed") {
+		t.Errorf("output %q", out.String())
+	}
+}
+
+func TestFailOnWarningWritesNothing(t *testing.T) {
+	root := t.TempDir()
+	src, dst := filepath.Join(root, "src"), filepath.Join(root, "dst")
+	write(t, src, "001_a.up.sql", "SET search_path TO public;\n")
+	var out, errb bytes.Buffer
+	if code := run([]string{"rewrite", "-schema", "auth", "-src", src, "-dst", dst, "-fail-on-warning"}, &out, &errb); code != 1 {
+		t.Fatalf("exit %d: %s", code, errb.String())
+	}
+	if _, err := os.Stat(dst); err == nil {
+		t.Error("files were written although the command failed")
+	}
+	if !strings.Contains(errb.String(), "warning") {
+		t.Errorf("no warning in %q", errb.String())
+	}
+}
+
+func TestSameDirectoryAndHelpAndExclude(t *testing.T) {
+	root := t.TempDir()
+	write(t, root, "001_a.up.sql", "SELECT * FROM countries JOIN users ON true;\n")
+	var out, errb bytes.Buffer
+	if code := run([]string{"rewrite", "-schema", "auth", "-src", root, "-dst", root}, &out, &errb); code != 2 {
+		t.Errorf("-src equal to -dst: exit %d", code)
+	}
+	if b, _ := os.ReadFile(filepath.Join(root, "001_a.up.sql")); string(b) != "SELECT * FROM countries JOIN users ON true;\n" {
+		t.Errorf("the source was overwritten: %s", b)
+	}
+	if code := run([]string{"rewrite", "-h"}, &out, &errb); code != 0 {
+		t.Errorf("-h: exit %d", code)
+	}
+	dst := filepath.Join(t.TempDir(), "out")
+	if code := run([]string{"rewrite", "-schema", "auth", "-exclude", "countries, other", "-src", root, "-dst", dst}, &out, &errb); code != 0 {
+		t.Fatalf("exit %d: %s", code, errb.String())
+	}
+	if b, _ := os.ReadFile(filepath.Join(dst, "001_a.up.sql")); string(b) != "SELECT * FROM countries JOIN auth.users ON true;\n" {
+		t.Errorf("got %s", b)
+	}
+}

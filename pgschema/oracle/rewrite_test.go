@@ -1,6 +1,7 @@
 package oracle
 
 import (
+	"context"
 	"fmt"
 	"os"
 	"path/filepath"
@@ -10,6 +11,7 @@ import (
 	"time"
 
 	"github.com/4itosik/pg_migrate_research/pgschema"
+	"github.com/4itosik/pg_migrate_research/pgschema/subst"
 	"github.com/4itosik/pg_migrate_research/poc/harness"
 )
 
@@ -263,6 +265,91 @@ func TestRewriteSpeed(t *testing.T) {
 			"files": files, "first_run_ms": float64(first.Microseconds()) / 1000, "warm_ms": float64(best.Microseconds()) / 1000,
 		}); err != nil {
 			t.Fatal(err)
+		}
+	}
+}
+
+// templated is the rewriter of a service that rewrites at build time and
+// substitutes at run time: the template with the placeholder, then the schema.
+func templated(schema string) (harness.Rewriter, error) {
+	r, err := pgschema.New(pgschema.Options{Placeholder: true})
+	if err != nil {
+		return nil, err
+	}
+	return HarnessAdapter{Learner: r.Learn, Rewriter: func(sql string) (string, []string, error) {
+		out, warns, err := r.Rewrite(sql)
+		if err != nil {
+			return "", nil, err
+		}
+		out, err = subst.Apply(out, schema)
+		return out, warns, err
+	}}, nil
+}
+
+// TestSchemaNamesOnServer runs the corpus on a live PostgreSQL with schemas
+// that need quoting, with direct rewriting and with a template: mixed case,
+// a keyword, a space, a double quote, a non-ASCII letter. The target schema is
+// not on the search_path. Cases that spell the schema "auth" themselves are
+// left out: they are written for that one name.
+func TestSchemaNamesOnServer(t *testing.T) {
+	if !haveServer() {
+		skipUnlessCI(t, "no PostgreSQL server: set PG_BIN or PG_DSN (tools/env.sh)")
+	}
+	if os.Getenv("CORPUS_DIR") == "" || os.Getenv("RESULTS_DIR") == "" {
+		skipUnlessCI(t, "CORPUS_DIR and RESULTS_DIR are not set (tools/env.sh)")
+	}
+	all, err := harness.LoadCorpus(corpusDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	// the checks of the corpus name the schema "auth"; for another schema they
+	// are written again with its name; cases whose migrations spell "auth"
+	// themselves are left out
+	var cases []harness.Case
+	for _, c := range all {
+		spelled := false
+		for _, m := range c.Migrations {
+			spelled = spelled || strings.Contains(m.Up, "auth.") || strings.Contains(m.Down, "auth.")
+		}
+		if !spelled {
+			cases = append(cases, c)
+		}
+	}
+	for _, c := range cases {
+		if c.Check == "" {
+			t.Fatalf("case %s has no check, the test would prove nothing", c.Name)
+		}
+	}
+	ctx := context.Background()
+	srv, err := harness.StartServer(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer srv.Stop()
+	modes := map[string]harness.Factory{"direct": ours, "template": templated}
+	for _, schema := range []string{"Auth", "user", "my schema", `we"ird`, "ü"} {
+		renamed := make([]harness.Case, len(cases))
+		for i, c := range cases {
+			q := subst.QuoteIdent(schema)
+			for _, r := range [][2]string{{"auth.", q + "."}, {"SCHEMA auth ", "SCHEMA " + q + " "}, {"'auth'::regnamespace", "'" + q + "'::regnamespace"}} {
+				c.Setup = strings.ReplaceAll(c.Setup, r[0], r[1])
+				c.Check = strings.ReplaceAll(c.Check, r[0], r[1])
+			}
+			renamed[i] = c
+		}
+		for mode, factory := range modes {
+			rep := harness.Run(ctx, srv, renamed, harness.Config{
+				Candidate: "pgschema-" + mode, Library: "pgschema", Mode: harness.ModeRewrite,
+				Factory: factory, Schema: schema,
+			})
+			failed := 0
+			for _, r := range rep.Results {
+				if r.Status != "pass" && r.Status != "skip" && r.Expect != "limitation" {
+					failed++
+					t.Errorf("schema %q, %s: case %s %s: %s", schema, mode, r.Case, r.Stage, r.Error)
+				}
+			}
+			t.Logf("schema %-10q %-8s: %d of %d cases pass, %d skipped, %d failed", schema, mode, rep.Passed(), len(rep.Results), rep.Skipped(), failed)
 		}
 	}
 }

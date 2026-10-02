@@ -76,6 +76,17 @@ END $$;`,
 			want:  "lastother",
 		},
 		{
+			name: "a variable named like a keyword",
+			up: `CREATE TYPE mood AS ENUM ('sad', 'happy');
+CREATE FUNCTION f() RETURNS text LANGUAGE plpgsql AS $$
+DECLARE int mood := 'happy';
+BEGIN
+  RETURN int::text;
+END $$;`,
+			query: "SELECT auth.f()",
+			want:  "happy",
+		},
+		{
 			name: "a refcursor parameter",
 			up: `CREATE TABLE t (id int);
 INSERT INTO t VALUES (7);

@@ -17,6 +17,7 @@ import (
 // main parse tree and is visited as a regular child.
 func (w *walker) createFunction(n *CreateFunctionStmt) {
 	w.defName(&n.Funcname, kindFunction)
+	w.singleColumnTable(n)
 	as := defElem(n.Options, "as")
 	if as == nil {
 		return
@@ -298,7 +299,59 @@ func (w *walker) declEdit(body string, t *plpgsql.TypeRef, vars map[string]bool)
 	if !identAt(body, n.Start, n.Text) {
 		return edit{}, false, fmt.Errorf("cannot locate the type %s in a declaration of the PL/pgSQL body", n.Text)
 	}
+	// the extractor reads the text of a type up to the end of the declaration
+	// part, as PostgreSQL does, and PostgreSQL then parses it as a type name;
+	// text that is not one is a function the server would not create
+	if err := checkTypeText(body[t.Start:t.End], t); err != nil {
+		return edit{}, false, fmt.Errorf("%s in a declaration of the PL/pgSQL body: %v", errInvalidType, err)
+	}
 	return edit{start: n.Start, end: n.Start, text: w.r.prefix}, true, nil
+}
+
+// errInvalidType starts the error for a declaration with text that is not a
+// type.
+const errInvalidType = "invalid type"
+
+// checkTypeText checks the text of a declared type: a type name for the plain
+// kind, otherwise the form name[.name...]%TYPE or %ROWTYPE with nothing else.
+func checkTypeText(text string, t *plpgsql.TypeRef) error {
+	if t.Kind == plpgsql.TypePlain {
+		_, err := parse.ParseMode(text, parse.ModeTypeName)
+		return err
+	}
+	var toks []lex.Item
+	sc := lex.NewScanner(text)
+	for {
+		it, err := sc.Next()
+		if err != nil {
+			return err
+		}
+		if it.Tok == 0 {
+			break
+		}
+		toks = append(toks, it)
+	}
+	// names with dots, %, TYPE or ROWTYPE, then only array bounds
+	i := 0
+	for n := range t.Names {
+		if n > 0 {
+			if i >= len(toks) || toks[i].Tok != '.' {
+				return fmt.Errorf("%q is not a name followed by %%TYPE or %%ROWTYPE", text)
+			}
+			i++
+		}
+		i++ // the name, which the extractor has found
+	}
+	if i+1 >= len(toks) || toks[i].Tok != '%' {
+		return fmt.Errorf("%q is not a name followed by %%TYPE or %%ROWTYPE", text)
+	}
+	i += 2 // % and TYPE or ROWTYPE
+	for ; i < len(toks); i++ {
+		if tok := toks[i].Tok; tok != '[' && tok != ']' && tok != lex.ICONST && tok != lex.ARRAY {
+			return fmt.Errorf("%q has text after %%TYPE or %%ROWTYPE that is not an array bound", text)
+		}
+	}
+	return nil
 }
 
 // identAt reports whether an identifier with the value name starts at pos.
@@ -316,6 +369,18 @@ func identAt(src string, pos int, name string) bool {
 func (r *Rewriter) analyzeFragment(f *plpgsql.Fragment, body string, learnOnly bool) (*analysis, error) {
 	const prefix = "SELECT "
 	q := f.SQL(body)
+	// the fragment must parse in its own mode: the text below is analyzed with
+	// a SELECT in front of it, which accepts things the mode does not
+	// (RETURN INTO x would be SELECT INTO x, a statement that creates a table)
+	if f.Mode != parse.ModeDefault {
+		text := q
+		if f.Kind == plpgsql.KindCaseWhen {
+			text = "x IN (" + q + ")"
+		}
+		if _, err := parse.ParseMode(text, f.Mode); err != nil {
+			return nil, err
+		}
+	}
 	switch f.Mode {
 	case parse.ModeDefault: // a whole SQL statement
 		return r.analyze(q, true, learnOnly)
@@ -366,4 +431,26 @@ func assignmentEnd(q string) (int, bool) {
 			}
 		}
 	}
+}
+
+// singleColumnTable handles RETURNS TABLE (c type) with one column. The
+// grammar makes the return type a copy of the column type whose position is
+// that of the TABLE keyword, so the name cannot be edited there: the column's
+// own type is qualified and the copy follows.
+func (w *walker) singleColumnTable(n *CreateFunctionStmt) {
+	var column *FunctionParameter
+	for _, p := range n.Parameters {
+		if fp, ok := p.(*FunctionParameter); ok && fp.Mode == FUNC_PARAM_TABLE {
+			if column != nil {
+				return // several columns: the return type is record
+			}
+			column = fp
+		}
+	}
+	if column == nil || column.ArgType == nil || n.ReturnType == nil || !n.ReturnType.Setof {
+		return
+	}
+	w.typeName(column.ArgType, false)
+	n.ReturnType.Names = append([]Node(nil), column.ArgType.Names...)
+	w.done[n.ReturnType] = true
 }
