@@ -1,3 +1,10 @@
+// This file is derived from PostgreSQL (src/pl/plpgsql/src/pl_scanner.c and pl_reserved_kwlist.h).
+//
+// Portions Copyright (c) 1996-2024, PostgreSQL Global Development Group
+// Portions Copyright (c) 1994, Regents of the University of California
+//
+// PostgreSQL License: see ../../LICENSE.PostgreSQL.
+
 package plpgsql
 
 import (

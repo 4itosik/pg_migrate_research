@@ -1,3 +1,10 @@
+// This file is derived from PostgreSQL (the function quote_identifier of src/backend/utils/adt/ruleutils.c).
+//
+// Portions Copyright (c) 1996-2024, PostgreSQL Global Development Group
+// Portions Copyright (c) 1994, Regents of the University of California
+//
+// PostgreSQL License: see ../LICENSE.PostgreSQL.
+
 // Package subst puts the name of a schema into migrations that were rewritten
 // with a placeholder instead of the schema.
 //
