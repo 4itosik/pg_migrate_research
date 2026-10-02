@@ -77,3 +77,36 @@ const (
 
 // intervalMask is INTERVAL_MASK.
 func intervalMask(b int32) int32 { return 1 << b }
+
+// The FRAMEOPTION_* bits of nodes/parsenodes.h, the frame options of a window
+// definition.
+const (
+	frameoptionNondefault              = 0x00001
+	frameoptionRange                   = 0x00002
+	frameoptionRows                    = 0x00004
+	frameoptionGroups                  = 0x00008
+	frameoptionBetween                 = 0x00010
+	frameoptionStartUnboundedPreceding = 0x00020
+	frameoptionEndUnboundedPreceding   = 0x00040
+	frameoptionStartUnboundedFollowing = 0x00080
+	frameoptionEndUnboundedFollowing   = 0x00100
+	frameoptionStartCurrentRow         = 0x00200
+	frameoptionEndCurrentRow           = 0x00400
+	frameoptionStartOffsetPreceding    = 0x00800
+	frameoptionEndOffsetPreceding      = 0x01000
+	frameoptionStartOffsetFollowing    = 0x02000
+	frameoptionEndOffsetFollowing      = 0x04000
+	frameoptionExcludeCurrentRow       = 0x08000
+	frameoptionExcludeGroup            = 0x10000
+	frameoptionExcludeTies             = 0x20000
+
+	frameoptionDefaults = frameoptionRange | frameoptionStartUnboundedPreceding | frameoptionEndCurrentRow
+)
+
+// XmlStandaloneType of utils/xml.h.
+const (
+	xmlStandaloneYes = iota
+	xmlStandaloneNo
+	xmlStandaloneNoValue
+	xmlStandaloneOmitted
+)
