@@ -1,7 +1,9 @@
 // Package pgqrewrite qualifies unqualified object names in PostgreSQL
 // migrations with a target schema. It is a proof of concept built on
-// github.com/wasilibs/go-pgquery: libpg_query (the parser of PostgreSQL
-// itself) compiled to WebAssembly and executed by wazero, so no cgo is needed.
+// libpg_query (the parser of PostgreSQL itself) without cgo: by default
+// github.com/wasilibs/go-pgquery, which runs libpg_query compiled to
+// WebAssembly with wazero; with the build tag wasm2go the same C code
+// translated to Go (internal/libpgquery), with no WebAssembly runtime.
 //
 // The rewriter never regenerates SQL. It finds the names to qualify in the
 // parse tree and inserts "schema." into the original text at the token
@@ -29,8 +31,8 @@ import (
 	"fmt"
 	"strings"
 
+	pgquery "github.com/4itosik/pg_migrate_research/poc/pgquery/internal/pgparse"
 	pg "github.com/pganalyze/pg_query_go/v6"
-	pgquery "github.com/wasilibs/go-pgquery"
 	"google.golang.org/protobuf/encoding/protojson"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"

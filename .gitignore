@@ -3,6 +3,7 @@
 /poc/*/pgschema-rewrite
 /poc/*/rewrite
 /poc/*/coldstart
+/poc/*/maxrss
 /poc/*/matrix
 /poc/*/coverage
 /poc/*/crosscheck

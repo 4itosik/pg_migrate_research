@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
+	pgquery "github.com/4itosik/pg_migrate_research/poc/pgquery/internal/pgparse"
 	pg "github.com/pganalyze/pg_query_go/v6"
-	pgquery "github.com/wasilibs/go-pgquery"
 )
 
 // createFunction qualifies the function name and rewrites a SQL or PL/pgSQL

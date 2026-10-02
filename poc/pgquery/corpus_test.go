@@ -5,6 +5,7 @@ import (
 
 	"github.com/4itosik/pg_migrate_research/poc/harness"
 	pgqrewrite "github.com/4itosik/pg_migrate_research/poc/pgquery"
+	"github.com/4itosik/pg_migrate_research/poc/pgquery/internal/pgparse"
 )
 
 type adapter struct{ r *pgqrewrite.Rewriter }
@@ -26,8 +27,8 @@ func factory(schema string) (harness.Rewriter, error) {
 func TestCorpus(t *testing.T) {
 	harness.RunTest(t, harness.TestOptions{
 		Config: harness.Config{
-			Candidate: "go-pgquery",
-			Library:   "github.com/wasilibs/go-pgquery (libpg_query 17, WASM)",
+			Candidate: pgparse.Backend,
+			Library:   pgparse.Library,
 			Mode:      harness.ModeRewrite,
 			Factory:   factory,
 		},

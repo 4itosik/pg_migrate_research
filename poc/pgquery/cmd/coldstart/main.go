@@ -1,5 +1,6 @@
-// Command coldstart measures the first call of go-pgquery in a fresh process:
-// the WebAssembly module is compiled by wazero on first use.
+// Command coldstart measures the first call of the libpg_query backend in a
+// fresh process: go-pgquery compiles its WebAssembly module with wazero on
+// first use, the wasm2go build (-tags wasm2go) compiles nothing at run time.
 package main
 
 import (
@@ -8,7 +9,7 @@ import (
 	"time"
 
 	pgqrewrite "github.com/4itosik/pg_migrate_research/poc/pgquery"
-	pgquery "github.com/wasilibs/go-pgquery"
+	pgquery "github.com/4itosik/pg_migrate_research/poc/pgquery/internal/pgparse"
 )
 
 func main() {
@@ -28,5 +29,5 @@ func main() {
 	if _, _, err := r.Rewrite(string(b)); err != nil {
 		panic(err)
 	}
-	fmt.Printf("first Parse (WASM compile): %v\nsteady Parse: %v\nRewrite of %s (%d bytes): %v\n", first, steady, os.Args[1], len(b), time.Since(t2))
+	fmt.Printf("backend %s\nfirst Parse: %v\nsteady Parse: %v\nRewrite of %s (%d bytes): %v\n", pgquery.Backend, first, steady, os.Args[1], len(b), time.Since(t2))
 }

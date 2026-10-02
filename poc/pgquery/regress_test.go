@@ -11,8 +11,8 @@ import (
 	"testing"
 	"time"
 
+	pgquery "github.com/4itosik/pg_migrate_research/poc/pgquery/internal/pgparse"
 	pg "github.com/pganalyze/pg_query_go/v6"
-	pgquery "github.com/wasilibs/go-pgquery"
 )
 
 // TestRegress rewrites every statement of the PostgreSQL regression suite

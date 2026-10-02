@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
+	pgquery "github.com/4itosik/pg_migrate_research/poc/pgquery/internal/pgparse"
 	pg "github.com/pganalyze/pg_query_go/v6"
-	pgquery "github.com/wasilibs/go-pgquery"
 )
 
 // tokens is the scanner output of a SQL text without comments.

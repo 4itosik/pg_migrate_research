@@ -9,6 +9,8 @@
 | `corpus/` | 23 сценария миграций в формате golang-migrate: `NNN_name.up.sql` / `.down.sql`, `setup.sql`, `check.sql`, `case.json` (в нём можно указать `min_server_version`) |
 | `harness/` | Стенд: временный PostgreSQL, накат, проверки, сравнение схем, откат |
 | `pgquery/` | Реализация на `github.com/wasilibs/go-pgquery`, утилита `cmd/pgschema-rewrite` |
+| `pgquery/internal/libpgquery` | Тот же libpg_query, переведённый в Go через wasm2go: бэкенд сборки с тегом `wasm2go`, без WASM-рантайма |
+| `pgquery/wasm2go/` | Генерация `internal/libpgquery` (`build.sh`), разрезание грамматики (`split_gram.py`), замер памяти компилятора (`maxrss`) |
 | `multigres/` | Реализация на парсере multigres (изменение AST + генерация SQL) |
 | `antlr/` | Реализация на ANTLR-грамматике bytebase (правка токенов) |
 | `coverage/` | Замер покрытия грамматики, точности deparse и скорости пяти парсеров |
@@ -74,6 +76,29 @@ cd crosscheck && go run . -regress $R -out ../results/crosscheck-regress-pg16.js
 Инструменты вырезают команды psql и данные `COPY … FROM stdin`. Если сканер не принимает токен (тесты проверяют и такие ошибки), выбрасывается только строка с этим токеном.
 
 `-diffs` пишет каждое расхождение и каждую ошибку отдельной строкой JSON. У multigres расхождение помечено: `deparse`, если дерево меняет уже deparse исходного оператора, иначе `rewrite`.
+
+## Сборка без WASM-рантайма
+
+Тег `wasm2go` подменяет go-pgquery на `internal/libpgquery`: тот же libpg_query, переведённый в обычный Go. Код переписывания тот же. Подробности и замеры — README §10 и §11.
+
+```bash
+cd poc/pgquery
+CGO_ENABLED=0 SAVE_SQL=0 go test -tags wasm2go ./...    # отчёт корпуса: results/go-pgquery-wasm2go.json
+REGRESS_DIR=$R go test -tags wasm2go -run 'TestWasm2goSameBytes|TestPlaceholder|TestRegress' -v .
+CGO_ENABLED=0 go build -tags wasm2go ./cmd/pgschema-rewrite
+
+# мало памяти: компилятор обрабатывает функции пакета по одной (~0,8 ГБ вместо ~1,2 ГБ)
+GOGC=50 go build -tags wasm2go -gcflags=github.com/4itosik/pg_migrate_research/poc/pgquery/internal/libpgquery=-c=1 ./cmd/pgschema-rewrite
+
+# пик памяти компилятора и линковщика по пакетам
+go build -o /tmp/maxrss ./wasm2go/maxrss
+go build -a -tags wasm2go -toolexec=/tmp/maxrss -o /dev/null ./cmd/pgschema-rewrite
+
+# перегенерировать internal/libpgquery; wasi-sdk и binaryen скачиваются в ~/.cache/pgquery-wasm2go
+cd wasm2go && ./build.sh
+```
+
+`TestWasm2goSameBytes` сверяет с go-pgquery байты дерева разбора, токенов сканера, PL/pgSQL и все поля ошибок. `TestPlaceholder` проверяет переписывание при сборке: текст с меткой `pgschema_placeholder` после подстановки схемы должен совпасть с прямым переписыванием. `SAVE_SQL=0` не пишет переписанные файлы: они те же, что у go-pgquery.
 
 ## Утилита
 
