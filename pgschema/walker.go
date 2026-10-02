@@ -59,6 +59,12 @@ func (w *walker) warn(format string, args ...any) {
 	}
 }
 
+// warnAt is warn about the place at byte offset loc of the text, -1 for the
+// statement.
+func (w *walker) warnAt(loc int32, format string, args ...any) {
+	w.warn(format, args...)
+}
+
 func isNilNode(n Node) bool {
 	if n == nil {
 		return true
@@ -320,7 +326,7 @@ func (w *walker) register(rv *RangeVar, kind objKind) {
 		return
 	}
 	if rv.Schemaname == "" || rv.Schemaname == w.r.schema {
-		w.r.reg.add(kind, rv.Relname)
+		w.created(kind, rv.Relname)
 	}
 }
 
@@ -464,7 +470,7 @@ func (w *walker) typeName(tn *TypeName, definition bool) {
 	if len(names) != 1 {
 		return
 	}
-	ref := w.typeRef(names[0], definition)
+	ref := w.typeRef(names[0], definition, tn.Location)
 	if ref == nil {
 		return
 	}
@@ -481,20 +487,64 @@ func (w *walker) typeName(tn *TypeName, definition bool) {
 
 // typeRef is the schema a type name gets: the target schema for a type that a
 // migration creates (or for the name of a type being defined), the schema of
-// the extension for a type of an active extension, nil for any other.
-func (w *walker) typeRef(name string, definition bool) *schemaRef {
-	if definition || w.r.reg.isType(name) {
+// the extension for a type of an active extension, nil for any other. A type
+// of the migrations that has the name of a type of pg_catalog gets nil: loc is
+// the position of the use for the warning, -1 for the statement.
+func (w *walker) typeRef(name string, definition bool, loc int32) *schemaRef {
+	switch {
+	case definition:
+		return w.r.targetRef()
+	case w.r.reg.isType(name):
+		if w.builtinUse("type", name, loc) {
+			return nil
+		}
 		return w.r.targetRef()
 	}
 	return w.r.ext.types[name]
 }
 
 // funcRef is the schema a function name gets, like typeRef.
-func (w *walker) funcRef(name string) *schemaRef {
+func (w *walker) funcRef(name string, loc int32) *schemaRef {
 	if w.r.reg.functions[name] {
+		if w.builtinUse("function", name, loc) {
+			return nil
+		}
 		return w.r.targetRef()
 	}
 	return w.r.ext.funcs[name]
+}
+
+// builtinUse reports whether a type or function of the migrations has the
+// name of one of pg_catalog, and warns about the use if so. pg_catalog comes
+// first in every search_path, so the unqualified name means the built-in (for
+// a type that is exactly how PostgreSQL resolves it; for a function it keeps
+// the calls of the built-in as they are) and is left unqualified.
+func (w *walker) builtinUse(kind, name string, loc int32) bool {
+	if kind == "type" && !isBuiltinType(name) || kind == "function" && !isBuiltinFunction(name) {
+		return false
+	}
+	w.warnAt(loc, "%s is also a built-in %s of pg_catalog and is left unqualified, so it means the built-in; qualify it explicitly if the migration means its own %s: %s",
+		name, kind, kind, snippet(w.stmtText()))
+	return true
+}
+
+// created registers an object that a statement creates. A type (a relation is
+// one too) or a function with the name of a built-in of pg_catalog gets the
+// schema like any other, and a warning: its unqualified uses are left as they
+// are (builtinUse).
+func (w *walker) created(kind objKind, name string) {
+	w.r.reg.add(kind, name)
+	label := ""
+	switch {
+	case kind == kindFunction && isBuiltinFunction(name):
+		label = "function"
+	case (kind == kindType || kind == kindRelation) && isBuiltinType(name):
+		label = "type"
+	}
+	if label != "" {
+		w.warn("%s has the name of a built-in %s of pg_catalog: it is created in the target schema, but an unqualified use of the name means the built-in and is left unqualified (qualify it explicitly where the migration means its own %s): %s",
+			name, label, label, snippet(w.stmtText()))
+	}
 }
 
 var relationArgFunctions = map[string]bool{
@@ -524,7 +574,7 @@ func (w *walker) funcCall(fc *FuncCall) {
 		}
 	}
 	if len(names) == 1 && !w.learnOnly {
-		if ref := w.funcRef(base); ref != nil && w.qualifyAtRef(fc.Location, base, ref) {
+		if ref := w.funcRef(base, fc.Location); ref != nil && w.qualifyAtRef(fc.Location, base, ref) {
 			fc.Funcname = prepend(fc.Funcname, refNode(ref))
 		}
 	}
@@ -542,11 +592,12 @@ func (w *walker) typeCast(tc *TypeCast) {
 	case "regclass":
 		w.literal(tc.Arg, func(n string) bool { return w.shouldQualifyRelation(n, false) })
 	case "regtype":
-		w.literal(tc.Arg, w.r.reg.isType)
+		w.literal(tc.Arg, func(n string) bool { return w.r.reg.isType(n) && !w.builtinUse("type", n, -1) })
 	case "regproc", "regprocedure":
-		w.literal(tc.Arg, func(n string) bool { return w.r.reg.functions[n] })
+		w.literal(tc.Arg, func(n string) bool { return w.r.reg.functions[n] && !w.builtinUse("function", n, -1) })
 	}
 }
+
 
 // usedFunctionName qualifies a function name that the statement uses (the
 // trigger function) if the function is created by the migrations.
@@ -555,7 +606,11 @@ func (w *walker) usedFunctionName(names *[]Node) {
 	if len(parts) != 1 || w.learnOnly {
 		return
 	}
-	if ref := w.funcRef(parts[0]); ref != nil {
+	loc := int32(-1)
+	if s, ok := (*names)[0].(*String); ok {
+		loc = s.Loc
+	}
+	if ref := w.funcRef(parts[0], loc); ref != nil {
 		w.qualifyFirstRef(names, ref)
 	}
 }
@@ -571,7 +626,7 @@ func (w *walker) defName(names *[]Node, kind objKind) {
 		return
 	}
 	if len(parts) == 1 || (len(parts) == 2 && parts[0] == w.r.schema) {
-		w.r.reg.add(kind, parts[len(parts)-1])
+		w.created(kind, parts[len(parts)-1])
 	}
 	if len(parts) != 1 || w.learnOnly {
 		return
@@ -684,7 +739,7 @@ func (w *walker) objectWithArgs(o *ObjectWithArgs, definition bool) {
 		return
 	}
 	w.done[o] = true
-	if len(parts) == 1 && (definition || w.r.reg.functions[parts[0]]) {
+	if len(parts) == 1 && (definition || w.r.reg.functions[parts[0]] && !w.builtinUse("function", parts[0], -1)) {
 		w.qualifyFirst(&o.Objname)
 	}
 }
@@ -693,13 +748,13 @@ func (w *walker) renameStmt(n *RenameStmt) {
 	switch {
 	case isRelationType(n.RenameType):
 		if n.Relation != nil && (n.Relation.Schemaname == "" || n.Relation.Schemaname == w.r.schema) {
-			w.r.reg.add(kindRelation, n.Newname)
+			w.created(kindRelation, n.Newname)
 		}
 	case n.RenameType == OBJECT_TYPE || n.RenameType == OBJECT_DOMAIN:
-		w.r.reg.add(kindType, n.Newname)
+		w.created(kindType, n.Newname)
 		w.objectList(n.RenameType, []Node{n.Object})
 	case isFunctionType(n.RenameType):
-		w.r.reg.add(kindFunction, n.Newname)
+		w.created(kindFunction, n.Newname)
 		w.objectList(n.RenameType, []Node{n.Object})
 	case n.RenameType == OBJECT_DOMCONSTRAINT: // ALTER DOMAIN d RENAME CONSTRAINT
 		w.objectList(OBJECT_DOMAIN, []Node{n.Object})

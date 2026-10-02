@@ -292,7 +292,7 @@ func (w *walker) declEdit(body string, t *plpgsql.TypeRef, vars map[string]bool)
 		qualify = len(t.Names) == 2 && !vars[t.Names[0].Text] && w.shouldQualifyRelation(t.Names[0].Text, false)
 	case plpgsql.TypePlain:
 		if len(t.Names) == 1 {
-			if r := w.typeRef(t.Names[0].Text, false); r != nil {
+			if r := w.typeRef(t.Names[0].Text, false, -1); r != nil {
 				ref, qualify = r, true
 			}
 		}

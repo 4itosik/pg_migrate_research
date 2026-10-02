@@ -1,5 +1,7 @@
 package pgschema
 
+import "slices"
+
 // registry remembers the objects the migrations create. Type and function
 // names are qualified only when the migrations create them, so the registry
 // is filled by Learn from all migrations before any of them is rewritten.
@@ -89,3 +91,18 @@ func (g *registry) add(k objKind, name string) {
 
 func (g *registry) addTemp(name string)       { g.put(g.temp, name) }
 func (g *registry) addTransition(name string) { g.put(g.transition, name) }
+
+// isBuiltinType reports whether pg_catalog has a type of the name on some
+// server of PostgreSQL 12-16, or the grammar maps a type keyword of the name
+// to one (builtins_gen.go).
+func isBuiltinType(name string) bool {
+	_, ok := slices.BinarySearch(builtinTypes, name)
+	return ok
+}
+
+// isBuiltinFunction reports whether pg_catalog has a function, an aggregate or
+// a procedure of the name on some server of PostgreSQL 12-16.
+func isBuiltinFunction(name string) bool {
+	_, ok := slices.BinarySearch(builtinFunctions, name)
+	return ok
+}
